@@ -12,53 +12,38 @@
 	\item 緊急サービス（9-1-1）に電話する：\index{emergency services}\index{9-1-1}緊急サービスネットワークはパトカー、救急車、消防車が速やかに現場に到着できるよう、電話番号と住所を対応づけるデータ構造を使う。これは重要だ。電話をかけた人は正確な住所を伝えられないかもしれず、遅れが生死を別つ可能性があるためである。
 \end{itemize}
 
-Every computer science curriculum in the world includes a course on data structures and algorithms.  Data structures are \emph{that} important; they improve our quality of life and even save lives on a regular basis.  Many multi-million and several multi-billion dollar companies have been built around data structures.
+\section{効率の必要性}
 
-How can this be?  If we stop to think about it, we realize that we interact with data structures constantly.
+次節では多くのデータ構造がサポートする操作を見ていく。ちょっとしたプログラミング経験があれば、これらを正しく実装することは難しくない。データを配列または線形リストに格納し、配列または線形リストの全要素を見てまわり、要素を追加したり削除したりすればよいのだ。
+
+こういう実装は簡単だが、あまり効率的ではない。さて、このことを考える価値はあるだろうか？コンピュータはどんどん高速化している。自明な実装で十分だろう。確認のためにざっくりとした計算をしてみよう。
+
+\paragraph{操作の数：}
+まあまあの大きさのデータセット、例えば100万（$10^6$）のアイテムを持つアプリケーションがあるとする。少なくとも一度は各アイテムを参照すると仮定してよいことが多いだろう。つまり少なくとも100万（$10^6$）回はこのデータで検索をしたいわけだ。この$10^6$回の検索それぞれが$10^6$個のアイテムをすべて確認すると、合計$10^6\times 10^6=10^{12}$（1000億）回の確認処理が必要だ。
+
+\paragraph{プロセッサの速度：}
+本書の執筆の時点で、かなり高速なデスクトップコンピュータでも毎秒10億（$10^9$）の操作は実行できない。\footnote{コンピュータの速度はせいぜい数ギガヘルツ（数十億回/秒）であり、各操作にふつう数サイクルが必要だ。}よってこのアプリケーションの完了には少なくとも$10^{12}/10^9=1000$秒、すなわち約16分40秒かかる。コンピューターの時間では16分は非常に長いが、人は気にしないかもしれない。（例えば、プログラマがコーヒーブレイクに向かうならそれで構わないだろう。）
+
+\paragraph{大きなデータセット：}
+Google\index{Google|}を考えてみよう。Googleでは85億ものWebページからの検索を扱う。先ほどの計算では、このデータに対するクエリは少なくとも8.5秒かかる。だがこれが事実ではないことはわかるだろう。Web検索には8.5秒もかからないし、あるページがインデックスに含まれているかよりさらに複雑なクエリを実行する。執筆時点でGoogleは1秒間に約$4,500$クエリを受けつける。つまり少なくとも$4,500 \times 8.5 = 38,250$ものサーバーが必要なのだ。
+
+\paragraph{解決策：}
+以上の例から、アイテム数$\mathtt{n}$と実行される操作数$m$が共に大きくなると、データ構造の自明な実装はスケールしないことがわかる。今の例で、（機械命令数で数えた）時間はおよそ$#n#\times m$だ。
+
+解決策はもちろん、データ構造内のデータを注意深く格納して、各操作がすべてのデータを見て回る必要がないようにすることだ。最初はムリなように思えるが、データ構造に格納されているデータの数とは関係なく、平均して2つのデータだけを参照すればすむデータ構造をのちに紹介する。 1秒あたり10億命令を実行できるとして、10億個のデータ（兆、京、垓であっても）を含むデータ構造を検索するのにわずか$0.000000002$秒しかかからないのだ。
+
+データ構造内のデータを整列することで、データ数に対して参照されるデータ数が非常にゆっくり増加するデータ構造も後で紹介する。例えば10億個のアイテムを整列しておけば、最大60個のアイテムを参照することで各操作を実行できる。毎秒10億命令実行できるコンピュータでは、これらの操作にそれぞれ$0.00000006$秒かかる。
+
+% XXX: ここまで完了
+この章の残りの部分では、この本の残りの部分で使用される主な概念の一部を簡単に解説する。\secref{interface}は本書で説明する全データ構造で実装されるインタフェースを説明するので読む必要がある。残りの節では、以下のものを解説する。
 \begin{itemize}
-  \item  Open a file: File system \index{file system} data structures are used to locate the parts of that file on disk so they can be retrieved.  This isn't easy; disks contain hundreds of millions of blocks.  The contents of your file could be stored on any one of them.
-  \item Look up a contact on your phone:  A data structure is used to look up a phone number in your contact list \index{contact list} based on partial information even before you finish dialing/typing.  This isn't easy; your phone may contain information about a lot of people---everyone you have ever contacted via phone or email---and your phone doesn't have a very fast processor or a lot of memory.
-  \item Log in to your favourite social network: \index{social network} The network servers use your login information to look up your account information.  This isn't easy; the most popular social networks have hundreds of millions of active users.
-  \item Do a web search: \index{web search} The search engine uses data structures to find the web pages containing your search terms.  This isn't easy; there are over 8.5 billion web pages on the Internet and each page contains a lot of potential search terms.
-  \item Phone emergency services (9-1-1): \index{emergency services}\index{9-1-1} The emergency services network looks up your phone number in a data structure that maps phone numbers to addresses so that police cars, ambulances, or fire trucks can be sent there without delay. This is important;  the person making the call may not be able to provide the exact address they are calling from and a delay can mean the difference between life or death.
+\item 指数・対数・階乗関数や漸近(ビッグオー)記法、確率、ランダム化などの数学の復習
+\item 計算モデル
+\item 正しさと実行時間、メモリ使用量
+\item 残りの章の概要
+\item サンプルコードと組版の規則
 \end{itemize}
-
-\section{The Need for Efficiency}
-
-In the next section, we look at the operations supported by the most commonly used data structures.  Anyone with a bit of programming experience will see that these operations are not hard to implement correctly.  We can store the data in an array or a linked list and each operation can be implemented by iterating over all the elements of the array or list and possibly adding or removing an element.
-
-This kind of implementation is easy, but not very efficient.  Does this really matter?  Computers are becoming faster and faster. Maybe the obvious implementation is good enough. Let's do some rough calculations to find out.
-
-\paragraph{Number of operations:}  Imagine an application with a moderately-sized data set, say of one million ($10^6$), items.  It is reasonable, in most applications, to assume that the application will want to look up each item at least once.  This means we can expect to do at least one million ($10^6$) searches in this data.  If each of these $10^6$ searches inspects  each of the $10^6$ items, this gives a total of $10^6\times 10^6=10^{12}$ (one thousand billion) inspections.
-
-\paragraph{Processor speeds:} At the time of writing, even a very fast desktop computer can not do more than one billion ($10^9$) operations per second.\footnote{Computer speeds are at most a few gigahertz (billions of cycles per second), and each operation typically takes a few cycles.} This means that this application will take at least $10^{12}/10^9 = 1000$ seconds, or roughly 16 minutes and 40 seconds.  Sixteen minutes is an eon in computer time, but a person might be willing to put up with it (if he or she were headed out for a coffee break).
-
-%Consider, now an application like the human genome project.  Completed in
-%2003 (when computers were quite a bit slower than they are now), this
-%was considered an extraordinary scientific accomplishment.  The human
-%genome consists of 3 billion ($3\times 10^6$) base pairs. By our
-%rough calculations, doing even a single search on this data would take
-%3 seconds.  Doing a million searches would take $3$ million seconds,
-%or roughly 34 days.  This is starting to get beyond reasonable.
-
-\paragraph{Bigger data sets:} Now consider a company like Google, \index{Google} that indexes over 8.5 billion web pages.  By our calculations, doing any kind of query over this data would take at least 8.5 seconds.  We already know that this isn't the case; web searches complete in much less than 8.5 seconds, and they do much more complicated queries than just asking if a particular page is in their list of indexed pages.  At the time of writing, Google receives approximately $4,500$ queries per second, meaning that they would require at least $4,500\times 8.5=38,250$ very fast servers just to keep up.
-
-\paragraph{The solution:} These examples tell us that the obvious implementations of data structures do not scale well when the number of items, #n#, in the data structure and the number of operations, $m$, performed on the data structure are both large.  In these cases, the time (measured in, say, machine instructions) is roughly $#n#\times m$.
-
-The solution, of course, is to carefully organize data within the data structure so that not every operation requires every data item to be inspected.  Although it sounds impossible at first, we will see data structures where a search requires looking at only two items on average, independent of the number of items stored in the data structure.  In our billion instruction per second computer it takes only $0.000000002$ seconds to search in a data structure containing a billion items (or a trillion, or a quadrillion, or even a quintillion items).
-
-We will also see implementations of data structures that keep the items in sorted order, where the number of items inspected during an operation grows very slowly as a function of the number of items in the data structure.  For example, we can maintain a sorted set of one billion items while inspecting at most 60 items during any operation.  In our billion instruction per second computer, these operations take $0.00000006$ seconds each.
-
-The remainder of this chapter briefly reviews some of the main concepts used throughout the rest of the book.   \secref{interfaces} describes the interfaces implemented by all of the data structures described in this book and should be considered required reading.  The remaining sections discuss:
-\begin{itemize}
-  \item some mathematical review including exponentials, logarithms, factorials, asymptotic (big-Oh) notation, probability, and randomization;
-  \item the model of computation; 
-  \item correctness, running time, and space;
-  \item an overview of the rest of the chapters; and
-  \item the sample code and typesetting conventions.
-\end{itemize}
-A reader with or without a background in these areas can easily skip them now and come back to them later if necessary.
-
+これらの背景知識があってもなくても、いったん気軽に飛ばし必要に応じて戻り読みしてもよい。
 
 \section{Interfaces}
 \seclabel{interfaces}
