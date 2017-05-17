@@ -98,72 +98,99 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 
 #Deque#（双方向キュー）はFIFOキューとLIFOキュー（スタック）の一般化だ。 #Deque#は前と後ろのある要素の列を表す。列の前または後ろに要素を追加できる。 #Deque#操作の名前はわかりやすく、#addFirst(x)#、#removeFirst()#、#addLast(x)#、 #removeLast()#だ。スタックは#addFirst()#と#removeFirst()#だけを使って実装できる。一方FIFOキューには#addLast(x)#と#removeFirst()#を使えばよい。
 
-% XXX: ここまで完了
 \subsection{#List#インターフェース：線形シーケンス}
 
-この本は、FIFO #Queue#、#Stack#、または#Deque#インターフェースについてはほとんど話をしません。これは、これらのインターフェースが#List#インターフェースに組み込まれているためです。図1.4に示すA #List#は、シーケンスを表します。$ \ensuremath {\mathtt{x}} _ 0、\ldots、\ensuremath {\mathtt{x}} _ {\suremath {\mathtt{ n}} - 1} $の値を返します。 $ \mathtt{List} $インターフェイスには以下の操作が含まれています：
+この本では、FIFO #Queue#や#Stack#、#Deque#のインターフェースについての話はほとんどしない。なぜなら、これらは#List#インターフェースにまとめられるためだ。図1.4に示す#List#\index{List@#List#}は、値の列$#x#_0,\ldots,#x#_{#n#-1}$を表現する。
+#List#インターフェイスは以下の操作を含む。
 
-$ \mathtt{size（）} $：リストの長さを返す$ \mathtt{n} $
-$ \mathtt{get（i）} $：値を返す$ \ensuremath {\mathtt{x}} _ {\suremath {\mathtt{i}}} $
-$ \mathtt{$ mathtt{i}}} $} $の値を$ \mathtt{x} $と等しく設定する$ \mathtt{set（i、x）} $：
-$ \mathtt{add（i、x）} $：$ \mathtt{i} $の位置に$ \mathtt{x} i}}}、\ldots、\suremath {\mathtt{x}} _ {\mathtt{n}} - 1} $;
-\{\suremath {\mathtt{n}} - 1のすべての$ j \に対して、
-\ensuremath {\mathtt{x}} $ {$ mathtt{x}} $と置き換えて、$ \mathtt{remove {i}} $を削除します。 \suremath {\mathtt{1}}、\ldots、\ensuremath {
-	\{\suremath {\mathtt{i}}内のすべての$ j \に対して、$ \ensuremath {\mathtt{x}} _ {j} = \、\ldots、\suremath {\mathtt{n}} - 2 \} $と減算$ \mathtt{n} $
+\begin{enumerate}
+  \item #size()#: リストの長さ#n#を返す。
+  \item #get(i)#: $#x#_{#i#}$の値を返す。
+  \item #set(i,x)#: $#x#_{#i#}$の値を#x#にする。
+  \item #add(i,x)#: #x#を#i#番目として追加し、$#x#_{#i#},\ldots,#x#_{#n#-1}$をずらす。\\
+    すなわち、$j\in\{#n#-1,\ldots,#i#\}$について$#x#_{j+1}=#x#_j$とし、#n#をひとつ増やし、$#x#_i=#x#$とする。
+  \item #remove(i)#: $#x#_{#i#}$を削除し、$#x#_{#i+1#},\ldots,#x#_{#n#-1}$をずらす。\\ 
+    すなわち、$j\in\{#i#,\ldots,#n#-2\}$について$#x#_{j}=#x#_{j+1}$とし、#n#をひとつ減らす。
+\end{enumerate}
 
-		これらの操作は、$ \mathtt{Deque} $インターフェースを実装するのには簡単に十分です：
-		$ \displaystyle \ensuremath {\mathtt{add（$ x）}}} $ $ \displaystyle \
-			$ \displaystyle \ensuremath {\mathtt{remove（0）}} $ \displaystyle \ensuremath {\mathtt{remove（0）}} $
-			$ \displaystyle \ensuremath {\mathtt{add（x）}} $ $ \displaystyle \rightmath {\mathtt{add（size、）、x）}} $
-			$ \displaystyle \ensuremath {\mathtt{remove（size - ） - 1}}} $ $ \displaystyle \
+これらの操作を使って、#Deque#インターフェースは簡単に実装できる。
 
-			図1.4：A $ \mathtt{List} $は$ 0,1,2、\ldots、\ensuremath {\mathtt{n}} - 1 $で索引付けされたシーケンスを表します。この$ \mathtt{List} $で、$ \mathtt{get（2）} $への呼び出しは値$ c $を返します。
-			\includegraphics [width = \textwidth] {figs / list}
+\begin{eqnarray*}
+  #addFirst(x)# &\Rightarrow& #add(0,x)# \\
+  #removeFirst()# &\Rightarrow& #remove(0)#  \\
+  #addLast(x)# &\Rightarrow& #add(size(),x)# \\
+  #removeLast()# &\Rightarrow& #remove(size()-1)#
+\end{eqnarray*}
 
-			次の章では通常、$ \mathtt{Stack} $、$ \mathtt{Deque} $、FIFO $ \mathtt{Queue} $インターフェースについては議論しませんが、$ \mathtt{Stack} $と$ \mathtt{ Deque} $は、$ \mathtt{List} $インターフェースを実装するデータ構造体の名前で使用されることがあります。これが起きると、これらのデータ構造を使って$ \mathtt{Stack} $や$ \mathtt{Deque} $インターフェースを非常に効率的に実装することができます。たとえば、$ \mathtt{ArrayDeque} $クラスは、すべての$ \mathtt{Deque} $操作を1回の操作で一定時間に実装する$ \mathtt{List} $インターフェースの実装です。
-
-			1.2.3 $ \mathtt{USet} $インターフェース：順序付けられていないセット
-
-			$ \mathtt{USet} $インターフェースは、数学的な集合を模倣する一意の要素の順序付けられていない集合を表します。 A $ \mathtt{USet} $には、$ \mathtt{n} $個の要素が含まれています。要素が複数回出現することはありません。要素は特定の順序ではありません。 A $ \mathtt{USet} $は次の操作をサポートしています：
-
-			$ \mathtt{size（）} $：集合内の要素の数$ $ mathtt{n} $を返す
-			$ \mathtt{add（x）} $：要素$ \mathtt{x} $をまだセットしていない場合はその集合に追加します。
-			$ \mathtt{x} $が$ \mathtt{y} $と等しくなるような集合の中に要素$ \mathtt{y} $がないならば、集合に$ \mathtt{x} $を加える。 $ \mathtt{x} $がセットに追加された場合は$ \mathtt{true} $を返し、それ以外の場合は$ \mathtt{false} $を返します。
-			$ \mathtt{remove（x）} $：セットから$ \mathtt{x} $を削除する。
-			$ \mathtt{x} $が$ \mathtt{y} $と等しく、$ \mathtt{y} $を取り除くような集合の要素$ \mathtt{y} $を探します。そのような要素が存在しない場合、$ \mathtt{y} $、または$ \mathtt{null} $を返します。
-			$ \mathtt{find（x）} $：セット内に$ \mathtt{x} $があればそれを見つけます。
-			集合中の$ \mathtt{y} $が$ \mathtt{x} $と等しくなるような要素$ \mathtt{y} $を見つける。そのような要素が存在しない場合、$ \mathtt{y} $、または$ \mathtt{null} $を返します。
-
-			これらの定義は、$ \mathtt{y} $から削除または見つけられる要素である$ \mathtt{x} $を、我々が削除したり見つけたりする可能性のある要素と区別することに少し難解です。これは、$ \mathtt{x} $と$ \mathtt{y} $は実際には等しく扱われる別個のオブジェクトであるかもしれないからです。このような区別は、キーを値にマップする辞書やマップを作成できるので便利です。
-
-			辞書/マップを作成するには、$ \mathtt{Pair} $ sという複合オブジェクトを作成します。それぞれのオブジェクトにはキーと値が含まれています。 2つの$ \mathtt{Pair} $ sは、それらのキーが等しい場合、等しいとみなされます。 $ \mathtt{USET} $にある$ \mathtt{find（x）}を呼び出すと、$ \mathtt{$ mathtt{ $ \ensuremath {\mathtt{$ mathtt{}} $ \ensuremath {\mathtt{$ mathtt{}} $ \y}} =（\suremath {\mathtt{k}}、\suremath {\mathtt{v}}）$。言い換えれば、キー$ \mathtt{k} $のみが与えられた場合、$ \mathtt{v} $という値を復元することができます。
+\begin{figure}
+  \centering{\includegraphics[width=\ScaleIfNeeded]{figs/list}}
+  \caption[A List]{#List#は$0,1,2,\ldots,#n#-1$で添え字づけられた列を表現する。この#List#で#get(2)#を実行すると値$c$が返ってくる。}
+  \figlabel{list}
+\end{figure}
 
 
-				1.2.4 $ \mathtt{SSet} $インターフェース：ソートされたセット
+この後の章では#Stack#、#Deque#、FIFO #Queue#のインターフェースについての話はほぼ出てこない。しかし、#Stack#と#Deque#は、#List#インターフェースを実装するデータ構造として出てくることがある。その場合、#Stack#や#Deque#のインターフェースは非常に効率良く実装できる。たとえば#ArrayDeque#クラスは#List#インターフェースの実装だ。これはすべての#Deque#操作をひとつだけの定数時間操作で実装できる。
 
-					$ \mathtt{SSet} $インターフェースはソートされた要素の集合を表します。 $ \mathtt{SS} $は、何らかの総順序から要素を格納するので、任意の2つの要素$ \mathtt{x} $と$ \mathtt{y} $を比較することができます。コード例では、これは$ \mathtt{compare（x、y）} $というメソッドで行われます。
+\subsection{#USet#インターフェース：順序付けられていない要素の集まり}
 
-					$ \{\mathtt{compare（x、y）}} \begin {cases} {} <0＆\text {... ... {} = 0＆ mathtt{x}} = \suremath {\mathtt{y}} $} \end {cases} $
+#USet#\index{USet@#USet#}インターフェースは重複がなく、順序付けられていない要素の集まりを表現する。これは数学における\emph{集合}を模したものだ。#USet#には、#n#個の\emph{互いに相異なる}要素が含まれる。つまり、同じ要素が複数入っていることはない。また、要素の並び順は決まっていない。#USet#は以下の操作をサポートする。
 
-					$ \mathtt{SSET} $は、以下のような全く同じセマンティクスを持つ$ \mathtt{size（）} $、$ \mathtt{add（x）} $、$ \mathtt{remove（x）} $メソッドをサポートします。 $ \mathtt{USet} $インターフェイス。 $ \mathtt{USet} $と$ \mathtt{SSet} $の違いは$ \mathtt{find（x）} $メソッドの違いです：
+\begin{enumerate}
+\item #size()#：集合の要素数#n#を返す。
+\item #add(x)#：要素#x#が集合に入っていなければ集合に追加する。\\
+$#x# = #y#$を満たす集合の要素#y#が存在しないなら、集合に#x#を加える。#x#が集合に追加されたら#true#を返し、そうでなければ#false#を返す。
+\item #remove(x)#：集合から#x#を削除する。\\
+$#x# = #y#$を満たす集合の要素#y#を探し、集合から取り除く。そのような要素が見つかれば#y#を、見つからなければ#null#を返す。
+\item #find（x）#：集合に#x#が入っていればそれを見つける。\\
+$#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素が見つかれば#y#を、見つからなければ#null#を返す。
+\end{enumerate}
 
-					$ \mathtt{find（x）} $：ソートされた集合の中で$ \mathtt{x} $を見つける。
-					$ \ensuremath {\mathtt{y}} \ge \ensuremath {\mathtt{x}} $のように、最小の要素$ \mathtt{y} $を検索します。そのような要素が存在しない場合、$ \mathtt{y} $または$ \mathtt{null} $を返します。
+今述べた定義で、探したい#x#と、見つかるかもしれない集合の要素#y#の区別を小難しく感じるかもしれない。これを区別する理由は、#x#と#y#は等しいと判定される別のオブジェクトかもしれないためだ。こうすると、キーを値に対応づける\emph{辞書}(\emph{マップ})を作るのに便利なのだ。
+\index{dictionary}%
+\index{map}%
 
-					このバージョンの$ \mathtt{find（x）} $操作は、後継検索と呼ばれることがあります。 $ \mathtt{x} $に等しい要素がない場合でも意味のある結果を返すので、基本的な方法は$ \mathtt{USet.find（x）} $と異なります。
+辞書(マップ)を作るために、まず#Pair#\index{pair}という複合オブジェクトを作る。#Pair#には\emph{キー}と\emph{値}からなる。 2つの#Pair#は、キーが等しいければ等しいとみなされる。#Pair#である$(#k#,#v#)$を#USet#に入れてから、$#x#=(#k#,#null#)$として#find(x)#を呼び出すと、$#y#=(#k#,#v#)$が返ってくる。すなわち、キー#k#だけから値#v#を復元できるのだ。
 
-					$ \mathtt{USet} $と$ \mathtt{SSet} $ $ \mathtt{find（x）} $演算の区別は非常に重要であり、しばしば見逃されます。 $ \mathtt{SSet} $によって提供される特別な機能には通常、実行時間が長く、実装の複雑性が高いという価格が含まれています。例えば、この本で議論されている$ \mathtt{SSet} $実装の大部分はすべて、実行時に$ \mathtt{find（x）} $演算を持ち、これは対数の対数である。一方、第5章の$ \mathtt{ChainedHashTable} $としての$ \mathtt{USet} $の実装には、一定の予想時間内に実行される$ \mathtt{find（x）} $演算があります。これらの構造のどれを使用するかを選択するときは、$ \mathtt{SSet} $によって提供される特別な機能が本当に必要でない限り、常に$ \mathtt{USet} $を使用する必要があります。
+\subsection{#SSet#インターフェース：ソートされた要素の集まり}
+\seclabel{sset}
 
-					\section{Mathematical Background}
+\index{SSet@#SSet#}%
+#SSet#インターフェースは順序づけされた要素の集まりを表現する。#SSet#は全順序な要素を格納するので、任意の2つの要素#x#と#y#は比較可能である。サンプルコードでは、以下のように定義される#compare(x, y)#メソッドで比較を行うものとする。
 
-					In this section, we review some mathematical notations and tools used throughout this book, including logarithms, big-Oh notation, and probability theory.  This review will be brief and is not intended as an introduction. Readers who feel they are missing this background are encouraged to read, and do exercises from, the appropriate sections of the very good (and free) textbook on mathematics for computer science \cite{llm11}.
+\[
+    #compare(x,y)#
+      \begin{cases}
+        {}<0 & \text{if $#x#<#y#$} \\
+        {}>0 & \text{if $#x#>#y#$} \\
+        {}=0 & \text{if $#x#=#y#$}
+      \end{cases}
+\]
+\index{compare@#compare(x,y)#}%
 
-					\subsection{Exponentials and Logarithms}
+#SSET#は#USet#と全く同じセマンティクスを持つ操作#size()#、#add(x)#、#remove(x)#をサポートする。#USet#と#SSet#の違いは#find(x)#だ。
 
-					\index{exponential}
-					The expression $b^x$ denotes the number $b$ raised to the power of $x$.  If $x$ is a positive integer, then this is just the value of $b$ multiplied by itself $x-1$ times:
-					\[
-					b^x = \underbrace{b\times b\times \cdots \times b}_{x} \enspace .
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item #find(x)#: 順序づけられた集合から#x#の位置を特定する。\\
+   $#y# \ge #x#$を満たす最小の要素#y#を探す。
+   このような#y#が存在すれば返し、そうでないなら#null#を返す。
+\end{enumerate}
+
+この#find(x)#は、\emph{後継探索(XXX:訳語)}\index{successor search}と呼ばれることがある。#x#に等しい要素がなくても意味のある結果を返す点で#USet.find(x)#とは異なる。
+
+#USet#、#SSet#における#find(x)#の区別は重要なのだが気づいていない人もいる。 #SSet#は追加の仕事をしてくれるぶん、実装が複雑で実行時間が長くなりがちだ。例えば、この本で述べる#SSet#の#find(x)#の実装では、要素数の対数だけの時間がかかる。一方、\chapref{hashing}の#ChainedHashTable#による#USet#の実装では、#find(x)#の実行時間の期待値は定数である。#SSet#の追加機能が本当に必要でないなら、#SSet#ではなく常に#USet#を使うべきだ。
+
+% XXX: ここまで完了
+\section{Mathematical Background}
+
+In this section, we review some mathematical notations and tools used throughout this book, including logarithms, big-Oh notation, and probability theory.  This review will be brief and is not intended as an introduction. Readers who feel they are missing this background are encouraged to read, and do exercises from, the appropriate sections of the very good (and free) textbook on mathematics for computer science \cite{llm11}.
+
+\subsection{Exponentials and Logarithms}
+
+\index{exponential}
+The expression $b^x$ denotes the number $b$ raised to the power of $x$.  If $x$ is a positive integer, then this is just the value of $b$ multiplied by itself $x-1$ times:
+\[
+b^x = \underbrace{b\times b\times \cdots \times b}_{x} \enspace .
 					\]
 					When $x$ is a negative integer, $b^{-x}=1/b^{x}$.  When $x=0$, $b^x=1$.  When $b$ is not an integer, we can still define exponentiation in terms of the exponential function $e^x$ (see below), which is itself defined in terms of the exponential series, but this is best left to a calculus text.
 
