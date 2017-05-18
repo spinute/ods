@@ -180,102 +180,117 @@ $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素
 
 #USet#、#SSet#における#find(x)#の区別は重要なのだが気づいていない人もいる。 #SSet#は追加の仕事をしてくれるぶん、実装が複雑で実行時間が長くなりがちだ。例えば、この本で述べる#SSet#の#find(x)#の実装では、要素数の対数だけの時間がかかる。一方、\chapref{hashing}の#ChainedHashTable#による#USet#の実装では、#find(x)#の実行時間の期待値は定数である。#SSet#の追加機能が本当に必要でないなら、#SSet#ではなく常に#USet#を使うべきだ。
 
-% XXX: ここまで完了
-\section{Mathematical Background}
+\section{数学的背景}
+この節では本書で使用する数学記法や基礎知識を復習する。例えば、対数やビッグオー記法、確率論などだ。内容はあっさりしたもので、丁寧な手解きはしない。背景知識が足りないと感じる読者のために、コンピュータサイエンスのための数学の優れた無料の教科書がある。必要に応じて適切な箇所を読み、練習問題を解いてみるとよいだろう。
+\cite{llm11}.
 
-In this section, we review some mathematical notations and tools used throughout this book, including logarithms, big-Oh notation, and probability theory.  This review will be brief and is not intended as an introduction. Readers who feel they are missing this background are encouraged to read, and do exercises from, the appropriate sections of the very good (and free) textbook on mathematics for computer science \cite{llm11}.
-
-\subsection{Exponentials and Logarithms}
+\subsection{指数と対数}
 
 \index{exponential}
-The expression $b^x$ denotes the number $b$ raised to the power of $x$.  If $x$ is a positive integer, then this is just the value of $b$ multiplied by itself $x-1$ times:
+$b^x$と書いて$b$の$x$乗を表す。$x$が正の整数なら、$b$にそれ自身を$x-1$回掛けた値になる。
+
 \[
-b^x = \underbrace{b\times b\times \cdots \times b}_{x} \enspace .
-					\]
-					When $x$ is a negative integer, $b^{-x}=1/b^{x}$.  When $x=0$, $b^x=1$.  When $b$ is not an integer, we can still define exponentiation in terms of the exponential function $e^x$ (see below), which is itself defined in terms of the exponential series, but this is best left to a calculus text.
-
-					\index{logarithm}
-					In this book, the expression $\log_b k$ denotes the \emph{base-$b$ logarithm} of $k$.  That is, the unique value $x$ that satisfies
-					\[
-					b^{x} = k  \enspace .
+    b^x = \underbrace{b\times b\times \cdots \times b}_{x} \enspace .
 \]
-Most of the logarithms in this book are base 2 (\emph{binary logarithms}).  \index{binary logarithm} \index{logarithm!binary} For these, we omit the base, so that $\log k$ is shorthand for $\log_2 k$.
 
-An informal, but useful, way to think about logarithms is to think of $\log_b k$ as the number of times we have to divide $k$ by $b$ before the result is less than or equal to 1.  For example, when one does binary search, each comparison reduces the number of possible answers by a factor of 2.  This is repeated until there is at most one possible answer.  Therefore, the number of comparison done by binary search when there are initially at most $n+1$ possible answers is at most $\lceil\log_2(n+1)\rceil$.
+$ x $が負の整数なら、$b^x=1/b^{-x}$である。$x=0$なら、$b^x=1$である。
+$b$が整数でないときも、やはり（後述する）指数関数$e^x$の観点から、べき乗を定義できる。指数関数もまた指数級数を使って定義されているが、こういうな話は微積分の教科書に任せることにする。
 
-\index{natural logarithm}
-\index{logarithm!natural}
-Another logarithm that comes up several times in this book is the \emph{natural logarithm}.  Here we use the notation $\ln k$ to denote $\log_e k$, where $e$ --- \emph{Euler's constant} --- is given by \index{Euler's constant} \index{e@$e$ (Euler's constant)}
+\index{logarithm}
+この本では$\log_b k$と書いて\emph{$b$を底とする対数}を表す。これは次の式を満たす$x$として一意に決まる、
+
+\[
+    b^{x} = k  \enspace .
+\]
+
+この本に出てくる対数の底は2であることが多い。底が2の対数を\{二進対数}という。そのため、底になにも書かない$\log k$は$\log_2 k$の省略記法とする。
+\index{binary logarithm}%
+\index{logarithm!binary}%
+
+対数の大雑把なイメージを持つ方法を紹介する。$\log_b k$とは$k$を何回$b$で割ると1より小さくなるかを表す数だと考えればよい。例を挙げよう。二分探索という手法を使うと、一回の比較処理のたびに、答えの候補の個数が半分になる。答えの候補が1つに絞られるまで、この処理を繰り返す。$n+1$個の答えの候補が最初にあるなら、二分検索に必要な比較の回数は$\lceil \log_2(n+1) \rceil$以下だ。
+
+\index{natural logarithm}%
+\index{logarithm!natural}%
+この本で\emph{自然対数}という別の対数も何度か出てくる。$\ln k$と書いて$\log_e k$を表すことにする。ここで、$e$は次のように定義される\emph{オイラーの定数}だ。
+\index{Euler's constant}%
+\index{e@$e$ (Euler's constant)}%
 \[
    e = \lim_{n\rightarrow\infty} \left(1+\frac{1}{n}\right)^n
    \approx  2.71828 \enspace .
 \]
-The natural logarithm comes up frequently because it is the value of a particularly common integral:
+
+自然対数は頻繁に現れる。これは$e$がよく見かける次のような積分値であるためだ。
 \[
     \int_{1}^{k} 1/x\,\mathrm{d}x  = \ln k \enspace .
 \]
-Two of the most common manipulations we do with logarithms are removing them from an exponent:
+
+よく使う対数の操作は2つある。ひとつは指数部からの取り出し操作だ。
 \[
     b^{\log_b k} = k
 \]
-and changing the base of a logarithm:
+
+もう一つは対数の底を取り替え操作だ。
 \[
     \log_b k = \frac{\log_a k}{\log_a b} \enspace .
 \]
-For example, we can use these two manipulations to compare the natural and binary logarithms
+
+これら2つの操作を使えば、例えば自然対数と二進対数を比較できる。
 \[
-   \ln k = \frac{\log k}{\log e} = \frac{\log k}{(\ln e)/(\ln 2)} = 
+   \ln k = \frac{\log k}{\log e} = \frac{\log k}{(\ln e)/(\ln 2)} =
     (\ln 2)(\log k) \approx 0.693147\log k \enspace .
 \]
 
-\subsection{Factorials}
+\subsection{階乗}
 \seclabel{factorials}
 
-\index{factorial}
-In one or two places in this book, the \emph{factorial} function is used.  For a non-negative integer $n$, the notation $n!$ (pronounced ``$n$ factorial'') is defined to mean 
+\index{factorials}
+この本で\emph{階乗関数}を使う箇所がいくつかある。$n$が非負整数のとき、$n!$（ 「$n$の階乗」と読む）は次のように定義される。
 \[
    n! = 1\cdot2\cdot3\cdot\cdots\cdot n \enspace .
 \]
-Factorials appear because $n!$ counts the number of distinct permutations, i.e., orderings, of $n$ distinct elements.  \index{permutation} For the special case $n=0$, $0!$ is defined as 1. 
 
-\index{Stirling's Approximation} The quantity $n!$ can be approximated using \emph{Stirling's Approximation}:
+$n!$は$n$要素の相異なる順列\index{permutation}の個数である。つまり$n$個の相異なる要素の並べ方の数として階乗は現れる。なお、$n=0$のときについて、$0!$は1と定義される。
+
+\index{Stirling's Approximation}%
+$n!$の大きさは、\emph{スターリングの近似}によって近似的に求められる。
 \[
-	n! 
+	n!
    = \sqrt{2\pi n}\left(\frac{n}{e}\right)^{n}e^{\alpha(n)} \enspace ,
 \]
-where
-\[  
+ここで$\alpha(n)$は次の条件を満たす。
+\[
    \frac{1}{12n+1} <  \alpha(n) < \frac{1}{12n}  \enspace .
 \]
-Stirling's Approximation also approximates $\ln(n!)$:
+
+スターリングの近似を使って$\ln(n!)$の近似値も計算できる。
 \[
    \ln(n!) = n\ln n - n + \frac{1}{2}\ln(2\pi n) + \alpha(n)
 \]
-(In fact, Stirling's Approximation is most easily proven by approximating
-$\ln(n!)=\ln 1 + \ln 2  + \cdots + \ln n$ by the integral
-$\int_1^n \ln n\,\mathrm{d}n = n\ln n - n +1$.)
 
-\index{binomial coefficients}
-Related to the factorial function are the \emph{binomial coefficients}.  For a non-negative integer $n$ and an integer $k\in\{0,\ldots,n\}$, the notation $\binom{n}{k}$ denotes:
+（スターリングの近似を証明する簡単な方法として、$\ln(n!)=\ln 1 + \ln 2  + \cdots + \ln n$を$\int_1^n \ln n\,\mathrm{d}n = n\ln n - n +1$で近似するというものがある。)
+
+\index{binomial coefficients}%
+\emph{二項係数}は階乗関数とつながりがある。$n$を非負整数、$k$を$\{0,\ldots,n\}$の要素とするとき、$\binom{n}{k}$は次のように定義される。
+
 \[
    \binom{n}{k} = \frac{n!}{k!(n-k)!} \enspace .
 \]
-The binomial coefficient $\binom{n}{k}$ (pronounced ``$n$ choose $k$'') counts the number of subsets of an $n$ element set that have size $k$, i.e., the number of ways of choosing $k$ distinct integers from the set $\{1,\ldots,n\}$.
+二項係数$\binom{n}{k}$は、大きさ$n$の集合における大きさ$k$の部分集合の個数である。すなわち、集合$\{1,\ldots,n\}$から相異なる$k$個の整数を取り出すときの場合の数である。
 
-\subsection{Asymptotic Notation}
+\subsection{漸近記法}
 
-\index{asymptotic notation} \index{big-Oh notation} \index{O@$O$ notation} When analyzing data structures in this book, we want to talk about the running times of various operations.  The exact running times will, of course, vary from computer to computer and even from run to run on an individual computer.  When we talk about the running time of an operation we are referring to the number of computer instructions performed during the operation.  Even for simple code, this quantity can be difficult to compute exactly.  Therefore, instead of analyzing running times exactly, we will use the so-called \emph{big-Oh notation}: For a function $f(n)$, $O(f(n))$ denotes a set of functions,
+\index{asymptotic notation} \index{big-Oh notation} \index{O@$O$ notation}
+データ構造を分析する際には操作の実行時間についての議論が有用だ。正確な実行時間はコンピュータごとに異なる。同じコンピュータで実行する場合ですらバラつくだろう。実行時間の話をしているときは、実際は操作に必要なコンピュータ命令数に注目する。単純なコードであっても、この量を正確に計算するのは難しいことがある。そのため実行時間を正確に解析するのではなく、いわゆる\emph{ビッグオー記法}を使う。$f(n)$を関数とするとき、$O(f(n))$は次のような関数の集合を表す。
 \[
    O(f(n)) = \left\{
      \begin{array}{l}
        g(n):\mbox{there exists $c>0$, and $n_0$ such that} \\
-             \quad\mbox{$g(n) \le c\cdot f(n)$ for all $n\ge n_0$}   
+             \quad\mbox{$g(n) \le c\cdot f(n)$ for all $n\ge n_0$}
      \end{array} \right\} \enspace .
 \]
-Thinking graphically, this set consists of the functions $g(n)$ where $c\cdot f(n)$ starts to dominate $g(n)$ when $n$ is sufficiently large.
+図形的に考える。$n$が十分に大きくなると$c\cdot f(n)$に上から抑えられる関数$g(n)$を集めたものがこの集合だ。
 
-We generally use asymptotic notation to simplify functions.  For example, in place of $5n\log n + 8n - 200$ we can write $O(n\log n)$.
-This is proven as follows:
+漸近表記を使えば関数を単純化できる。たとえば、$5n\log n + 8n - 200$の代わりに$O(n \log n)$と書ける。これは次のように証明できる。
 \begin{align*} 
        5n\log n + 8n - 200
         & \le 5n\log n + 8n \\
@@ -283,62 +298,80 @@ This is proven as follows:
             \\
         & \le 13n\log n  \enspace .
 \end{align*}
+$ c = 13 $および$ n_0 = 2 $とすれば、関数$ f(n)= 5n \log n + 8n-200 $が集合$ O(n \log n)$に含まれることがわかる。
+
+漸近表記の便利な性質をいくつか挙げる。
+
+まずは、任意の定数$c_1 < c_2$について以下が成り立つ。
+\[ O(n^{c_1}) \subset O(n^{c_2}) \enspace\]
+
+つづいて、任意の定数$ a、b、c> 0 $について以下が成り立つ。
+\[ O(a) \subset O(\log n) \subset O(n^{b}) \subset O({c}^n) \enspace\]
+
+これらの包含関係はそれぞれに正の値を掛けても保たれる。
+たとえば$n$を掛けると次のようになります。
+
+\[ O(n) \subset O(n\log n) \subset O(n^{1+b}) \subset O(n{c}^n) \enspace \]
+
+これは有名な記号の濫用なのだが、$f_1(n) = O(f(n))$ と書いて$f_1(n) \in O(f(n))$であることを表す。また、「この操作の実行時間は$O(f(n))$に\emph{含まれる}」ことを単に「この操作の実行時間は$O(f(n))$だ」と言う。これらの短い言い方は語感を整え、漸近記法を連続する等式の中で使いやすくするのに役立つ。
+
+この書き方の、奇妙な例を挙げる。
+\[
+  T(n) = 2\log n + O(1)  \enspace
+\]
+
+これは正確に書くとこうなる。
+\[
+  T(n) \le 2\log n + [\mbox{some member of $O(1)$]}  \enspace
+\]
+
+$O(1)$には別の問題もある。この記法には変数が入ってないので、どの変数が大きくなるのかわからないのだ。文脈から読み取る必要がある。上の例では、方程式の中に変数は$n$しかないので、$T(n)= 2 \log n + O(f(n))$の$f(n) = 1$であるものと読み取ることになる。
+
+ビッグオー記法は新しいものでも、コンピュータサイエンス独自のものでもない。1894年には数学者Paul Bachmannが使っていた。その後しばらくしてコンピュータサイエンスにおいてアルゴリズムの実行時間を論ずるのに非常に便利なことが判明したのだ。
+次のコードを考えてみましょう。
+
+\javaimport{junk/Simple.snippet()}
+\cppimport{ods/Simple.snippet()}
+
+このメソッドを1回実行すると以下の処理が行われる。
+\begin{itemize}
+      \item 代入$1$回 (#int\, i\, =\, 0#)
+      \item 比較$#n#+1$回 (#i < n#)
+      \item インクリメント #n# 回(#i++#)
+      \item 配列のオフセット計算 #n# 回 (#a[i]#)
+      \item 関節代入#n#回 (#a[i] = i#)
+\end{itemize}
+
+よって実行時間は以下のようになる。
+\[
+    T(#n#)=a + b(#n#+1) + c#n# + d#n# + e#n# \enspace
+\]
+
+% XXX: ここまで完了
+$ a $、$ b $、$ c $、$ d $、$ e $は、コードを実行しているマシンに依存し、代入、比較、インクリメント演算、配列オフセット計算、および間接演算を実行する時間を表す定数ですそれぞれ割り当てられます。しかし、この式が2行のコードの実行時間を表す場合、この種の解析は複雑なコードやアルゴリズムを扱いにくいことは明らかです。 big-Oh表記を使用すると、実行時間を
+
+$ \ displaystyle T（\ suremath {\ mathtt {n}}）= O（\ suremath {\ mathtt {n}}）\ enspace。 $
+
+これはよりコンパクトであるだけでなく、ほぼ同じくらい多くの情報を提供します。上記の例で実行時間が定数$ a $、$ b $、$ c $、$ d $、$ e $に依存しているということは、一般に、2つの実行時間を比較することはできないこれらの定数の値を知らなくても、どちらが速いかを知ることができます。これらの定数を決定するために努力しても（例えば、タイミングテストを通して）、私たちの結論はテストを実行するマシンに対してのみ有効です。
+
+Big-Oh表記法は、より複雑な関数を分析することを可能にする、より高いレベルで推論することを可能にします。 2つのアルゴリズムの実行時間が同じであれば、どちらが速いか分かりませんし、明確な勝者がないかもしれません。あるマシンではより速く、別のマシンでは速くなるかもしれません。しかし、2つのアルゴリズムが大きく異なる実行時間を持っている場合、実行時間の短い方が$ \ mathtt {n} $の十分な大きさの方が高速であることが確信できます。
 This demonstrates that the function $f(n)=5n\log n + 8n - 200$ is in the set $O(n\log n)$ using the constants $c=13$ and $n_0 = 2$.
 
-A number of useful shortcuts can be applied when using asymptotic notation.  First:
-\[ O(n^{c_1}) \subset O(n^{c_2}) \enspace ,\]
-for any $c_1 < c_2$.  Second: For any constants $a,b,c > 0$,
-\[ O(a) \subset O(\log n) \subset O(n^{b}) \subset O({c}^n) \enspace . \]
-These inclusion relations can be multiplied by any positive value, and they still hold. For example, multiplying by $n$ yields:
-\[ O(n) \subset O(n\log n) \subset O(n^{1+b}) \subset O(n{c}^n) \enspace . \]
-
-Continuing in a long and distinguished tradition, we will abuse this notation by writing things like $f_1(n) = O(f(n))$ when what we really mean is $f_1(n) \in O(f(n))$.  We will also make statements like ``the running time of this operation is $O(f(n))$'' when this statement should be ``the running time of this operation is \emph{a member of} $O(f(n))$.'' These shortcuts are mainly to avoid awkward language and to make it easier to use asymptotic notation within strings of equations.
-
-A particularly strange example of this occurs when we write statements like
-\[
-  T(n) = 2\log n + O(1)  \enspace .
-\]
-Again, this would be more correctly written as
-\[
-  T(n) \le 2\log n + [\mbox{some member of $O(1)$]}  \enspace .
-\]
-
-The expression $O(1)$ also brings up another issue. Since there is no variable in this expression, it may not be clear which variable is getting arbitrarily large.  Without context, there is no way to tell.  In the example above, since the only variable in the rest of the equation is $n$, we can assume that this should be read as $T(n) = 2\log n + O(f(n))$, where $f(n) = 1$.
-
-Big-Oh notation is not new or unique to computer science.  It was used by the number theorist Paul Bachmann as early as 1894, and is immensely useful for describing the running times of computer algorithms.  Consider the following piece of code: \javaimport{junk/Simple.snippet()} \cppimport{ods/Simple.snippet()} One execution of this method involves
-\begin{itemize}
-      \item $1$ assignment (#int\, i\, =\, 0#),
-      \item $#n#+1$ comparisons (#i < n#),
-      \item #n# increments (#i++#),
-      \item #n# array offset calculations (#a[i]#), and
-      \item #n# indirect assignments (#a[i] = i#).
-\end{itemize}
-So we could write this running time as
-\[
-    T(#n#)=a + b(#n#+1) + c#n# + d#n# + e#n# \enspace , 
-\]
-where $a$, $b$, $c$, $d$, and $e$ are constants that depend on the machine running the code and represent the time to perform assignments, comparisons, increment operations, array offset calculations, and indirect assignments, respectively.  However, if this expression represents the running time of two lines of code, then clearly this kind of analysis will not be tractable to complicated code or algorithms.  Using big-Oh notation, the running time can be simplified to
-\[
-    T(#n#)= O(#n#) \enspace .
-\]
-Not only is this more compact, but it also gives nearly as much information.  The fact that the running time depends on the constants $a$, $b$, $c$, $d$, and $e$ in the above example means that, in general, it will not be possible to compare two running times to know which is faster without knowing the values of these constants.  Even if we make the effort to determine these constants (say, through timing tests), then our conclusion will only be valid for the machine we run our tests on.
-
-Big-Oh notation allows us to reason at a much higher level, making it possible to analyze more complicated functions.  If two algorithms have the same big-Oh running time, then we won't know which is faster, and there may not be a clear winner.  One may be faster on one machine, and the other may be faster on a different machine.  However, if the two algorithms have demonstrably different big-Oh running times, then we can be certain that the one with the smaller running time will be faster \emph{for large enough values of #n#}.
-
-An example of how big-Oh notation allows us to compare two different functions is shown in \figref{intro-asymptotics}, which compares the rate of growth of $f_1(#n#)=15#n#$ versus $f_2(n)=2#n#\log#n#$.  It might be that $f_1(n)$  is the running time of a complicated linear time algorithm while $f_2(n)$ is the running time of a considerably simpler algorithm based on the divide-and-conquer paradigm.  This illustrates that, although $f_1(#n#)$ is greater than $f_2(n)$ for small values of #n#, the opposite is true for large values of #n#.  Eventually $f_1(#n#)$ wins out, by an increasingly wide margin.  Analysis using big-Oh notation told us that this would happen, since $O(#n#)\subset O(#n#\log #n#)$.
+ビッグ・オ表記がどのように2つの異なる関数を比較することができるかの例を図1.5に示します。図1.5は、$ f_1（\ suremath {\ mathtt {n}}）= 15 \ ensuremath {\ mathtt {n }} $対$ f_2（n）= 2 \ suremath {\ mathtt {n}} \ log \ ensuremath {\ mathtt {n}} $。 $ f_1（n）$は複雑な線形時間アルゴリズムの実行時間であり、$ f_2（n）$は分裂克服のパラダイムに基づくかなり簡単なアルゴリズムの実行時間です。 これは、$ \ mathtt {n} $の小さな値に対して、$ f_1（\ ensuremath {\ mathtt {n}}）$は$ f_2（n）$よりも大きいが、$ \ mathtt { mathtt {n} $。 最終的に$ f_1（\ suremath {\ mathtt {n}}）$がますます広い範囲で勝ちます。 大Oの表記法を使った分析では、$ O（\ suremath {\ mathtt {n}}）\ subset O（\ suremath {\ mathtt {n}} \ log \ }）$。
 
 \begin{figure}
-  \begin{center}
-    \newlength{\tmpa}\setlength{\tmpa}{.98\linewidth}
-    \addtolength{\tmpa}{-4mm}
-    \resizebox{\tmpa}{!}{\input{images/bigoh-1.tex}}\\[4ex]
-    \resizebox{.98\linewidth}{!}{\input{images/bigoh-2.tex}}
-  \end{center}
-  \caption{Plots of $15#n#$ versus $2#n#\log#n#$.}
-  \figlabel{intro-asymptotics}
+\begin{center}
+\newlength{\tmpa}\setlength{\tmpa}{.98\linewidth}
+\addtolength{\tmpa}{-4mm}
+\resizebox{\tmpa}{!}{\input{images/bigoh-1.tex}}\\[4ex]
+\resizebox{.98\linewidth}{!}{\input{images/bigoh-2.tex}}
+\end{center}
+\caption{Plots of $15#n#$ versus $2#n#\log#n#$.}
+\figlabel{intro-asymptotics}
 \end{figure}
 
-In a few cases, we will use asymptotic notation on functions with more than one variable. There seems to be no standard for this, but for our purposes, the following definition is sufficient:
+いくつかのケースでは、複数の変数を持つ関数に対して漸近表記を使用します。 これのための標準はないようですが、私たちの目的のために、次の定義で十分です：
+
 \[
    O(f(n_1,\ldots,n_k)) = 
    \left\{\begin{array}{@{}l@{}}
@@ -347,62 +380,54 @@ In a few cases, we will use asymptotic notation on functions with more than one 
              \qquad \mbox{for all $n_1,\ldots,n_k$ such that $g(n_1,\ldots,n_k)\ge z$}   
    \end{array}\right\} \enspace .
 \]
-This definition captures the situation we really care about:  when the arguments $n_1,\ldots,n_k$ make $g$ take on large values.  This definition also agrees with the univariate definition of $O(f(n))$ when $f(n)$ is an increasing function of $n$.  The reader should be warned that, although this works for our purposes, other texts may treat multivariate functions and asymptotic notation differently.
 
+この定義は、私たちが本当に気にしている状況を捕捉します。引数$ n_1、\ ldots、n_k $ make $ g $が大きな値をとるときです。 この定義は、$ f（n）$が$ n $の増加関数であるときの$ O（f（n））$の単変量定義にも同意します。 読者は、これが我々の目的のために働くが、他のテキストは多変量関数および漸近表記を異なる方法で扱うことがあることを警告すべきである。
 
-\subsection{Randomization and Probability}
-\seclabel{randomization}
+1.3.4ランダム化と確率
 
-\index{randomization}
-\index{probability}
-\index{randomized data structure}
-\index{randomized algorithm}
-Some of the data structures presented in this book are \emph{randomized}; they make random choices that are independent of the data being stored in them or the operations being performed on them.  For this reason, performing the same set of operations more than once using these structures could result in different running times.  When analyzing these data structures we are interested in their average or \emph{expected} running times.
-\index{expected running time}
-\index{running time!expected}
+この本に記載されているデータ構造のいくつかはランダム化されています。彼らはそれらに格納されているデータやそれらに対して実行されている操作とは無関係のランダムな選択を行います。このため、これらの構造を使用して同じ操作を複数回実行すると、実行時間が異なる可能性があります。これらのデータ構造を分析する際には、平均または予想稼働時間に関心があります。
 
-Formally, the running time of an operation on a randomized data structure is a random variable, and we want to study its \emph{expected value}.  \index{expected value} For a discrete random variable $X$ taking on values in some countable universe $U$, the expected value of $X$, denoted by $\E[X]$, is given by the formula
-\[
-    \E[X] = \sum_{x\in U} x\cdot\Pr\{X=x\} \enspace .
-\]
-Here $\Pr\{\mathcal{E}\}$ denotes the probability that the event $\mathcal{E}$ occurs.  In all of the examples in this book, these probabilities are only with respect to the random choices made by the randomized data structure;  there is no assumption that the data stored in the structure, nor the sequence of operations performed on the data structure, is random.
+正式には、ランダム化されたデータ構造に対する操作の実行時間はランダム変数であり、期待値を調べたいと考えています。数えられる宇宙$ U $の値をとる離散確率変数$ X $に対して、$ \ mathrm {E} [X] $で表される$ X $の期待値は、
 
-One of the most important properties of expected values is \emph{linearity of expectation}.  \index{linearity of expectation} For any two random variables $X$ and $Y$,
-\[
-   \E[X+Y] = \E[X] + \E[Y] \enspace .
-\]
-More generally, for any random variables $X_1,\ldots,X_k$,
-\[
-   \E\left[\sum_{i=1}^k X_i\right] = \sum_{i=1}^k \E[X_i] \enspace .
-\]
-Linearity of expectation allows us to break down complicated random variables (like the left hand sides of the above equations) into sums of simpler random variables (the right hand sides).
+$ \ displaystyle \ mathrm {E} [X] = \ sum_ {U \} x \ cdot \ Pr \ {X = x \} \ enspace。 $
 
-A useful trick, that we will use repeatedly, is defining \emph{indicator random variables}.  \index{indicator random variable} These binary variables are useful when we want to count something and are best illustrated by an example.  Suppose we toss a fair coin $k$ times and we want to know the expected number of times the coin turns up as heads.  \index{coin toss} Intuitively, we know the answer is $k/2$, but if we try to prove it using the definition of expected value, we get
-\begin{align*}
-   \E[X] & = \sum_{i=0}^k i\cdot\Pr\{X=i\} \\
-         & = \sum_{i=0}^k i\cdot\binom{k}{i}/2^k \\
-         & = k\cdot \sum_{i=0}^{k-1}\binom{k-1}{i}/2^k \\
-         & = k/2 \enspace .
-\end{align*}
-This requires that we know enough to calculate that $\Pr\{X=i\} = \binom{k}{i}/2^k$, and that we know the binomial identities $i\binom{k}{i}=k\binom{k-1}{i}$ and $\sum_{i=0}^{k} \binom{k}{i} = 2^{k}$.
+ここで$ \ Pr \ {\ mathcal {E} \} $はイベント$ \ mathcal {E} $が発生する確率を示します。この本のすべての例では、これらの確率はランダム化されたデータ構造によって行われたランダムな選択に関してのみです。構造体に格納されたデータやデータ構造体上で実行された操作のシーケンスがランダムであるという前提はありません。
 
-Using indicator variables and linearity of expectation makes things much easier.  For each $i\in\{1,\ldots,k\}$, define the indicator random variable
-\[
-    I_i = \begin{cases}
-           1 & \text{if the $i$th coin toss is heads} \\
-           0 & \text{otherwise.}
-          \end{cases}
-\]
-Then 
-\[ \E[I_i] = (1/2)1 + (1/2)0 = 1/2 \enspace . \]
-Now, $X=\sum_{i=1}^k I_i$, so
-\begin{align*}
-   \E[X] & = \E\left[\sum_{i=1}^k I_i\right] \\
-         & = \sum_{i=1}^k \E[I_i] \\
-         & = \sum_{i=1}^k 1/2 \\
-         & = k/2 \enspace .
-\end{align*}
-This is a bit more long-winded, but doesn't require that we know any magical identities or compute any non-trivial probabilities. Even better, it agrees with the intuition that we expect half the coins to turn up as heads precisely because each individual coin turns up as heads with a probability of $1/2$.
+期待値の最も重要な特性の1つは、期待の直線性です。任意の2つの確率変数$ X $と$ Y $に対して、
+
+$ \ displaystyle \ mathrm {E} [X + Y] = \ mathrm {E} [X] + \ mathrm {E} [Y] \ enspaceです。 $
+
+より一般的には、任意の確率変数$ X_1、\ ldots、X_k $、
+
+\\ {0} $ \ displaystyle \ mathrm {E} [X_i] \ enspace。 $
+
+期待の直線性は、複雑な確率変数（上記の式の左辺のようなもの）をより単純な確率変数の和（右辺）に分解することを可能にする。
+
+繰り返し使用する便利なトリックは、指標のランダム変数を定義することです。これらのバイナリ変数は、何かを数えたい場合に便利で、例で最もよく示されています。私たちが公正なコイン$ k $回を投げたと仮定し、コインが頭になる予想数を知りたいとします。直感的には、答えは$ k / 2 $ですが、期待値の定義を使って証明しようとすると、
+
+$ \ displaystyle \ mathrm {E} $ $ \ displaystyle = \ sum_ {i = 0} ^ k i \ cdot \ Pr \ {X = i \} $
+  $ \ displaystyle = \ sum_ {i = 0} ^ k i \ cdot \ binom {k} {i} / 2 ^ k $
+    ^ {k-1} \ bin {k-1} {i} / 2 ^ k $
+	  $ \ displaystyle = k / 2 \ enspace。$
+
+	  これは、$ \ Pr \ {X = i \} = \ binom {k} {i} / 2 ^ k $を計算するのに十分なことが分かっていなければならず、2項アイデンティティ$ i \ binom {k} {i } = {k-1} {i} $と$ \ sum_ {i = 0} ^ {k} \ binom {k} {i} = 2 ^ {k} $である。
+
+	  インジケータ変数と期待値の直線性を使用すると、作業がはるかに簡単になります。 \ {1、\ ldots、k \} $の各$ iに対して、インジケータの確率変数を定義する
+
+	  $ \ ifstin {\ begin {cases} $ 1 $コイントスが頭の場合は\\ 0＆\ text {そうでなければ} \ end {cases} $
+
+	  その後、
+
+	  $ \ displaystyle \ mathrm {E} [I_i] =（1/2）1 +（1/2）0 = 1/2 \ enspace。 $
+
+	  今、$ X = \ sum_ {i = 1} ^ k I_i $だから
+
+	  $ \ displaystyle \ mathrm {E} \ left {\ sum_ {i = 1} ^ k I_i \ right] $ \ displaystyle \ mathrm {
+	    $ \ displaystyle = \ sum_ {i = 1} ^ k \ mathrm {E} [I_i] $
+		  $ \ displaystyle = \ sum_ {i = 1} ^ k 1/2 $
+		    $ \ displaystyle = k / 2 \ enspace。$
+
+			これはもう少し長持ちですが、魔法のアイデンティティーを知っていることや、自明ではない確率を計算する必要はありません。さらに良いことに、各コインが$ 1/2 $の確率で頭として登場するため、コインの半分が正確に頭に浮かんでくることがわかるという直感に同意します。
 
 \section{The Model of Computation}
 \seclabel{model}
