@@ -382,67 +382,96 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
 
 この定義で我々が気にしていることがわかるのだ。引数$n_1,\ldots,n_k$が$g$を大きくするときのことだ。この定義は$f(n)$が$n$の増加関数なら一変数の場合の$O(f(n))$の定義と同じだ。我々の目的はこれでよいのだが、多変数の場合の漸近記法を異なる定義を与えている教科書もあることには注意が必要だ。
 
-% XXX: ここまで完了
-1.3.4ランダム化と確率
+\subsection{ランダム性と確率}
+\seclabel{randomization}
 
-この本に記載されているデータ構造のいくつかはランダム化されています。彼らはそれらに格納されているデータやそれらに対して実行されている操作とは無関係のランダムな選択を行います。このため、これらの構造を使用して同じ操作を複数回実行すると、実行時間が異なる可能性があります。これらのデータ構造を分析する際には、平均または予想稼働時間に関心があります。
+\index{randomization}%
+\index{probability}%
+\index{randomized data structure}%
+\index{randomized algorithm}%
+この本で扱うデータ構造には\emph{ランダム性}を利用するものがある。格納されているデータや実行された操作だけでなく、サイコロの目もふまえて動作を決めるのだ。そのため同じことをしても実行時間は毎回同じであるとは限らない。こういうデータ構造を分析するときは平均または\emph{期待実行時間}を考えるのがよい。
+\index{expected running time}%
+\index{running time!expected}%
 
-正式には、ランダム化されたデータ構造に対する操作の実行時間はランダム変数であり、期待値を調べたいと考えています。数えられる宇宙$ U $の値をとる離散確率変数$ X $に対して、$ \ mathrm {E} [X] $で表される$ X $の期待値は、
+形式的には、ランダム性を利用するデータ構造における操作の実行時間は確率変数である。そしせその\emph{期待値}を知りたい。全事象$U$の値をとる離散確率変数を$X$とするとき、$X$の期待値$E[X]$は以下のように定義される。
+\index{expected value}%
+\[
+    \E[X] = \sum_{x\in U} x\cdot\Pr\{X=x\} \enspace
+\]
 
-$ \ displaystyle \ mathrm {E} [X] = \ sum_ {U \} x \ cdot \ Pr \ {X = x \} \ enspace。 $
+ここで、$\Pr\{\mathcal{E}\}$は事象$\mathcal{E}$の発生確率とする。この本の例では、データ構造の内部で発生するランダム性のみを考慮して確率を定める。データ構造に入ってくるデータや実行される操作列がランダムだという仮定は置かないことに注意する。
 
-ここで$ \ Pr \ {\ mathcal {E} \} $はイベント$ \ mathcal {E} $が発生する確率を示します。この本のすべての例では、これらの確率はランダム化されたデータ構造によって行われたランダムな選択に関してのみです。構造体に格納されたデータやデータ構造体上で実行された操作のシーケンスがランダムであるという前提はありません。
+期待値の最も重要な性質として\emph{期待値の線形性}がある。
+\index{linearity of expectation}%
+任意のふたつの確率変数$X$と$Y$について以下の関係が成り立つ。
+\[
+   \E[X+Y] = \E[X] + \E[Y] \enspace
+\]
 
-期待値の最も重要な特性の1つは、期待の直線性です。任意の2つの確率変数$ X $と$ Y $に対して、
+より一般的には、任意の確率変数$ X_1,\ldots,X_k $について以下の関係が成り立つ。
+\[
+   \E\left[\sum_{i=1}^k X_i\right] = \sum_{i=1}^k \E[X_i] \enspace
+\]
 
-$ \ displaystyle \ mathrm {E} [X + Y] = \ mathrm {E} [X] + \ mathrm {E} [Y] \ enspaceです。 $
+期待値の線形性によって、（上の式の左辺のように）複雑な確率変数を(右辺のような)より単純な確率変数の和に分解できる。
 
-より一般的には、任意の確率変数$ X_1、\ ldots、X_k $、
+\emph{インジケータ確率変数}\index{indicator random variable}はよく使う便利なトリックだ。この二値変数はなにかを数えたいときに役立つ。例を見るとよくわかるだろう。表裏が等しい確率で出るコインを$k$回投げたとき、表が出る回数の期待値を知りたいとする。
+\index{coin toss}
+直感的な答えは$k/2$だが、期待値の定義を使って証明しようとすると次のようになる。
 
-\\ {0} $ \ displaystyle \ mathrm {E} [X_i] \ enspace。 $
+\begin{align*}
+   \E[X] & = \sum_{i=0}^k i\cdot\Pr\{X=i\} \\
+         & = \sum_{i=0}^k i\cdot\binom{k}{i}/2^k \\
+         & = k\cdot \sum_{i=0}^{k-1}\binom{k-1}{i}/2^k \\
+         & = k/2 \enspace .
+\end{align*}
 
-期待の直線性は、複雑な確率変数（上記の式の左辺のようなもの）をより単純な確率変数の和（右辺）に分解することを可能にする。
+この計算は$\Pr\{X=i\} = \binom{k}{i}/2^k$および2項係数の性質$i\binom{k}{i}=k\binom{k-1}{i}$や$\sum_{i=0}^{k} \binom{k}{i} = 2^{k}$を知っていないとできない。
 
-繰り返し使用する便利なトリックは、指標のランダム変数を定義することです。これらのバイナリ変数は、何かを数えたい場合に便利で、例で最もよく示されています。私たちが公正なコイン$ k $回を投げたと仮定し、コインが頭になる予想数を知りたいとします。直感的には、答えは$ k / 2 $ですが、期待値の定義を使って証明しようとすると、
+インジケータ変数と期待値の線形性を使えばはるかに簡単になる。$\{1,\ldots,k\}$の各$i$に対し以下のインジケータの確率変数を定義する。
 
-$ \ displaystyle \ mathrm {E} $ $ \ displaystyle = \ sum_ {i = 0} ^ k i \ cdot \ Pr \ {X = i \} $
-  $ \ displaystyle = \ sum_ {i = 0} ^ k i \ cdot \ binom {k} {i} / 2 ^ k $
-    ^ {k-1} \ bin {k-1} {i} / 2 ^ k $
-	  $ \ displaystyle = k / 2 \ enspace。$
+\[
+    I_i = \begin{cases}
+           1 & \text{$i$番目のコイントスの結果が表のとき} \\
+           0 & \text{そうでないとき}
+          \end{cases}
+\]
+そして、以下の計算を行う。
+\[ \E[I_i] = (1/2)1 + (1/2)0 = 1/2 \enspace \]
+ここで、$X=\sum_{i=1}^k I_i$なので以下のように所望の値を得られる。
+\begin{align*}
+   \E[X] & = \E\left[\sum_{i=1}^k I_i\right] \\
+         & = \sum_{i=1}^k \E[I_i] \\
+         & = \sum_{i=1}^k 1/2 \\
+         & = k/2 \enspace .
+\end{align*}
 
-	  これは、$ \ Pr \ {X = i \} = \ binom {k} {i} / 2 ^ k $を計算するのに十分なことが分かっていなければならず、2項アイデンティティ$ i \ binom {k} {i } = {k-1} {i} $と$ \ sum_ {i = 0} ^ {k} \ binom {k} {i} = 2 ^ {k} $である。
+この計算は少し長いものの、不思議な等式や非自明な確率計算は必要ない。各コイントスは$1/2$の確率で表が出るので結果はたぶんコイン数の半分だ、という直感の説明でもある。
 
-	  インジケータ変数と期待値の直線性を使用すると、作業がはるかに簡単になります。 \ {1、\ ldots、k \} $の各$ iに対して、インジケータの確率変数を定義する
-
-	  $ \ ifstin {\ begin {cases} $ 1 $コイントスが頭の場合は\\ 0＆\ text {そうでなければ} \ end {cases} $
-
-	  その後、
-
-	  $ \ displaystyle \ mathrm {E} [I_i] =（1/2）1 +（1/2）0 = 1/2 \ enspace。 $
-
-	  今、$ X = \ sum_ {i = 1} ^ k I_i $だから
-
-	  $ \ displaystyle \ mathrm {E} \ left {\ sum_ {i = 1} ^ k I_i \ right] $ \ displaystyle \ mathrm {
-	    $ \ displaystyle = \ sum_ {i = 1} ^ k \ mathrm {E} [I_i] $
-		  $ \ displaystyle = \ sum_ {i = 1} ^ k 1/2 $
-		    $ \ displaystyle = k / 2 \ enspace。$
-
-			これはもう少し長持ちですが、魔法のアイデンティティーを知っていることや、自明ではない確率を計算する必要はありません。さらに良いことに、各コインが$ 1/2 $の確率で頭として登場するため、コインの半分が正確に頭に浮かんでくることがわかるという直感に同意します。
-
-\section{The Model of Computation}
+\section{計算モデル}
 \seclabel{model}
 
-In this book, we will analyze the theoretical running times of operations on the data structures we study.  To do this precisely, we need a mathematical model of computation.  For this, we use the \emph{#w#-bit word-RAM} \index{word-RAM} \index{RAM} model.  RAM stands for Random Access Machine. In this model, we have access to a random access memory consisting of \emph{cells}, each of which stores a #w#-bit \emph{word}.  \index{word} This implies that a memory cell can represent, for example, any integer in the set $\{0,\ldots,2^{#w#}-1\}$.
+本書ではデータ構造における操作の実行時間を理論的に分析する。これを正確に行うための計算の数学的なモデルが必要だ。そのために\emph{#w#ビットのワードRAM}モデルを使うことにする。
+\index{word-RAM}%
+\index{RAM}%
+RAMはランダムアクセスマシン(Random Access Machine)の頭字語である。
+このモデルではランダムアクセスメモリを使える。
+ランダムアクセスメモリはセルの集まりで、これはそれぞれ#w#ビットのワードを格納できる。
+\index{word}
+つまり、各セルは$\{0,\ldots,2^{#w#}-1\}$の中のひとつを表せる。
 
-In the word-RAM model, basic operations on words take constant time.  This includes arithmetic operations (#+#, #-#, #*#, #/#, #%#), comparisons ($<$, $>$, $=$, $\le$, $\ge$), and bitwise boolean operations (bitwise-AND, OR, and exclusive-OR).
+ワードRAMモデルではワードの基本的な操作に一定の時間が必要である。基本的な操作は算術演算（#+#, #-#, #*#, #/#, #%#）や比較（$<$, $>$, $=$, $\le$, $\ge$）、ビット単位の論理演算（ビット単位のANDやOR、排他的論理和）である。
 
-Any cell can be read or written in constant time.  A computer's memory is managed by a memory management system from which we can allocate or deallocate a block of memory of any size we would like. Allocating a block of memory of size $k$ takes $O(k)$ time and returns a reference (a pointer) to the newly-allocated memory block.  This reference is small enough to be represented by a single word.
+どのセルも一定の時間でに読み書きできる。コンピュータのメモリはメモリ管理システムによって管理される。メモリ管理システムは必要に応じてメモリブロックを割り当てたり割り当て解除したりしてくれる。サイズ$k$のメモリブロックの割当てには$O(k)$の時間がかかり、新しく割り当てられたメモリブロックへの参照（ポインタ）が返される。この参照はひとつのワードで表せる程度小さい。
 
-The word-size #w# is a very important parameter of this model.  The only assumption we will make about #w# is the lower-bound $#w# \ge \log #n#$, where #n# is the number of elements stored in any of our data structures.  This is a fairly modest assumption, since otherwise a word is not even big enough to count the number of elements stored in the data structure.
+ワード幅#w#はこのモデルの重要なパラメータである。
+この本で#w#に置く仮定は、#n#をデータ構造に格納されうる要素数とするとき、$#w# \ge \log #n#$であるということだけだ。これは控えめな仮定である。なぜならこれが成り立たないとひとつのワードではデータ構造の要素数を数えることすらできないためである。
 
-Space is measured in words, so that when we talk about the amount of space used by a data structure, we are referring to the number of words of memory used by the structure.  All of our data structures store values of a generic type #T#, and we assume an element of type #T# occupies one word of memory.  \javaonly{(In reality, we are storing references to objects of type #T#, and these references occupy only one word of memory.)}
+領域はワード単位で測るので、データ構造で使う領域の広さとはメモリの使用するワード数のことである。我々のデータ構造はみなジェネリック型Tの値を格納し、T型の要素は1ワードのメモリで表現できると仮定する。
 
-\javaonly{The #w#-bit word-RAM model is a fairly close match for the (32-bit) Java Virtual Machine (JVM) when $#w#=32$.}\cpponly{The #w#-bit word-RAM model is a fairly close match for modern desktop computers when $#w#=32$ or $#w#=64$.} The data structures presented in this book don't use any special tricks that are not implementable \javaonly{on the JVM and most other architectures.}\cpponly{in C++ on most architectures.} 
+この本に載っているデータ構造は、実装できないような特殊なトリックを使ってはいない。
+
+% XXX: ここまで完了
 \section{Correctness, Time Complexity, and Space Complexity}
 
 When studying the performance of a data structure, there are three things that matter most:
