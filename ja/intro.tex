@@ -471,233 +471,57 @@ RAMはランダムアクセスマシン(Random Access Machine)の頭字語であ
 
 この本に載っているデータ構造は、実装できないような特殊なトリックを使ってはいない。
 
-% XXX: ここまで完了
-\section{Correctness, Time Complexity, and Space Complexity}
+\section{正しさ、時間複雑性、空間複雑性}
 
-When studying the performance of a data structure, there are three things that matter most:
-
-\begin{description}
-  \item[Correctness:] The data structure should correctly implement
-    its interface.
-    \index{correctness}
-  \item[Time complexity:] The running times of operations on the data
-    structure should be as small as possible.
-    \index{time complexity}
-    \index{complexity!time}
-  \item[Space complexity:] The data structure should use as little memory
-    as possible.
-    \index{space complexity}
-    \index{complexity!space}
-\end{description}
-
-%Sometimes these three requirements are in conflict with each other. For
-%example, it may be possible to have a faster data structure by using
-%more space.  It may be possible to have a data structure that is faster,
-%or uses less space, if the data structure is allowed to make (hopefully
-%occasional) mistakes.
-
-In this introductory text, we will take correctness as a given;  we won't consider data structures that give incorrect answers to queries or don't perform updates properly.  We will, however, see data structures that make an extra effort to keep space usage to a minimum.  This won't usually affect the (asymptotic) running times of operations, but can make the data structures a little slower in practice.
-
-When studying running times in the context of data structures we tend to come across three different kinds of running time guarantees:
+データ構造の性能を考えるとき重要な項目が3つある。
 
 \begin{description}
-\item[Worst-case running times:] 
-  \index{running time}
-  \index{running time!worst-case}
-  \index{worst-case running time}
-  These are the strongest kind of running time guarantees.  If a data structure operation has a worst-case running time of $f(#n#)$, then one of these operations \emph{never} takes longer than $f(#n#)$ time.
-\item[Amortized running times:]
-  \index{running time!amortized}
-  \index{amortized running time}
-  If we say that the amortized running time of an operation in a data structure is $f(#n#)$, then this means that the cost of a typical operation is at most $f(#n#)$.  More precisely, if a data structure has an amortized running time of $f(#n#)$, then a sequence of $m$ operations takes at most $mf(#n#)$ time.  Some individual operations may take more than $f(#n#)$ time but the average, over the entire sequence of operations, is at most $f(#n#)$.
-\item[Expected running times:] 
-  \index{running time!expected}
-  \index{expected running time}
-  If we say that the expected running time of an operation on a data structure is $f(#n#)$, this means that the actual running time is a random variable (see \secref{randomization}) and the expected value of this random variable is at most $f(#n#)$.  The randomization here is with respect to random choices made by the data structure.
+  \item[正しさ：]データ構造はそのインタフェースを正しく実装しなければならない。
+  \item[時間複雑性：]データ構造における操作の実行時間は短いほどよい。
+  \item[空間複雑性：]データ構造のメモリ使用量は小さいほどよい。
 \end{description}
 
-To understand the difference between worst-case, amortized, and expected running times, it helps to consider a financial example.  Consider the cost of buying a house: \paragraph{Worst-case versus amortized cost:} \index{amortized cost} Suppose that a home costs \$120\,000.  In order to buy this home, we might get a 120 month (10 year) mortgage with monthly payments of \$1\,200 per month.  In this case, the worst-case monthly cost of paying this mortgage is \$1\,200 per month.
+この本は入門書なので正しさは常に満たすことにする。つまり、不正確な出力が得られることがあったり、更新をちゃんとしなかったりするデータ構造のことは考えない。
+一方で、メモリ使用量を最小限に抑えるための工夫をしているデータ構造は紹介する。
+これは操作の（漸近的な）実行時間には影響しないことが多いが、実用上ではデータ構造を少し遅くするかもしれない。
 
-If we have enough cash on hand, we might choose to buy the house outright, with one payment of \$120\,000.  In this case, over a period of 10 years, the amortized monthly cost of buying this house is \[ \$120\,000 / 120\text{ months} = \$1\,000\text{ per month} \enspace .  \] This is much less than the \$1\,200 per month we would have to pay if we took out a mortgage.
+データ構造の実行時間を考えるとき、3つの異なる実行時間保証を扱うことがよくある。
 
-\paragraph{Worst-case versus expected cost:}
-\index{expected cost} Next, consider the issue of fire insurance on our \$120\,000 home.  By studying hundreds of thousands of cases, insurance companies have determined that the expected amount of fire damage caused to a home like ours is \$10 per month.  This is a very small number, since most homes never have fires, a few homes may have some small fires that cause a bit of smoke damage, and a tiny number of homes burn right to their foundations.  Based on this information, the insurance company charges \$15 per month for fire insurance.
+\begin{description}
+\item[最悪実行時間：]
+  \index{running time}%
+  \index{running time!worst-case}%
+  \index{worst-case running time}%
+  これは最も強力な実行時間の保証である。操作の最悪実行時間が$f(#n#)$ならば、操作の実行時間は\emph{決して}$f(#n#)$よりも長いことはない。
+\item[償却実行時間：]
+  \index{running time!amortized}%
+  \index{amortized running time}%
+  償却実行時間が$f(#n#)$ならば、典型的な操作のコストが$f(#n#)$であることを意味する。
+  より正確には、$m$個の操作の列が$mf(#n#)$であることを意味する。
+  いくつかの操作には、個別では$f(#n#)$よりも長い時間がかかるかもしれないが、操作の列全体として考えると、ひとつあたりのコストは$f(#n#)$以下なのである。
+\item[期待実行時間：]
+  \index{running time!expected}%
+  \index{expected running time}%
+  期待実行時間が$f(#n#)$ならば、実際の実行時間は確率変数（\secref{randomization}を参照）であり、この確率変数の期待値が$f(#n#)$である。
+  ここでいうランダム性はデータ構造の中でのものである。
+\end{description}
 
-Now it's decision time. Should we pay the \$15 worst-case monthly cost for fire insurance, or should we gamble and self-insure at an expected cost of \$10 per month?  Clearly, the \$10 per month costs less \emph{in expectation}, but we have to be able to accept the possibility that the \emph{actual cost} may be much higher.  In the unlikely event that the entire house burns down, the actual cost will be \$120\,000.
+最悪、償却、期待実行時間の違いを理解するのに、お金の例え話が役に立つ。家を買う費用のことを考えてみよう。
 
-These financial examples also offer insight into why we sometimes settle for an amortized or expected running time over a worst-case running time.  It is often possible to get a lower expected or amortized running time than a worst-case running time. At the very least, it is very often possible to get a much simpler data structure if one is willing to settle for amortized or expected running times.
+\paragraph{最悪コストと償却コスト}
+\index{amortized cost}%
+家の価格が120000ドルだとする。毎月1200ドルの120ヶ月（10年）の住宅ローンでこの家が手に入るかもしれない。この場合、月額費用は最悪でも月1200ドルだ。
 
-\section{Code Samples}
+十分な現金を持っていれば120000ドルの一括払いで家を買うこともできる。こうするとこの家を購入代金を10年で償却した月額費用は以下のようになる。
+\[
+   \$120\,000 / 120\text{ months} = \$1\,000\text{ per month} \enspace .
+\]
 
-\pcodeonly{
+これはローンの場合に支払う月額1200ドルよりだいぶ少ない。
 
-The code samples in this book are written in pseudocode.  \index{pseudocode} These should be easy enough to read for anyone who has any programming experience in any of the most common programming languages of the last 40 years.  To get an idea of what the pseudocode in this book looks like, here is a function that computes the average of an array, #a#: \pcodeimport{ods/Algorithms.average(a)} As this code illustrates, assigning to a variable is done using the $\gets$ notation.
-% WARNING: graphic typesetting of assignment operator
-We use the convention that the length of an array, #a#, is denoted by #len(a)# and array indices start at zero, so that #range(len(a))# are the valid indices for #a#.  To shorten code, and sometimes make it easier to read, our pseudocode allows for (sub)array assignments.
-The following two functions are equivalent:
-\pcodeimport{ods/Algorithms.left_shift_a(a).left_shift_b(a)}
-The following code sets all the values in an array to zero:
-\pcodeimport{ods/Algorithms.zero(a)}
-When analyzing the running time of code like this, we have to be careful; statements like 
-    #a[0:len(a)] = 1#
-or
-   #a[1:len(a)] = a[0:len(a)-1]#
-do not run in constant time. They run in $O(#len(a)#)$ time.
+\paragraph{最悪コストと期待コスト}
+次に120000ドルの家における火災保険を考えてみよう。保険会社はたくさん事例を調べた結果、この家における火災のリスクは月額10ドル相当だと判断した。ほとんどの家庭では火災が発生せず、ごく一部の家庭がボヤを経験し、全焼してしまう家の数はもっともっと少ない。この情報から保険会社は火災保険の料金を月に15ドルにした。
 
-We take similar shortcuts with variable assignments, so that the code #x,y=0,1# sets #x# to zero and #y# to 1 and the code #x,y = y,x# swaps the values of the variables #x# and #y#.  \index{swap}
+さて、どうしよう。最悪でも月額15ドル火災保険費用を支払うべきだろうか、それとも月額10ドルの自家保険を積み立てるべきだろうか。明らかに1か月あたり10ドルの費用が\emph{期待値では}安いが、\emph{最悪の場合では}コストがはるかに高くなる。万一全焼すれば120000ドル支払うことになる。
 
-Our pseudocode uses a few operators that may be unfamiliar.  As is standard in mathematics, (normal) division is denoted by the $/$ operator.  In many cases, we want to do integer division instead, in which case we use the $#//#$ operator, so that $#a//b# = \lfloor a/b\rfloor$ is the integer part of $a/b$.  So, for example, $3/2=1.5$ but $#3//2# = 1$.  \index{integer division} \index{div operator} Occasionally, we also use the $\bmod$ operator to obtain the remainder from integer division, but this will be defined when it is used.  \index{mod operator} \index{div operator} Later in the book, we may use some bitwise operators including left-shift (#<<#), right shift (#>>#), bitwise and (#&#), and bitwise exclusive-or (#^#).  \index{left shift} \index{#<<#|see {left shift}} \index{right shift} \index{#>>#|see {right shift}} \index{bitwise and} \index{#&#|see {bitwise and}} \index{#^#|see {bitwise exclusive-or}}
-
-The pseudocode samples in this book are machine translations of Python code that can be downloaded from the book's website.\footnote{ \url{http://opendatastructures.org}}  If you ever encounter an ambiguity in the pseudocode that you can't resolve yourself, then you can always refer to the corresponding Python code.  If you don't read Python, the code is also available in Java and C++.  If you can't decipher the pseudocode, or read Python, C++, or Java, then you may not be ready for this book.  }
-
-\notpcode{
-The code samples in this book are written in the \lang\ programming language.  However, to make the book accessible to readers not familiar with all of \lang's constructs and keywords, the code samples have been simplified.  For example, a reader won't find any of the keywords #public#, #protected#, #private#, or #static#.  A reader also won't find much discussion about class hierarchies.  Which interfaces a particular class implements or which class it extends, if relevant to the discussion, should be clear from the accompanying text.
-
-These conventions should make the code samples understandable by anyone with a background in any of the languages from the ALGOL tradition, including B, C, C++, C\#, Objective-C, D, Java, JavaScript, and so on.  Readers who want the full details of all implementations are encouraged to look at the \lang\ source code that accompanies this book.
-
-This book mixes mathematical analyses of running times with \lang\ source code for the algorithms being analyzed.  This means that some equations contain variables also found in the source code.  These variables are typeset consistently, both within the source code and within equations.  The most common such variable is the variable #n# \index{n@#n#} that, without exception, always refers to the number of items currently stored in the data structure. 
-}
-
-\section{List of Data Structures}
-
-Tables~\ref{tab:summary-i} and \ref{tab:summary-ii} summarize the performance of data structures in this book that implement each of the interfaces, #List#, #USet#, and #SSet#, described in \secref{interfaces}.  \Figref{dependencies} shows the dependencies between various chapters in this book.  \index{dependencies} A dashed arrow indicates only a weak dependency, in which only a small part of the chapter depends on a previous chapter or only the main results of the previous chapter.
-
-\begin{table}
-\vspace{56pt}
-\begin{center}
-\resizebox{.98\textwidth}{!}{
-\begin{threeparttable}
-\begin{tabular}{|l|l|l|l|} \hline
-\multicolumn{4}{|c|}{#List# implementations} \\ \hline
- & #get(i)#/#set(i,x)# & #add(i,x)#/#remove(i)# & \\ \hline
-#ArrayStack# & $O(1)$ & $O(1+#n#-#i#)$\tnote{A} & \sref{arraystack} \\
-#ArrayDeque# & $O(1)$ & $O(1+\min\{#i#,#n#-#i#\})$\tnote{A} & \sref{arraydeque} \\
-#DualArrayDeque# & $O(1)$ & $O(1+\min\{#i#,#n#-#i#\})$\tnote{A} & \sref{dualarraydeque}\\
-#RootishArrayStack# & $O(1)$ & $O(1+#n#-#i#)$\tnote{A}  & \sref{rootisharraystack} \\
-#DLList# & $O(1+\min\{#i#,#n#-#i#\})$ & $O(1+\min\{#i#,#n#-#i#\})$  & \sref{dllist} \\
-#SEList# & $O(1+\min\{#i#,#n#-#i#\}/#b#)$ & $O(#b#+\min\{#i#,#n#-#i#\}/#b#)$\tnote{A}  & \sref{selist} \\
-#SkiplistList# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E}  & \sref{skiplistlist} \\ \hline
-\multicolumn{4}{c}{} \\[2ex] \hline
-\multicolumn{4}{|c|}{#USet# implementations} \\ \hline
- & #find(x)# & #add(x)#/#remove(x)# & \\ \hline
-#ChainedHashTable# & $O(1)$\tnote{E} & $O(1)$\tnote{A,E} & \sref{hashtable} \\ 
-#LinearHashTable# & $O(1)$\tnote{E} & $O(1)$\tnote{A,E} & \sref{linearhashtable} \\ \hline
-\end{tabular}
-\begin{tablenotes}
-\item[A]{Denotes an \emph{amortized} running time.}
-\item[E]{Denotes an \emph{expected} running time.}
-\end{tablenotes}
-\end{threeparttable}}
-\end{center}
-\caption[Summary of List and USet implementations.]{Summary of #List# and #USet# implementations.}
-\tablabel{summary-i}
-\end{table}
-
-\begin{table}
-\begin{center}
-\begin{threeparttable}
-\begin{tabular}{|l|l|l|l|} \hline
-\multicolumn{4}{|c|}{#SSet# implementations} \\ \hline
- & #find(x)# & #add(x)#/#remove(x)# & \\ \hline
-#SkiplistSSet# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E} & \sref{skiplistset} \\ 
-#Treap# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E} & \sref{treap} \\ 
-#ScapegoatTree# & $O(\log #n#)$ & $O(\log #n#)$\tnote{A} & \sref{scapegoattree} \\
-#RedBlackTree# & $O(\log #n#)$ & $O(\log #n#)$ & \sref{redblacktree} \\ 
-#BinaryTrie#\tnote{I} & $O(#w#)$ & $O(#w#)$ & \sref{binarytrie} \\ 
-#XFastTrie#\tnote{I} & $O(\log #w#)$\tnote{A,E} & $O(#w#)$\tnote{A,E} & \sref{xfast} \\ 
-#YFastTrie#\tnote{I} & $O(\log #w#)$\tnote{A,E} & $O(\log #w#)$\tnote{A,E} & \sref{yfast} \\ 
-\javaonly{#BTree# & $O(\log #n#)$ & $O(B+\log #n#)$\tnote{A} & \sref{btree} \\ 
-#BTree#\tnote{X} & $O(\log_B #n#)$ & $O(\log_B #n#)$ & \sref{btree} \\ } \hline
-\multicolumn{4}{c}{} \\[2ex] \hline
-\multicolumn{4}{|c|}{(Priority) #Queue# implementations} \\ \hline
- & #findMin()# & #add(x)#/#remove()# & \\ \hline
-#BinaryHeap# & $O(1)$ & $O(\log #n#)$\tnote{A} & \sref{binaryheap} \\ 
-#MeldableHeap# & $O(1)$ & $O(\log #n#)$\tnote{E} & \sref{meldableheap} \\ \hline
-\end{tabular}
-\begin{tablenotes}
-\item[I]{This structure can only store #w#-bit integer data.}
-\javaonly{\item[X]{This denotes the running time in the external-memory model; see \chapref{btree}.}}
-\end{tablenotes}
-%\renewcommand{\thefootnote}{\arabic{footnote}}
-\end{threeparttable}
-\end{center}
-\caption[Summary of SSet and priority Queue implementations.]{Summary of #SSet# and priority #Queue# implementations.}
-\tablabel{summary-ii}
-\end{table}
-
-\begin{figure}
-  \begin{center}
-    \includegraphics[width=\ScaleIfNeeded]{figs/dependencies}
-  \end{center}
-  \caption{The dependencies between chapters in this book.}
-  \figlabel{dependencies}
-\end{figure}
-
-\section{Discussion and Exercises}
-
-The #List#, #USet#, and #SSet# interfaces described in \secref{interfaces} are influenced by the Java Collections Framework \cite{oracle_collections}.  \index{Java Collections Framework} These are essentially simplified versions of the #List#, #Set#, #Map#, #SortedSet#, and #SortedMap# interfaces found in the Java Collections Framework.  \javaonly{The accompanying source code includes wrapper classes for making #USet# and #SSet# implementations into #Set#, #Map#, #SortedSet#, and #SortedMap# implementations.}
-
-For a superb (and free) treatment of the mathematics discussed in this chapter, including asymptotic notation, logarithms, factorials, Stirling's approximation, basic probability, and lots more, see the textbook by Leyman, Leighton, and Meyer \cite{llm11}.  For a gentle calculus text that includes formal definitions of exponentials and logarithms, see the (freely available) classic text by Thompson \cite{t14}.
-
-For more information on basic probability, especially as it relates to computer science, see the textbook by Ross \cite{r01}.  Another good reference, which covers both asymptotic notation and probability, is the textbook by Graham, Knuth, and Patashnik \cite{gkp94}.
-
-\javaonly{Readers wanting to brush up on their Java programming can find many Java tutorials online \cite{oracle_tutorials}.}
-
-\begin{exc}
-  This exercise is designed to help familiarize the reader with choosing the right data structure for the right problem.  If implemented, the parts of this exercise should be done by making use of an implementation of the relevant interface (#Stack#, #Queue#, #Deque#, #USet#, or #SSet#) provided by the \javaonly{Java Collections Framework}\cpponly{C++ Standard Template Library}.
-
-  Solve the following problems by reading a text file one line at a time and performing operations on each line in the appropriate data structure(s).  Your implementations should be fast enough that even files containing a million lines can be processed in a few seconds.
-  \begin{enumerate}
-    \item Read the input one line at a time and then write the lines out in reverse order, so that the last input line is printed first, then the second last input line, and so on.
-
-    \item  Read the first 50 lines of input and then write them out in reverse order. Read the next 50 lines and then write them out in reverse order. Do this until there are no more lines left to read, at which point any remaining lines should be output in reverse order.
-
-      In other words, your output will start with the 50th line, then the 49th, then the 48th, and so on down to the first line. This will be followed by the 100th line, followed by the 99th, and so on down to the 51st line. And so on.  Your code should never have to store more than 50 lines at any given time.
-
-    \item Read the input one line at a time.  At any point after reading the first 42 lines, if some line is blank (i.e., a string of length 0), then output the line that occured 42 lines prior to that one. For example, if Line 242 is blank, then your program should output line 200. This program should be implemented so that it never stores more than 43 lines of the input at any given time.
-
-    \item Read the input one line at a time and write each line to the output if it is not a duplicate of some previous input line. Take special care so that a file with a lot of duplicate lines does not use more memory than what is required for the number of unique lines.
-
-    \item Read the input one line at a time and write each line to the output only if you have already read this line before. (The end result is that you remove the first occurrence of each line.) Take special care so that a file with a lot of duplicate lines does not use more memory than what is required for the number of unique lines.
-
-    \item Read the entire input one line at a time. Then output all lines sorted by length, with the shortest lines first. In the case where two lines have the same length, resolve their order using the usual ``sorted order.''  Duplicate lines should be printed only once.
-
-    \item Do the same as the previous question except that duplicate lines should be printed the same number of times that they appear in the input.
-
-    \item Read the entire input one line at a time and then output the even numbered lines (starting with the first line, line 0) followed by the odd-numbered lines.
-
-    \item Read the entire input one line at a time and randomly permute the lines before outputting them.  To be clear: You should not modify the contents of any line. Instead, the same collection of lines should be printed, but in a random order.
-  \end{enumerate}
-\end{exc}
-
-\begin{exc}
-  \index{Dyck word}
-  A \emph{Dyck word} is a sequence of +1's and -1's with the property that the sum of any prefix of the sequence is never negative.  For example, $+1,-1,+1,-1$ is a Dyck word, but $+1,-1,-1,+1$ is not a Dyck word since the prefix $+1-1-1<0$.  Describe any relationship between Dyck words and #Stack# #push(x)# and #pop()# operations.
-\end{exc}
-
-\begin{exc}
-  \index{matched string}
-  \index{string!matched}
-  A \emph{matched string} is a sequence of \{, \}, (, ), [, and ] characters that are properly matched.  For example, ``\{\{()[]\}\}'' is a matched string, but this ``\{\{()]\}'' is not, since the second \{ is matched with a ].  Show how to use a stack so that, given a string of length #n#, you can determine if it is a matched string in $O(#n#)$ time.
-\end{exc}
-
-\begin{exc}
-  Suppose you have a #Stack#, #s#, that supports only the #push(x)# and #pop()# operations. Show how, using only a FIFO #Queue#, #q#, you can reverse the order of all elements in #s#.
-\end{exc}
-
-\begin{exc}
-  \index{Bag@#Bag#}
-  Using a #USet#, implement a #Bag#.  A #Bag# is like a #USet#---it supports the #add(x)#, #remove(x)# and #find(x)# methods---but it allows duplicate elements to be stored.  The #find(x)# operation in a #Bag# returns some element (if any) that is equal to #x#.  In addition, a #Bag# supports the #findAll(x)# operation that returns a list of all elements in the #Bag# that are equal to #x#.
-\end{exc}
-
-\begin{exc}
-  From scratch, write and test implementations of the #List#, #USet# and #SSet# interfaces.  These do not have to be efficient.  They can be used later to test the correctness and performance of more efficient implementations.  (The easiest way to do this is to store the elements in an array.)
-\end{exc}
-
-\begin{exc}
-  Work to improve the performance of your implementations from the previous question using any tricks you can think of.  Experiment and think about how you could improve the performance of #add(i,x)# and #remove(i)# in your #List# implementation.  Think about how you could improve the performance of the #find(x)# operation in your #USet# and #SSet# implementations.  This exercise is designed to give you a feel for  how difficult it can be to obtain efficient implementations of these interfaces.
-\end{exc}
-
-
-
-
+この例から、最悪でなく償却あるいは期待実行時間を選ぶことがある理由もわかるだろう。償却・期待実行時間は最悪実行時間よりも小さいことが多い。償却・期待実行時間を使うことにすれば、はるかに単純なデータ構造採用できる場合がよくあるのだ。
