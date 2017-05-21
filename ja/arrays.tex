@@ -1,0 +1,43 @@
+\chapter{配列を使ったリスト}
+\chaplabel{arrays}
+
+この章では、\emph{backing array}と呼ばれる配列にデータを格納する、#List#・#Queue#インターフェースの実装について検討する。
+\emph{backing array}.
+\index{backing array}%
+次の表は、この章で説明するデータ構造の操作時間を要約したものだ。
+
+\newlength{\tabsep}
+\setlength{\tabsep}{\itemsep}
+\addtolength{\tabsep}{\parsep}
+\addtolength{\tabsep}{-2pt}
+\begin{center}
+\vspace{\tabsep}
+\begin{tabular}{|l|l|l|} \hline
+ & #get(i)#/#set(i,x)# & #add(i,x)#/#remove(i)# \\ \hline
+#ArrayStack# & $O(1)$ & $O(#n#-#i#)$ \\
+#ArrayDeque# & $O(1)$ & $O(\min\{#i#,#n#-#i#\})$ \\
+#DualArrayDeque# & $O(1)$ & $O(\min\{#i#,#n#-#i#\})$ \\
+#RootishArrayStack# & $O(1)$ & $O(#n#-#i#)$ \\ \hline
+\end{tabular}
+\vspace{\tabsep}
+\end{center}
+
+データをひとつの配列に入れるデータ構造には以下のような利点・欠点がある。
+
+\begin{itemize}
+  \item 配列の任意の要素には一定の時間でアクセスできる。
+  そのため#get(i)#・#set(i,x)#はいずれも定数時間で実行される。
+
+  \item 配列は動的ではない。リストの真ん中付近に要素を追加・削除するためには、隙間を作ったり埋めたりするために多くの要素が移動することになる。
+  #add(i,x)#・#remove(i)#操作の実行時間が#n#・#i#に依存するのはこのためだ。
+
+  \item 配列は伸び縮みしない。
+  backing arrayのサイズより多くの要素をデータ構造に入れるには、新しい配列を割当て、古い配列の要素をそちらにコピーする必要がある。
+  この操作のコストは大きい。
+\end{itemize}
+
+3つめの点が重要だ。
+上記の表に記載された実行時間はbacking arrayの拡大・縮小にかかるコストは含まれていない。
+後述するように、注意深く設計すれば、backing arrayの拡大・縮小のコストを加味しても\emph{平均的な}実行時間はほとんど増えない。
+より正確に言うと、空のデータ構造からはじめて、#add(i,x)#・#remove(i)#を#m#回実行するときの、backing arrayの拡大・縮小のための合計コストは$O(m)$である。
+個々の操作のコストは大きいが、#m#個の操作にわたる償却コストを考えれば、ひとつの操作あたりのコストは$O(1)$なのだ。
