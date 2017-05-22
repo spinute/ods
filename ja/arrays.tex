@@ -41,3 +41,135 @@
 後述するように、注意深く設計すれば、backing arrayの拡大・縮小のコストを加味しても\emph{平均的な}実行時間はほとんど増えない。
 より正確に言うと、空のデータ構造からはじめて、#add(i,x)#・#remove(i)#を#m#回実行するときの、backing arrayの拡大・縮小のための合計コストは$O(m)$である。
 個々の操作のコストは大きいが、#m#個の操作にわたる償却コストを考えれば、ひとつの操作あたりのコストは$O(1)$なのだ。
+
+\section{ArrayStack：配列を使った高速なスタック操作}
+\seclabel{arraystack}
+
+\index{ArrayStack@#ArrayStack#}%
+
+#ArrayStack#は\emph{backing array}#a#を使ったリストインターフェースの実装だ。
+リストの#i#番目の要素を#a[i]#とする。
+ほとんどの場合#a#は実際に必要な値よりも大きい。
+そのため整数#n#によって実際に#a#に入っている要素数を表す。
+つまり、リストの要素は#a[0]#,\ldots,#a[n-1]#に格納される。
+また、関係$#a.length# \ge #n#$が常に成り立つ。
+
+\codeimport{ods/ArrayStack.a.n.size()}
+
+\subsection{基本}
+#get(i)#や#set(i,x)#を使って#ArrayStack#の要素を読み書きする方法は簡単である。
+境界チェックをしたあと単に#a[i]#を返すか、#a[i]#を書き換えるかすればよいのだ。
+
+\codeimport{ods/ArrayStack.get(i).set(i,x)}
+
+#ArrayStack#に要素を追加・削除するための実装を\figref{arraystack}に示す。
+#add(i,x)#では、まず#a#が既に一杯かどうかを調べる。
+もしそうなら#resize()#を呼び出して、#a#を大きくする。
+#resize()#の実装方法については後述する。
+#resize()#の直後では$#a.length# > #n#$であることだけ知っていれば今は十分である。
+あとは#x#が入るように$#a[i]#,\ldots,#a[n-1]#$をひとつずつ右に移動させ、#a[i]#をxにし、#n#を1増やせばよい。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/arraystack}
+  \end{center}
+  \caption[Adding to an ArrayStack]{
+  #add(i,x)#・#remove(i)#を#ArrayStack#に実行する。
+  矢印は要素のコピーを表す。
+  #resize()#を呼ぶ操作にはアスタリスクを付した。}
+  \figlabel{arraystack}
+\end{figure}
+
+\codeimport{ods/ArrayStack.add(i,x)}
+#resize()#が呼ばれるかもしれないが、このコストを無視すれば#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり、この操作のコストは（リサイズのことを無視すれば）$O(#n#-#i#)$である。
+
+#remove(i)#の実装も似ている。
+$#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]は書き換えられる））、#n#の値をひとつ小さくする。
+その後#n#が#a.length#より小さすぎないか、具体的には$#a.length# \ge 3#n#$を確認する。
+もしそうなら、#resize()#を呼んで#a#を小さくする。
+
+\codeimport{ods/ArrayStack.remove(i)}
+#resize()#が呼ばれるかもしれないが、このコストを無視すれば#remove(i)#のコストはシフトする要素数に比例し、$O(#n#-#i#)$である。
+
+\subesction{拡張と収縮}
+
+#resize()#の実装は単純だ。
+大きさ$2#n#$の新しい配列#b#を割当て、#n#個の#a#の要素を#b#のはじめの#n#個としてコピーする。そして#a#を#b#に置き換える。
+よって#resize()#の呼び出し後は$#a.length# = 2#n#$が成り立つ。
+
+\codeimport{ods/ArrayStack.resize()}
+
+#resize()#の実際のコストの計算も簡単だ。
+大きさ$2#n#$の配列#b#を割当て、#n#要素をコピーする。
+これは$O(#n#)$の時間がかかる。
+
+前節からの実行時間分析は#resize()#のコストを無視していた。
+この節では\emph{償却解析}として知られる方法でこれを解決する。
+この手法は個々の#add(i, x)#・#remove(i)#における#resize()#のコストを求めるわけではない。
+代わりに、#m#個の#add(i, x)#・#remove(i)#からなる操作列の間に呼ばれる#resize()#すべてのことを考える。
+
+次の補題を示す。
+\begin{lem}\lemlabel{arraystack-amortized}
+  空の#ArrayStack#が作られたあと、$m\ge 1$個の#add(i, x)#・#remove(i)#からなる操作の列が順に実行されるとき、この間に呼ばれる#resize()#の合計実行時間は#O(m)#である。
+\end{lem}
+
+%XXX: ここまで完了
+\begin{proof}
+#resize()#が呼ばれるとき、その前の#resize()#呼び出しから#add#・#remove#が実行された回数は$#n#/2-1$以下である。
+$i$回目の#resize()#呼び出しの際の#n#を$#n#_i$とする。
+$r$を#resize()#の呼び出し回数とする。
+このとき、#add(i,x)#と#remove(i)#の合計呼び出し回数は次の関係を満たす。
+\[
+  \sum_{i=1}^{r} (#n#_i/2-1) \le m \enspace
+\]
+
+これを変形すると次の式が得られる。
+\[
+  \sum_{i=1}^{r} #n#_i \le 2m + 2r  \enspace
+\]
+
+$r \leq m$より#resize()#呼び出しのための実行時間の合計は次のようになる。
+\[
+\sum_{i=1}^{r} O(#n#_i) \le O(m+r) = O(m)  \enspace
+\]
+
+あとは$(i-1)$から$i$回目の#resize()#の間に#add(i,x)#か#remove(i)#が呼ばれる回数が$#n#_i/2$以下であることを示す。
+
+2つの場合が考えられる。
+ひとつは#resize()#が#add(i,x)#に呼ばれる場合で、これはbacking arrayが一杯になるとき、つまり$#a.length# = #n#=#n#_i$が成り立つときだ。
+直前の#resize()#を考えよう。この#resize()#の直後、#a#の大きさは#a.length#だが#a#の要素数は$#a.length#/2=#n#_i/2$以下であった。
+しかし#a#の要素数は今では$#n#_i=#a.length#$なのだから、前の#resize()#から$#n#_i/2$回以上は#add(i,x)#が呼ばれたことがわかる。
+
+もうひとつ考えられるのは、#resize()#が#remove(i)#に呼ばれる場合で、このとき$#a.length# \ge 3#n#=3#n#_i$である。
+前の#resize()#の直後では#a#の要素数は$#a.length/2#-1$以下であった。
+\footnote{この数式における${}-1$は、特別なケース$#n#=0$かつ$#a.length# = 1$を考慮したものだ。}
+今#a#には$#n#_i\le#a.length#/3$個の要素が入っている。
+よって、直前の#resize()#以降に実行された#remove(i)#の回数の下界は次のように計算できる。
+
+  \begin{align*}
+      R & \ge #a.length#/2 - 1 - #a.length#/3 \\
+        & = #a.length#/6 - 1 \\
+        & = (#a.length#/3)/2 - 1 \\
+        & \ge #n#_i/2 -1\enspace .
+  \end{align*}
+
+いずれの場合でも、$(i-1)$から$i$回目の#resize()#の間に#add(i,x)#か#remove(i)#が呼ばれる回数の合計は$#n#_i/2-1$以上である。
+\end{proof}
+
+\subsection{要約}
+
+次の定理は#ArrayStack#の性能を整理するものだ。
+
+\begin{thm}\thmlabel{arraystack}
+  #ArrayStack#は#List#インターフェースを実装する。
+  #resize()#のコストを無視すると、#ArrayStack#における各操作の実行時間は、
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+#n#-#i#)$である。
+  \end{itemize}
+  空の#ArrayStack#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
+\end{thm}
+
+#ArrayStack#は#Stack#を実装する効率的な方法である。
+特に#push(x)#は#add(n,x)#、#pop()#は#remove(n-1)#のようにそれぞれ実装できる。
+またいずれの操作も償却実行時間$O(1)$である。
