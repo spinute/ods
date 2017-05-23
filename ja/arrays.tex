@@ -194,3 +194,105 @@ Javaには#System.arraycopy(s,i,d,j,n)#メソッドがある。
 これらを使っても漸近的な実行時間は減らないのだが、やる価値のある最適化ではある。
 
 C++やJavaの実装で高速な配列コピーを使って2〜3倍の高速化できたこともある。どのくらい速くなるかは環境によるので是非試してみてほしい。
+
+\section{ArrayQueue：配列を使ったキュー}
+\seclabel{arrayqueue}
+
+\index{ArrayQueue@#ArrayQueue#}%
+この節ではFIFO（先入れ先出し）キューを実装するデータ構造#ArrayQueue#を紹介する。
+(#add(x)#によって)要素が追加されたのと同じ順番で、（#remove()#によって）キューから要素が削除される。
+
+FIFOキューの実装に#ArrayStack#はあまり向いていない。
+一方の端から要素を追加し他方から要素を削除することになるので、賢明な選択ではないのだ。
+2つの操作のうち一方はリストの先頭を変更することになる。つまり、$#i#=0$で#add(i,x)#か#remove(i)#を呼びだす。
+このとき、#n#に比例する実行時間がかかってしまう。
+
+配列を使ったキューの効率的な実装は、もし無限の配列#a#があれば簡単だろう。
+次に削除する要素を追跡するインデックス#j#と、キューの要素数#n#を記録しておけばよい。
+そうすればキューの要素は以下の場所に入っている。
+\[ #a[j]#,#a[j+1]#,\ldots,#a[j+n-1]# \enspace \]
+まず#i#, #j#を0に初期化する。
+要素を追加するときは、#a[j+n]#に要素を入れて、#n#をひとつ増やす。
+要素を削除するときは、#a[j]#から要素を取り出し、#j#をひとつ増やし、#n#をひとつ減らす。
+
+もちろんこの方法の問題点は無限の配列が必要になることだ。
+#ArrayQueue#は有限の配列#a#と\emph{剰余算術}で無限配列を模倣する。
+\index{modular arithmetic}%
+剰余算術は時間の計算をするときに使っているものだ。
+例えば10:00に5時間を足すと3:00になる。
+形式的に書けば次のようになる。
+\[
+    10 + 5 = 15 \equiv 3 \pmod{12} \enspace
+\]
+数式の後半は「12を法として15と3は合同である」と読む。
+$\bmod$は次のように二項演算と考えてもよい。
+\[
+   15 \bmod 12 = 3 \enspace .
+\]
+
+より一般的には
+整数$a$と正整数$m$について、ある整数kが存在し$a = r + km$をみたす$\{0、\ldots、m-1 \} $の一意な要素を$a \bmod m $と書く。
+雑に言うと$ r $とは$ a $を$ m $で割った余りである。
+CやC++、Ruby、Javaなど多くのプログラミング言語ではmod演算子は\%で表される。
+
+剰余算術は無限配列を模倣するのに便利である。
+$#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利用して、配列の中にキューの要素をうまく入れられるのだ。
+
+\[
+#a[j%a.length]#,#a[(j+1)%a.length]#,\ldots,#a[(j+n-1)%a.length]# \enspace
+\]
+
+これは#a#を\emph{循環配列}として使っている。
+\index{circular array}%
+\index{array!circular}%
+配列の添字が$#a.length#-1$を超えると、配列の先頭に戻ってくるのである。
+
+残りの問題は、#ArrayQueue#の要素数が#a#の大きさを超えてはならないことだ。
+
+\codeimport{ods/ArrayQueue.a.j.n}
+
+#ArrayQueue#に対して#add(x)#・#remove()#からなる操作の列を実行する様子を\figref{arrayqueue}に示す。
+#add(x)#はまず#a#が一杯かどうかを確認し、必要に応じて#resize()#を呼んで#a#の容量を増やす。
+続いて#x#を#a[(j+n)%a.length]#に入れて、#n#をひとつ増やせばよい。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/arrayqueue}
+  \end{center}
+  \caption[Adding and removing from an ArrayQueue]{A sequence of #add(x)# and #remove(i)# operations on an
+  #ArrayQueue#.  Arrows denote elements being copied.  Operations that
+  result in a call to #resize()# are marked with an asterisk.}
+  \figlabel{arrayqueue}
+\end{figure}
+
+\codeimport{ods/ArrayQueue.add(x)}
+
+最後になるが、#resize()#操作は#ArrayStack#のものとよく似ている。
+大きさ$2#n#$の新しい配列#b#を割当て、
+\[
+   #a[j]#,#a[(j+1)%a.length]#,\ldots,#a[(j+n-1)%a.length]#
+\]
+を
+\[
+   #b[0]#,#b[1]#,\ldots,#b[n-1]#
+\]
+にコピーし、$#j#=0$とする。
+
+\codeimport{ods/ArrayQueue.resize()}
+
+\subsection{要約}
+
+次の定理は#ArrayQueue#の性能を整理するものだ。
+
+\begin{thm}
+  #ArrayStack#は#List#インターフェースを実装する。
+  #resize()#のコストを無視すると、#ArrayStack#における各操作の実行時間は、
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+#n#-#i#)$である。
+  \end{itemize}
+  空の#ArrayStack#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
+  #ArrayQueue#は(FIFO)#Queue#インターフェースの実装である。
+  #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#を$O(1)$の時間で実行できる。
+  さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#に使われる実行時間の合計は$O(m)$である。
+\end{thm}
