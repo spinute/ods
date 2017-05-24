@@ -296,3 +296,60 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
   #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#を$O(1)$の時間で実行できる。
   さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#に使われる実行時間の合計は$O(m)$である。
 \end{thm}
+
+\section{ArrayDeque：配列を使った高速な双方向キュー}
+\seclabel{arraydeque}
+
+\index{ArrayDeque@#ArrayDeque#}%
+%XXX: ここまで
+前節の#ArrayQueue#は、一方の端からは追加が他方の端から削除が効率的にできる列を表現するデータ構造だった。#ArrayDeque#は両方の端で効率的な追加と削除ができるデータ構造である。
+#ArrayQueue#を表現するために使った循環配列をここでもまた使って#List#インタフェースを実装する。
+
+\codeimport{ods/ArrayDeque.a.j.n}
+
+#ArrayDeque#における#get(i)#と#set(i,x)#の実装は難しくない。
+配列の要素$#a[#{#(j+i)#\bmod #a.length#}#]#$を読み書きすればよいのだ。
+
+\codeimport{ods/ArrayDeque.get(i).set(i,x)}
+
+#add(i,x)#の実装はもう少し興味深い。
+まず、#a#が一杯かどうかを確認し、必要に応じて#resize()#を呼ぶ。
+ここで、#i#が小さいとき（0に近いとき）と大きいとき（#n#に近いとき）に、特に効率的に操作したいのだということを覚えておいてほしい。
+つづいて、$#i#<#n#/2$かどうかを確認する。
+もしそうなら、$#a[0]#,\ldots,#a[i-1]#$をそれぞれひとつずつ左にずらす。
+そうでないなら、$#a[i]#,\ldots,#a[n-1]#$をそれぞれひとつずつ右にずらす。
+#add(i,x)#と#remove(x)#の説明として\figref{arraydeque}を見てほしい。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/arraydeque}
+  \end{center}
+  \caption[Adding and removing from an ArrayDeque]{A sequence of #add(i,x)# and #remove(i)# operations on an
+  #ArrayDeque#.  Arrows denote elements being copied.}
+  \figlabel{arraydeque}
+\end{figure}
+
+\codeimport{ods/ArrayDeque.add(i,x)}
+
+このようにシフトを行うことで、#add(i,x)#は$\min\{ #i#, #n#-#i# \}$より多くの要素をシフトしなくてよい。
+よって#add(i,x)#の（#resize()#のことを無視した）実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+
+#remove(i)#の実装も似たようなものだ。
+$#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか、$#a[i+1]#,\ldots,#a[n-1]#$をそれぞれ左にひとつずつシフトするか、$#i#<#n#/2$かどうかに応じてどちらかを行う。
+やはり#remove(i)#も$O(1+\min\{#i#,#n#-#i#\})$だけの時間で要素を動かし終えることができる。
+
+\codeimport{ods/ArrayDeque.remove(i)}
+
+\subsection{要約}
+
+次の定理は#ArrayDeque#の性能を整理するものだ。
+  #ArrayDeque#は#List#インターフェースを実装する。
+  #resize()#のコストを無視すると、#ArrayDeque#における各操作の実行時間は、
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+  \end{itemize}
+  空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
+  #ArrayQueue#は(FIFO)#Queue#インターフェースの実装である。
+  #resize()#のコストを無視すると、#ArrayDeque#は#add(x)#・#remove()#を$O(1)$の時間で実行できる。
+  さらに、空の#ArrayDeque#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#に使われる実行時間の合計は$O(m)$である。
