@@ -301,7 +301,6 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 \seclabel{arraydeque}
 
 \index{ArrayDeque@#ArrayDeque#}%
-%XXX: ここまで
 前節の#ArrayQueue#は、一方の端からは追加が他方の端から削除が効率的にできる列を表現するデータ構造だった。#ArrayDeque#は両方の端で効率的な追加と削除ができるデータ構造である。
 #ArrayQueue#を表現するために使った循環配列をここでもまた使って#List#インタフェースを実装する。
 
@@ -349,7 +348,161 @@ $#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか�
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
   \end{itemize}
+  空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#にかかる時間の合計は$O(m)$である。
+
+\section{#DualArrayDeque#：2つのスタックから作った双方向キュー}
+\seclabel{dualarraydeque}
+
+\index{DualArrayDeque@#DualArrayDeque#}%
+
+次は2つの#ArrayStack#を使って#ArrayDeque#に近い性能を示すデータ構造#DualArrayDeque#を紹介する。
+#DualArrayDeque#の漸近的な性能は#ArrayDeque#より優れているわけではないのだが、2つのシンプルなデータ構造を組み合わせてより高度なデータ構造を作る良い例なのでここで扱う価値がある。
+
+#DualArrayDeque#は、2つの#ArrayStack#を使ってリストを表現する。
+#ArrayStack#では終端付近の要素を高速に修正できたことを思い出してほしい。
+#DualArrayDeque#は#front#と#back#という名のふたつの#ArrayStack#を後ろ合わせに配置する。
+そのため両端での高速な操作が可能だ。
+
+\codeimport{ods/DualArrayDeque.front.back}
+
+#DualArrayDeque#は要素数#n#を明示的に保持しない。
+$#n#=#front.size()# + #back.size()#$なのでその必要がないのだ。
+しかし#DualArrayDeque#の解析では相変わらず#n#で要素数を表すことにする。
+
+\codeimport{ods/DualArrayDeque.front.back}
+
+ひとつめの#ArrayStack#である#front#には$0,\ldots,#front.size()#-1$番目の要素を、逆さまの順番で格納する。
+もうひとつの#ArrayStack#である#back#には$#front.size()#,\ldots,#size()#-1$番目の要素を普通の順番で格納する。
+こうして、#front#か#back#に対する#get(i)#か#set(i,x)#を適切に呼び出すことで、#get(i)#・#set(i,x)#を$O(1)$の実行時間で実現できる。
+
+\codeimport{ods/DualArrayDeque.get(i).set(i,x)}
+
+#front#には逆順に要素を蓄えているので、インデックス$#i#<#front.size()#$は#front#の$#front.size()#-#i#-1$番目の要素である。
+
+#DualArrayDeque#における要素の追加・削除は\figref{dualarraydeque}を見てほしい。
+#add(i,x)#は#front#か#back#を必要に応じて操作する。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/dualarraydeque}
+  \end{center}
+  \caption[Adding and removing in a DualArrayDeque]{A sequence of #add(i,x)# and #remove(i)# operations on a
+  #DualArrayDeque#.  Arrows denote elements being copied.  Operations that
+  result in a rebalancing by #balance()# are marked with an asterisk.}
+  \figlabel{dualarraydeque}
+\end{figure}
+
+\codeimport{ods/DualArrayDeque.add(i,x)}
+
+%XXX: ここまで
+#add(i,x)#はふたつの#ArrayStack# #front#・#back#のバランスを調整するために#balance()#を呼び出す。
+#balance()#の実装は後で説明するが、$#size()#<2$であるときを除いて#front.size()#と#back.size()#は三倍以上離れないことを#balance()#は保証することを知っておけば十分である。
+具体的には$3\cdot#front.size()# \ge #back.size()#$と$3\cdot#back.size()# \ge #front.size()#$であることを保証する。
+
+つづいて#add(i,x)#のうち#balance()#のことを無視したコストを求める。
+$#i#<#front.size()#$のとき#add(i,x)#は$#front.add(front.size()-i-1,x)#$で実装できる。
+#front#は#ArrayStack#なのでこのコストは次のようになる。
+\begin{equation}
+  O(#front.size()#-(#front.size()#-#i#-1)+1) = O(#i#+1) \enspace
+  \eqlabel{das-front}
+\end{equation}
+一方
+$#i#\ge#front.size()#$のとき#add(i,x)#は$#back.add(i-front.size(),x)#$で実装できる。
+このコストは次のようになる。
+\begin{equation}
+  O(#back.size()#-(#i#-#front.size()#)+1) = O(#n#-#i#+1) \enspace
+  \eqlabel{das-back}
+\end{equation}
+
+$#i#<#n#/4$のときはひとつめのケース\myeqref{das-front}に該当する。
+$#i#\ge 3#n#/4$のときはふたつめのケース\myeqref{das-back}に該当する。
+$#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するかわからない。
+しかし$#i#\ge #n#/4$かつ$#n#-#i#>#n#/4$なのでいずれ場合も実行時間は$O(#n#)=O(#i#)=O(#n#-#i#)$である。
+以上をまとめると次のようになる。
+\[
+     \mbox{Running time of } #add(i,x)# \le 
+          \left\{\begin{array}{ll}
+            O(1+ #i#) & \mbox{if $#i#< #n#/4$} \\
+            O(#n#) & \mbox{if $#n#/4 \le #i# < 3#n#/4$} \\
+            O(1+#n#-#i#) & \mbox{if $#i# \ge 3#n#/4$}
+          \end{array}\right.
+\]
+ゆえに#add(i,x)#の実行時間は#balance()#の呼び出しのことを無視すれば$O(1+\min\{#i#, #n#-#i#\})$である。
+
+\codeimport{ods/DualArrayDeque.remove(i)}
+
+\subsection{バランスの調整}
+
+最後に#add(i,x)#と#remove(i)#によって実行される#balance()#の説明をする。
+この操作は#front#・#back#のどちらも大きく（または小さく）なりすぎないことを保証するものだ。
+要素数が2以上のとき、#front#も#back#も$#n#/4$以上の要素を含むようにするのだ。
+そうでないときは要素を動かして、#front#・#back#がそれぞれちょうど$\lfloor#n#/2\rfloor$・$\lceil#n#/2\rceil$個の要素を持つようにする。
+
+\codeimport{ods/DualArrayDeque.balance()}
+
+ここまでで分析するようなことは特にないだろう。
+#balance()#がバランス調整をするとき$O(#n#)$個の要素を動かすので$O(#n#)$の時間がかかる。
+#balance()#は#add(i,x)#・#remove(i)#で毎回呼ばれるのでこれは一見好ましくない。
+しかし次の補題より、#balance()#のための平均時間は定数であることがわかる。
+
+\begin{lem}\lemlabel{dualarraydeque-amortized}
+  空の#DualArrayDeque#に対して$m\ge 1$個の#add(i,x)#・#remove(i)#からなる操作の列を順に実行する。
+  このとき#balance()#の実行時間の合計は$O(m)$である。
+\end{lem}
+
+\begin{proof}
+  #balance()#が要素を動かすとき、前に#balance()#が要素を動かしたときから呼ばれた#add(i,x)#・#remove(i)#の合計数は$#n#/2-1$以下であることを示す。
+  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計時間が$O(m)$であることを示すには十分である。
+
+  ここでは
+  \emph{ポテンシャル法}.
+  \index{potential}%
+  \index{potential method}%
+  として知られる手法を解析に用いる。
+  #DualArrayDeque#の\emph{ポテンシャル}$\Phi$を#front#と#back#の要素数の差と定義する。
+  \[  \Phi = |#front.size()# - #back.size()#| \enspace . \]
+  このポテンシャルの興味深い性質は、バランス調整を行わない#add(i,x)#・#remove(i)#の呼び出しはポテンシャルを1増やすことだ。
+
+  
+  次の式が成り立つことから、#balance()#が要素を動かした直後にはポテンシャル$\Phi_0$は1以下であることがわかるだろう。
+  \[ \Phi_0 = \left|\lfloor#n#/2\rfloor-\lceil#n#/2\rceil\right|\le 1  \enspace .\]
+
+  要素を動かす#balance()#の直前には$3#front.size()# < #back.size()#$であったと仮定して一般性を失わない。
+  次の式が成り立つ。
+  \begin{eqnarray*}
+   #n# & = & #front.size()#+#back.size()# \\
+       & < & #back.size()#/3+#back.size()# \\
+       & = & \frac{4}{3}#back.size()#
+  \end{eqnarray*}
+  このときのポテンシャルは次のように評価できる。
+  \begin{eqnarray*}
+  \Phi_1 & = & #back.size()# - #front.size()# \\
+      &>& #back.size()# - #back.size()#/3 \\
+      &=& \frac{2}{3}#back.size()# \\
+      &>& \frac{2}{3}\times\frac{3}{4}#n# \\
+      &=& #n#/2
+  \end{eqnarray*}
+  以上より、前に#balance()#によって要素を動かしてから、#add(i,x)#・#remove(i)#が呼ばれた回数は$\Phi_1-\Phi_0 > #n#/2-1$ 以上である。
+\end{proof}
+
+\subsection{要約}
+
+次の定理は#DualArrayDeque#の性質をまとめるものだ。
+\begin{thm}\thmlabel{dualarraydeque}
+  #DualArrayDeque#は#List#インターフェースを実装する。
+  #resize()#・#balance()#のコストを無視すると、#DualArrayDeque#における各操作の実行時間は、
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+  \end{itemize}
   空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
-  #ArrayQueue#は(FIFO)#Queue#インターフェースの実装である。
-  #resize()#のコストを無視すると、#ArrayDeque#は#add(x)#・#remove()#を$O(1)$の時間で実行できる。
-  さらに、空の#ArrayDeque#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#に使われる実行時間の合計は$O(m)$である。
+  Furthermore, beginning with an empty #DualArrayDeque#, any sequence of $m$
+  #add(i,x)# and #remove(i)# operations results in a total of $O(m)$
+  time spent during all calls to #resize()# and #balance()#.
+\end{thm}
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+  \end{itemize}
+  空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#・#balance()#にかかる時間の合計は$O(m)$である。
+
