@@ -495,7 +495,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
   \end{itemize}
-  空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
+  空の#DualArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
   Furthermore, beginning with an empty #DualArrayDeque#, any sequence of $m$
   #add(i,x)# and #remove(i)# operations results in a total of $O(m)$
   time spent during all calls to #resize()# and #balance()#.
@@ -504,5 +504,178 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
   \end{itemize}
-  空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#・#balance()#にかかる時間の合計は$O(m)$である。
+  空の#DualArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#・#balance()#にかかる時間の合計は$O(m)$である。
 
+\section{2.6 RootishArrayStack：空間効率に優れた配列スタック}
+\seclabel{rootisharraystack}
+
+\index{RootishArrayStack@#RootishArrayStack#}%
+
+ここまで紹介してきたデータ構造には共通の欠点がある。
+データは1つか2つの配列に入れ、配列のサイズを変更しないようにしているので、配列に隙間が多い傾向がある点だ。
+例えば#resize()#直後の#ArrayStack#では配列#a#は半分しか埋まっていない。
+#a#は3分の1しか埋まっていないことさえある。
+
+この節ではこの無駄なスペースの問題を解決する#RootishArrayStack#というデータ構造を紹介する。
+#RootishArrayStack#は#n#個の要素を$O(\sqrt{#n#})$個の配列に格納する。
+この配列では使われていない場所は常に$O(\sqrt{#n#})$以下である。
+残りのすべての場所にはデータが入っているのだ。
+つまり#n#個の要素を入れるとき、無駄になるスペースは$O(\sqrt{#n#})$以下である。
+
+#RootishArrayStack#は\emph{ブロック}と呼ばれる#r#個の配列に要素を格納する。この配列は$0,1,\ldots,#r#-1$と添字付けられる。
+\figref{rootisharraystack}を見てほしい。
+ブロック$b$は$b+1$個の要素を含む。
+すなわち、#r#個のブロックが含む要素数の合計は次のように計算できる。
+\[
+  1+ 2+ 3+\cdots +#r# = #r#(#r#+1)/2
+\]
+この式が成り立つのは\figref{gauss}を見ればわかるだろう。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/rootisharraystack}
+  \end{center}
+  \caption[Adding and removing in a RootishArrayStack]{A sequence of #add(i,x)# and #remove(i)# operations on a
+  #RootishArrayStack#.  Arrows denote elements being copied. }
+  \figlabel{rootisharraystack}
+\end{figure}
+
+\codeimport{ods/RootishArrayStack.blocks.n}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/gauss}
+  \end{center}
+  \caption{The number of white squares is $1+2+3+\cdots+#r#$.  The number of
+  shaded squares is the same.  Together the white and shaded squares make a
+  rectangle consisting of $#r#(#r#+1)$ squares.}
+  \figlabel{gauss}
+\end{figure}
+
+リストの要素はブロック内で順番に配置される。
+0番目の要素はブロック0に、1・2番目の要素はブロック1に、3・4・5番目の要素はブロック2に格納される。
+ここで問題になるのは、全体で#i#番目の要素が、どのブロックのどの位置に入っているかをどう知るかである。
+
+#i#に対応する、ブロック内の位置は簡単に計算できる。
+インデックス#i#の要素が#b#番目のブロックに入っているなら、$0,\ldots,#b#-1$番目のブロックにおける要素数の合計は$#b#(#b#+1)/2$である。
+そのため、#i#は
+\[
+     #j# = #i# - #b#(#b#+1)/2
+\]
+として#b#番目のブロックの#j#番目の位置に入っている。
+#b#を求めるのはもう少し難しい。
+#i#以下のインデックスを持つ要素は$#i#+1$個ある。
+一方で、$0,\ldots,b$番目のブロックに入っている要素数の合計は$(#b#+1)(#b#+2)/2$である。
+よって、#b#は次の式を満たす最小の整数である。
+\[
+    (#b#+1)(#b#+2)/2 \ge #i#+1 \enspace .
+\]
+この式は次のように変形できる。
+\[
+    #b#^2 + 3#b# - 2#i# \ge  0 \enspace .
+\]
+対応する2次方程式$#b#^2 + 3#b# - 2#i# =  0$はふたつの解$#b#=(-3 + \sqrt{9+8#i#}) / 2$と$#b#=(-3 - \sqrt{9+8#i#}) / 2$を持つ。
+ふたつめの解は常に負の値なので捨ててよい。
+よって、解は$#b# = (-3 + \sqrt{9+8i}) / 2$である。
+この解は一般に整数とは限らない。
+しかし元の不等式に戻ると$#b# \ge (-3 + \sqrt{9+8i}) / 2$を満たす最小の#b#が欲しかったのであった。
+これは次のように書ける。
+\[
+   #b# = \left\lceil(-3 + \sqrt{9+8i}) / 2\right\rceil \enspace .
+\]
+
+\codeimport{ods/RootishArrayStack.i2b(i)}
+
+話を変えるが、#get(i)#と#set(i,x)#は簡単に実装できる。
+まず#b#を計算し、そのブロック内のインデックス#j#を求め、適切な操作を実行すればよい。
+
+\codeimport{ods/RootishArrayStack.get(i).set(i,x)}
+
+この章のデータ構造のどれを使って#blacks#リストを表現すれば、#get(i)#も#set(i,x)#も定数時間で実行できる。
+
+#add(i,x)#はもう手慣れたものだろう。
+まずデータ構造が一杯かどうか、つまり$#r#(#r#+1)/2 = #n#$かどうかを確認する。
+もしそうなら#grow()#を呼び出し新たなブロックを追加する。
+その後$#i#,\ldots,#n#-1$番目の要素をそれぞれ右にひとつずらし、新たな#i#番目の要素を入れるための隙間を作る。
+
+\codeimport{ods/RootishArrayStack.add(i,x)}
+
+#grow()#メソッドはやってほしいことをしてくれる、つまり新しいブロックを追加してくれる。
+
+\codeimport{ods/RootishArrayStack.grow()}
+
+#grow()#のコストを無視すると、#add(i,x)#の操作はシフト操作のコストを考えれば十分で、これは$O(1+#n#-#i#)$である。
+これは#ArrayStack#と同じだ。
+
+#remove(i)#は#add(i,x)#に似ている。
+$#i#+1,\ldots,#n#$番目の要素をそれぞれ左にひとつずつシフトし、ふたつ以上の空のブロックがあれば#shrink()#を呼び出し、使われていないブロックをひとつだけ残して削除する。
+
+\codeimport{ods/RootishArrayStack.remove(i)}
+\codeimport{ods/RootishArrayStack.shrink()}
+
+ここでもまた、#shrink()#のコストを無視すれば#remove(i)#のコストはシフトのコストを考えれば十分で、これは$O(#n#-#i#)$である。
+
+\subsection{拡張・収縮の分析}
+
+上の#add(i,x)#・#remove(i)#の解析では#grow()#・#shrink()#のことを考慮していなかった。
+まず、#ArrayStack.resize()#とは違い、#grow()#は#shrink()#要素をコピーしないことに注意する。
+つまり大きさ#r#の配列を割り当て・解放するだけである。
+環境によって、これは定数時間で実行できたり、#r#に比例する時間がかかったりする。
+
+#grow()#・#shrink()#を呼んだ直後の状況はわかりやすい。
+最後のブロックは空で、その他のブロックは一杯である。
+そのため、次の#grow()#・#shrink()#が呼ばれるのは、少なくとも$#r#-1$回要素が追加・削除された後である。
+よって、#grow()#・#shrink()#に$O(#r#)$だけ時間がかかっても、そのコストは$#r#-1$回の#add(i,x)#・#remove(i)#で償却され、#grow()#・#shrink()#の償却コストは$O(1)$である。
+
+\subsection{領域使用量}
+\seclabel{rootishspaceusage}
+
+次に、#RootishArrayStack#が使用する余分な領域の量を分析する。
+RootishArrayStackが使用する領域のうち、リストの要素を保持していないものを数えたい。
+これを\emph{無駄な領域}ということにする。
+\index{wasted space}%
+
+XXX: 以下、原著怪しい(?)ので確認
+
+#remove(i)#の後には#RootishArrayStack#のうち一杯でないブロックは2つまでである。
+よって#n#要素を含む#RootishArrayStack#のブロック数を#r#とすれば次の関係が成り立つ。
+\[
+    (#r#-2)(#r#-1)/2 \le #n# \enspace
+\]
+ここでまた二次式の解を考えれば次の式が成り立つ。
+\[
+   #r# \le (3+\sqrt{1+4#n#})/2 = O(\sqrt{#n#}) \enspace
+\]
+末尾のブロックふたつの大きさは#r#と#r-1#なので、これらのブロックによって生じる無駄な領域の量は$2#r#-1 = O(\sqrt{#n#})$以下である。
+もしこれらのブロックを（例えば）#ArrayStack#に入れれば、#r#個のブロックを入れる#List#による無駄な領域の量も$O(#r#)=O(\sqrt{#n#})$である。
+#n#個の要素と関連情報を保持するのに必要なその他の領域は$O(1)$である。
+以上より、#RootishArrayStack#の無駄な領域の量は合計$O(\sqrt{#n#})$である。
+
+この空間領域量は空からはじまり、要素をひとつずつ追加できるデータ構造の中で最適であることを示す。
+正確にいうと、#n#個の要素を追加する際にはどこかのタイミングで（ほんの一瞬かもしれないが）$\sqrt{#n#}$以上の無駄な領域が生じることを示す。
+
+空のデータ構造に#n#個の要素をひとつずつ追加していくとする。
+完了したときには、#r#個のブロックに分散して#n#個のアイテムがデータ構造に入っている。
+$#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個のポインタ（参照）を使い、ポインタは無駄な領域である。
+一方で$#r# < \sqrt{#n#}$なら鳩の巣原理より大きさ$#n#/#r# > \sqrt{#n#}$のブロックが存在する。
+このブロックがはじめて割当てられた瞬間を考える。
+このブロックは割当てられたとき空なので、$\sqrt{#n#}$の無駄な領域が生じている。
+以上より、#n#個の要素を挿入するまでのあるタイミングでデータ構造は$\sqrt{#n#}$の無駄な領域を生じることが示された。
+
+\subsection{要約}
+
+次の定理は#RootishArrayStack#のについての議論をまとめたものだ。
+\begin{thm}\thmlabel{rootisharraystack}
+  #RootishArrayStack#は#List#インターフェースを実装する。
+  #grow()#・#shrink()#のコストを無視すると、#RootishArrayStack#における各操作の実行時間は、
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+#n#-#i#)$である。
+  \end{itemize}
+  空の#RootishArrayStack#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#grow()#・#shrink()#にかかる時間の合計は$O(m)$である。
+
+  要素数#n#の#RootishArrayStack#が使う（ワード単位で測った）使用領域量\footnote{\secref{model}で説明した、どのようにメモリ量を測るかという話を思い出してほしい。}は$#n# +O(\sqrt{#n#})$である。
+\end{thm}
+
+\subsection{Computing Square Roots}
+XXX: Pseudo-code editionでは無い節だが、Ruby editionでは書くか?
