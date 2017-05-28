@@ -90,3 +90,108 @@
 #SLList#の末尾を削除するのは難しいが、これは新しい末尾を現在の末尾のひとつ前のノードに設定しなければならないためである。
 末尾のひとつ前のノード#w#とは$#w.next#=#tail#$であるもののことだ。
 困ったことに#w#を見つけるには#SLList#を#head#から順に$#n#-2$個のノードを辿っていかなければならないのである。
+
+\section{#DLList#: 双方向連結リスト}
+\seclabel{dllist}
+
+\index{DLList@#DLList#}%
+\index{doubly-linked list}%
+\index{linked list!doubly-}%
+
+#DLList#（doubly-linked list、双方向連結リスト）は#SLList#によく似ている。
+違いがあるのは、#DLList#ではノード#u#が直後のノード#u.next#と直前のノード#u.prev#との両方の参照を持っている点だ。
+
+\javaimport{ods/DLList.Node}
+\cppimport{ods/DLList.Node}
+
+#SLList#を実装するとき注意しなければならないことがいくつかあった。
+例えば#SLList#の最後のノードを削除したり、空の#SLList#にノードを追加するときは#head#・#tail#を適切に更新するため特別な注意が必要であった。
+#DLList#ではこういう特殊な場合というのがかなり増える。
+#DLList#におけるこういう問題を綺麗に扱う最善の方法はおそらくダミーノードを使うことだろう。
+\index{dummy node}%
+これはデータを含まないノードで、ただ場所だけを占める。
+こうするとノードを特別扱いする必要がなくなるのだ。
+すべてのノードには#next#と#prev#がある。
+#dummy#は最後のノードの直後にあり、最初のノードの直前にあると見なす。
+こうすると双方向連結リストのノードは\figref{dllist}に示すようなサイクルになる。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/dllist2}
+  \end{center}
+  \caption[A DLList]{A #DLList# containing a,b,c,d,e.}
+  \figlabel{dllist}
+\end{figure}
+
+%TODO: Remove constructors from class Node
+
+\codeimport{ods/DLList.n.dummy.DLList()}
+
+#DLList#で番号を指定してノードを見つけるのは簡単だ。
+先頭（#dummy.next#）から順方向に列を辿るか、末尾（#dummy.prev#）から逆方向に列を辿ればよい。
+こうして#i#番目のノードを見つけるのにかかる時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+
+\codeimport{ods/DLList.getNode(i)}
+
+#get(i)#・#set(i,x)#もまた簡単である。
+#i#番目の頂点を見つけ、その値を読み書きすればよい。
+
+\codeimport{ods/DLList.get(i).set(i,x)}
+
+この際の実行時間のうち支配的なのは#i#番目のノードを見つける時間なので、実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+
+\subsection{追加と削除}
+
+#DLList#におけるノード#w#の参照を持っていて、ノード#u#を#w#の直前に追加したいときは、$#u.next#=#w#$、$#u.prev#=#w.prev#$とし、#u.prev.next#・#u.next.prev#を適切に調整すればよい。（\figref{dllist-addbefore}を参照せよ。）
+ダミーノードがあるので#w.prev#・#w.next#がない場合を気にする必要はない。
+
+\codeimport{ods/DLList.addBefore(w,x)}
+
+\begin{figure}
+   \begin{center}
+      \includegraphics[scale=0.90909]{figs/dllist-addbefore}
+   \end{center}
+   \caption[Adding to a DLList]{Adding the node #u# before the node #w#
+      in a #DLList#.}
+   \figlabel{dllist-addbefore}
+\end{figure}
+
+#add(i,x)#操作の実装は自明だ。
+#DLList#の#i#番目のノードを見つけ、データ#x#を持つ新しいノード#u#をその直前に挿入すればよい。
+
+\codeimport{ods/DLList.add(i,x)}
+
+#add(i,x)#の実行時間のうち定数でないのは（#getNode(i)#を使って）#i#番目のノードを見つける処理だけだ。
+よって
+#add(i,x)#の実行時間は$O(1+\min\{#i#, #n#-#i#\})$である。
+
+#DLList#からノード#w#を削除するのは簡単である。
+#w.next#・#w.prev#のポインタを#w#をスキップするように調整すればよいのだ。
+ここでもまたダミーノードのおかげで複雑な場合分けの必要がなくなっている。
+
+\codeimport{ods/DLList.remove(w)}
+
+ここまでくると#remove(i)#も自明だ。
+#i#番目のノードを見つけ、これを削除すればよい。
+
+\codeimport{ods/DLList.remove(i)}
+
+#getNode(i)#によって#i#番目のノードを見つける処理が支配的なので、#remove(i)#の実行時間は$O(1+\min\{#i#, #n#-#i#\})$である。
+
+\subsection{要約}
+
+次の定理は#DLList#の性能をまとめたものである。
+
+\begin{thm}\thmlabel{dllist}
+  #DLList#は#List#インターフェースを実装する。
+  #get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#の実行時間はいずれも$O(1+\min\{#i#,#n#-#i#\})$である。
+\end{thm}
+
+もし#getNode(i)#のコストを無視すると、#DLList#の操作の実行時間はいずれも定数であることは注目に値する。
+つまり#DLList#の操作における時間のかかる部分は、興味のあるノードを見つける処理だけなのである。
+興味のあるノードさえ見つかれば、追加・削除・データの読み書きはいずれも定数時間で実行できる。
+
+これは\chapref{arrays}で説明した配列を使った#List#の実装とは対照的である。
+そのときは興味のあるノードは定数時間で見つかるのだが、要素を追加したり削除したりするために、配列内の要素をシフトする必要があり、その結果として各処理は非定数時間であった。
+
+このことから連結リストは何か別の方法でノードの参照が得られるアプリケーションに適している。
