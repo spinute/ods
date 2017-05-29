@@ -195,3 +195,263 @@
 そのときは興味のあるノードは定数時間で見つかるのだが、要素を追加したり削除したりするために、配列内の要素をシフトする必要があり、その結果として各処理は非定数時間であった。
 
 このことから連結リストは何か別の方法でノードの参照が得られるアプリケーションに適している。
+
+\section{#SEList#：空間効率のよい連結リスト}
+\seclabel{selist}
+
+\index{SEList@#SEList#}%
+\index{linked list!space-efficient}%
+連結リストの欠点はそのメモリ使用量である。（リストの真ん中に近い要素へのアクセスに時間がかかるのも欠点だが。）
+#DLList#のノードはみな前後合わせてふたつの参照を持つ。
+#Node#のフィールドのうちふたつはリストを維持するために占められ、残りのひとつだけがデータを入れるのに使われるのである。
+
+#SEList#(space-efficient list)はシンプルなアイデアでこの無駄な領域を削減する。
+#DLList#のように一個ずつ要素を入れるのではなく、複数の要素を含むブロック（配列）をデータとして入れるのである。
+もう少し正確に説明する。
+#SEList#のパラメータとして\emph{ブロックサイズ}bがある。
+#SEList#の個々のノードは#b+1#要素を収容できる配列をデータとして持つ。
+
+後で詳しく説明するが、個々のブロックには#Deque#の操作を実行できると便利だ。
+このために#BDeque# (bounded deque)というデータ構造を使うことにする。
+\index{BDeque@#BDeque#}%
+\index{bounded deque}%
+\index{deque!bounded}%
+これは\secref{arraydeque}で説明した#ArrayDeque#みたいなものだ。
+#BDeque#は#ArrayDeque#と少しだけ違う。
+新しい#BDeque#を作るときにbacking array #a#の大きさは#b+1#であり、その後拡大も縮小もされない。
+#BDeque#の重要な特徴は先頭・末尾の要素を追加・削除する操作を定数時間で実行できることだ。
+これは要素を他のブロックから移動するのに役立つ。
+
+\javaimport{ods/SEList.BDeque} 
+\cppimport{ods/SEList.BDeque} 
+
+\notpcode{
+#SEList#はブロックの双方向連結リストである。
+} % notpcode
+\javaimport{ods/SEList.Node}
+\cppimport{ods/SEList.Node}
+\javaimport{ods/SEList.n.dummy}
+\cppimport{ods/SEList.n.dummy}
+XXX: rubyimport
+
+\pcodeonly{
+An #SEList# is just a doubly-linked list of blocks. In addition to #next# and #prev# pointers, each node #u# in an #SEList# contains a #BDeque#, #u.d#.
+}
+
+\subsection{必要なメモリ量}
+
+#SEList#はブロックに含む要素数に次のような強い制限がある。
+末尾でないブロックはみな$#b#-1$以上$#b#+1$以下の要素を含む。
+これはつまり#SEList#が#n#要素を含むならブロック数は次の値以下である。
+\[
+    #n#/(#b#-1) + 1 = O(#n#/#b#)
+\]
+末尾以外の各ブロックの#BDeque#は$#b#+1$以下の要素を含むので各配列内の無駄な領域は高々定数である。
+ブロックが使う余分なメモリも定数である。
+よって#SEList#の無駄な領域は$O(#b#+#n#/#b#)$である。
+#b#を$\sqrt{#n#}$の定数倍にすれば、#SEList#の無駄な領域を\secref{rootishspaceusage}で導出した下界に等しくすることができる。
+
+\subsection{要素を検索}
+
+#SEList#の最初の課題はリストの#i#番目の要素を見つけることである。
+要素の位置は次のふたつから決まる。
+\begin{enumerate}
+  \item i番目の要素を含むブロックをデータとして持つノード#u#
+  \item そのブロックの中の要素の添字#j#
+\end{enumerate}
+
+\javaimport{ods/SEList.Location}
+\cppimport{ods/SEList.Location}
+
+ある要素を含むブロックを見つけるために#DLList#のときと同じ方法を使う。
+目的のノードを、先頭から順方向にあるいは末尾から逆方向に探すのだ。
+唯一の違うのはノードからノードに移る度にブロックをまるごとスキップすることになる点である。
+
+\pcodeimport{ods/SEList.get_location(i)}
+\javaimport{ods/SEList.getLocation(i)}
+\cppimport{ods/SEList.getLocation(i,ell)}
+
+
+最大でひとつのブロックを除いて、すべてのブロックの要素数は$#b#-1$以上であることを思い出してほしい。
+そのため全てのステップで探している要素に$#b#-1$以上ずつ近づいていく。
+よって、順方向に探索するときは目的のノードに$O(1+#i#/#b#)$ステップで到達する。
+一方逆方向では$O(1+(#n#-#i#)/#b#)$ステップである。
+このふたつの値の#i#によって決まる小さい方がこのアルゴリズムの実行時間を決める。
+つまり、#i#番目の要素を特定するのに要する時間は$O(1+\min\{#i#,#n#-#i#\}/#b#)$である。
+
+#i#番目の要素を含むブロックを特定できたので、#get(i)#・#set(i,x)#はあとは目的のブロックの中の添え字を計算すればよい。
+
+\codeimport{ods/SEList.get(i).set(i,x)}
+
+これらの操作の実行時間のうち#i#番目の要素を含むブロックを探す時間が支配的なので、実行時間は$O(1+\min\{#i#,#n#-#i#\}/#b#)$である。
+
+\subsection{要素の追加}
+
+#SEList#への要素の追加はもう少し複雑だ。
+一般的な場合を考える前に、より簡単な末尾に要素を追加する操作#add(x)#を考えよう。
+末尾のブロックが一杯（あるいはそもそもブロックがひとつも無い）ときは、新しいブロックを割当ててリストの末尾に追加する。
+すると末尾のブロックは存在し、一杯でないので、#x#をそのブロックの末尾に追加できる。
+
+\cppimport{ods/SEList.add(x)}
+\javaimport{ods/SEList.add(x)}
+\pcodeimport{ods/SEList.append(x)}
+
+#add(i,x)#でリストの中に要素を追加するのはより複雑だ。
+まず#i#番目の要素を入れるべきノード#u#を特定する。
+ここで問題になるのは、#u#のブロックは既に$#b#+1$個の要素を含んでいるため#x#を入れる隙間が無い場合である。
+
+$#u#_0,#u#_1,#u#_2,\ldots$がそれぞれ#u#, #u.next#, #u.next.next#...を表すとする。
+$#u#_0,#u#_1,#u#_2,\ldots$を#x#を入れられるスペースを求めて探索する。
+この探索の過程で3つの可能性が考えられる。（\figref{selist-add}を参照せよ。）
+
+\begin{figure}
+  \noindent
+  \begin{center}
+    \begin{tabular}{@{}l@{}}
+      \includegraphics[width=\ScaleIfNeeded]{figs/selist-add-a}\\[4ex]
+      \includegraphics[width=\ScaleIfNeeded]{figs/selist-add-b}\\[4ex]
+      \includegraphics[width=\ScaleIfNeeded]{figs/selist-add-c}\\
+    \end{tabular}
+  \end{center}
+  \caption[SEList add]{The three cases that occur during the addition of an item #x# in the interior of an #SEList#.  (This #SEList# has block size $#b#=3$.)}
+  \figlabel{selist-add}
+\end{figure}
+
+
+\begin{enumerate}
+\item すぐに（$r+1\le #b#$ステップ以内に）一杯でないブロックを持つノード$#u#_r$が見つかる。
+この場合、$r$回のシフトによって要素を次のブロックに移し、$#u#_r$の空いたスペースを$#u#_0$に持ってくる。
+すると#x#を$#u#_0$のブロックに挿入できるようになる。
+
+\item すぐに（$r+1\le #b#$ステップ以内に）ブロックのリストの末尾に到達する。
+この場合、新しい空のブロックをリストの末尾に追加し、最初のケースと同様の処理を行う。
+
+\item #b#ステップ探してもから出ないブロックが見つからない。
+この場合、 $#u#_0,\ldots,#u#_{#b#-1}$はいずれも$#b#+1$個の要素を含むブロックの列である。
+新しいブロック$#u#_{#b#}$をこの列の直後に追加し、元々あった$#b#(#b#+1)$この要素を広げる\emph{#spread#を呼ぶ}。
+$#u#_0,\ldots,#u#_{#b#}$はいずれも#b#個の要素を含むようになる。
+すると$#u#_0$のブロックは#b#個の要素を含むため、ここに#x#を挿入できる。
+\end{enumerate}
+
+\codeimport{ods/SEList.add(i,x)}
+
+#add(i,x)#の実行時間は上の3つの場合のどれが起きるかに依って決まる。
+上のふたつの場合は最大#b#ブロックにわたって要素を探しシフトするので、実行時間は$O(#b#)$である。
+3つめの場合では、#spread(u)#を呼び出し$#b#(#b#+1)$要素を動かすので、実行時間は$O(#b#^2)$である。
+3つめの場合のコストを無視すれば#i#番目の位置に要素#x#を挿入するときの実行時間は$O(#b#+\min\{#i#,#n#-#i#\}/#b#)$である。
+（この解析の妥当性はあとで償却法で説明する。）
+
+\subsection{要素の削除}
+
+#SEList#から要素を削除するのは要素を追加するのに似ている。
+まずは#i#番目の要素を含むノード#u#を特定する。
+そして#u#から要素を削除すると#u#のブロックの要素数が$#b#-1$より小さくなってしまう場合の対策が必要だ。
+
+ここでもまた$#u#_0,#u#_1,#u#_2,\ldots$は#u#, #u.next#, #u.next.next#, ...を表すとする
+$#u#_0,#u#_1,#u#_2,\ldots$を順に$#u#_0$のブロックの要素数を$#b#-1$以上にするために要素を貸してくれるノードを探す。
+ここでも考えられる3つの可能性がある。（\figref{selist-remove}を参照せよ。）
+
+\begin{figure}
+  \noindent
+  \begin{center}
+    \begin{tabular}{l}
+      \includegraphics[scale=0.90909]{figs/selist-remove-a}\\[4ex]
+      \includegraphics[scale=0.90909]{figs/selist-remove-b}\\[4ex]
+      \includegraphics[scale=0.90909]{figs/selist-remove-c}\\
+    \end{tabular}
+  \end{center}
+  \caption[SEList remove]{The three cases that occur during the removal of an item #x# in the interior of an #SEList#.  (This #SEList# has block size $#b#=3$.)}
+  \figlabel{selist-remove}
+\end{figure}
+
+
+\begin{enumerate}
+\item すぐに（$r+1\le #b#$ステップ以内に）$#b#-1$より多くの要素を含むノードが見つかる。
+この場合、$r$回のシフトで要素をあるブロックから後方のブロックに送り、$#u#_r$の余剰の要素を$#u#_0$に持ってくる。
+すると$#u#_0$のブロックから目的の要素を削除できるようになる。
+
+\item すぐに（$r+1\le #b#$ステップ以内に）リストの末尾に到達する。
+この場合、$#u#_r$は末尾のノードなので$#u#_r$のブロックには$#b#-1$個以上の要素を含むという制約がない。
+そのためひとつめの場合と同様に$#u#_r$から要素を借りてきて$#u#_0$に足してよい。
+この結果$#u#_r$のブロックが空になったら削除する。
+
+\item #b#ステップの間に$#b#-1$個より多くの要素を含むブロックが見つからない。
+この場合$#u#_0,\ldots,#u#_{#b#-1}$はいずれも要素数$#b#-1$のブロックの列である。
+\emph{#gather#}を呼び、$#b#(#b#-1)$要素を$#u#_0,\ldots,#u#_{#b#-2}$に集める。
+これらの$#b#-1$個のブロックはいずれもちょうど#b#要素を含むようになる。
+そして空になった$#u#_{#b#-1}$を削除する。
+すると、$#u#_0$のブロックは#b#要素を含むようになったので、ここから適当な要素を削除できる。
+\end{enumerate}
+
+\codeimport{ods/SEList.remove(i)}
+
+#add(i,x)#と同様に、3つめの場合での#gather(u)#を無視すれば、#remove(i)#の実行時間は$O(#b#+\min\{#i#,#n#-#i#\}/#b#)$である。
+
+\subsection{spreadとgatherの償却解析}
+
+続いて、#add(i,x)#・#remove(i)#で実行されるかもしれない#gather(u)#・#spread(u)#のコストを考える。
+はじめにコードを示す。
+
+\codeimport{ods/SEList.spread(u)}
+\codeimport{ods/SEList.gather(u)}
+
+いずれの実行時間においても支配的なのは二段階ネストしたループである。
+内側・外側いずれのループも最大$#b#+1$回実行されるのでいずれの操作の実行時間も$O((#b#+1)^2)=O(#b#^2)$である。
+しかし、次の補題によってこれらのメソッドは、#add(i,x)#・#remove(i)#の呼び出し#b#回につき多くとも1回しか呼ばれないことがわかる。
+
+\begin{lem}\lemlabel{selist-amortized}
+  空の#SEList#が作られ、$m\ge 1$回#add(i,x)#・#remove(i)#が実行される
+  このとき#spread()#・#gather()#に要する時間の合計は$O(#b#m)$である。
+\end{lem}
+
+\begin{proof}
+  ここでは償却解析のためのポテンシャル法を使う。
+  \index{potential method}%
+  ノード#u#のブロックの要素数が#b#でないとき、#u#は\emph{不安定}であるという。
+  （すなわち、#u#は末尾のノードか、要素数が$#b#-1$または$#b#+1$である。）
+  ブロックの要素数がちょうど#b#であるノードは\emph{安定}であるという。
+  #SEList#の\emph{ポテンシャル}を不安定なノードの数で定義する。
+  ここでは#add(i,x)#と#spread(u)#の呼び出し回数の関係だけを議論する。
+  しかし#remove(i)#・#gather(u)#の解析も同様である。
+
+  #add(i,x)#のひとつめの場合分けでは、
+  ブロックの大きさが変化するノードは$#u#_r$ひとつだけである。
+  よって高々一つのノードだけが安定から不安定になる。
+  ふたつめの場合わけでは新しいノードが作られ、そのノードは不安定である。
+  一方、他のノードの大きさは変わらず不安定なノードの数はひとつだけ増える。
+  以上よりひとつめふたつめいずれの場合でも、#SEList#のポテンシャルの増加は高々1である。
+
+  最後に３つめの場合わけでは$#u#_0,\ldots,#u#_{#b#-1}$はいずれも不安定である。
+  $#spread(#u_0#)#$が呼ばれると、これらの#b#個の不安定なノードは$#b#+1$個の安定なノードに置き換えられる。
+  そして#x#が$#u#_0$のブロックに追加され、$#u#_0$は不安定になる。
+  合わせてポテンシャルは$#b#-1$減少する。
+
+  まとめると、ポテンシャルは0からはじまる。（リストに一つもノードがない状態である。）
+  ケース１・２では、ポテンシャルは高々1増える。
+  ケース３ではポテンシャルは$#b#-1$減る。
+  不安定なノードの数であるポテンシャルは、0より小さくなることはない。
+  つまり、ケース３が起きるたびに、少なくとも$#b#-1$回のケース１・２が起きる。
+  以上より#spread(u)#が呼ばれる毎に、少なくとも#b#回#add(i,x)#が呼ばれていることが示された。
+\end{proof}
+
+\subsection{要約}
+
+次の定理は#SEList#の性能をまとめたものだ。
+
+\begin{thm}\thmlabel{selist}
+  #SEList#は#List#インターフェースを実装する。
+  #spread(u)#・#gather(u)#のコストを無視すると#b#個のブロックを持つ#SEList#の操作について次が成り立つ。
+  \begin{itemize}
+    \item #get(i)#・#set(i,x)#の実行時間は$O(1+\min\{#i#,#n#-#i#\}/#b#)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(#b#+\min\{#i#,#n#-#i#\}/#b#)$である。
+  \end{itemize}
+  さらに、空の#SEList#からはじめて、#add(i,x)#・#remove(i)#からなる$m$個の操作の列における、#spread(u)#・#gather(u)#の実行時間は合わせて$O(#b#m)$である。
+
+  要素数#n#の#SEList#における（ワード単位で測った）\footnote{\secref{model}で説明したメモリの図り方の議論を思い出すこと。}領域使用量は$#n# +O(#b# + #n#/#b#)$である。
+\end{thm}
+
+#SEList#により#ArrayList#と#DLList#の間のトレードオフを調整できる。
+ブロックの大きさ#b#によって、ふたつのデータ構造の濃さを調整できるである。
+極端な場合として$#b#=2$のとき、#SEList#のノードは最大3つの値を持ち、これは#DLList#と同じである。
+もう一方の極端な場合として$#b#>#n#$のとき、すべての要素は一つの配列に格納され、これは#ArrayList#みたいなものだ。
+これらの間の調整は、リストへの要素の追加・削除の時間と、特定の要素を見つける時間のトレードオフでもある。
