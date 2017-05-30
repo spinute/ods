@@ -455,3 +455,185 @@ $#u#_0,#u#_1,#u#_2,\ldots$を順に$#u#_0$のブロックの要素数を$#b#-1$�
 極端な場合として$#b#=2$のとき、#SEList#のノードは最大3つの値を持ち、これは#DLList#と同じである。
 もう一方の極端な場合として$#b#>#n#$のとき、すべての要素は一つの配列に格納され、これは#ArrayList#みたいなものだ。
 これらの間の調整は、リストへの要素の追加・削除の時間と、特定の要素を見つける時間のトレードオフでもある。
+
+\section{ディスカッションと練習問題}
+
+単方向連結リストも双方向連結リストも40年以上前からプログラムで使われており、研究され尽くしているテクニックである。
+例えばKnuthの\cite[Sections~2.2.3--2.2.5]{k97v1}で議論されている。
+#SEList#でさえもデータ構造の有名な練習問題である。
+#SEList#は\emph{unrolled linked list}\cite{sra94}と呼ばれることもある。
+\index{unrolled linked list|seealso{#SEList#}}%
+\index{linked list!unrolled|seealso{#SEList#}}%
+
+双方向連結リストの領域使用量を減らすための別の手法としてXOR-listsと呼ばれるものもある。
+\index{XOR-list}%
+XOR-listではノード#u#はひとつだけのポインタ#u.nextprev#を持つ。
+このポインタは#u.prev#と#u.next#のXORを取ったものである。
+リスト自体は、#dummy#を指すものと#dummy.next#のふたつのポインタを持つ。
+（#dummy.next#はリストが空なら#dummy#を、そうでないなら先頭のノードを指す。）
+このテクニックは#u#と#u.prev#があれば#u.next#を次の関係式から計算できることを利用している。
+\[
+   #u.next# = #u.prev# \verb+^+ #u.nextprev#
+\]
+（ここで\verb+^+はふたつの引数の排他的論理和を計算する。)
+このテクニックはコードを少し複雑すること、JavaやPythonなどガーベッジコレクションのある言語では使えないことは欠点である。
+XOR-listのもっと踏み込んだ議論はSinhaの雑誌記事\cite{s04}を参照してほしい。
+
+\begin{exc}
+  #SLList#においてダミーノードを使って#push(x)#・#pop()#・#add(x)#・#remove()#の全ての特殊なケースを避けることができないのは何故か説明せよ。
+\end{exc}
+
+\begin{exc}
+  #SLList#のメソッド#secondLast()#を設定・実装せよ。
+  これは#SLList#の末尾の一つ前の要素を返すものだ。
+  この実装の際にリストの要素数#n#を使わずに実装してみよ。
+\end{exc}
+
+\begin{exc}
+  #SLList#の#get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#を実装せよ。
+  いずれの操作の実行時間も$O(1+#i#)$であること。
+\end{exc}
+
+\begin{exc}
+  #SLList#の#reverse()#操作を設定・実装せよ。
+  これは#SLList#の要素の順番を逆にする操作である。
+  この操作の実行時間は$O(#n#)$でなければならず、再帰は使ってはならない。
+  また他のデータ構造を補助的に使ったり、新しいノードを作ってもいけない。
+\end{exc}
+
+\begin{exc}
+  #SLList#および#DLList#の#checkSize()#操作を設計・実装せよ。
+  これはリストを辿り、#n#の値がリストに入っている要素の数と一致するかを確認するものだ。
+  このメソッドはなにも返さないが、もし要素数が#n#と一致しなければ例外を投げる。
+\end{exc}
+
+\begin{exc}
+  #addBefore(w)#を再実装せよ。
+  これはノード#u#を作り、これをノード#w#の直前に追加するものだ。
+  この章を戻ってはいけない。
+  もしこの本のコードと完全に一致しなくともあなたの書くコードは正しいかもしれない。
+  そのコードをテストし、正しく動くかどうかを確認せよ。
+\end{exc}
+
+続くいくつかの問題は#DLList#の操作に関連するものだ。
+これらの問題では、新しいノードや一時的な配列を割当ててはいけない。
+これらの問題はいずれもノードの#prev#・#next#を書き換えるだけで解くこと。
+
+\begin{exc}
+  #DLList#の操作#isPalindrome()#を実装せよ。
+  これはリストが\emph{回文}であるときtrueを返す。
+  \index{palindrome}%
+  すなわち、$i\in\{0,\ldots,#n#-1\}$のいずれの場合も#i#番目の要素が$#n#-i-1$番目の要素と等しいかどうかを確認するものである。
+  実行時間は$O(#n#)$である必要がある。
+\end{exc}
+
+\begin{exc}
+  #rotate(r)#を実装せよ。
+  これは#DLList#の要素を回転するもので、#i#番目の要素を$(#i#+#r#)\bmod #n#$番目の位置に移動するものだ。
+  実行時間は$O(1+\min\{#r#,#n#-#r#\})$である必要があり、リスト内のノードを修正してはならない。
+\end{exc}
+
+
+\begin{exc}\exclabel{linkedlist-truncate}
+  #truncate(i)#を実装せよ
+  これは#DLList#を#i#番目で切り詰めるものだ。
+  この操作を実行すると、リストの要素数は#i#になり、$0,\ldots,#i#-1$番目の要素だけが残る。
+  返り値も別の#DLList#で、これは$#i#,\ldots,#n#-1$番目の要素を含むものである。
+  この操作の実行時間は$O(\min\{#i#,#n#-#i#\})$である。
+\end{exc}
+
+\begin{exc}
+  #absort(l2)#を実装せよ。
+  これは#DLList# #l2#を引数に取り、#l2#を空にし、その中身を元の順でレシーバーに追加する。
+  例えば#l1#が$a,b,c$を含み、#l2#が$d,e,f$を含むとき、#l1.absorb(l2)#を実行すると#l1#は$a,b,c,d,e,f$を含み、#l2#は空になる。
+\end{exc}
+
+\begin{exc}
+  #deal()#を実装せよ。
+  これは#DLList#から偶数番目の要素を削除し、それらの要素を含む#DLList#を返すものだ。
+  例えば#l1#が$a,b,c,d,e,f$を含むとき、#l1.deal()#を呼ぶと、#l1#の要素は$a,c,e$になり、$b,d,f$を含むリストが返される。
+\end{exc}
+
+\begin{exc}
+  #reverse()#を実装せよ。
+  これは#DLList#の要素の順序を逆転するものだ。
+\end{exc}
+
+\begin{exc}\exclabel{dllist-sort}
+  \index{merge-sort}%
+  この問題は#DLList#を整列するマージソートというアルゴリズムを実装してみるものだ。
+  マージソートは\secref{merge-sort}扱う。
+  \javaonly{In your implementation, perform comparisons between elements
+  using the #compareTo(x)# method so that the resulting implementation can
+  sort any #DLList# containing elements that implement the #Comparable#
+  interface.}
+  \begin{enumerate}
+    \item #DLList#の#takeFirst(l2)#操作を実装せよ。
+	この操作は#l2#の先頭ノードを取り出しレシーバに追加するものだ。
+	これは新しいノードを作らないことを除けば、#add(size(),l2.remove(0))#と等価である。
+    \item #DLList#の静的メソッド#merge(l1, l2)#を実装せよ。
+	これはふたつの整列済みのリスト#l1#・#l2#を統合し、その結果を含む新たな整列済みリストを返す。
+	この後では#l1#・#l2#は空になっている。
+	例えば#l1#の要素は$a,c,d$、#l2#の要素は$b,e,f$であるとき、このメソッドは$a,b,c,d,e,f$を含むリストを返す。
+    \item #DLList#の#sort()#メソッドを実装せよ。
+	これはマージソートを使ってリストの全ての要素を整列するものである。
+	この再帰的なアルゴリズムは次のように動作する。
+       \begin{enumerate}
+          \item リストの要素数が0または1ならなにもしない。
+          \item そうでないなら#truncate(size()/2)#によってリストをほぼ等しい大きさのふたつのリスト#l1#と#l2#に分割する。
+          \item 再帰的に#l1#を整列する。
+          \item 再帰的に#l2#を整列する。
+          \item 最後に#l1#と#l2#を統合して一つの整列済みリストとする。
+       \end{enumerate}
+  \end{enumerate}
+\end{exc}
+
+つづく数問は発展的なもので、要素が追加・削除される際に#Stack#・#Queue#の最小値がどうなるかについての理解を要求するものである。
+
+\begin{exc}
+  \index{MinStack@#MinStack#}%
+  #MinStack#を設計・実装せよ。
+  これは比較可能な要素を持ち、
+  スタックの操作#push(x)#・#pop()#・#size()#をサポートし、
+  #min()#操作も可能なものである。
+  #min()#はデータ構造に入っている要素のうち最小の値を返す。
+  全ての操作の実行時間は定数である。
+\end{exc}
+
+\begin{exc}
+  \index{MinQueue@#MinQueue#}%
+  #MinQueue#を設計・実装せよ。
+  これは比較可能な要素を持ち、
+  キューの操作#add(x)#・#remove()#・#size()#をサポートし、
+  #min()#操作も可能なものである。
+  全ての操作の償却実行時間は定数である。
+\end{exc}
+
+\begin{exc}
+  \index{MinDeque@#MinDeque#}%
+  #MinDeque#を設計・実装せよ。
+  これは比較可能な要素を持ち、
+  双方向キューの操作#addFirst(x)#・addLast(x)・#removeFirst()#・#removeLast()・#size()#をサポートし、
+  #min()#操作も可能なものである。
+  全ての操作の償却実行時間は定数である。
+\end{exc}
+
+次の問題は領域効率のよい#SLList#の解析・実装の理解度を測るためのものである。
+
+\begin{exc}
+  #SEList#が#Stack#のように使われるとき、つまり#SEList#は$#push(x)#\equiv #add(size(),x)#$・$#pop()#\equiv #remove(size()-1)#$によってのみ更新されるとき、これらの操作の償却実行時間はいずれも#b#の値に依らない定数であることを証明せよ。
+\end{exc}
+
+\begin{exc}
+  #Deque#の操作をすべてサポートし、いずれの償却実行時間も#b#に依らない定数である#SEList#を設計・実装せよ。
+\end{exc}
+
+\begin{exc}
+  ビット単位の排他的論理和\verb+^+によってふたつの#int#型の値を入れ替える方法を説明せよ。
+  ただし、このときにみっつめの変数を使ってはならないものとする。
+\end{exc}
+
+
+
+
+
