@@ -83,3 +83,65 @@ $L_0$の任意のノード#u#への探索経路の長さの期待値は$2\log #n
 違いはどのように探索経路を辿り方である。
 下に進んで$L_{r-1}$に移るか、$L_r$の中で右に進むかの選び方に違いがあるのである。
 
+\section{#SkiplistSSet#：効率的な#SSet#}
+\seclabel{skiplistset}
+
+\index{SkiplistSSet@#SkiplistSSet#}%
+#SkiplistSSet#はスキップリストを使った#SSet#インターフェースの実装である。
+ここでは、$L_0$は#SSet#の要素を整列して格納する。
+#find(x)#は探索経路に沿って$#y#\ge#x#$を満たす最小の#y#を探す。
+
+\codeimport{ods/SkiplistSSet.find(x).findPredNode(x)}
+
+#y#の探索経路を辿るのは簡単だ。
+$L_{#r#}$の中のノード#u#にいるとすると、まず右隣#u.next[r].x#を見る。
+$#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
+そうでないなら$L_{#r#-1}$に下がる。
+各ステップ（右または下に進む）は一定の時間で実行できる。
+よって\lemref{skiplist-searchpath}より#find(x)#の期待実行時間は$O(\log #n#)$である。
+
+#SkipListSSet#に要素を追加する方法の前に、新しいノードの高さ#k#を決めるためのコイントスをシミュレートする方法を考える。
+ランダムな整数#z#を生成し、#z#の2進数表現において連続する1の数を数える。
+\footnote{この方法はコイントスを完全に再現しているわけではない。なぜなら#k#は#int#のビット数より常に小さいからである。しかし要素数が$2^{32}=4294967296$を越える場合でもない限り、この影響は無視できるほど小さい。}
+
+\codeimport{ods/SkiplistSSet.pickHeight()}
+
+#SkiplistSSet#の#add(x)#の実装は、#x#を入れる場所を見つけ、高さ#k#を#pickHeight()#で決め、#x#を$L_0$,\ldots,$L_{#k#}$に継ぎ合せる。
+これを実現する最も簡単な方法は、リスト$L_{#r#}$からリスト$L_{#r#-1}$に下がるノードを記録する配列#stack#を使うことだ。
+より正確にいうと、#stack[r]#は$L_{#r#}$内の$L_{#r#-1}$に下がるパスのあるノードである。
+#x#を挿入する時に修正する必要のあるノードはちょうど$#stack[0]#,\ldots,#stack[k]#$である。
+次のコードはこの#add(x)#アルゴリズムの実装である。
+\label{pg:skiplist-add}
+\codeimport{ods/SkiplistSSet.add(x)}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-add}
+  \end{center}
+  \caption[Adding to a skiplist]{Adding the node containing $3.5$ to a skiplist.  The nodes stored in #stack#
+  are highlighted.}
+  \figlabel{skiplist-add}
+\end{figure}
+
+要素#x#を削除するのも同様に行える。ただし#stack#で探索経路を覚えておく必要はない。
+削除は探索経路を辿ることで行える。
+#x#を探す途中にノード#u#から下に向かうとき、$#u.next.x#=#x#$なら#u#を繋ぎ替える。
+\codeimport{ods/SkiplistSSet.remove(x)}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-remove}
+  \end{center}
+  \caption{Removing the node containing $3$ from a skiplist.}
+  \figlabel{skiplist-remove}
+\end{figure}
+
+\subsection{Summary}
+
+次の定理はスキップリストを使った整列集合の性能をまとめたものだ。
+
+\begin{thm}\thmlabel{skiplist}
+#SkiplistSSet#は#SSet#インターフェースの実装である。
+#SkiplistSSet#は操作#add(x)#・#remove(x)#・#find(x)#を持ち、いずれの期待実行時間も$O(\log #n#)$である。
+\end{thm}
+
