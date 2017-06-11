@@ -145,3 +145,101 @@ $#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
 #SkiplistSSet#は操作#add(x)#・#remove(x)#・#find(x)#を持ち、いずれの期待実行時間も$O(\log #n#)$である。
 \end{thm}
 
+\section{#SkiplistList#：効率的なランダムアクセス#List#}
+\seclabel{skiplistlist}
+
+\index{SkiplistList@#SkiplistList#}%
+#SkiplistList#はスキップリストを使った#List#インターフェースの実装だ。
+#SkiplistList#では、$L_0$はリストの要素をリストにおける順序通りに含む。
+#SkiplistSSet#と同様に、要素の追加・削除・読み書きのいずれの実行時間も$O(\log #n#)$である。
+
+これを可能にするためにはまず$L_0$における#i#番目の要素を見つける方法が必要だ。
+このための最も簡単な方法はリスト$L_{#r#}$における\emph{辺の長さ}を定義することだ。
+$L_{0}$における辺の長さをいずれも1とする。
+$L_{#r#} (#r#>0)$の辺#e#の辺の長さを、$L_{#r#-1}$において#e#の下にある辺の長さの和とする。
+これは辺#e#の長さは$L_0$において#e#の下にある辺の数であるとするのと等価な定義である。
+この定義の例として\figref{skiplist-lengths}を参照せよ。
+スキップリストの辺は配列に格納されており、その長さも同様に格納すればよい。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-lengths}
+  \end{center}
+  \caption{The lengths of the edges in a skiplist.}
+  \figlabel{skiplist-lengths}
+\end{figure}
+
+\javaimport{ods/SkiplistList.Node}
+\cppimport{ods/SkiplistList.Node}
+
+この定義の良い性質として、$L_0$においてj番目のノードから長さ$\ell$の辺を辿ると、$L_0$において$#j#+\ell$のノードに移るというものがある。
+こうして、探索パスを辿りながら$L_0$におけるインデックス#j#を算出することができる。
+$L_{#r#}$のノード#u#にいるとき、辺#u.next[r]#の長さと#j#の和が#i#より小さいなら右に進む。
+そうでないな下、すなわち$L_{#r#-1}$に進む。
+
+\codeimport{ods/SkiplistList.findPred(i)}
+\codeimport{ods/SkiplistList.get(i).set(i,x)}
+
+#get(i)#・#set(i,x)#において大変なのは$L_0$の#i#番目のノードを見つける処理なので、これらの処理の実行時間は$O(\log #n#)$である。
+
+#SkiplistList#の#i#番目の位置に要素を追加するのは簡単だ。
+#SkiplistSSet#とは違い新しいノードが必ず追加されるので、ノードの位置を見つける処理とノードを追加する処理を同時に実行できる。
+まずは新たに挿入するノード#w#の高さ#k#を決め、#i#の探索経路を辿る。
+$L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L_{#r#}$と次合わせる。
+このとき辺の長さも適切に更新する必要があることに注意する。
+\figref{skiplist-addix}を見よ。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-addix}
+  \end{center}
+  \caption[Adding to a SkiplistList]{Adding an element to a #SkiplistList#.}
+  \figlabel{skiplist-addix}
+\end{figure}
+
+探索経路上の
+探索経路上でリスト$L_{#r#}$のノード#u#に探索経路上で下ったとき、
+#i#番目の位置に要素を追加することがわかるため辺#u.next[r]#の長さをひとつ大きくする。
+ノード#w#をふたつのノード#u#と#z#の間に追加する様子が\figref{skiplist-lengths-splice}に示されている。
+探索経路を辿りながら$L_0$において#u#が何番目なのかを数えることができる。
+そのため#u#から#w#までの辺の長さは$#i#-#j#$とわかる。
+さらに、#u#から#z#への辺の長さ$\ell$から、#w#から#z#への辺の長さを計算できる。
+こうして#w#を挿入し、関連する辺の長さの更新を定数時間で終えることができる。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/skiplist-lengths-splice}
+  \end{center}
+  \caption[Adding to a SkiplistList]{Updating the lengths of edges while splicing a node 
+   #w# into a skiplist.}
+  \figlabel{skiplist-lengths-splice}
+\end{figure}
+
+複雑そうに聞こえるかもしれないが、実際のコードはとても単純である。
+
+\codeimport{ods/SkiplistList.add(i,x)}
+\codeimport{ods/SkiplistList.add(i,w)}
+
+ここまでの話から#SkiplistList#における#remove(i)#の実装は明らかである。
+#i#番目の位置への探索経路を辿る。
+高さ#r#のノード#u#から経路が下に向かうとき、その高さにおける#u#から出る辺の長さをひとつ小さくする。
+また、#u.next[r]#が高さ#i#の要素であるかどうかを確認し、もしそうならリストからそれを除く。
+\figref{skiplist-removei}に例が描かれている。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-removei}
+  \end{center}
+  \caption[Removing an element from a SkiplistList]{Removing an element from a #SkiplistList#.}
+  \figlabel{skiplist-removei}
+\end{figure}
+\codeimport{ods/SkiplistList.remove(i)}
+
+\subsection{Summary}
+
+次の定理は#SkiplistList#の性能をまとめたものだ。
+
+\begin{thm}\thmlabel{skiplistlist}
+  #SkiplistList#は#List#インターフェースを実装する。
+  #SkiplistList#における#get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#の期待実行時間はいずれも$O(\log #n#)$である。
+\end{thm}
