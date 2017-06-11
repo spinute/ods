@@ -243,3 +243,150 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   #SkiplistList#は#List#インターフェースを実装する。
   #SkiplistList#における#get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#の期待実行時間はいずれも$O(\log #n#)$である。
 \end{thm}
+
+\section{スキップリストの解析}
+\seclabel{skiplist-analysis}
+
+この節では高さ・大きさ・探索経路の長さの期待値を解析する。
+ここでは基本的な確率論の知識を前提とする。
+いくつかの証明はコイントスについての次に述べる考察を利用する。
+
+\begin{lem}\lemlabel{coin-tosses}
+  \index{coin toss}%
+  $T$を表裏が等しい確率で出るコインを投げて、表が出るまでに要するコイントスの回数とする。（表が出た回も含めて数えることに注意する。）
+\end{lem}
+
+\begin{proof}
+表が出たらにコイントスをやめるとする。
+次の指示変数を定義する。
+  \[ I_{i} = \left\{\begin{array}{ll}
+     0 & \mbox{コイントスが$i$回よりも少ないとき} \\
+     1 & \mbox{コイントスが$i$回以上のとき}
+     \end{array}\right.
+  \]
+  $I_i=1$なのは最初の$i-1$回の結果がいずれも裏であることと同値である。
+  よって$\E[I_i]=\Pr\{I_i=1\}=1/2^{i-1}$である。
+  コイントスの合計回数$T$は$T=\sum_{i=1}^{\infty} I_i$と書ける。
+  以上より、次のことがわかる。
+  \begin{align*}
+    \E[T] & =  \E\left[\sum_{i=1}^\infty I_i\right] \\
+     & =  \sum_{i=1}^\infty \E\left[I_i\right] \\
+     & =  \sum_{i=1}^\infty 1/2^{i-1} \\
+     & =  1 + 1/2 + 1/4 + 1/8 + \cdots \\
+     & =  2 \enspace .   \qedhere
+  \end{align*}
+\end{proof}
+
+次のふたつの補題からスキップリストの大きさは要素数に対して線形だとわかる。
+
+\begin{lem}\lemlabel{skiplist-size1}
+  $#n#$要素からなるスキップリストにおける（番兵を除く）ノード数の期待値は $2#n#$である。
+\end{lem}
+
+\begin{proof}
+  要素#x#がリスト$L_{#r#}$に含まれる確率は$1/2^{#r#}$である。
+  よって$L_{#r#}$のノード数の期待値は$#n#/2^{#r#}$である。
+  \footnote{\secref{指示変数と期待値の線形性からこの結果を得る方法はrandomization}を参照せよ。}
+  以上よりすべてのリストに含まれるノードの総数の期待値が求まる。
+  \[ \sum_{#r#=0}^\infty #n#/2^{#r#} = #n#(1+1/2+1/4+1/8+\cdots) = 2#n# \enspace . \qedhere \]
+\end{proof}
+
+\begin{lem}\lemlabel{skiplist-height}
+  #n#要素を含むスキップリストの高さの期待値は$\log #n# + 2$以下である。
+\end{lem}
+
+\begin{proof}
+  $#r#\in\{1,2,3,\ldots,\infty\}$について次の確率変数を定義する。
+  \[ I_{#r#} = \left\{\begin{array}{ll}
+     0 & \mbox{$L_{#r#}$が空のとき} \\
+     1 & \mbox{$L_{#r#}$が空でないとき}
+     \end{array}\right.
+  \]
+  スキップリストの高さ#h#は次のように計算できる。
+  \[
+       #h# = \sum_{r=1}^\infty I_{#r#} \enspace .
+  \]
+  $I_{#r#}$はリスト$L_{#r#}$の長さ$|L_{#r#}|$を越えないことに注意する。
+  \[
+     \E[I_{#r#}] \le \E[|L_{#r#}|] = #n#/2^{#r#} \enspace
+  \]
+  よって
+  \begin{align*}
+       \E[#h#] &= \E\left[\sum_{r=1}^\infty I_{#r#}\right] \\
+        &= \sum_{#r#=1}^{\infty} E[I_{#r#}] \\
+        &= \sum_{#r#=1}^{\lfloor\log #n#\rfloor} E[I_{#r#}]
+                 + \sum_{r=\lfloor\log #n#\rfloor+1}^{\infty} E[I_{#r#}]  \\
+        &\le \sum_{#r#=1}^{\lfloor\log #n#\rfloor} 1
+                 + \sum_{r=\lfloor\log #n#\rfloor+1}^{\infty} #n#/2^{#r#} \\
+        &\le \log #n#
+                 + \sum_{#r#=0}^\infty 1/2^{#r#} \\
+        &= \log #n# + 2 \enspace . \qedhere
+  \end{align*}
+\end{proof}
+
+\begin{lem}\lemlabel{skiplist-size2}
+  $#n#$要素からなるスキップリストのノード数の期待値は、番兵を含めて$2#n#+O(\log #n#)$である。
+\end{lem}
+
+\begin{proof}
+  \lemref{skiplist-size1}より番兵を含まないノード数の期待値は$2#n#$である。
+  番兵の数の期待値はスキップリストの高さ$#h#$に等しく、
+  これは\lemref{skiplist-height}より$\log #n#+2 = O(\log #n#)$以下である。
+  \end{proof}
+
+
+
+\begin{lem}
+スキップリストにおける探索経路の長さの期待値は$2\log #n# + O(1)$以下である。
+\end{lem}
+
+\begin{proof}
+最も簡単な方法はノード#x#の\emph{逆探索経路}を考えることだ。
+この経路は$L_0$における#x#の直前のノードから始まる。
+パスが上に向かえるときはそうする。
+そうでないなら左に進む。
+少し考えると、#x#の逆探索経路は探索経路と方向が逆であることを除いて同じであることがわかるだろう。
+
+ある高さで逆探索経路が通過するノードの数#r#は次の試行と関連している。
+コインを投げる。
+表が出れば上に向かい停止する。
+裏が出れば左に向かい試行を続ける。
+このとき、表が出るまでにコインを投げる回数は逆探索経路のある高さで左に向かうステップの数に対応している。
+\footnote{これは大きく数えてしまうかもしれない。なぜなら試行は表が出るか番兵に出くわすかのどちらかが起きたときに終わるからである。しかしこれは問題ではない。なぜなら今考えている補題は上界に関するものだからである。}
+\lemref{coin-tosses}よりはじめて表が出るまでのコイントスの回数の期待値は1である。
+
+$S_{#r#}$を（順方向の）探索経路における高さ$#r#$で右に進む回数を表す。
+$\E[S_{#r#}]\le 1$である。
+さらに$L_{#r#}$では$L_{#r#}$の長さより多く右に進むことはないので$S_{#r#}\le |L_{#r#}|$である。
+よって次の式が成り立つ。
+  \[
+    \E[S_{#r#}] \le \E[|L_{#r#}|] = #n#/2^{#r#} \enspace
+  \]
+あとは\lemref{skiplist-height}と同様に証明を完成できる。
+$S$をスキップリストにおけるノード#u#の探索経路の長差とする。
+また、#h#をそのスキップリストの高さとする。
+このとき、次の式が成り立つ。
+  \begin{align*}
+      \E[S] 
+         &= \E\left[ #h# + \sum_{#r#=0}^\infty S_{#r#} \right] \\
+         &= \E[#h#] + \sum_{#r#=0}^\infty \E[S_{#r#}]  \\
+         &= \E[#h#] + \sum_{#r#=0}^{\lfloor\log #n#\rfloor} \E[S_{#r#}] 
+              + \sum_{#r#=\lfloor\log #n#\rfloor+1}^\infty \E[S_{#r#}] \\
+         &\le \E[#h#] + \sum_{#r#=0}^{\lfloor\log #n#\rfloor} 1
+              + \sum_{r=\lfloor\log #n#\rfloor+1}^\infty #n#/2^{#r#} \\
+         &\le \E[#h#] + \sum_{#r#=0}^{\lfloor\log #n#\rfloor} 1
+              + \sum_{#r#=0}^{\infty} 1/2^{#r#} \\
+         &\le \E[#h#] + \sum_{#r#=0}^{\lfloor\log #n#\rfloor} 1
+              + \sum_{#r#=0}^{\infty} 1/2^{#r#} \\
+         &\le \E[#h#] + \log #n# + 3 \\
+         &\le 2\log #n# + 5  \enspace . \qedhere
+  \end{align*}
+\end{proof}
+
+
+次の定理はこの節の結果をまとめるものだ。
+\begin{thm}
+$#n#$要素を含むスキップリストの大きさの期待値は$O(#n#)$である。
+ある要素の探索経路の長さの期待値は$2\log #n# + O(1)$以下である。
+\end{thm}
+
