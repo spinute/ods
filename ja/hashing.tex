@@ -16,3 +16,238 @@
 この章で扱う手法にはある範囲からランダムに生成した整数を利用する。
 サンプルコードではこのランダム整数はハードコードされた定数になっている。
 この定数は空気中のノイズを利用したランダムなビット列から得られる。
+
+\section{#ChainedHashTable#: チェイン法を使ったハッシュテーブル}
+\seclabel{hashtable}
+
+\index{ChainedHashTable@#ChainedHashTable#}%
+\index{chaining}%
+\index{hashing with chaining}%
+#ChainedHashTable#とは\emph{チェイン法}を使ってデータをリストの配列#t#に蓄えるデータ構造である。
+整数#n#はすべてのリストにおける要素数の合計である。（\figref{chainedhashtable}を参照せよ。）
+\codeimport{ods/ChainedHashTable.t.n}
+
+\begin{figure}
+   \begin{center}
+     \includegraphics[width=\ScaleIfNeeded]{figs/chainedhashtable}
+   \end{center}
+   \caption[A ChainedHashTable]{An example of a #ChainedHashTable# with $#n#=14$ and $#t.length#=16$.  In this example $#hash(x)#=6$}
+   \figlabel{chainedhashtable}
+\end{figure}
+\index{hash value}%
+\index{hash(x)@#hash(x)#}%
+データ#x#の\emph{ハッシュ値}#hash(x)#とは$\{0,\ldots,#t.length#-1\}$の中のある値である。
+ハッシュ値が#i#であるデータはリスト#t[i]#に入れられる。
+リストが長くなり過ぎないように、次の不変条件を保持する。
+\[
+    #n# \le #t.length#
+\]
+こうると、リストの平均要素数は常に1以下である。
+$#n#/#t.length# \le 1$
+
+ハッシュテーブルに要素#x#を追加するには配列#t#の大きさを増やす必要があるかどうかを確認し、必要があれば#t#を拡張する。
+あとは#x#から$\{0,\ldots,#t.length#-1\}$内の整数であるハッシュ値#i#を計算し、#x#をリスト#t[i]#に追加すればよい。
+\codeimport{ods/ChainedHashTable.add(x)}
+配列を拡張するとき、#t#の大きさを二倍にし、元の配列に入っていた要素をすべて新しいテーブルに入れ直す。
+これは#ArrayStack#のときと同じ戦略であり、あのときと同じ結果が適用できる。
+すなわち、操作列についての拡張操作の償却実行時間は定数である。（必要ならページ\pageref{lem:arraystack-amortized}の\lemref{arraystack-amortized}を見直すこと。）
+
+拡張のあとはは#x#を#ChainedHashTable#リスト#t[hash(x)]#に追加すればよい。
+\ref{chap:arrays}章や\ref{chap:linkedlists}章で説明したどのリストの実装を使っても、この操作は定数時間で可能である。
+
+要素#x#をハッシュテーブルから削除するためには、リスト#t[hash(x)]#を#x#が見つかるまで辿ればよい。
+\codeimport{ods/ChainedHashTable.remove(x)}
+この実行時間は$#n#_{#i#}$をリスト#t[i]#の長さとするとき、$O(#n#_{#hash(x)#})$である。
+
+ハッシュテーブルから要素#x#を見つけるのも同様である。
+リスト#t[hash(x)]#を線形に探索すればよい。
+\codeimport{ods/ChainedHashTable.find(x)}
+これもリスト#t[hash(x)]#の長さに比例する時間がかかる。
+
+ハッシュテーブルの性能はハッシュ関数の選択に大きく影響される。
+良いハッシュ関数は要素を#t.length#個のリストに均等に分散し、各リストの長さの期待値は$O(#n#/#t.length)# = O(1)$である。
+一方、よくないハッシュ関数はすべての要素を同じリストに追加してしまう。
+すなわち、リスト#t[hash(x)]#の長さは#n#になってしまう。
+次の小節ではよいハッシュ関数について説明する。
+
+\subsection{Multiplicative Hashing}
+\seclabel{multihash}
+
+\index{hashing!multiplicative}%
+\index{multiplicative hashing}%
+乗算ハッシュ法は剰余算術（\secref{arrayqueue}で説明した）と整数の割り算からハッシュ値をハッシュ値を計算する効率的な方法である。
+$\ddiv$は割り算の商を求める演算子である。
+形式的には任意の整数$a\ge 0$と$b\ge 1$について、$a\ddiv b = \lfloor a/b\rfloor$と定義される。
+
+乗算ハッシュ法では、ある整数#d#（これは\emph{次数}と呼ばれるについて大きさ$2^{#d#}$であるハッシュテーブルを使う。
+整数$#x#\in\{0,\ldots,2^{#w#}-1\}$のハッシュ値は次のように計算される。
+\[
+    #hash(x)# = ((#z#\cdot#x#) \bmod 2^{#w#}) \ddiv 2^{#w#-#d#}
+\]
+ここで#z#は$\{1,\ldots,2^{#w#}-1\}$のうちの奇数からランダムに選択される。
+整数の演算は整数のビット数を$#w#$とするとき、$2^{#w#}$で勝手に剰余を取られることを利用すると、このハッシュ関数は非常に効率よく実現できる。
+\footnote{ほとんどのプログラミング言語ではこうなのだが、残念なことにRuby（やPythonなど）ではそうではない。#w#ビットの固定桁の演算の結果がビットに収まらなくなったときには、可変桁数の整数表現が使われるのである。}
+integer operation
+that overflows is upgraded to a variable-length representation.}  
+（\figref{multihashing}を参照せよ。）
+さらに、$2^{#w#-#d#}$による整数の割り算は二進法で右側の$#w#-#d#$ビットを落とせば計算できる。（これはビットを右に$#w#-#d#$個だけシフトすればよく、実装は上の式よりも単純になる。）
+\codeimport{ods/ChainedHashTable.hash(x)}
+
+\begin{figure}
+  \begin{center}
+    \resizebox{.98\textwidth}{!}{
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{|lr@{}r|}\hline
+    $2^#w#$ (4294967296)&            #1#&#00000000000000000000000000000000# \\
+    #z# (4102541685)&                   &#11110100100001111101000101110101# \\
+    #x# (42) &                          &#00000000000000000000000000101010# \\
+    $#z#\cdot#x#$ &             #101000#&#00011110010010000101110100110010# \\
+    $(#z#\cdot#x#)\bmod 2^{#w#}$ &      &#00011110010010000101110100110010# \\
+    $((#z#\cdot#x#)\bmod 2^{#w#})\ddiv 2^{#w#-#d#}$ &&
+                      \multicolumn{1}{@{}l|}{#00011110#} \\\hline
+    \end{tabular}}
+    \setlength{\arrayrulewidth}{.4pt}
+  \end{center}
+  \caption{$#w#=32$、$#d#=8$とした乗算ハッシュ法の操作}
+  \figlabel{multihashing}
+\end{figure}
+
+次の補題は乗算ハッシュ法がうまくハッシュ値の衝突を避けることを示す。（証明はこの節の後半に回す。）
+
+\begin{lem}\lemlabel{universal-hashing}
+  #x#と#y#を$\{0,\ldots,2^{#w#}-1\}$内の任意の整数であって、$#x#\neq #y#$を満たすものとする。
+  このとき$\Pr\{#hash(x)#=#hash(y)#\} \le 2/2^{#d#}$が成り立つ。
+\end{lem}
+
+\lemref{universal-hashing}より、#remove(x)#と#find(x)#の性能は簡単に解析できる。
+
+\begin{lem}
+任意のデータ#x#について、$#n#_{#x#}$を#x#がハッシュテーブルに現れる回数とするとき、リスト#t[hash(x)]#の長さの期待値は$#n#_{#x#} + 2$以下である。
+\end{lem}
+
+\begin{proof}
+  $S$をハッシュテーブルに含まれる#x#ではない要素の集合とする。
+  要素$#y#\in S$について、次の指示変数を定義する。
+    \[ I_{#y#} = \left\{\begin{array}{ll}
+       1 & \mbox{if $#hash(x)#=#hash(y)#$} \\
+       0 & \mbox{otherwise}
+       \end{array}\right.
+    \]
+  ここで、\lemref{universal-hashing}より、$\E[I_{#y#}] \le 2/2^{#d#}=2/#t.length#$である。
+  リスト#t[hash(x)]#の長さの期待値は次のように求まる。
+  \begin{eqnarray*}
+   \E\left[#t[hash(x)].size()#\right] &=& \E\left[#n#_{#x#} + \sum_{#y#\in S} I_{#y#}\right] \\
+    &=& #n#_{#x#} + \sum_{#y#\in S} \E [I_{#y#} ] \\
+    &\le& #n#_{#x#} + \sum_{#y#\in S} 2/#t.length# \\
+    &\le& #n#_{#x#} + \sum_{#y#\in S} 2/#n# \\
+    &\le& #n#_{#x#} + (#n#-#n#_{#x#})2/#n# \\
+    &\le& #n#_{#x#} + 2 \enspace ,
+  \end{eqnarray*}
+\end{proof}
+
+Now, we want to prove 
+続いて\lemref{universal-hashing}を証明する。
+まずは整数論の定理からはじめる。
+次の証明では$(b_r,\ldots,b_0)_2$と書いて、$\sum_{i=0}^r b_i2^i$を表す。ここで、$b_i$は0か1である。
+すなわち、$(b_r,\ldots,b_0)_2$は二進表記で$b_r,\ldots,b_0$である整数のことである。
+また、$\star$は値の不明な桁を表すとする。
+
+\begin{lem}\lemlabel{hashing-mapping}
+  $S$を$\{1,\ldots,2^{#w#}-1\}$内の奇数の集合とする。
+  $q, i$は$S$の任意の要素とする。
+  このとき、$#z#\in S$の要素が一意に存在して$#z#q\bmod 2^{#w#} = i$を満たす。
+\end{lem}
+
+\begin{proof}
+  $#z#$を選ぶと$i$は決まるので、$#z#q\bmod 2^{#w#} = i$を満たす$#z#\in S$が一意に決まることを示せば良い。
+
+  背理法で示す。
+  整数#z#と#z'#が存在し$#z#>#z#'$であると仮定する。
+  このとき、
+  \[
+     #z#q\bmod 2^{#w#} = #z#'q \bmod 2^{#w#} = i
+  \]
+  よって、
+  \[
+     (#z#-#z#')q\bmod 2^{#w#} = 0
+  \]
+  しかしこれはある整数$k$について次の式が成り立つことを意味する。
+  \begin{equation}
+    (#z#-#z#')q = k 2^{#w#} \eqlabel{factors}
+  \end{equation}
+  2進数のことを考えると
+  \[
+    (#z#-#z#')q = k\cdot(1,\underbrace{0,\ldots,0}_{#w#})_2
+  \]
+  なので、$(#z#-#z#')q$の末尾#w#桁はすべて0である。
+
+  加えて、$q\neq 0$かつ$#z#-#z#'\neq 0$より$k\neq 0$である。
+  $q$は奇数なのでこの二進表記の末尾桁は0ではない。
+  \[
+    q = (\star,\ldots,\star,1)_2
+  \]
+  $|#z#-#z#'| < 2^{#w#}$より、$#z#-#z#'$の末尾に連続して並ぶ0の個数は#w#未満である。
+  \[
+    #z#-#z#' = (\star,\ldots,\star,1,\underbrace{0,\ldots,0}_{<#w#})_2
+  \]
+  積$(#z#-#z#')q$の末尾に連続して並ぶ0の個数は#w#未満である。
+  \[
+   (#z#-#z#')q = (\star,\cdots,\star,1,\underbrace{0,\ldots,0}_{<#w#})_2 
+    \enspace .
+  \]
+  以上より、$(#z#-#z#')q$は\myeqref{factors}を満たさず、矛盾する。
+\end{proof}
+
+\lemref{hashing-mapping}から次の便利な事実がわかる。
+#z#が$S$から一様な確率でランダムに選ばれるとき、#zt#は$S$上に一様分布する。
+次の証明では#z#の最下位の1である桁を除いた、$#w#-1$桁のランダムなビットを考えるのがポイントだ。
+
+\begin{proof}[Proof of \lemref{universal-hashing}]
+条件$#hash(x)#=#hash(y)#$と「$#z# #x#\bmod2^{#w#}$の上位#d#ビット$#z# #y#\bmod 2^{#w#}$の上位#d#ビットが等しい」は同値である。
+この条件の必要条件は、$#z#(#x#-#y#)\bmod 2^{#w#}$の上位#d#ビットがすべて0である、またはすべて1であることである。
+これは、$#zx#\bmod 2^{#w#} > #zy#\bmod 2^{#w#}$ならば次の条件である。
+  \begin{equation}
+      #z#(#x#-#y#)\bmod 2^{#w#} = 
+      (\underbrace{0,\ldots,0}_{#d#},\underbrace{\star,\ldots,\star}_{#w#-#d#})_2 
+      \eqlabel{all-zeros}
+  \end{equation}
+一方、$#zx#\bmod 2^{#w#} < #zy#\bmod 2^{#w#}$ならば次の条件である。
+  \begin{equation}
+      #z#(#x#-#y#)\bmod 2^{#w#} = 
+      (\underbrace{1,\ldots,1}_{#d#},\underbrace{\star,\ldots,\star}_{#w#-#d#})_2 
+       \enspace .
+      \eqlabel{all-ones}
+  \end{equation}
+よって、$#z#(#x#-#y#)\bmod 2^{#w#}$が\myeqref{all-zeros}か\myeqref{all-ones}のどちらかであることを示せばよい。
+
+  $q$を、ある整数$r\ge 0$が存在し、$(#x#-#y#)\bmod 2^{#w#}=q2^r$を満たす一意な奇数とする。
+  \lemref{hashing-mapping}より、$#z#q\bmod 2^{#w#}$の二進表現は$#w#-1$桁のランダムなビットを持つ。（最下位桁は1である。）
+  \[
+   #z#q\bmod 2^{#w#}  = (\underbrace{b_{#w#-1},\ldots,b_{1}}_{#w#-1},1)_2
+  \]
+  よって$#z#(#x#-#y#)\bmod 2^{#w#}=#z#q2^r\bmod 2^{#w#}$は桁の$#w#-r-1$ランダムなビットを持つ。（その後1が続き、さらに$r$個の0が続く。）
+  \[
+  #z#(#x#-#y#)\bmod 2^{#w#}  =
+  #z#q2^{r}\bmod 2^{#w#} =
+      (\underbrace{b_{#w#-r-1},\ldots,b_{1}}_{#w#-r-1},1,\underbrace{0,0,\ldots,0}_{r})_2
+  \]
+  これで証明が終わる。
+  $r > #w#-#d#$ならば$#z#(#x#-#y#)\bmod 2^{#w#}$の上位#d#ビットは0と1を共に含む。よって$#z#(#x#-#y#)\bmod 2^{#w#}$が\myeqref{all-zeros}または\myeqref{all-ones}である確率は0である。
+  $#r#=#w#-#d#$ならば\myeqref{all-zeros}の確率は0だが、\myeqref{all-ones}である確率は$1/2^{#d#-1}=2/2^{#d#}$である。
+  （これは$b_1,\ldots,b_{d-1}=1,\ldots,1$である必要があるためだ。）
+  $r < #w#-#d#$ならば$b_{#w#-r-1},\ldots,b_{#w#-r-#d#}=0,\ldots,0$、すなわち$b_{#w#-r-1},\ldots,b_{#w#-r-#d#}=1,\ldots,1$である。
+  いずれの場合の確率も$1/2^{#d#}$であり、またそれぞれの事象は互いに排反である。
+  よって、このどちらかである確率は$2/2^{#d#}$である。
+\end{proof}
+
+\subsection{要約}
+
+次の定理は#ChainedHashTable#の性能をまとめたものだ。
+
+\begin{thm}\thmlabel{hashtable}
+  #ChainedHashTable#は#USet#インターフェースを実装する。
+  #grow()#のコストを無視すると、#ChainedHashTable#における#add(x)#・#remove(x)#・#find(x)#の期待実行時間は$O(1)$である。
+
+  さらに、空の#ChainedHashTable#に対して、$m$個の#add(x)#・#remove(x)#からなる任意の操作列を順に実行するとき、#grow()#の呼び出しに要する合計時間は$O(m)$である。
+\end{thm}
+
