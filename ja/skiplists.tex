@@ -390,3 +390,126 @@ $#n#$要素を含むスキップリストの大きさの期待値は$O(#n#)$で�
 ある要素の探索経路の長さの期待値は$2\log #n# + O(1)$以下である。
 \end{thm}
 
+\section{ディスカッションと練習問題}
+
+スキップリストを提案したのはPugh \cite{p91}であり、多くの拡張や応用も提案されている。\cite{p89}
+その後さらに多くの研究が行われている。
+スキップリストの#i#番目の要素を見つける探索経路の長さの期待値や分散はより正確に求められている。 \cite{kp94,kmp95,pmp92}.
+決定的な変種や\cite{mps92}偏りのある変種\cite{bbg02,esss01}、適応的な変種\cite{bdl08}も開発されている。
+スキップリストは様々な言語やフレームワークで書かれ、またオープンソースのデータベースシステムで使われている。\cite{skipdb,redis}
+スキップリストの変種がオペレーティング・システムHP-UXにおけるカーネルのプロセス制御の構造として使われている。\cite{hpux}.
+
+
+\begin{exc}
+\figref{skiplist}のスキップリストにおける2.5と5.5の探索経路を説明せよ。
+\end{exc}
+
+\begin{exc}
+\figref{skiplist}のスキップリストに対して、0.5を高さ1に追加し、その後3.5を高さ2に追加するときの振る舞いを説明せよ。
+\end{exc}
+
+\begin{exc}
+\figref{skiplist}のスキップリストから1と3を削除するときの振る舞いを説明せよ。
+\end{exc}
+
+\begin{exc}
+\figref{skiplist-lengths}の#SkiplistList#に#remove(2)#を実行する時の振る舞いを説明せよ。
+\end{exc}
+
+\begin{exc}
+\figref{skiplist-lengths}の#SkiplistList#に#add(3,x)#を実行する時の振る舞いを説明せよ。
+なお、#pickHeight()#は新たなノードの高さとして4を選択すると仮定せよ。
+\end{exc}
+
+\begin{exc}\exclabel{skiplist-changes}
+#add(x)#または#remove(x)#を実行するとき、#SkiplistSet#のポインタのうち操作されるものの数の期待値は定数であることを示せ。
+\end{exc}
+
+\begin{exc}\exclabel{skiplist-opt}
+$L_{i-1}$から$L_i$に要素を上げるかどうかを決めるとき、コイントスではなく確率$p (0 < p < 1)$を用いる。
+  \begin{enumerate}
+   \item このとき探索経路長の期待値は$(1/p)\log_{1/p} #n# + O(1)$以下であることを示せ。
+   \item これを最小にする$p$を求めよ。
+   \item スキップリストの高さの期待値を求めよ。
+   \item スキップリストのノード数の期待値を求めよ。
+  \end{enumerate}
+\end{exc}
+
+
+\begin{exc}\exclabel{skiplist-opt-2}
+  #SkiplistSet#の#find(x)#は\emph{冗長な比較}を行うことがある。
+  これは#x#と同じ値の比較を複数回行うことである。
+  $#u.next[r]# = #u.next[r-1]#$を満たすノード#u#が存在すると発生する。
+  どのように冗長な比較が発生するかを説明し、#find(x)#においてこれが発生しないようにする方法を示せ。
+  そして、このように修正した#find(x)#での比較操作の回数を解析せよ。
+\end{exc}
+
+\begin{exc}
+#SSet#における要素#x#のランクとは、#SSet#の要素であって、#x#より小さいものの個数である。
+#SSet#インターフェースの実装であり、ランクによる要素への高速アクセスが可能なスキップリストを設計・実装せよ。これはランク#i#の要素を返す#get(i)#を持つ。この操作の実行時間は$O(\log #n#)$である。
+\end{exc}
+
+\begin{exc}
+  \index{finger}%
+  \index{finger search!in a skiplist}%
+XXX: 日本語汚い
+
+スキップリストの\emph{指}とは探索経路において下に向かうノードからなる配列である。 （\pageref{pg:skiplist-add}のコードで#add(x)#における変数#stack#は\emph{指}である。\figref{skiplist-add}において影になっているノードは指を表している。）
+指は$L_0$における経路を示していると解釈することもできる。
+
+\emph{指探索}は指を利用した#find(x)#の実装である。
+$#u.x# < #x#$かつ$(#u.next#=#null# \or #u.next.x# > #x#)$を満たすノード#u#に到達するまで指を登り、そして#u#からふつうの#x#の探索を実行する。
+$L_0$において#b#と指が指す値との間にある値の数を$r$とするとき、\emph{指探索}のステップ数の期待値は$O(1+\log r)$である。
+
+#Skiplist#のサブクラス#SkiplistWithFinger#を実装せよ。
+これは#find(x)#を指を利用して実装する。
+このサブクラスでは指を保持し、指探索によって#find(x)#を実装する。
+#find(x)#の間に指は前回の#find(x)#の結果を指すように更新される。
+\end{exc}
+
+\begin{exc}\exclabel{skiplist-truncate}
+#truncate(i)#を実装せよ。
+これは#SkiplistList#を#i#番目の位置で切り詰める。
+このメソッドを実行するとリストの大きさは#i#になり、リストは添え字$0,\ldots,#i#-1$の要素のみを含むようになる。
+返り値は#SkiplistList#であって、添え字$#i#,\ldots,#n#-1$の要素を含むものである。
+このメソッドの実行時間は$O(\log #n#)$でなければならない。
+\end{exc}
+
+\begin{exc}
+#SkiplistList#の#absorb(l2)#メソッドを実装せよ。
+これは#SkiplistList# #l2#を引数に取り、これを空にし、元々入っていた要素をそのままの順番でレシーバーに追加するものだ。
+例えば、#l1#の要素が$a,b,c$、#l2#の要素が$d,e,f$であるとき、#l1.absorb(l2)#を呼ぶと、#l1#の要素は$a,b,c,d,e,f$になり#l2#は空になる。
+このメソッドの実行時間は$O(\log #n#)$でなければならない。
+\end{exc}
+
+\begin{exc}
+#SEList#のアイデアを転用し、空間効率の良い#SSet#である#SESSet#を設計・実装せよ。
+要素を順に#SEList#に格納し、この#SEList#のブロックを#SSet#に格納すればよい。
+もし使った#SSet#の実装が#n#要素を$O(#n#)$のメモリだけを使って保持できるなら、#SESSet#は#n#要素を格納ためのメモリに加えて、消費する無駄なメモリは$O(#n#/#b#+#b#)$である。
+\end{exc}
+
+\begin{exc}
+#SSet#を使って、（大きな）テキストを読み込み、そのテキストの任意の部分文字列をインタラクティブに検索できるアプリケーションを設計・実装せよ。
+このアプリはユーザーがクエリを入力するときテキストのマッチしている部分があればこれを結果として返す。
+
+  \noindent ヒント1：任意の部分文字列はある接尾辞の接頭辞である。よってテキストファイルのすべての接尾辞を保存すれば十分である。
+
+  \noindent ヒント2：任意の接尾辞はテキストの中のどこから接尾辞が始まるのかを表す一つの整数でコンパクトに表現できる。
+
+  \noindent 書いたアプリケーションを長いテキストでテストせよ。
+  プロジェクトGutenberg \cite{gutenberg}から本を入手できる。
+  正しく動いたら、レスポンスを速くしよう。すなわち、キー入力から結果が得られるまでに要する時間を認識できないくらい小さくしよう。
+\end{exc}
+
+\begin{exc}
+  \index{skiplist!versus binary search tree}%
+  \index{binary search tree!versus skiplist}%
+  （この練習問題は\secref{binarysearchtree}で二分探索木について学んでから取り組むべきだ。）
+  スキップリストを二分探索木と比較せよ。
+  \begin{enumerate}
+     \item スキップリストの辺を削除することが、二分木のようにみえること、また二分探索木ににていることを説明せよ。
+     \item スキップリストと二分探索木は使うポインタの数は同じである。(ノードあたり2つ）
+	 しかしスキップリストの方がこれを上手く使っている。
+	 これは何故か、説明せよ。
+  \end{enumerate}
+\end{exc}
