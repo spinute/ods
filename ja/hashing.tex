@@ -251,3 +251,205 @@ Now, we want to prove
   さらに、空の#ChainedHashTable#に対して、$m$個の#add(x)#・#remove(x)#からなる任意の操作列を順に実行するとき、#grow()#の呼び出しに要する合計時間は$O(m)$である。
 \end{thm}
 
+\section{#LinearHashTable#：線形探索法}
+\seclabel{linearhashtable}
+
+\index{LinearHashTable@#LinearHashTable#}%
+The 
+#ChainedHashTable#はリストの配列を使うデータ構造であった。
+#i#番目のリストは$#hash(x)#=#i#$である#x#を全て格納していた。
+\emph{オープンアドレス法}と呼ばれる別の方法があり、これは配列#t#に直列要素を収めるものだ。
+\index{open addressing}%
+このやり方はこの節で説明する#LinearHashTable#が採用しているものだ。
+文献によっては\emph{線形探索法によるオープンアドレス}と呼ばれることもある。
+\index{linear probing}%
+
+#LinearHashTable#の背後にあるアイデアは#i=hash(x)#である要素#x#を理想的には#t[i]#に入れたい、というものだ。
+もしこれが（他の要素が既にそこに入っていて）ムリなら、$#t#[(#i#+1)\bmod#t.length#]$に要素を入れてみる。
+これもムリなら$#t#[(#i#+2)\bmod#t.length#]$に入れてみる。
+これを#x#が入れる場所が見つかるまで繰り返す。
+
+#t#の値は次の三種類のいずれかだ。
+\begin{enumerate}
+  \item データの値：#USet#に入っている実際の値である。
+  \item #null#：データが入っていないことを示す。
+  \item #del#：データが入っていたがそれが削除されたことを示す。
+\end{enumerate}
+#LinearHashTable#の要素数を数えるカウンタ#n#に加えて、上の一つ目と三つ目の個数の合計を数えるカウンタ#q#を用意する。
+#q#の値は#n#に#del#の個数を加えた値である。
+効率的にこれを実装するために、#t#は#q#より十分大きい必要がある。このとき、#t#には#null#である場所がたくさんある。
+よって#LinearHashTable#の操作は不変条件$#t.length#\ge 2#q#$を常に満たすようにする。
+
+整理すると、#LinearHashTable#は要素の配列#t#に加え、整数#n#、#q#を持つ。これはそれぞれ要素数と、#null#でない値の個数を保持する。
+さらに、ハッシュ関数の値域の大きさ2の冪に制限されていることが多いので、整数不変条件$#t.length#=2^#d#$を満たす整数#d#も持ち回る。
+\codeimport{ods/LinearHashTable.t.n.q.d}
+
+#LinearHashTable#の#find(x)#操作は単純である。
+$#i#=#hash(x)#$として、#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\bmod #t.length#]$, ...と順に、#t[i']=x#または#t[i']=null#を満たす添え字#i'#を探す。
+#t[i']=x#のとき、#x#が見つかったとして#t[i']#を返す。
+#t[i']=null#のとき、#x#はハッシュテーブルに含まれないとして#null#を返す。
+\codeimport{ods/LinearHashTable.find(x)}
+
+#LinearHashTable#の#add(x)#操作も簡単に実装できる。
+#find(x)#を使えば#x#が入っているかどうか確認できる。
+#x#が入っていなければ#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\bmod #t.length#]$, ...と順に探し、#null#か#del#を見つけたらそこを#x#に書き換え、#n#と#q#をひとつずつ増やす。
+\codeimport{ods/LinearHashTable.add(x)}
+
+ここまでで#remove(x)#の実装も明らかだろう。
+t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\bmod #t.length#]$, ...と#t[i']=x#または#t[i']=null#である添え字#i'#を見つけるまで探す。
+#t[i']=x#ならば#t[i']=del#とし#true#を返す。
+#t[i']=null#ならば#x#はテーブルに入っていなかった（そのため削除できない）として#false#を返す。
+\codeimport{ods/LinearHashTable.remove(x)}
+
+#find(x)#・#add(x)#・#remove(x)#の正しさは簡単に確認できる。
+ただし、これは#del#を使うことに依存している。
+これらの操作は#null#でない値を#null#に書き換えないことに注意する。
+そのため#t[i']=null#である添え字#i'#を見つけると、#x#は配列に入っていないことがわかる。
+#t[i']#はずっと#null#であったといえるので先立って、すなわち#i'#よりも先の添字に#add(x)#が要素を追加していることはないのである。
+
+
+#null#でないエントリの数が$#t.length#/2$より大きいときに#add(x)#を呼ぶとき、またはデータの入っているエントリ数が#t.length/8#よりも小さいときに#remove(x)#を呼ぶと#resize()#が呼ばれる。
+#resize()#は他の配列を使ったデータ構造の場合と同様に働く。
+まず$2^{#d#} \ge 3#n#$を満たす最小の非負整数#d#を見つける。
+大きさ$2^{#d#}$の配列#t#を割当て、古い配列の要素を全て移し替える。
+この処理の過程で、#q#を#n#に等しくリセットする。
+これは新しい配列#t#は#del#を含まないためである。
+\codeimport{ods/LinearHashTable.resize()}
+
+\subsection{線形探索法の解析}
+
+#add(x)#・#remove(x)#・#find(x)#のいずれも#null#であるエントリを見つけると（あるいはその前に）終了することに注意する。
+配列#t#の半分以上は#null#なので、直感的には線形探索法はすぐに#null#のエントリを見つけて処理を終えそうに思う。
+しかしあまりこの直感を当てにはできない。
+例えば#t#のエントリを平均的には２つだけ見れば良さそうだが、実はこれは正しくない。
+
+この節ではハッシュ値は$\{0,\ldots,#t.length#-1\}$から一様な確率分布に従う独立な値であると仮定する。
+これは現実的な仮定ではないが、これを仮定すれば線形探索法の解析が可能になる。
+この節の後半でTabulation Hashingという、線形探索法の用途には「十分よい」ハッシュ法を説明する。
+もうひとつ、#t#の添字はすべて#t.length#で剰余を取っているとする。
+つまり単に#t[i]#と書いても$#t#[#i#\bmod#t.length#]$のことである。
+
+\index{run}%
+XXX: runの訳語
+\emph{#i#から始まる長さ$k$のrun}が発生するとはテーブルのエントリ$#t[i]#, #t[i+1]#,\ldots,#t#[#i#+k-1]$がいずれも#null#でなく、$#t#[#i#-1]=#t#[#i#+k]=#null#$であることをいう。
+#t#の#null#でない要素の数は#q#で、#add(x)#は常に$#q#\le#t.length#/2$であることを保証する。
+直前の#rebuild()#以後、#t#に挿入された#q#個の要素を$#x#_1,\ldots,#x#_{#q#}$とする。
+仮定より、ハッシュ値$#hash#(#x#_j)$はいずれも一様分布に従う互いに独立な確率変数である。
+ここまでの準備で線形探索法の解析における主要な補題を示せる。
+
+\begin{lem}\lemlabel{linear-probing}
+#i#を$\{0,\ldots,#t.length#-1\}$のある要素に固定する。
+このときある定数$c(0<c<1)$が存在して、#i#から始まる長さ$k$のrunが発生する確率を$O(c^k)$と表せる。
+\end{lem}
+
+\begin{proof}
+#i#から始まる長さ$k$のrunが発生するとき、相異なる$k$個の要素$#x#_j$が存在し、$#hash#(#x#_j)\in\{#i#,\ldots,#i#+k-1\}$を満たす。
+この事象の発生確率は次のように計算できる。
+\[
+  p_k  = \binom{#q#}{k}\left(\frac{k}{#t.length#}\right)^k\left(\frac{#t.length#-k}{#t.length#}\right)^{#q#-k}
+\]
+これは$k$個の要素の選び方によらず、これら$k$個の要素はいずれも$k$箇所のうちのいずれかに、そして残りの$#q#-k$個の要素は残りの$#t.length#-k$箇所に割り振られなければならないためだ。
+\footnote{$p_k$は#i#から始まる長さ$k$のrunが発生する確率よりも大きいことに注意する。これは$p_k$は必要条件$#t#[#i#-1]=#t#[#i#+k]=#null#$を要求しないためである。}
+
+次の導出ではすこしズルをしている。
+$r!$を$(r/e)^r$に置き換える部分である。
+スターリング近似（\secref{factorials}）からこれは真実からのずれは$O(\sqrt{r})$程度だとわかる。
+これを許すと導出が簡単になるのである。
+\excref{linear-probing}ではスターリング近似を使ったより厳密な計算を読者にやってもらう予定だ。
+
+#t.length#が最小値を取るとき$p_k$は最大値を取る。
+またデータ構造は不変条件$#t.length# \ge 2#q#$を保つ。
+よって次の式が成り立つ。
+\begin{align*}
+   p_k & \le \binom{#q#}{k}\left(\frac{k}{2#q#}\right)^k\left(\frac{2#q#-k}{2#q#}\right)^{#q#-k} \\
+  & = \left(\frac{#q#!}{(#q#-k)!k!}\right)\left(\frac{k}{2#q#}\right)^k\left(\frac{2#q#-k}{2#q#}\right)^{#q#-k} \\
+  & \approx \left(\frac{#q#^{#q#}}{(#q#-k)^{#q#-k}k^k}\right)\left(\frac{k}{2#q#}\right)^k\left(\frac{2#q#-k}{2#q#}\right)^{#q#-k} && \text{[Stirling's approximation]} \\
+  & = \left(\frac{#q#^{k}#q#^{#q#-k}}{(#q#-k)^{#q#-k}k^k}\right)\left(\frac{k}{2#q#}\right)^k\left(\frac{2#q#-k}{2#q#}\right)^{#q#-k} \\
+ & = \left(\frac{#q#k}{2#q#k}\right)^k
+     \left(\frac{#q#(2#q#-k)}{2#q#(#q#-k)}\right)^{#q#-k} \\
+ & = \left(\frac{1}{2}\right)^k
+     \left(\frac{(2#q#-k)}{2(#q#-k)}\right)^{#q#-k} \\
+ & = \left(\frac{1}{2}\right)^k
+     \left(1+\frac{k}{2(#q#-k)}\right)^{#q#-k} \\
+ & \le \left(\frac{\sqrt{e}}{2}\right)^k
+\end{align*}
+最後の変形では$x>0$ならば$(1+1/x)^x \le e$であることを利用した。
+ここで、$\sqrt{e}/{2}< 0.824360636 < 1$なので、補題が示された。
+\end{proof}
+
+\lemref{linear-probing}を使えば#find(x)#・#add(x)#・#remove(x)#の期待実行時間の上界は直接的に計算できる。
+まずは最もシンプルな#find(x)#を呼ぶが#x#が#LinearHashTable#に入っていないときを考える。
+この場合$#i#=#hash(x)#$は$\{0,\ldots,#t.length#-1\}$の値を取り、#t#の中身と独立な確率変数である。
+#i#が長さ$k$のrunの一部なら、#find(x)#の実行時間は$O(1+k)$以下である。
+よって実行時間の期待値の上界を計算できる。
+\[
+  O\left(1 + \left(\frac{1}{#t.length#}\right)\sum_{i=1}^{#t.length#}\sum_{k=0}^{\infty} k\Pr\{\text{#i# is part of a run of length $k$}\}\right)
+\]
+内側の和を取っている長さ$k$のrunはk回カウントされているので、これをまとめて$k^2$とすれば、上の和は次のように変形できる。
+\begin{align*}
+  & { } O\left(1 + \left(\frac{1}{#t.length#}\right)\sum_{i=1}^{#t.length#}\sum_{k=0}^{\infty} k^2\Pr\{\mbox{#i# starts a run of length $k$}\}\right) \\
+  & \le O\left(1 + \left(\frac{1}{#t.length#}\right)\sum_{i=1}^{#t.length#}\sum_{k=0}^{\infty} k^2p_k\right) \\
+  & = O\left(1 + \sum_{k=0}^{\infty} k^2p_k\right) \\
+  & = O\left(1 + \sum_{k=0}^{\infty} k^2\cdot O(c^k)\right) \\
+  & = O(1)
+\end{align*}
+最後の変形$\sum_{k=0}^{\infty} k^2\cdot O(c^k)$では指数級数の性質を使っている。
+\footnote{解析学の教科書ではこの和は比を計算して求める。すなわち、ある正の数$k_0$が存在し、任意の$k\ge k_0$について、$\frac{(k+1)^2c^{k+1}}{k^2c^k} < 1$を満たす。}
+以上より、#LinearHashTable#に入っていない#x#について、#find(x)#の期待実行時間は$O(1)$である。
+
+#resize()#のコストを無視していいなら、この解析で#LinearHashTable#の解析を終わりだ。
+
+まず上の#find(x)#の解析は、#add(x)#において#x#がテーブルに含まれないときにもそのまま適用できる。
+#x#がテーブルに含まれるときの#find(x)#の解析は#add(x)#によって#x#を加えたときのコストと同じである。
+最後に、#remove(x)#のコストも#find(x)#のコストと同じだ。
+
+まとめると、#resize()#のコストを無視すれば、#LinearHashTable#の操作の期待実行時間はいずれも$O(1)$である。
+リサイズのコストを考える場合は、\secref{arraystack}で#ArrayStack#の償却解析を行ったのと同様である。
+
+\subsection{Summary}
+
+次の定理は#LinearHashTable#の性能をまとめたものだ。
+
+\begin{thm}\thmlabel{linear-probing}
+  #LinearHashTable#は#USet#インターフェースを実装する。
+  #resize()#のコストを無視すると、#LinearHashTable#における#add(x)#・#remove(x)#・#find(x)#の期待実行時間は$O(1)$である。
+
+  さらに、空の#LinearHashTable#に対して、$m$個の#add(x)#・#remove(x)#からなる操作の列を順に実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
+\end{thm}
+
+\subsection{Tabulation Hashing}
+\seclabel{tabulation}
+
+\index{tabulation hashing}%
+#LinearHashTable#の解析では強い仮定を置いていた。
+すなわち、任意の相異なる要素$\{#x#_1,\ldots,#x#_#n#\}$についてそのハッシュ値$#hash#($x$_1),\ldots,#hash#(#x#_#n#)$が独立に一様な確率で$\{0,\ldots,#t.length#-1\}$内を分布するという仮定である。
+これを実現するひとつのやり方は大きさ$2^{#w#}$の巨大な配列#tab#を準備し、すべてのエントリを互いに独立な#w#-bitの乱数で初期化することだ。
+このとき、#hash(x)#は#tab[x.hashCode()]#から#d#ビットを整数として取り出せばよい。
+\codeimport{ods/LinearHashTable.idealHash(x)}
+あいにく大きさ$2^{#w#}$の配列はメモリ使用量の観点から現実的でない。
+\emph{Tabulation Hashing}では#w#ビットの整数の代わりに$#w#/#r#$個の$#r#$ビット整数で妥協する。
+こうすれば大きさ$2^{#r#}$の配列$#w#/#r#$個で済むのである。
+これらの配列に入っている整数はいずれも互いに独立な#w#ビットの乱数である。
+-bit integers.  To obtain the value
+of 
+#hash(x)#を計算するために、#x.hashCode()#を$#w#/#r#$個の#r#ビット整数に分け、それぞれを配列の添え字として使う。
+その後各配列の値をビット単位の排他的論理和を計算し、この結果を#hash(x)#とする。
+次のコードは$#w#=32, #r#=4$の場合のものである。
+\codeimport{ods/LinearHashTable.hash(x)}
+この場合、#tab#は4つの列と$2^{32/4}=256$の行からなる二次元配列である。
+XXX: これ必要?
+\pcodeonly{
+Quantities like #0xff#, used above, are \emph{hexadecimal numbers}
+\index{hexadecimal numbers}%
+whose digits have 16 possible values 0--9, which have their usual
+meaning and a--f, which denote 10--15.  The number $#0xff#=15\cdot 16 + 15 = 255$.
+The #&# symbol is the \emph{bitwise and} operator, so
+code like #h >> 8 & 0xff# extracts bits with index 8 through 15 of #h#.}
+
+任意の#x#について#hash(x)#は$\{0,\ldots,2^{#d#}-1\}$の値をを一様な確率で取ることを簡単に確認できる。
+少し計算すればハッシュ値のペアが互いに独立であることも確認できる。
+これは#ChainedHashTable#における乗算ハッシュ法の代わりにTabulation Hashingを使えることを意味する。
+
+残念ながら、相異なる任意の#n#個の値の組みについて、そのハッシュ値が互いに独立というわけではない。
+しかしそうであっても、Tabulation Hashingは\thmref{linear-probing}で示した性質を保証するのに十分よいハッシュ法である。
+この話題についてはこの章の終わりで参考文献を紹介する。
