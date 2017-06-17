@@ -71,3 +71,97 @@
 \emph{外部ノード}を考えると便利なことがある。
 左の子を持たないノードは外部ノードを左の子として持ち、同様に右の子を持たないノードは外部ノードを右の子として持つとする。（\figref{binary-tree}.bを参照）
 帰納法により、$#n#\ge 1$個の（本物の）ノードを持つ二分木は$#n#+1$個の外部ノードを持つことを示せる。
+
+\section{#BinaryTree#：基本的な二分木}
+
+\index{BinaryTree@#BinaryTree#}%
+二分木のノード#u#を表す最も単純なやり方は、明示的に（3つ以下の）隣接するノードを保持することだ。
+\javaimport{ods/BinaryTree.BTNode<Node}
+\cppimport{ods/BinaryTree.BTNode}
+隣接する頂点が3つもないときはそこには#nil#を入れる。
+こうすれば外部ノードと根の親が#nil#に対応することになる。
+
+すると、二分木自体は根#r#への参照として表現できる。
+\codeimport{ods/BinaryTree.r}
+
+ノード#u#の深さは#u#から根への経路をたどるときのステップ数である。
+\codeimport{ods/BinaryTree.depth(u)}
+
+
+\subsection{Recursive Algorithms}
+
+\index{recursive algorithm}%
+再帰アルゴリズムを使うと二分木に関する計算が簡単になる。
+例えば#u#を根とする二分木のサイズ（ノードの数）は、#u#の子を根とする部分木のサイズを最適に計算し、足し合わせると求まる。
+
+\codeimport{ods/BinaryTree.size(u)}
+
+ノード#u#の高さは#u#のふたつの部分木の高さの最大値を計算し、それに1加えると求まる。
+
+\codeimport{ods/BinaryTree.height(u)}
+
+\subsection{Traversing Binary Trees}
+\seclabel{bintree:traversal}
+
+\index{traversal!of a binary tree}%
+\index{tree traversal}%
+\index{binary-tree traversal}%
+先の小節で説明したふたつのアルゴリズムは二分木のすべてのノードを訪問するために再帰を使った。
+いずれのアルゴリズムも二分木のノードを次のコードと同じ順番で訪問していた。
+\codeimport{ods/BinaryTree.traverse(u)}
+
+このように再帰を使うと、短くて単純なコードを書けるが、これには問題もある。
+再帰の深さの最大値は二分木の深さの最大値、すなわち木の高さである。
+木の高さが非常に大きいと、この再帰は利用できるスタックの量以上の領域を要求し、プログラムがクラッシュしてしまう。
+
+再帰なしで二分木を辿るためには、どこから来たかに基づき次の行き先を決めるアルゴリズムを使える。
+\figref{bintree-traverse}を見よ。
+ノード#u#に#u.parent#から来たときは、次は#u.left#に向かう。
+#u.left#から来たときは、次は#u.right#に向かう。
+#u.right#から来たときは、#u#の部分木は辿り終えたので#u.parent#に戻る。
+次のコードはこれを実装したものである。
+ただし、#u.left#・#u.right#・#u.parent#が#nil#であるケースも適切に処理している。
+\codeimport{ods/BinaryTree.traverse2()}
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[scale=0.90909]{figs/bintree-traverse-2}
+      \includegraphics[scale=0.90909]{figs/bintree-3}
+    \end{tabular}
+  \end{center}
+  \caption[Traversing a BinaryTree]{The three cases that occur at node
+    #u# when traversing a binary tree non-recursively, and the resultant
+    traversal of the tree.}
+  \figlabel{bintree-traverse}
+\end{figure}
+
+再帰アルゴリズムで計算できることは、こうして再帰なしでも計算できる。
+例えば木のサイズを計算するためには、カウンタ#n#を保持し、新しいノードを訪問するたびにその値をひとつずつ増やせばよい。
+\codeimport{ods/BinaryTree.size2()}
+
+二分木の実装には、#parent#を使わないものもある。
+この場合、再帰でない実装はやはり可能だが、#List#か#Stack#を使って今見ているノードから根までの経路を記録する必要がある。
+
+
+これまで説明したものとは別の辿り方は\emph{幅優先}なものである。
+\index{breadth-first traversal}%
+\index{traversal!breadth-first}%
+幅優先でノードを辿る場合、根から深さごとに下に向かって、同じ深さのものは左から順に、すべてのノードは訪問される。
+（\figref{bintree-bfs}を参照せよ。）
+XXX: どういう意味だろう
+これは英語の文章読み方と似ている。
+幅優先の巡回はキュー#q#を使って実装できる。
+はじめは#q#は根だけを含む。
+ステップごとに次のノード#u#を#q#から取り出し、#u#を処理し、#u.left#と#u.right#を（#nil#じゃなければ）#q#に加える。
+\codeimport{ods/BinaryTree.bfTraverse()}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/bintree-4}
+  \end{center}
+  \caption{During a breadth-first traversal, the nodes of a binary tree
+  are visited
+level-by-level, and left-to-right within each level.}
+  \figlabel{bintree-bfs}
+\end{figure}
