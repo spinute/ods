@@ -1,0 +1,73 @@
+\chapter{二分木}
+\chaplabel{binarytrees}
+
+この章ではコンピュータサイエンスで最も基本的な構造のうちのひとつである二分木を紹介する。
+\emph{木}と呼ばれるのは図示した場合の構造が（森に生えてる）木に似ているためである。
+\index{tree}%
+\index{tree!binary}%
+\index{binary tree}%
+二分木の定義は複数ある。
+数学的には\emph{二分木}とは連結な有限無向グラフであって、サイクルがなく、すべての頂点の次数が2以下であるものである。
+
+コンピュータサイエンスでの二分木には\emph{根付き}である。
+\index{tree!rooted}%
+\index{rooted tree}%
+次数2以下の特別なノード#r#を、木の\emph{根}と呼ぶ。
+すべてのノード$#u#(\neq #r#)$について#u#から#r#に向かう経路上の二番目のノードを#u#の\emph{親}という。
+\index{parent}%
+それ以外の#u#に隣接するノードを#u#の\emph{子}と呼ぶ。
+\emph{順序付けられた}二分木に興味がある事が多い。
+\index{ordered tree}%
+\index{tree!ordered}%
+これは\emph{左の子}と\emph{右の子}を区別するということだ。
+\index{left child}%
+\index{child!left}%
+\index{right child}%
+\index{child!right}%
+
+図示するとき、二分木はふつう根から下に向かって書かれる。
+根が一番上にあり、左右の子はそれぞれ左下・右下に書かれる。
+（\figref{bintree-orientation}）
+例えば\figref{binary-tree}.a は9個のノードを持つ二分木である。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/bintree-traverse-1} 
+  \end{center}
+  \caption[Parent, left child, and right child]{The parent, left child, and right child of the node #u#
+    in a #BinaryTree#.}
+  \figlabel{bintree-orientation}
+\end{figure}
+
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[width=\HalfScaleIfNeeded]{figs/bintree-1} &
+      \includegraphics[width=\HalfScaleIfNeeded]{figs/bintree-2} \\
+      (a) & (b)
+    \end{tabular}
+  \end{center}
+  \caption{A binary tree with (a)~nine real nodes and (b)~ten external nodes.}
+  \figlabel{binary-tree}
+\end{figure}
+
+二分木は重要なので、そのための専用の語彙がいくつかある。
+二分木におけるノード#u#の\emph{深さ}とは、
+\index{depth}%
+#u#から根までの経路の長さである。
+ノード#w#が#u#から#r#へのパスに含まれるとき、#w#は#u#の\emph{祖先}と呼ばれる。
+\index{ancestor}%
+一方#u#は#w#の\emph{子孫}と呼ばれる。
+\index{descendant}%
+二分木によけるノード#u#の\emph{部分木}とは、#u#を根とし、#u#のすべての子孫を含む二分木である。
+ノード#u#の\emph{高さ}とは、#u#から#u#の子孫へのパスの長さの最大値である。
+\index{height!in a tree}
+木の\emph{高さ}とはその根の高さである。
+\index{height!of a tree}%
+ノード#u#が子を持たないとき、#u#は\emph{葉}である。
+\index{leaf}%
+
+\emph{外部ノード}を考えると便利なことがある。
+左の子を持たないノードは外部ノードを左の子として持ち、同様に右の子を持たないノードは外部ノードを右の子として持つとする。（\figref{binary-tree}.bを参照）
+帰納法により、$#n#\ge 1$個の（本物の）ノードを持つ二分木は$#n#+1$個の外部ノードを持つことを示せる。
