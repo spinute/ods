@@ -310,3 +310,173 @@ Two examples of searches in a binary search tree are shown in
 \chapref{rbs}で\emph{期待実行時間}$O(\log #n#)$を、ランダム性を利用して達成する方法を説明する。
 \chapref{scapegoat}では\emph{償却実行時間}$O(\log #n#)$を、部分的な再構築を利用して達成する方法を説明する。
 \chapref{redblack}では\emph{最悪実行時間}$O(\log #n#)$を、4つまで子を持ちうる木をシミュレートすることで達成する方法を説明する。
+
+\section{ディスカッションと練習問題}
+
+二分木は血縁関係のモデルとして数千年に渡って使われている。
+これは家系図は自然と二分木でモデル化されるからだ。
+\index{family tree}%
+\index{pedigree family tree}%
+家系図では根はある人で、左右の子ノードはその人の両親である。
+最近の数百年では二分木は生物学における系統樹にも使われている。
+\index{species tree}
+ここでは葉は現存の種を表し、内部ノードは\emph{分化}の発生を示す。
+\emph{speciation events}
+これは一つの種のふたつの集団からふたつの別々の種が派生することだ。
+
+二分探索木は1950年代に、複数のグループが独立に発見した。
+\cite[Section~6.2.2]{k97v3}
+個々の二分探索木についてのより詳細な文献は後の章で紹介する。
+
+ゼロから二分木を実装するとき、いくつか設計上考えることがある。
+ひとつは各ノードが親へのポインタを持つかどうかである。
+多くの操作が単に根から葉への経路を辿るものならば親へのポインタは不要で、メモリを無駄にしたり、バグを入れ込む原因となったりする。
+一方親へのポインタがないと、木探索は再帰を（または明示的にスタックを）使うことになる。
+またいくつか実装が複雑になってしまう操作もある。（ある種の二分探索木における挿入や削除など）
+
+もうひとつの設計上のポイントは親と左右の子へのポインタをどう保持するかである。
+この章の実装ではそれぞれ別々の変数にこれを保持していた。
+長さ3の配列#p#を使う選択肢もある。
+ここで#u.p[0]#・#u.p[1]#・#u.p[2]#がそれぞれ、#u#の左右の子と親へのポインタを保持する。
+配列を使うとプログラム内の#if#文の連続を代数的な表現でより単純に書くことができる。
+
+この単純化を木を辿るときに使える。
+例えば、#u.p[i]#から#u#に来たとき、次のノードは$#u.p#[(#i#+1)\bmod 3]$である。
+左右の対称性があるときにも似たようなことができる。
+すなわち、#u.p[i]#の兄弟は$#u.p#[(#i#+1)\bmod 2]$である。
+これは#u.p[i]#が左の子($#i#=0$)であっても右の子($#i#=1$)であっても使える。
+これにより、左右の場合それぞれのために複雑なコードを書いていたのをまとめられることがある。
+例として\pageref{page:rotations}の#rotateLeft(u)#・#rotateRight(u)#を参照せよ。
+
+\begin{exc}
+  $#n#\ge 1$個のノードからなる二分木は$#n#-1$本の辺を持つことを示せ。
+\end{exc}
+
+\begin{exc}
+  $#n#\ge 1$個の（本物の）ノードからなる二分木は$#n#+1$個の外部ノードを持つことを示せ。
+\end{exc}
+
+\begin{exc}
+  二分木$T$が一つ以上葉を持つとき、$T$の根の高々ひとつの子を持つか、$T$は二つ以上の葉を持つかのいずれかであることを示せ。
+\end{exc}
+
+\begin{exc}
+ノード#u#を根とする部分木の大きさを計算する再帰的でないメソッド#size2(u)#を実装せよ。
+\end{exc}
+
+\begin{exc}
+ノード#u#をの高さを計算する再帰的でないメソッド#height2(u)#を実装せよ。
+\end{exc}
+
+\begin{exc}
+二分木が\emph{サイズでバランスされている}とは、
+  \index{size-balanced}%
+  \index{binary search tree!size-balanced}%
+任意のノード#u#について、#u.left#・#u.right#を根とする部分木のサイズの差が高々1であることをいう。
+二分木がこの意味でバランスされているかを判定する再帰的メソッド#isBalanced()#を書け。
+このメソッドの実行時間は$O(#n#)$でなければならない。
+（色々な形状の大きい木でテストしてみること。$O(#n#)$より多く時間がかかる実装は簡単である。）
+\end{exc}
+
+\index{traversal!pre-order}%
+\index{traversal!post-order}%
+\index{traversal!in-order}%
+\index{pre-order traversal}%
+\index{post-order traversal}%
+\index{in-order traversal}%
+\emph{行きがけ順}とは、二分木の訪問順であって、ノード#u#をそのいずれの子よりも先に訪問するものである。
+\emph{通りがけ順}とは、二分木の訪問順であって、ノード#u#を左の部分木に含まれる子よりも後かつ右の部分木に含まれる子よりも先に訪問するものである。
+\emph{帰りがけ順}とは、二分木の訪問順であって、ノード#u#を#u#を根とする部分木に含まれるいずれの子よりも後に訪問するものである。
+行きがけ番号・通りがけ番号・帰りがけ番号とは、各対応する順序に従って頂点を訪問した時のノードに付された訪問順の番号である。
+例として\figref{binarytree-numbering}を見よ。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/binarytree-numbering-1}
+    \includegraphics[scale=0.90909]{figs/binarytree-numbering-2} \\[2ex]
+    \includegraphics[scale=0.90909]{figs/binarytree-numbering-3}
+  \end{center}
+  \caption{Pre-order, post-order, and in-order numberings of a binary tree.}
+  \figlabel{binarytree-numbering}
+\end{figure}
+
+\begin{exc}
+  \index{number!pre-order}%
+  \index{number!post-order}%
+  \index{number!in-order}%
+  \index{pre-order number}%
+  \index{post-order number}%
+  \index{in-order number}%
+#BinarySearchTree#のサブクラスとしてノードのフィールドに行きがけ番号・通りがけ番号・帰りがけ番号を持つものを作れ。
+これらの値を適切に割り当てる再帰的なメソッド#preOrderNumber()#・#inOrderNumber()#・#postOrderNumbers()#を書け。
+なお、いずれのメソッドの実行時間も$O(#n#)$であること。
+\end{exc}
+
+\begin{exc}\exclabel{tree-traversal}
+再帰的でない関数#nextPreOrder(u)#・#nextInOrder(u)#・#nextPostOrder(u)#を実装せよ。
+これらは各順序においてノード#u#の次であるノードを返す関数である。
+いずれも償却実行時間は定数である必要がある。
+ノード#u#からはじめて、この関数を繰り返し呼んでノードを辿り、$#u#=#null#$になるまでこれを続けるとき、すべての呼び出しの合計コストは$O(#n#)$でなければならない。
+\end{exc}
+
+\begin{exc}
+ノードに行きがけ番号・通りがけ番号・帰りがけ番号が付された二分木があるとする。
+この番号を使って次の質問に定数時間で答える方法を考えよ。
+  \begin{enumerate}
+    \item ノード#u#が与えられたとき、#u#を根とする部分木の大きさを求めよ。
+    \item ノード#u#が与えられたとき、#u#の深さを求めよ。
+    \item ノード#u#と#w#が与えられたとき、#u#が#w#の祖先であるかを判定せよ。
+  \end{enumerate}
+\end{exc}
+
+\begin{exc}
+ノードに対する行きがけ番号・通りがけ番号の組みのリストが与えられたとする。
+このような行きがけ番号・通りがけ番号が付される木は一意に定まることを示せ。
+また具体的にこの木を構成方法を与えよ。
+\end{exc}
+
+\begin{exc}
+#n#個のノードからなる二分木は$2(#n#-1)$ビット以下で表現できることを示せ。
+（ヒント：木を辿る際に起きることを記録し、これを再生して木を再構築することを考るとよい。）
+\end{exc}
+
+\begin{exc}
+\figref{bst}の二分木に$3.5$を追加し、続けて$4.5$を追加するときの様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+\figref{bst}の二分木に$3$を削除し、続けて$5$を削除するときの様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+#BinarySearchTree#のメソッド#getLE(x)#を実装せよ。
+これは木に含まれる要素のうち、#x#以下のものを集めたリストを返すものだ。
+このメソッドの実行時間は$O(#n#'+#h#)$でなければならない。
+ここで$#n#'$は木に含まれる#x#以下の要素の数、#h#は木の高さである。
+\end{exc}
+
+\begin{exc}
+空の#BinarySearchTree#に$\{1,\ldots,#n#\}$をすべて追加し、結果として得られる木の高さが$#n#-1$になるためにはどうすればよいか。
+また、このやり方は何通りあるか。
+\end{exc}
+
+\begin{exc}
+ある#BinarySearchTree#に#add(x)#を実行し、（同じ#x#について）#remove(x)#を実行すると、木は常に元の状態に戻るか?
+\end{exc}
+
+\begin{exc}
+#BinarySearchTree#において#remove(x)#を実行するとき、あるノードの高さが大きくなることがあるか?
+もしそうなら、どのくらい大きくなりうるか?
+\end{exc}
+
+\begin{exc}
+#BinarySearchTree#において#add(x)#を実行するとき、あるノードの高さが大きくなることがあるか?
+また、そのとき木の高さが大きくなることがあるか?
+もしそうなら、どのくらい大きくなりうるか?
+\end{exc}
+
+\begin{exc}
+#BinarySearchTree#の一種であり、各ノード#u#が#u.size#（#u#を根とする部分木の大きさ）、#u.depth#（#u#の深さ）、#u.height#（#u#を根とする部分木の高さ）を保持するものを設計・実装せよ。
+
+なお、#add(x)#・#remove(x)#を読んでもこれらの値は適切に保たれる必要があり、一方でこれらの操作のコストを定数時間より大きくはしないように注意すること。
+\end{exc}
