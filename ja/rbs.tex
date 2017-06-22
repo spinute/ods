@@ -201,3 +201,185 @@ $I_i$を指示確率変数とする。
 
 \thmref{rbs}における期待値は、ランダム二分探索木を作るための置換のランダム性によることを強調しておく。
 これは#x#の選び方がランダムであるというわけでなく、任意の#x#について成り立つものなのである。
+
+\section{#Treap#}
+\seclabel{treap}
+
+\index{Treap@#Treap#}%
+ランダム二分探索木の問題は当然ながら動的でないことだ。
+#SSet#インターフェースを実装するために必要な#add(x)#・#remove(x)#をサポートしていないのである。
+この節では#Treap#と呼ばれるデータ構造を説明する。
+これは\lemref{rbs}を使って#SSet#インターフェースを実装する。
+\footnote{#Treap#の名はこのデータ構造は二分木 \textbf{tr}ee(\secref{binarysearchtree})であると同時にヒープ h\textbf{eap}(\chapref{heaps}) でもあることによる。}
+
+#Treap#のノードは値#x#を持つ点で#BinarySearchTree#に似ているが、それに加えて一意の数である\emph{優先度}#p#を持つ。
+そしてこの#p#はランダムに割当てられる。
+\javaimport{ods/Treap.Node<T>}
+\cppimport{ods/Treap.TreapNode}
+#Treap#のノードは、二分探索木の性質に加えて、\emph{ヒープ性}も満たす。
+\begin{itemize}
+\item （ヒープ性）根でない任意のノード#u#について
+      $#u.parent.p# < #u.p#$が成り立つ。
+      \index{heap property}%
+\end{itemize}
+言い換えると、どのノードの優先度もそのふたつの子のいずれの優先度よりも小さい。
+\figref{treap}にこの例を示した。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/treap}
+  \end{center}
+  \caption[A Treap]{An example of a #Treap# containing the integers
+  $0,\ldots,9$. Each node, #u#, is illustrated as a box containing $#u.x#,#u.p#$.}
+  \figlabel{treap}
+\end{figure}
+
+ヒープと二分探索木の性質を共に満たすことから、キー#x#と優先度#p#が決まると#Treap#の形状が完全に定まる。
+ヒープ性から最小の優先度を持つノードが#Treap#の根#r#であることがわかる。
+二分探索木性から#r.x#より小さなキーを持つノードは#r.left#を根とする部分木に含まれ、#r.x#より大さなキーを持つノードは#r.right#を根とする部分木に含まれることがわかる。
+
+#Treap#の優先度の重要な特徴は一意であり、ランダムに割当てられることである。
+このことからふたつの#Treap#についての等価な考え方がある。
+先に定義したように、#Treap#はヒープ性と二分探索木性に従う。
+この代わりに#Treap#をノードが優先度の昇順に追加されていく#BinarySearchTree#であると考えることもできる。
+例えば\figref{treap}の#Treap#は、#BinarySearchTree#に対して次の値$(#x#,#p#)$の列を追加することで得られる。
+\[
+  \langle
+   (3,1), (1,6), (0,9), (5,11), (4,14), (9,17), (7,22), (6,42), (8,49), (2,99)
+  \rangle
+\]
+
+優先度はランダムに決まるのでこれはキーのランダムな置換を取るのと同じである。
+この場合は次の置換に対応する。
+\[
+  \langle 3, 1, 0, 5, 9, 4, 7, 6, 8, 2 \rangle
+\]
+これらを#BinarySearchTree#に追加すればよい。
+これはtreapの形状はランダム二分探索木と同じであることを意味する。
+特にもしキー#x#をそのランクに置き換えると
+\footnote{#x#を集合$S$の要素とするとき、#x#のランクとは$S$の要素のうち#x#より小さいものの個数である。}
+rank of an element #x# in a set $S$ of elements is the number of
+\lemref{rbs}を適用できる。
+\lemref{rbs}を#Treap#の用語で言い換えると次のようになる。
+\begin{lem}\lemlabel{rbs-treap}
+  #n#個のキーからなる集合$S$を保持する#Treap#において次の命題が成り立つ。
+  \begin{enumerate}
+    \item 任意の$#x#\in S$について#x#の探索経路の長さの期待値は$H_{r(#x#)+1} + H_{#n#-r(#x#)} - O(1)$である。
+    \item 任意の$#x#\not\in S$について#x#の探索経路の長さの期待値は$H_{r(#x#)} + H_{#n#-r(#x#)}$である。
+  \end{enumerate}
+  ここで$r(#x#)$は集合$S\cup\{#x#\}$における#x#のランクである。
+\end{lem}
+繰り返しになるが、\lemref{rbs-treap}の期待値は頂点への優先度の割当てのランダム性によることを強調しておく。これはキーがランダムであることは全く仮定していない。
+
+\lemref{rbs-treap}から#Treap#の#find(x)#は効率よく実装できることがわかる。
+しかし本当に嬉しいのは#add(x)#・#delete(x)#操作を実装できることである。
+このためにはヒープ性を保つための回転操作が必要である。
+\figref{rotations}を参照せよ。
+二分探索木の\emph{回転}とは
+\index{rotation}%
+ノード#w#と親#u#について、二分探索木性を保ちながら#w#を#u#の親にする操作である。
+回転には\emph{右回転}と\emph{左回転}の二種類があって、それぞれ#w#が#u#の右の子であるか、左の子であるかに対応する。
+\index{left rotation}%
+\index{right rotation}%
+
+\begin{figure}
+  \begin{center}
+     \includegraphics[width=\ScaleIfNeeded]{figs/rotation}
+  \end{center}
+  \caption{Left and right rotations in a binary search tree.}
+  \figlabel{rotations}
+\end{figure}
+
+これを実装するときには、ふたつの場合を処理し、コーナーケース（#u#が根である場合）に気をつける必要がある。
+そのため実際のコードは\figref{rotations}を見て想像するものよりも少し長い。
+\codeimport{ods/BinarySearchTree.rotateLeft(u).rotateRight(u)}
+\label{page:rotations}
+#Treap#における回転の重要な性質は、#w#の深さが1減り、#u#の深さが1増えることだ。
+
+回転を使って#add(x)#を次のように実装できる。
+新しいノード#u#を作り、#u.x=x#とし、#u.p#を乱数で初期化する。
+#u#を#BinarySearchTree#の#add(x)#アルゴリズムを使って追加する。
+このとき#u#は#Treap#の葉になる。
+ここで#Treap#は二分探索木性を満たすが、ヒープ性を満たすとは限らない。
+特にこれは#u.parent.p > u.p#の場合である。
+この場合、#w#=#u.parent#で回転操作実行し、#u#を#w#の親にする。
+#u#が引き続きヒープ性を犯しているなら、これを繰り返す。
+この度に#u#の深さは1減り、#u#が根になるか$#u.parent.p# < #u.p#$を満たすと処理は終了する。
+\codeimport{ods/Treap.add(x).bubbleUp(u)}
+\figref{treap-add}に#add(x)#操作の例を示した。
+
+\begin{figure}
+  \begin{center}
+  \includegraphics[width=\ScaleIfNeeded]{figs/treap-insert-a} \\
+  \includegraphics[width=\ScaleIfNeeded]{figs/treap-insert-b} \\
+  \includegraphics[width=\ScaleIfNeeded]{figs/treap-insert-c} \\
+  \end{center}
+  \caption[Adding to a Treap]{Adding the value 1.5 into the #Treap# from \figref{treap}.}
+  \figlabel{treap-add}
+\end{figure}
+
+#add(x)#操作の実行時間は#x#の探索経路の長さと、新たに追加されたノード#u#を#Treap#におけるあるべき位置まで移動するための回転する回数から求まる。
+\lemref{rbs-treap}より探索経路の長さの期待値は$2\ln #n#+O(1)$以下である。
+さらに回転のたびに#u#の深さは減る。
+#u#が根になると処理が終了するので、回転回数の期待値は探索経路長の期待値以下である。
+よって、#Treap#における#add(x)#の実行時間の期待値は$O(\log #n#)$である。
+（\excref{treap-rotates}はこの操作における回転の回数の期待値は実は$O(1)$であることを示す問題である。）
+
+#Treap#における#remove(x)#は#add(x)#の逆である。
+#x#を含むノード#u#を探し、#u#が葉に来るまで下方向に回転を繰り返し、最後に#u#を取り外す。
+#u#を下方向に動かすとき、右に回転するか左に回転するかの選択肢があることに注意する。
+この選択は次の規則に従う。
+\begin{enumerate}
+\item #u.left#と#u.right#がいずれも#null#なら、#u#は葉なので回転の必要はない
+\item #u.left#または#u.right#が#null#なら、#null#でない方と回転で#u#を入れ替える
+\item $#u.left.p# < #u.right.p#$ならば右に回転し、そうでないなら左に回転する
+\end{enumerate}
+この規則により#Treap#は連結であり、またヒープ性も保たれることがわかる。
+\codeimport{ods/Treap.remove(x).trickleDown(u)}
+\figref{treap-remove}に#remove(x)#の例を示した。
+\begin{figure}
+  \begin{center}
+  \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/treap-delete-a} \\
+  \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/treap-delete-b} \\
+  \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/treap-delete-c} \\
+  \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/treap-delete-d} 
+  \end{center}
+  \caption[Removing from a treap]{Removing the value 9 from the #Treap# in \figref{treap}.}
+  \figlabel{treap-remove}
+\end{figure}
+
+#remove(x)#の実行時間の解析におけるポイントは、#add(x)#の逆の操作になっていることだ。
+特に#x#を同じ優先度#u.p#で再挿入することを考えると、#add(x)#操作はちょうど同じ数の回転を実行し、#Treap#は#remove(x)#の直前の状態に戻る。
+（\figref{treap-remove}を下から上に見ると値9を#Treap#に追加している様子になっている。）
+これは大きさ#n#の#Treap#の#remove(x)#操作の実行時間の期待値は、大きさ#n-1#の#Treap#の#add(x)#操作の実行時間の期待値に比例するということである。
+すなわち、#remove(x)#の実行時間の期待値は$O(\log #n#)$である。
+
+\subsection{Summary}
+
+次の定理は#Treap#の性能をまとめるものだ。
+
+\begin{thm}
+#Treap#は#SSet#インターフェースを実装する。
+#Treap#は#add(x)#・#remove(x)#・#find(x)#をサポートし、いずれの実行時間の期待値も$O(\log #n#)$である。
+\end{thm}
+
+#Treap#と#SkiplistSSet#を比べてみるのは面白いだろう。
+いずれも#SSet#の実装で、各操作の実行時間の期待値は$O(\log #n#)$である。
+どちらのデータ構造でも#add(x)#・#remove(x)#は検索に続く定数回のポインタの更新からなる。
+（下の\excref{treap-rotates}を見よ）
+よってどちらのデータ構造でも探索経路の長さの期待値が性能を決める重要な値である。
+#SkiplistSSet#では探索経路の長さの期待値は次のようである。
+\[
+     2\log #n# + O(1)
+\]
+#Treap#では次のようである。
+\[
+    2\ln #n# +O(1) \approx 1.386\log #n#  + O(1)
+\]
+よって#Treap#における探索経路の方が短く、これは各操作も#Skiplist#よりも#Treap#の方がかなり早いと解釈できるだろう。
+\chapref{skiplists}の\excref{skiplist-opt}で示したように、偏ったコイントスを使って、#Skiplist#における探索経路の長さの期待値を次のように減らせる。
+XXX: SkiplistSSetではない?
+\[
+     e\ln #n# + O(1) \approx 1.884\log #n# + O(1) 
+\]
+この最適化を採用しても#SkiplistSSet#における探索経路の期待値はやはり#Treap#のそれよりだいぶ長いのである。
