@@ -383,3 +383,169 @@ XXX: SkiplistSSetではない?
      e\ln #n# + O(1) \approx 1.884\log #n# + O(1) 
 \]
 この最適化を採用しても#SkiplistSSet#における探索経路の期待値はやはり#Treap#のそれよりだいぶ長いのである。
+
+\section{ディスカッションと練習問題}
+
+ランダム二分探索木についての研究は多岐に渡る。
+Random binary search trees have been studied extensively.  
+Devroye\cite{d88}が\lemref{rbs}とそれに関連した成果を証明した。
+より強い結果も複数知られているが、もっとも印象的なのはReed\cite{r03}の成果である。
+この文献ではランダム二分探索木の高さの期待値が次の式になることを示した。
+\[
+  \alpha\ln n - \beta\ln\ln n + O(1)
+\]
+ここで$\alpha\approx4.31107$は$[2,\infty)$範囲における$\alpha\ln((2e/\alpha))=1$の唯一の解であり、$\beta=\frac{3}{2\ln(\alpha/2)}$である。
+さらに、高さの分散は定数である。
+
+#Treap#という名前はSeidelとAragon\cite{as96}が考えた。
+この文献では#Treap#といくつかの変種を議論している。
+しかし、#Treap#の基本的なデータ構造はVuillemin\cite{v80}が先に研究しており、この文献ではCartesian treeと呼んでいた。
+
+#Treap#における空間効率の最適化として、各ノードに明示的に優先度#p#を蓄えずに済ませる方法がある。
+代わりに、#u#の優先度として#u#のメモリアドレスのハッシュ値を用いる。
+多くのハッシュ関数が実用的には上手く動作するが、\lemref{rbs}の証明の正しさを保つためには、\emph{min-wise independent性}を満たす関数族からランダムに選出した関数を使う必要がある。
+\index{min-wise independence}%
+min-wise independent性とは次の性質である。
+相異なる任意の値$x_1,\ldots,x_k$について、それぞれのハッシュ値$h(x_1),\ldots,h(x_k)$は高い確率で相異なる値を取る。
+すなわち、ある定数$c$が存在して、任意の$i\in\{1,\ldots,k\}$について次の式が成り立つ。
+\[
+   \Pr\{h(x_i) = \min\{h(x_1),\ldots,h(x_k)\}\} \le c/k
+\]
+このようなハッシュ関数のクラスであり、実装が簡単で高速なものとして
+\emph{tabulation hashing}がある。（\secref{tabulation}を参照せよ。）
+\index{tabulation hashing}%
+\index{hashing!tabulation}%
+
+#Treap#の他の変種であって、優先度を各ノードに蓄えないものとして、randomized binary search treeがある。
+\index{randomized binary search tree}%
+\index{binary search tree!randomized}%
+これはMart\'\i nezとRoura \cite{mr98}が提案した。
+任意のノード#u#は#u#を根とする部分木の大きさ#u.size#を保持する。
+#add(x)#・#remove(x)#いずれのアルゴリズムもランダム化されている。
+#x#を#u#を根とする部分木に追加するアルゴリズムは次のものである。
+\begin{enumerate}
+   \item 確率$1/(#size(u)#+1)$で#x#はふつうに葉として追加され、回転によって#x#は部分木の根に移動してくる。
+   \item そうでなければ（すなわち確率$1-1/(#size(u)#+1)$で、#x#は#u.left#または#u.right#の適切な方を根とする部分木に再帰的に追加される。
+\end{enumerate}
+ひとつめの場合は#Treap#における#add(x)#において#x#のノードがランダムな優先度として#size(u)#個のいずれの値よりも小さい値を取る場合に対応しており、この事象の発生確率をそのままアルゴリズムに使っている。
+
+#x#をrandomized binary search treeから削除するやり方は#Treap#における削除と似ている。
+#x#を含むノード#u#を見つけ、これが葉に到達するまで繰り返し深さを増やしながら回転し、そこで木から切り離す。
+各ステップにおける回転が右か左かをランダムに決める。
+\begin{enumerate}
+  \item
+  確率#u.left.size/(u.size-1)#で#u#において右回転を行う。
+  すなわち#u.leftを部分木の根に持ってくる。
+  \item
+  確率#u.right.size/(u.size-1)#で#u#において左回転を行う。
+  すなわち#u.rightを部分木の根に持ってくる。
+\end{enumerate}
+ここでも#Treap#において#u#で左右の回転を行う確率と同じであることを簡単に確認できる。
+
+#Treap#と比べてrandomized binary search treeには短所がある。
+要素の追加・削除の際にたくさんランダムな選択をする必要があり、また部分木の大きさを保持しなければならないのである。
+randomized binary search treeの長所としては、部分木の大きさは他の便利な目的、例えばランクを$O(\log #n#)$の期待実行時間で計算するのに使うことができる点である。（\excref{treap-get}を参照せよ。）
+一方で#Treap#の優先度には木のバランスを保つ以外の用途はない。
+
+\begin{exc}
+  \figref{treap}の#Treap#に4.5を優先度7で追加し、値7.5を優先度20で追加する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+  \figref{treap}の#Treap#から5と7を削除する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+  \figref{rbs-lvc}の右の木を生成する操作の列が$21,964,800$通りあることを示せ。（ヒント：高さ$h$の完全二分木の個数に関する漸化式を作り、$h=3$の場合を評価せよ。）
+\end{exc}
+
+\begin{exc}
+  #permute(a)#メソッドを設計・実装せよ。
+  これは#n#個の相異なる値を含む配列#a#を入力とし、#a#のランダムな置換を返すものである。
+  実行時間は$O(#n#)$であり、$#n#!$通りの置換がいずれも当確率で現れる必要がある。
+\end{exc}
+
+\begin{exc}\exclabel{treap-rotates}
+\lemref{rbs-treap}を利用して、#add(x)#における回転回数の期待値が$O(1)$であることを示せ。（このことから#remove(x)#の場合も同様のことがわかる。）
+\end{exc}
+
+\begin{exc}
+#Treap#の実装を明示的に優先度を保持しないように修正せよ。
+その際優先度として、各ノードのハッシュ値を利用せよ。
+\end{exc}
+
+\begin{exc}
+二分探索木の各ノード#u#は高さ#u.height#、#u#を根とする部分木の大きさ#u.size#を保持していると仮定する。
+  \begin{enumerate}
+    \item 左または右の回転を#u#で実行すると、回転によって影響を受けるすべてのノードにおけるふたつの値を定数時間で更新できることを示せ。
+    \item 各ノードの深さも保持することにすると、上と同様の結果が成り立たなくなることを説明せよ。
+  \end{enumerate}
+\end{exc}
+
+\begin{exc}
+  #n#要素からなる整列済み配列#a#から#Treap#を構築するアルゴリズムを設計・実装せよ。
+  XXX: よくわからん
+  This method should run in $O(#n#)$
+  worst-case time and should construct a #Treap# that is indistinguishable
+  from one in which the elements of #a# were added one at a time using
+  the #add(x)# method.
+\end{exc}
+
+
+\begin{exc}
+  \index{finger}%
+  \index{finger search!in a treap}%
+  この問題では#Treap#において、与えられたポインタの近くにあるノードを効率的に見つける方法を明らかにする。
+  \begin{enumerate}
+    \item 各ノードがそれを根とする部分木における最大値・最小値を保持する#Treap#を設計・実装せよ。
+    \item この情報を使って、#fingerFind(x,u)#を実装せよ。
+	これは#u#の助けを借りて#find(x)#を実行する操作である。
+	（#u#は#x#から遠くないノードであれば望ましい。）
+	この操作は#u#から上に向かって進み$#w.min#\le #x#\le #w.max#$を満たすノード#w#を見つける。
+	その後は#w#からふつうのやり方で#x#を検索する。
+	（#fingerFind(x,u)#の実行時間は$O(1+\log r)$であることを示せる。
+	ここで、$r$はtreapの要素であって、その値が#x#と#u.x#の間にあるものの数である。）
+	\item #Treap#の実装を拡張し、#find(x)#の探索を開始するノードを、直近の#find(x)#で見つかったノードとするようにせよ。
+  \end{enumerate}
+\end{exc}
+
+\begin{exc}\exclabel{treap-get}
+#Treap#におけるランクが#i#であるキーを返す操作#get(i)#を設計・実装せよ。
+（ヒント：各ノード#u#が#u#を根とする部分木の大きさを保持するようにするとよい。）
+\end{exc}
+
+\begin{exc}
+  \index{TreapList@#TreapList#}%
+  #TreapList#を実装せよ。
+  これは#List#インターフェースとTreapとして実装したものだ。
+  各ノードはリストのアイテムを保持し、行きがけ順で辿るとリストに入っている順でアイテムが見つかる。
+  #List#の操作#get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#の期待実行時間はいずれも$O(\log #n#)$である必要がある。
+\end{exc}
+
+
+
+\begin{exc}\exclabel{treap-split}
+  #split(x)#をサポートする#Treap#を設計・実装せよ。
+  この操作は#Treap#に含まれる#x#より大きいすべての値を削除し、削除された値をすべて含む新たな#Treap#を返すものである。
+
+  \noindent 例：
+  #t2 = t.split(x)#は#t#から#x#より大きい値をすべて削除し、削除した値をすべて含む新たな#Treap# #t2#を返す。
+  #split(x)#の実行時間の期待値は$O(\log #n#)$である必要がある。
+
+  \noindent 注意：
+  この修正後も#size()#は定数時間で正しく動く必要がある。
+  これは\excref{treap-get}のために必要である。
+\end{exc}
+
+\begin{exc}\exclabel{treap-join}
+#split(x)#の逆であると考えられる#absorb(t2)#をサポートする#Treap#を設計・実装せよ。
+この操作は#Treap# #t2#からすべての値を削除し、それらをレシーバーに追加する。
+また、この操作は#t#の最小値はレシーバーの最大値よりも大きいことを前提とする。
+なお、#absorb(t2)#の期待実行時間は$O(\log #n#)$である必要がある。
+\end{exc}
+
+\begin{exc}
+  この節で説明したMartinezのrandomized binary search treesを実装せよ。
+  また、#Treap#の実装と性能を比較せよ。
+\end{exc}
+
