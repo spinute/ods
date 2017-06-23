@@ -1,0 +1,19 @@
+\chapter{Scapegoat Tree}
+\chaplabel{scapegoat}
+
+この章では二分探索木の一種である#ScapegoatTree#を紹介する。
+このデータ構造は何か誤りがあるとき、それは誰の責任なのかを決めようとする現実でよくある考え方に基づく。（scapegoatとは罪を負わされたヤギ、転じて身代わりのことである。）
+\index{scapegoat}%
+責任の所在が決まれば、そいつに問題を解決させることができる。
+
+#ScapegoatTree#は\emph{部分再構築}によってバランスを保つ。
+\index{partial rebuilding}%
+\index{binary search tree!partial rebuilding}%
+部分再構築の間に、ある部分木全体が分解され完全にバランスされた部分木として再構築される。
+ノード#u#を根とする部分木を完全にバランスされた木に再構築するやり方はたくさんある。
+もっとも単純なやり方のひとつは#u#の部分木を辿りすべてのノードを配列#a#に集め、#a#から再帰的にバランスされた木を構築するものだ。
+$#m#=#a.length#/2$とするとき、#a[m]#を新たな部分木の根とし、$#a#[0],\ldots,#a#[#m#-1]$は左の部分木に、$#a#[#m#+1],\ldots,#a#[#a.length#-1]$は右の部分木にそれぞれ再帰的に格納される。
+\codeimport{ods/ScapegoatTree.rebuild(u).packIntoArray(u,a,i).buildBalanced(a,i,ns)}
+#rebuild(u)#の実行時間は$O(#size(u)#)$である。
+結果として得られる部分木は高さ最小のものである。
+すなわち、#size(u)#個のノードを持ちこの木より低い木は存在しない。
