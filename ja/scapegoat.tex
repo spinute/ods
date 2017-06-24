@@ -17,3 +17,215 @@ $#m#=#a.length#/2$とするとき、#a[m]#を新たな部分木の根とし、$#
 #rebuild(u)#の実行時間は$O(#size(u)#)$である。
 結果として得られる部分木は高さ最小のものである。
 すなわち、#size(u)#個のノードを持ちこの木より低い木は存在しない。
+
+\section{#ScapegoatTree#：部分再構築する二分探索木}
+\seclabel{scapegoattree}
+
+\index{ScapegoatTree@#ScapegoatTree#}%
+#ScapegoatTree#とは、#BinarySearchTree#であり、ノード数#n#に加えてノード数の上界を保持する#q#を持つ。
+\codeimport{ods/ScapegoatTree.q}
+#n#と#q#は常に次の式を満たす。
+\[
+      #q#/2 \le  #n# \le #q#  \enspace .
+\]
+加えて#ScapegoatTree#の高さは対数程度である。
+すなわちscapegoat treeの高さは常に次の値以下である。
+\begin{equation}
+     \log_{3/2} #q# \le \log_{3/2} 2#n# < \log_{3/2} #n# + 2\enspace .
+     \eqlabel{scapegoat-height}
+\end{equation}
+Even with this constraint, a #
+この制約を満たしても、ScapegoatTree#は意外と偏って見た目になりうる。
+例えば\figref{scapegoat-example}は$#q#=#n#=10$であり、高さ$5<\log_{3/2}10 \approx 5.679$の木である。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/scapegoat-insert-1}
+  \end{center}
+  \caption[A ScapegoatTree]{A #ScapegoatTree# with 10 nodes and height 5.}
+  \figlabel{scapegoat-example}
+\end{figure}
+
+#ScapegoatTree#における#find(x)#の実装は#BinarySearchTree#の場合の標準的なもの（\secref{binarysearchtree}を見よ）を使う。
+実行時間は木の高さに比例し、\myeqref{scapegoat-height}よりこれは$O(\log #n#)$である。
+
+#add(x)#の実装では、まず#n#と#q#をひとつずつ増やし、#x#を二分探索木に追加するふつうのアルゴリズムを使う。
+すなわち、#x#を探し、新たな葉#u#を追加し、$#u.x#=#x#$とする。
+このとき、運良く#u#の深さが$\log_{3/2}#q#$以下なら、これ以上なにもしなくてよい。
+
+$#depth(u)# > \log_{3/2} #q#$であることもある。
+この場合、高さを減らす必要がある。
+これはそんなに大変ではない。
+今、ノード#u#だけが、木の中で深さが$\log_{3/2} #q#$を超えているノードである。
+#u#を修正するために、木を上に向かって辿りながら\emph{scapegoat}であるノード#w#を探す。
+#w#は非常にバランスの悪いノードである。
+ここでバランスは次の式で判断される。
+\begin{equation}
+   \frac{#size(w.child)#}{#size(w)#} > \frac{2}{3} \enspace ,
+   \eqlabel{scapegoat}
+\end{equation}
+#w.child#は#w#の子であって、根から#u#に至る経路上にあるものである。
+scapegoatが存在することを示すのは難しくない。
+今はこれを事実として認めることにする。
+scapegoat #w#が見つかれば#w#を根とする部分木を完全に取り壊し、完全にバランスされた二分探索木として再構築すればよい。
+binary search tree.  We know, from 
+\myeqref{scapegoat}より、#u#を加える前から#w#の部分木は完全二分木ではない。
+よって、#w#を再構築するときにその高さは1以上減り、#ScapegoatTree#の高さは再度$\log_{3/2}#q#$以上になる。
+
+\codeimport{ods/ScapegoatTree.add(x)}
+
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[scale=0.90909]{figs/scapegoat-insert-3} &
+      \includegraphics[scale=0.90909]{figs/scapegoat-insert-4} 
+    \end{tabular}
+  \end{center}
+  \caption[Adding to a scapegoat tree]{Inserting 3.5 into a #ScapegoatTree# increases its height to 6, which violates \myeqref{scapegoat-height} since $6 > \log_{3/2} 11 \approx 5.914$.  A scapegoat is found at the node containing 5.}
+\end{figure}
+scapegoat #w#を見つけるコスト、#w#を根とする部分木を再構築するコストを無視すれば、#add(x)#の実行時間のうち支配的なのは最初の検索のものであり、これは$O(\log #q#) = O(\log #n#)$である。
+scapegoatを見つけ、部分木を再構築するコストは、次小節で償却解析を使って説明する。
+
+#ScapegoatTree#における#remove(x)#の実装は非常に単純である。
+#x#を探し、#BinarySearchTree#におけるアルゴリズムを使ってそれを削除する。
+（これは木の高さを増やすことはない。）
+そして#n#をひとつ小さくし、#q#はそのままにしておく。
+最後に$#q# > 2#n#$かどうかを確認し、もしそうなら\emph{木全体を再構築}し、完全にバランスされた二分探索木にして、$#q#=#n#$とする。
+\codeimport{ods/ScapegoatTree.remove(x)}
+ここでも、再構築のコストを無視すれば、#remove(x)#の実行時間は木の高さに比例し、$O(\log #n#)$である。
+
+\subsection{正しさの証明と実行時間の解析}
+
+ここでは#ScapegoatTree#の各操作の正しさと償却実行時間の解析とを行う。
+まずは正しさを示すために、#add(x)#操作において\myeqref{scapegoat-height}が成り立たなくなったなら常にscapegoatを見つけられることを示す。
+
+\begin{lem}
+  #u#を#ScapegoatTree#における深さ$h>\log_{3/2} #q#$のあるノードとする。
+  このとき#u#からrootへの経路上に次の条件を満たすノード#w#が存在する。
+  \[
+     \frac{#size(w)#}{#size(parent(w))#} > 2/3 \enspace .
+  \]
+\end{lem}
+
+\begin{proof}
+背理法で示す。
+#u#からrootへの経路上の任意のノード#w#について次の式が成り立つと仮定する。
+\[
+   \frac{#size(w)#}{#size(parent(w))#} \le 2/3 \enspace .
+\]
+また、根から#u#への経路を$#r#=#u#_0,\ldots,#u#_h=#u#$とする。
+このとき
+$#size(u#_0#)#=#n#$、
+$#size(u#_1#)#\le\frac{2}{3}#n#$、
+$#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般に次の式が成り立つ。
+\[
+#size(u#_i#)#\le\left(\frac{2}{3}\right)^i#n# \enspace .
+\]
+ここで$#size(u)#\ge 1$より次の式が成り立つことを示す。
+\[
+    1 \le #size(u)# \le \left(\frac{2}{3}\right)^h#n#
+   < \left(\frac{2}{3}\right)^{\log_{3/2} #q#}#n#
+   \le \left(\frac{2}{3}\right)^{\log_{3/2} #n#}#n#
+   = \left(\frac{1}{#n#}\right) #n#
+   = 1 \enspace . \qedhere
+\]
+しかしこれは成り立たず、矛盾が導かれた。
+\end{proof}
+
+続いてまだ説明していない部分の実行時間の解析を行う。
+scapegoatノードを探す際の#size(u)#・#rebuild(w)#のコストを改正する。
+これらふたつの操作の間には次のような関係がある。
+\begin{lem}
+#ScapegoatTree#の#add(x)#において、scapegoat #w#を見つけて#w#を根とする部分木を再構築するコストは$O(#size(w)#)$である。
+\end{lem}
+
+\begin{proof}
+scapegoatノード#w#を見つけたあと、そこから再構築を行うコストは$O(#size(w)#)$である。
+scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで$#u#_0,\ldots,#u#_k$に順に実行する。
+しかし、 $#u#_k$はこの列における最初のscapegoatノードなので、任意の$i\in\{0,\ldots,k-2\}$について次の式が成り立つ。
+\[
+  #size(u#_{i}#)# < \frac{2}{3}#size(u#_{i+1}#)#
+\]
+よって、すべての#size(u)#呼び出しのコストの合計は次のようになる。
+\begin{eqnarray*}
+ O\left( \sum_{i=0}^k #size(u#_{k-i}#)# \right)
+ &=& O\left(
+  #size(u#_k#)#
+  + \sum_{i=0}^{k-1} #size(u#_{k-i-1}#)#
+  \right) \\
+ &=& O\left(
+  #size(u#_k#)#
+  + \sum_{i=0}^{k-1} \left(\frac{2}{3}\right)^i#size(u#_{k}#)#
+  \right) \\
+&=& O\left(
+  #size(u#_k#)#\left(1+
+   \sum_{i=0}^{k-1} \left(\frac{2}{3}\right)^i
+  \right)\right) \\
+&=& O(#size(u#_k#)#) = O(#size(w)#) \enspace ,
+\end{eqnarray*}
+最後の行は減少幾何数列の和を計算している。
+\end{proof}
+
+最後に、$m$個の操作を順に実行する時の#rebuild(u)#の合計コストの上界を示す。
+
+\begin{lem}\lemlabel{scapegoat-amortized}
+空の#ScapegoatTree#に対して、$m$個の#add(x)#・#remove(x)#からなる操作の列を順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
+\end{lem}
+
+\begin{proof}
+XXX: 訳語は? accounting methodのことだろうか?
+\emph{credit scheme}を使って示す。
+\index{credit scheme}%
+各ノードは預金を持っていると考える。
+預金が$c$だけあれば再構築のための支払いができる。
+預金の合計は$O(m\log m)$で、#rebuild(u)#は#u#に蓄えられている預金を使って支払われる。
+
+挿入・削除の際に挿入・削除されるノード#u#への経路上にある各ノードの預金を1だけ増やす。
+こうして一回の操作で増える預金の合計は最大$\log_{3/2}#q#\le \log_{3/2}m$である。
+削除の際には多めに預金を蓄えることになる。
+こうして最大$O(m\log m)$だけの預金を行う。
+あとは、これだけの預金ですべての#rebuild(u)#の支払いに十分であることを示せばよい。
+
+挿入の際に#rebuild(u)#を実行するなら、#u#はscapegoatである。
+次のことを仮定しても一般性を失わない。
+\[
+\frac{#size(u.left)#}{#size(u)#} > \frac{2}{3} \enspace .
+\]
+次の事実を仮定すると、
+  \[
+    #size(u)# = 1 + #size(u.left)# + #size(u.right)# 
+  \]
+  次の式が成り立つ。
+  \[
+    \frac{1}{2}#size(u.left)# > #size(u.right)#  \enspace 
+  \]
+このとき、さらに次の式が成り立つ。
+  \[
+    #size(u.left)# - #size(u.right)# > \frac{1}{2}#size(u.left)# >
+    \frac{1}{3}#size(u)#  \enspace .
+  \]
+#u#を含む部分木が直前に再構築されたとき（もし、#u#を含む部分木が一度も再構築されていなければ、#u#が挿入されたとき）、次の式が成り立つ。
+  \[
+    #size(u.left)# - #size(u.right)# \le 1 \enspace .
+  \]
+よって、#u.left#・#u.right#に影響を与えた#add(x)#・#remove(x)#の数の合計は次の値以上である。
+  \[
+    \frac{1}{3}#size(u)# - 1 \enspace . 
+  \]
+#u#には少なくともこれだけの預金が蓄えられており、#rebuild(u)#に必要な$O(#size(u)#)$だけの支払いには十分である。
+
+削除において#rebuild(u)#が呼ばれるとき、$#q# > 2#n#$である。
+この場合、$#q#-#n#> #n#$だけ余分に預金が蓄えられており、根の再構築に必要な$O(#n#)$だけの支払いには十分である。
+
+以上で示された。
+\end{proof}
+
+\subsection{要約}
+次の定理は#ScapegoatTree#の性能をまとめるものだ。
+
+\begin{thm}\thmlabel{scapegoat}
+  #ScapegoatTree#は#SSet#インターフェースを実装する。
+  #rebuild(u)#のコストを無視すると、#ScapegoatTree#は#add(x)#・#remove(x)#・#find(x)#をいずれも$O(\log #n#)$の時間で実行できる。
+  さらに、空の#ScapegoatTree#に対して、$m$個の#add(x)#・#remove(x)#からなる操作の列を順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
+\end{thm}
+
