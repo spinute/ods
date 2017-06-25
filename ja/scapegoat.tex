@@ -229,3 +229,120 @@ XXX: 訳語は? accounting methodのことだろうか?
   さらに、空の#ScapegoatTree#に対して、$m$個の#add(x)#・#remove(x)#からなる操作の列を順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
 \end{thm}
 
+\section{ディスカッションと練習問題}
+
+GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し、このデータ構造を定義し、解析した。
+しかし同じデータ構造がAndersson \cite{a89,a99}によって先に発見されており、そこでは
+\index{general balanced tree}%
+\emph{general balanced trees}
+と呼ばれていた。
+これはこのデータ構造は高さが小さいならどのような形状も取れることによる。
+
+#ScapegoatTree#の実装で実験してみると、この本で紹介した他の#SSet#の実装と比べてかなり遅いことがわかる。
+高さの上界は
+\[
+   \log_{3/2}#q# \approx 1.709\log #n# + O(1)
+\] 
+であり、これは#Skiplist#の探索経路の長さの期待値よりも良く、#Treap#とも遠くないため、この結果は意外かもしれない。
+最適化として、部分木のサイズを各ノードが保持したり、既に計算した部分木のサイズを再利用したりできる。
+（\ref{exc:scapegoat-quicksize}と\ref{exc:scapegoat-explicitsize}を参照せよ。）
+これらの最適化をしても依然として#add(x)#・#delete(x)#からなる操作の列を#ScapegoatTree#で実行したとき、他の#SSet#の実装より遅いことがあるだろう。
+
+この本で扱った他の#SSet#の実装と異なり#ScapegoatTree#は再構築自体に多くの時間を消費するため、このような性能差が現れる。
+この本で紹介した他の#SSet#の実装では、#n#個の操作の間に$O(#n#)$程度のデータ構造の変形をすればよかった。
+一方、\excref{scapegoat-nlogn}から#n#個の操作の列を#ScapegoatTree#に実行するとき、$#n#\log #n#$のオーダーの時間を#rebuild(u)#に費やすことがわかる。
+これは再構築をすべて#rebuild(u)#で行っていることの帰結である。 \cite{d90}.
+
+性能は劣るものの、#ScapegoatTree#を使うのが正しい選択となる場合がある。
+これは、各ノードに追加のデータがあり、それを回転操作においては定数時間で更新できないが、#rebuild(u)#操作の際に更新できる場合である。
+この場合#ScapegoatTree#や部分的な再構築を行う他のデータ構造が有効である。
+このような応用の例を\excref{list-order-maintenance}で取り上げている。
+
+\begin{exc}
+  \figref{scapegoat-example}の#ScapegoatTree#に1.5、1.6を順に追加する様子を描け。
+\end{exc}
+
+\begin{exc}
+  空の#ScapegoatTree#に$1,5,2,4,3$を順に追加する様子を描け。
+  加えて、\lemref{scapegoat-amortized}の証明で使った預金がどう移動し、どのように使われるかも説明せよ。
+\end{exc}
+
+\begin{exc}\exclabel{scapegoat-nlogn}
+  空の#ScapegoatTree#に対して、$#x#=1,2,3,\ldots,#n#$について順に#add(x)#を呼び出す。
+  このときある定数$c>0$が存在し、#rebuild(u)#に要する時間の合計は$c#n#\log #n#$以上であることを示せ。
+\end{exc}
+
+\begin{exc}
+  #ScapegoatTree#における探索経路の長さは$\log_{3/2}#q#$を超えない。
+  \begin{enumerate}
+    \item #ScapegoatTree#を修正し、$1<#b#<2$を満たすパラメータ#b#について探索経路の長さが$\log_{#b#} #q#$を超えないデータ構造を、設計・解析・実装せよ。
+    \item 解析・実験によると、#find(x)#・#add(x)#・#remove(x)#の償却コストは#n#と#b#の関数としてどう表せるか。
+  \end{enumerate}
+\end{exc}
+
+\begin{exc}\exclabel{scapegoat-quicksize}
+  #ScapegoatTree#の#add(x)#メソッドを修正し、既に計算した部分木の大きさは再計算せず、無駄を省くように修正せよ。
+  #size(w)#を計算するとき、#size(w.left)#か#size(w.right)#は既に計算しているため、このような最適化が可能である。
+  修正前後での性能を比較せよ。
+\end{exc}
+
+\begin{exc}\exclabel{scapegoat-explicitsize}
+  #ScapegoatTree#の変種として、明示的に各ノードを根とする部分木の大きさを蓄えるものを実装せよ。
+  もともとの#ScapegoatTree#や\excref{scapegoat-quicksize}での実装と、ここでの実装とを性能比較せよ。
+\end{exc}
+
+\begin{exc}
+  この章の最初に説明した#rebuild(u)#を、再構築する部分木に含まれるノードを蓄える配列を使わずに再実装せよ。
+  代わりに、まずは再帰を使ってこれらのノードを連結リストにし、この連結リストを完全にバランスされた二分木に変換せよ。
+  （いずれのステップにも華麗な再帰による実装がある。）
+\end{exc}
+
+\begin{exc}
+  \index{WeightBalancedTree@#WeightBalancedTree#}%
+  #WeightBalancedTree#を設計・実装せよ。
+  このデータ構造では、根以外の各ノード#u#は\emph{バランス条件}$#size(u)# \le (2/3)#size(u.parent)#$を満たす。
+  #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、ノード#u#でバランス条件が成り立たないときには#u.parent#を根とする部分木が再構築される点でのみ異なっている。
+  そして、#WeightBalancedTree#の償却実行時間は$O(\log#n#)$であることを示せ。
+\end{exc}
+
+\begin{exc}
+  \index{CountdownTree@#CountdownTree#}%
+  #CountdownTree#を設計・実装せよ。
+  このデータ構造では各ノード#u#は\emph{タイマー} #u.t#を持っている。
+  #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、いずれかの操作が#u#の部分木に影響を与えるとき、#u.t#をひとつ小さくする点で異なる。
+  $#u.t#=0$のとき、#u#を根とする部分木は完全にバランスされた二分木に再構築される。
+  ノード#u#が再構築に関わるとき（#u#が再構築されるか、#u#の祖先のうちのひとつが再構築されるとき）#u.t#は$#size(u)#/3$にリセットされる。
+
+  そして、#CountdownTree#の償却実行時間は$O(\log#n#)$であることを示せ。
+  （ヒント：まずは任意のノードがあるバランスに関する不変条件を満たすことを示せ。）
+\end{exc}
+
+\begin{exc}
+  \index{DynamiteTree@#DynamiteTree#}%
+  #DynamiteTree#を設計・実装せよ。
+  このデータ構造ではすべてのノード#u#は#u#を根とする部分着の大きさを#u.size#として保持する。
+  #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、
+  いずれかの操作が#u#の部分木に影響を与えるとき、#u#は確率$1/#u.size#$で\emph{爆発}する。
+  #u#が爆発すると、#u#を根とする部分木は完全にバランスされた二分木に再構築される。
+
+  そして、#DynamiteTree#の償却実行時間は$O(\log#n#)$であることを示せ。
+\end{exc}
+
+\begin{exc}\exclabel{list-order-maintenance}
+  \index{Sequence@#Sequence#}%
+  要素の列を保持するデータ構造#Sequence#を設計・実装せよ。
+  これは次のような操作を提供する。
+  \begin{itemize}
+    \item #addAfter(e)#：要素#e#の次に新たな要素を追加する。
+	また、新たに追加した要素を返す。
+	（#e#が#null#なら新たな要素は列の先頭に追加される。）
+    \item #remove(e)#：#e#を列から削除する。
+    \item #testBefore(e1,e2)#：#e1#が#e2#の前にあるならば、またそのときに限って#true#を返す。
+  \end{itemize}
+  はじめのふたつの操作の償却実行時間は$O(\log #n#)$でなければならない。
+  みっつめの操作は定数時間でなければならない。
+
+  #Sequence#は、列の中の順序を使い、#ScapegoatTree#のようにデータを蓄えれば実装できる。
+  #testBefore(e1,e2)#を定数時間で実装するために、要素#e#は根から#e#への経路を符号化した整数でラベル付けされる。
+  こうすると#testBefore(e1,e2)#は#e1#と#e2#のラベルを比較すればよい。
+\end{exc}
