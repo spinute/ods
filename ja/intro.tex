@@ -75,7 +75,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
   \figlabel{queue}
 \end{figure}
 
-\fig{prioqueue}に示す優先度付き#Queue#は、
+\figref{prioqueue}に示す優先度付き#Queue#は、
 \index{priority queue}%
 \index{priority queue|seealso{heap}}%
 \index{queue!priority}%
@@ -145,7 +145,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 $#x# = #y#$を満たす集合の要素#y#が存在しないなら、集合に#x#を加える。#x#が集合に追加されたら#true#を返し、そうでなければ#false#を返す。
 \item #remove(x)#：集合から#x#を削除する。\\
 $#x# = #y#$を満たす集合の要素#y#を探し、集合から取り除く。そのような要素が見つかれば#y#を、見つからなければ#null#を返す。
-\item #find（x）#：集合に#x#が入っていればそれを見つける。\\
+\item #find(x)#：集合に#x#が入っていればそれを見つける。\\
 $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素が見つかれば#y#を、見つからなければ#null#を返す。
 \end{enumerate}
 
@@ -207,7 +207,7 @@ $b$が整数でないときも、やはり（後述する）指数関数$e^x$の
     b^{x} = k  \enspace .
 \]
 
-この本に出てくる対数の底は2であることが多い。底が2の対数を\{二進対数}という。そのため、底になにも書かない$\log k$は$\log_2 k$の省略記法とする。
+この本に出てくる対数の底は2であることが多い。底が2の対数を\emph{二進対数}という。そのため、底になにも書かない$\log k$は$\log_2 k$の省略記法とする。
 \index{binary logarithm}%
 \index{logarithm!binary}%
 
@@ -309,7 +309,7 @@ $ c = 13 $および$ n_0 = 2 $とすれば、関数$ f(n)= 5n \log n + 8n-200 $�
 まずは、任意の定数$c_1 < c_2$について以下が成り立つ。
 \[ O(n^{c_1}) \subset O(n^{c_2}) \enspace\]
 
-つづいて、任意の定数$ a、b、c> 0 $について以下が成り立つ。
+つづいて、任意の定数$ a, b, c> 0 $について以下が成り立つ。
 \[ O(a) \subset O(\log n) \subset O(n^{b}) \subset O({c}^n) \enspace\]
 
 これらの包含関係はそれぞれに正の値を掛けても保たれる。
