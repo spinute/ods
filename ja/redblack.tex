@@ -30,3 +30,103 @@ Scapegoat treeには高さの保証があるものの、#add(x)#・#remove(x)#�
 
 赤黒木の実装に直接取り掛かるのでなく、関連するデータ構造である2-4木についての背景知識をまずは説明する。
 こうするとどうやって赤黒木が発見され、なぜこのデータ構造を効率的に管理できるのかを理解する助けになるだろう。
+
+\section{2-4木}
+\seclabel{twofour}
+
+2-4木は次の性質を持つ根付き木である。
+\begin{prp}[height]
+すべての葉の深さは同じである。
+\end{prp}
+\begin{prp}[degree]
+すべての内部ノードは2-4個の子ノードを持つ。
+\end{prp}
+2-4の例を\figref{twofour-example}に示す。
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/24rb-2}
+  \end{center}
+  \caption{A 2-4 tree of height 3.}
+  \figlabel{twofour-example}
+\end{figure}
+2-4木の性質より、この木の高さは葉の数の対数である。
+\begin{lem}\lemlabel{twofour-height}
+  #n#個の葉を持つ2-4木の高さは$\log #n#$以下である。
+\end{lem}
+
+\begin{proof}
+内部ノードの子の数は2以上なので、2-4木の高さを$h$とすると葉の数は$2^h$以上である。
+  \[
+     #n# \ge 2^h \enspace .
+  \]
+  両辺の対数を取ると$h \le \log #n#$である。
+\end{proof}
+
+\subsection{葉の追加}
+
+2-4木に葉を追加するのは簡単である。
+（\figref{twofour-add}を参照せよ。）
+下から二番目の深さのノード#w#の子として葉#u#を追加したいとき、単に#u#を#w#の子とする。
+これは高さの制約は保つが、次数の制約を犯すかもしれない。
+つまり、#u#を追加する直前に#w#の4つの子を持っていたなら、#w#の子の数は今では5となる。
+この場合、 #w#を\emph{分割}し、#w#と#w#'というそれぞれ2つ、3つずつの子を持つノードとする。
+\index{split}%
+このとき#w#'には親がいないので、#w#'を#w#の親の子とする。
+この処理は再帰的に行われる。
+先の処理の結果として#w#の親が持つ子の数が多くなりすぎるかもしれず、そのときはまた分割を行う。
+この処理を、子の数が4未満のノードが見つかるか、根#r#を#r#と#r'#に分割するまで繰り返す。
+後者の場合には新しい根を作り、#r#と#r'#をその子とする。
+そのときにはすべての葉の深さが同時に増えるので、高さの性質はやはり保たれる。
+
+\begin{figure}
+  \begin{center}
+   \begin{tabular}{c}
+     \includegraphics[scale=0.90909]{figs/24tree-add-1} \\
+     \includegraphics[scale=0.90909]{figs/24tree-add-2} \\
+     \includegraphics[scale=0.90909]{figs/24tree-add-3}
+   \end{tabular}
+  \end{center}
+  \caption[Adding a leaf to a 2-4 Tree]{Adding a leaf to a 2-4 Tree.
+  This process stops after one split because #w.parent# has a degree of less
+  than 4 before the addition.}
+  \figlabel{twofour-add}
+\end{figure}
+
+2-4木の高さは常に$\log #n#$以下なので、葉の追加は$\log #n#$ステップ以下で完了する。
+
+\subsection{葉の削除}
+
+2-4木から葉を削除するには少し工夫が必要である。
+（\figref{twofour-remove}を参照せよ。）
+葉#u#をその親#w#から削除するとき、単に#u#を削除する。
+その直前に、#w#が子をふたつしか持っていなかったなら、#w#の子はひとつだけになり、次数の制約を犯すことになる。
+
+\begin{figure}
+  \begin{center}
+   \begin{tabular}{c}
+     \includegraphics[height=\FifthHeightScaleIfNeeded]{figs/24tree-remove-1} \\
+     \includegraphics[height=\FifthHeightScaleIfNeeded]{figs/24tree-remove-2} \\
+     \includegraphics[height=\FifthHeightScaleIfNeeded]{figs/24tree-remove-3} \\
+     \includegraphics[height=\FifthHeightScaleIfNeeded]{figs/24tree-remove-4} \\
+     \includegraphics[height=\FifthHeightScaleIfNeeded]{figs/24tree-remove-5} \\
+   \end{tabular}
+  \end{center}
+  \caption[Removing a leaf from a 2-4 Tree]{Removing a leaf from a
+    2-4 Tree.  This process goes all the way to the root because each of
+    #u#'s ancestors and their siblings have only two children.}
+  \figlabel{twofour-remove}
+\end{figure}
+
+これを修正するため、#w#の兄弟#w'#を見る。
+#w#の親が持つ子の数は2以上なので、兄弟#w'#は必ず存在する。
+#w'#が3つまたは4つの子を持つなら、そのうちひとつを#w'#から#w#に移す。
+すると#w#の子の数は2、#w'#の子の数は2か3になり、処理を終えられる。
+
+一方、#w'#の子の数が2なら、#w#と#w'#を\emph{併合}し、子を3つ持つ一つのノード#w#とする。
+\index{merge}%
+続いて#w'#を#w'#の親から取り除く。
+この処理はノード#u#かその兄弟#u'#が3つ以上子を持つような#u#を見つけるか、根に到達すると終了する。
+後者の場合は根はひとつの子だけを持つので、根は削除して、その子を新たな根とする。
+この場合もすべての葉の高さが同時に減るので、高さの性質はやはり保たれる。
+
+ここでも、2-4木の高さは常に$\log #n#$以下なので、葉の削除は$\log #n#$ステップ以下で完了する。
