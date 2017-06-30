@@ -130,3 +130,323 @@ Scapegoat treeには高さの保証があるものの、#add(x)#・#remove(x)#�
 この場合もすべての葉の高さが同時に減るので、高さの性質はやはり保たれる。
 
 ここでも、2-4木の高さは常に$\log #n#$以下なので、葉の削除は$\log #n#$ステップ以下で完了する。
+
+\section{#RedBlackTree#：2-4木のシミュレーション}
+\seclabel{redblacktree}
+
+赤黒木は各ノード#u#が\emph{赤}か\emph{黒}の\emph{色}を持つ二分探索木である。
+\index{colour}%
+赤は$0$で、黒は$1$で表現される。
+\index{red node}%
+\index{black node}%
+\javaimport{ods/RedBlackTree.red.black.Node<T>}
+\cppimport{ods/RedBlackTree.RedBlackNode.red.black}
+
+赤黒木を操作する前後では次のふたつの性質が満たされる。
+いずれも赤・黒の色と、0・1の数値を使って定義される。
+\begin{prp}[black-height]
+  \index{black-height property}%
+  「黒い高さ」が一様：任意の葉から根への経路上には、同じ数だけ黒いノードがある。
+\end{prp}
+
+\begin{prp}[no-red-edge]
+  \index{no-red-edge property}%
+  赤い辺が無い：赤いノード同士は隣接しない。
+  （根でない任意のノード#u#について、$#u.colour# + #u.parent.colour# \ge 1$が成り立つ。）
+\end{prp}
+根#r#については、どちらの色であってもこれらの性質が満たされる。
+そのため、根は黒であると仮定する。
+また赤黒木を更新するアルゴリズムはこれを保つ。
+赤黒木を単純化するための別の工夫として、外部ノード（#nil#で表現される）を黒いノードと扱うのがよい。
+\figref{redblack-example}に赤黒木の例を示した。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/24rb-1}
+  \end{center}
+  \caption[A red-black tree]{An example of a red-black tree with black-height 3.  External (#nil#) nodes are drawn as squares.}
+  \figlabel{redblack-example}
+\end{figure}
+
+
+\subsection{赤黒木と2-4木}
+
+前の小節で定義した黒い高さと赤い辺についての性質を、赤黒木が効率的のは一見して驚くかもしれない。
+一方、これらの性質がなんの役に立つのかよくわからないかもしれない。
+しかし、赤黒木は2-4木を二分木として効率的にシミュレートするように設計されているのである。
+
+\figref{twofour-redblack}を参照せよ。
+#n#個のノードを持つ赤黒木$T$に次の変換を施す。
+すべての赤いノード#u#を取り除き、#u#のふたつの子をいずれも（黒い）#u#の親に直接接続する。
+こうして得られる木$T$は黒いノードだけを含む。
+\begin{figure}
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[scale=0.90909]{figs/24rb-3} \\
+      \includegraphics[scale=0.90909]{figs/24rb-2}
+    \end{tabular}
+  \end{center}
+  \caption{Every red-black tree has a corresponding 2-4 tree.}
+  \figlabel{twofour-redblack}
+\end{figure}
+
+$T'$の内部ノードはみな2-4個の子を持つ。
+ふたつの黒い子を持っていた黒いノードは、変換後も2つの黒い子を持つ。
+赤い子と黒い子をひとつずつ持っていた黒いノードは、変換後は3つの黒い子を持つ。
+ふたつの赤い子を持っていた黒いノードは、変換後も4つの黒い子を持つ。
+加えて黒い高さの性質より、$T'$の任意の葉から根への経路の長さは同じである。
+つまり、$T'$は2-4木になのである！
+
+2-4木$T'$は$#n#+1$個の葉を持ち、各葉は赤黒木の$#n#+1$個の外部ノードと対応する。
+よってこの木の高さは$\log (#n#+1)$以下である。
+2-4木のすべての葉から根への経路は赤黒木$T'$における根から外部ノードへの経路に対応する。
+この経路の最初・最後のノードは黒色で、内部ノードのふたつにひとつ以上は赤いので、この経路にあるノードのうち黒いものは$\log(#n#+1)$個以下、赤いものは$\log(#n#+1)-1$個以下である。
+よって、任意の$#n#\ge 1$について、任意の\emph{内部}ノードから根への経路のうち最長のものの長さは次の値以下である。
+\[
+   2\log(#n#+1) -2 \le 2\log #n#
+\]
+このことから、赤黒木の最も重要な性質を示せる。
+\begin{lem}
+#n#個のノードからなる赤黒木の高さは$2\log #n#$以下である。
+\end{lem}
+
+2-4木と赤黒木の関係がわかれば、赤黒木を保ちながら効率的に要素の追加・削除ができる気がしてきたことだろう。
+
+#BinarySearchTree#における要素の追加は新たな葉を追加することで行えることはこれまでの章で説明した。
+よって、赤黒木における#add(x)#を実装するためには、2-4木における5つの個を持つノードの分割をシミュレートする方法があればよい。
+5つの子を持つ2-4木のノードは、ふたつの赤い子を持つひとつの黒いノード#w#であって、子のうちの一方が更に赤い子を持つものである。
+#w#を「分割」するには、#w#を赤く、#w#の子をいずれも黒くすればよい。
+このような例を\figref{rb-split}に示した。
+
+\begin{figure}
+  \begin{center}
+   \begin{tabular}{c}
+     \includegraphics[scale=0.90909]{figs/rb-split-1} \\
+     \includegraphics[scale=0.90909]{figs/rb-split-2} \\
+     \includegraphics[scale=0.90909]{figs/rb-split-3} \\
+   \end{tabular}
+  \end{center}
+  \caption[Simulating a 2-4 tree]{Simulating a 2-4 tree split operation
+    during an addition in a red-black tree.  (This simulates the 2-4
+    tree addition shown in \figref{twofour-add}.)}
+  \figlabel{rb-split}
+\end{figure}
+
+同様に#remove(x)#をするためには、ふたつのノードを併合する方法と兄弟から子を借りる方法があればよい。
+ふたつのノードの併合は\figref{rb-split}で示した分割の逆の処理であり、いずれも黒い兄弟を赤に、その共通の赤い親を黒にすればよい。
+兄弟から子を借りる操作が最も複雑で、回転と色の変更を共に行う必要がある。
+
+もちろん赤い辺の制約、黒い高さの制約をいずれも満たす必要がある。
+これが可能なことくらいではもう驚かないかもしれないが、2-4木を赤黒木でシミュレートするためには考えなければならない場合分けはやはり多いのである。
+背景にある2-4を無視して赤黒木の性質を保つことを直接的に考えることで、よりシンプルになることもある。
+
+\subsection{Left-Leaning Red-Black Trees}
+XXX: left-learning に定訳はあるか?
+
+\index{red-black tree}%
+\index{left-leaning red-black tree}%
+赤黒木の定義の仕方は複数ある。
+#add(x)#・#remove(x)#を実行しながら、赤い辺の制約・黒い高さの制約を保てる、いくつかのデータ構造があるのだ。
+異なる構造では、異なるやり方でこれを達成する。
+ここでは、#RedBlackTree#と呼ぶデータ構造を実装する。
+\index{RedBlackTree@#RedBlackTree#}%
+これは赤黒木の一種であって、特にある追加の性質を満たすものの実装である。
+\begin{prp}[left-leaning]\prplabel{left-leaning}\prplabel{redblack-last}
+  \index{left-leaning property}%
+  任意のノード#u#について、#u.left#が黒ならば#u.right#も黒である。
+\end{prp}
+例えば\figref{redblack-example}のleft-leaning性を満たしていない。
+右に進む経路の赤いノードの親がこの性質を犯しているためだ。
+
+left-leaning性を保持するのは、これにより#add(x)#・#remove(x)#において木を更新するときの場合分けが単純になるためである。
+これは対応する2-4木の表現が一意に定まるためである。
+次数が2のノードはふたつの黒い子を持つ黒いノードになる。
+次数が3のノードは左の子が赤、右の子が黒の黒いノードになる。
+次数が4のノードはふたつの黒い子を持つ赤いノードになる。
+
+#add(x)#・#remove(x)#の実装の詳細に入る前に、\figref{redblack-flippullpush}に図示した単純なサブルーチンを説明する。
+最初のふたつのサブルーチンは黒い高さの制約を保ったまま色を操作するものである。
+#pushBlack(u)#の入力#u#はふたつの赤い子を持つ黒いノードで、#u#を赤に、そのふたつの子をいずれも黒に塗り替える。
+#pullBlack(u)#はこの逆の操作である。
+\codeimport{ods/RedBlackTree.pushBlack(u).pullBlack(u)}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/flippullpush}
+  \end{center}
+  \caption{Flips, pulls and pushes}
+  \figlabel{redblack-flippullpush}
+\end{figure}
+
+#flipLeft(u)#は#u#と#u.right#の色を入れ替え、その後#u#を左回転する。
+この操作はこれらふたつのノードの色と親子関係をいずれも入れ替える。
+\codeimport{ods/RedBlackTree.flipLeft(u)}
+#flipLeft(u)#は#u#がleft-leaning性を犯しているとき、この性質を取り戻すのに役立つ。
+これは#u.left#が黒で#u.right#が赤であるためだ。
+この場合は特に、この操作によって黒い高さ・赤い辺の制約がいずれも満たされることが保証される。
+#flipRight(u)#は#flipLeft(u)#を左右対称に入れ替えた操作である。
+
+XXX: 図のノードが一部白抜きなのはなぜ?
+\codeimport{ods/RedBlackTree.flipRight(u)}
+
+\subsection{要素の追加}
+
+#RedBlackTree#における#add(x)#を実装するには、#BinarySearchTree#におけるふつうの挿入操作によって、$#u.x#=#x#$かつ$#u.colour#=#red#$を満たす新たな葉#u#を追加すればよい。
+この処理は任意のノードの黒い高さは変わらないので黒い木の制約は破られない。
+しかし、left-leaning性を犯すことがあるかもしれない。（これは#u#が右の子であるときである。）また赤い辺の制約を犯すこともあるかもしれない。（これは#u#の親が赤いときである。）
+これらの性質を取り戻すためには#addFixup(u)#を呼べばよい。
+\codeimport{ods/RedBlackTree.add(x)}
+
+Illustrated in 
+\figref{rb-addfix}に図示したように、#addFixup(u)#
+赤いノード#u#を入力に取るが、これは赤い辺の制約やleft-leaning性を犯しているかもしれない。
+この先の議論は、\figref{rb-addfix}を見るかそれを再度紙に書いてみるかでもしないと理解できないと思う。
+続きを読む前に、この図に目を通して意味を考えてみてほしい。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/rb-addfix}
+  \end{center}
+  \caption{A single round in the process of fixing Property~2 after
+  an insertion.}
+  \figlabel{rb-addfix}
+\end{figure}
+
+#u#が木の根なら、#u#を黒くすればふたつの性質を成り立たせることができる。
+#u#の兄弟も赤いなら#u#の親は黒で、ふたつの性質は既に成り立っている。
+
+このいずれでもないとき、まずは#u#の親#w#がleft-leaning性を犯しているかを確認し、もしそうなら#flipLeft(w)#を実装し、$#u#=#w#$とする。
+この結果、次の状態になる。
+#u#は親である#w#の左の子になり、そのため#w#はleft-leaning性を満たすようになる。
+あとは#u#の赤い辺の制約が満たされることを示せばよい。
+#w#が黒いなら既に赤い辺の性質は満たされているので、赤い場合だけを心配すれば十分である。
+
+まだ制約が破られているので、#u#と#w#はいずれも赤い。
+赤い辺の制約（#u#によって侵されているが、#w#によっては侵されていない）より、#u#には親の親#g#が存在し、それは黒い。
+#g#の右の子が赤いならleft-leaning性より#g#の子は共に赤く、#pushBlack(g)#を呼ぶと#g#は赤く、#w#は黒くなる。
+すると、#u#について赤い辺の制約が満たされるが、#g#について赤い辺の制約が侵されるかもしれず、$#u#=#g#$として同じ処理を再度繰り返す。
+
+もし#g#の右の子が黒いなら、
+#flipRight(g)#を呼べば#w#は#g#の（黒い）親になり、#w#は#u#と#g#のふたつの赤い子を持つ。
+これは#u#が赤い辺の制約を満たすこと、#g#がleft-leaning性を満たすことを保証する。
+この場合、処理はここで終了してよい。
+\codeimport{ods/RedBlackTree.addFixup(u)}
+
+#insertFixup(u)#の繰り返し一度あたりの実行時間は定数で、繰り返しの度に#u#を根に向けて動かすが処理が終了する。
+よって、#insertFixup(u)#は$O(\log #n#)$回の繰り返しの後に終了し、このときの実行時間は$O(\log #n#)$である。
+
+\subsection{Removal}
+
+#RedBlackTree#では#remove(x)#の実装が最も複雑であり、これは知られているどの赤黒木の場合でも同様である。
+\texttt{二分探索木}における#remove(x)#のように、この操作は唯一の子#u#を持つノード#w#を特定し、#u#を#u.parent#と接続し、#w#を木から取り除く。
+
+このとき問題となるのは、#w#が黒なら黒い高さの制約が#w.parent#で破られることだ。
+#w.colour#を#u.colour#に足すとこの問題を一時的に解決できる。
+もちろんこの結果ふたつの別の問題が発生する。
+(1)~もし#u#と#w#が共に黒いと$#u.colour#+#w.colour#=2$であり、これは不正な色になってしまう。
+XXX: (2)?
+#w#が赤いとき、#u#と入れ替えると$#u.parent#$のleft-leaning性が犯されるかもしれない。
+これらの問題はいずれも#removeFixup(u)#を呼ぶと解決できる。
+\codeimport{ods/RedBlackTree.remove(x)}
+
+#removeFixup(u)#の入力であるノード#u#の色は1か2（無向な色）である。
+#u#の色が2なら、#removeFixup(u)#は一連の回転と塗り替え操作を実行し、このノードが木から追い出す。
+ノード#u#が更新しようとしている部分木の根になるまで処理を行う。
+XXX: I'm 迷子
+During this
+process, the node #u# changes until, at the end of this process, #u#
+refers to the root of the subtree that has been changed.  The root of
+this subtree may have changed colour.  In particular, it may have gone
+from red to black, so the #removeFixup(u)# method finishes by checking
+if #u#'s parent violates the left-leaning property and, if so, fixing it.
+\codeimport{ods/RedBlackTree.removeFixup(u)}
+
+\figref{rb-removefix}は#removeFixup(u)#を図示したものだ。
+この説明も\figref{rb-removefix}を見ながら出ないと理解するのは難しいだろう。
+#removeFixup(u)#の繰り返し毎にdouble-blackのノード#u#は次の4つの場合分けに基づき処理される。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[height=\HeightScaleIfNeeded]{figs/rb-removefix}
+  \end{center}
+  \caption{A single round in the process of eliminating a double-black node
+   after a removal.}
+  \figlabel{rb-removefix}
+\end{figure}
+
+\noindent
+Case 0: #u#が根である場合である。このときは最も簡単である。
+#u#を黒に塗り直せばよい。（これは赤黒木のいずれの制約を犯すこともない。）
+
+\noindent
+Case 1: #u#の兄弟#v#が赤い場合である。
+このときleft-leaning性より、#u#の兄弟#v#はその親#w#左の子である。
+#w#で右回転を実行し、次の繰り返しに進む。
+この操作では#w#の親はleft-leaning性を犯すようになり、#u#の深さが1大きくなることに注する。
+しかし、次の繰り返しは#w#が赤い場合のCase~3である。
+このとき、後で説明するCase~3を実行すると、処理がうまく終了することがわかるだろう。
+\codeimport{ods/RedBlackTree.removeFixupCase1(u)}
+
+\noindent
+Case 2: #u#の兄弟#v#が黒い場合である。
+このとき、#u#は親#w#の左の子である。
+続いて#pullBlack(w)#を呼ぶ。すると、#u#は黒く、#v#は赤くなり、#w#はより黒く、すなわち黒またはdouble-blackになる。
+このとき、#w#はleft-leaning性を満たしておらず、#flipLeft(w)#を読んでこれを解決する。
+
+At this point, #w# is red and #v# is the root of the subtree with which
+we started.  We need to check if #w# causes the no-red-edge property to
+be violated.  We do this by inspecting #w#'s right child, #q#.  If #q#
+is black, then #w# satisfies the no-red-edge property and we can continue
+the next iteration with $#u#=#v#$.
+
+Otherwise (#q# is red), so both the no-red-edge property and the left-leaning
+properties are violated at #q# and #w#, respectively.  The left-leaning
+property is restored with a call to  
+#rotateLeft(w)#, but the no-red-edge
+property is still violated.  At this point, #q# is the left child of
+#v#, #w# is the left child of #q#, #q# and #w# are both red, and #v#
+is black or double-black.  A #flipRight(v)#  makes #q# the parent of
+both #v# and #w#.  Following this up by a #pushBlack(q)# makes both #v#
+and #w# black and sets the colour of #q# back to the original colour of #w#.
+
+At this point, the double-black node is has been eliminated and the
+no-red-edge and black-height properties are reestablished.  Only one possible problem remains: the right child of #v# may be red, in which
+case the left-leaning property would be violated.  We check this and
+perform a #flipLeft(v)# to correct it if necessary.
+\codeimport{ods/RedBlackTree.removeFixupCase2(u)}
+
+\noindent
+Case 3: #u#'s sibling is black and #u# is the right child of its parent,
+#w#.  This case is symmetric to Case~2 and is handled mostly the same way.
+The only differences come from the fact that the left-leaning property
+is asymmetric, so it requires different handling.
+
+As before, we begin with a call to #pullBlack(w)#, which makes #v# red
+and #u# black.  A call to #flipRight(w)# promotes #v# to the root of
+the subtree.  At this point #w# is red, and the code branches two ways
+depending on the colour of #w#'s left child, #q#.
+
+If #q# is red, then the code finishes up exactly the same way as Case~2
+does, but is even simpler since there is no danger of #v# not
+satisfying the left-leaning property.
+
+The more complicated case occurs when #q# is black.  In this case,
+we examine the colour of #v#'s left child.  If it is red, then #v# has
+two red children and its extra black can be pushed down with a call to
+#pushBlack(v)#.  At this point, #v# now has #w#'s original colour, and we
+are done.
+
+If #v#'s left child is black, then #v# violates the left-leaning property,
+and we restore this with a call to #flipLeft(v)#.  We then return the
+node #v# so that the next iteration of #removeFixup(u)# then continues
+with $#u#=#v#$.
+\codeimport{ods/RedBlackTree.removeFixupCase3(u)}.
+
+Each iteration of #removeFixup(u)# takes constant time.  Cases~2 and 3
+either finish or move #u# closer to the root of the tree.  Case~0 (where
+#u# is the root) always terminates and Case~1 leads immediately to Case~3,
+which also terminates.  Since the height of the tree is at most $2\log
+#n#$, we conclude that there are at most $O(\log #n#)$ iterations of
+#removeFixup(u)#, so #removeFixup(u)# runs in $O(\log #n#)$ time.
+
+
