@@ -109,9 +109,11 @@ html: java-html cpp-html python-html
 
 java-html : $(javh) ods-java-html.tex epsfigs
 	mkdir -p ods-java
-	pdflatex ods-java-html
+	platex ods-java-html
 	bibtex ods-java-html
+	platex ods-java-html
 	latex2html -init_file latex2html-init -dir ods-java ods-java-html
+#	pdflatex ods-java-html
 
 ods-java-html.tex : ods.tex Makefile
 	sed 's/-lang/-java-html/' ods.tex > ods-java-html.tex
