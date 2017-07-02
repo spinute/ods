@@ -233,7 +233,7 @@ $\bmod$は次のように二項演算と考えてもよい。
 より一般的には
 整数$a$と正整数$m$について、ある整数kが存在し$a = r + km$をみたす$\{0, \ldots, m-1 \} $の一意な要素を$a \bmod m $と書く。
 雑に言うと$ r $とは$ a $を$ m $で割った余りである。
-CやC++、Ruby、Javaなど多くのプログラミング言語ではmod演算子は\%で表される。
+CやC++、Ruby、Javaなど多くのプログラミング言語ではmod演算子は\%で表される。 % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
 
 剰余算術は無限配列を模倣するのに便利である。
 $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利用して、配列の中にキューの要素をうまく入れられるのだ。
@@ -285,13 +285,6 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 次の定理は#ArrayQueue#の性能を整理するものだ。
 
 \begin{thm}
-  #ArrayStack#は#List#インターフェースを実装する。
-  #resize()#のコストを無視すると、#ArrayStack#における各操作の実行時間は、
-  \begin{itemize}
-    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
-    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+#n#-#i#)$である。
-  \end{itemize}
-  空の#ArrayStack#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
   #ArrayQueue#は(FIFO)#Queue#インターフェースの実装である。
   #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#を$O(1)$の時間で実行できる。
   さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#に使われる実行時間の合計は$O(m)$である。
@@ -356,7 +349,7 @@ $#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか�
 \index{DualArrayDeque@#DualArrayDeque#}%
 
 次は2つの#ArrayStack#を使って#ArrayDeque#に近い性能を示すデータ構造#DualArrayDeque#を紹介する。
-#DualArrayDeque#の漸近的な性能は#ArrayDeque#より優れているわけではないのだが、2つのシンプルなデータ構造を組み合わせてより高度なデータ構造を作る良い例なのでここで扱う価値がある。
+#DualArrayDeque#の漸近的な性能は#ArrayDeque#より優れているわけではないのだが、2つのシンプルなデータ構造を組み合わせてより高度なデータ構造を作る良い例なのでここで学ぶ価値がある。
 
 #DualArrayDeque#は、2つの#ArrayStack#を使ってリストを表現する。
 #ArrayStack#では終端付近の要素を高速に修正できたことを思い出してほしい。
@@ -366,10 +359,10 @@ $#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか�
 \codeimport{ods/DualArrayDeque.front.back}
 
 #DualArrayDeque#は要素数#n#を明示的に保持しない。
-$#n#=#front.size()# + #back.size()#$なのでその必要がないのだ。
-しかし#DualArrayDeque#の解析では相変わらず#n#で要素数を表すことにする。
+要素数は$#n#=#front.size()# + #back.size()#$によって求めることが出来るからだ。
+ただし#DualArrayDeque#の解析では相変わらず#n#で要素数を表すことにする。
 
-\codeimport{ods/DualArrayDeque.front.back}
+\codeimport{ods/DualArrayDeque.size()}
 
 ひとつめの#ArrayStack#である#front#には$0,\ldots,#front.size()#-1$番目の要素を、逆さまの順番で格納する。
 もうひとつの#ArrayStack#である#back#には$#front.size()#,\ldots,#size()#-1$番目の要素を普通の順番で格納する。
@@ -399,7 +392,7 @@ $#n#=#front.size()# + #back.size()#$なのでその必要がないのだ。
 #balance()#の実装は後で説明するが、$#size()#<2$であるときを除いて#front.size()#と#back.size()#は三倍以上離れないことを#balance()#は保証することを知っておけば十分である。
 具体的には$3\cdot#front.size()# \ge #back.size()#$と$3\cdot#back.size()# \ge #front.size()#$であることを保証する。
 
-つづいて#add(i,x)#のうち#balance()#のことを無視したコストを求める。
+つづいて#add(i,x)#のうち#balance()#のコストを無視したコストを求める。
 $#i#<#front.size()#$のとき#add(i,x)#は$#front.add(front.size()-i-1,x)#$で実装できる。
 #front#は#ArrayStack#なのでこのコストは次のようになる。
 \begin{equation}
@@ -440,14 +433,14 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
 
 \codeimport{ods/DualArrayDeque.balance()}
 
-ここまでで分析するようなことは特にないだろう。
+#balance()#の解析は簡単である。
 #balance()#がバランス調整をするとき$O(#n#)$個の要素を動かすので$O(#n#)$の時間がかかる。
 #balance()#は#add(i,x)#・#remove(i)#で毎回呼ばれるのでこれは一見好ましくない。
 しかし次の補題より、#balance()#のための平均時間は定数であることがわかる。
 
 \begin{lem}\lemlabel{dualarraydeque-amortized}
   空の#DualArrayDeque#に対して$m\ge 1$個の#add(i,x)#・#remove(i)#からなる操作の列を順に実行する。
-  このとき#balance()#の実行時間の合計は$O(m)$である。
+  このとき全ての#balance()#の呼び出しの実行時間の合計は$O(m)$である。
 \end{lem}
 
 \begin{proof}
