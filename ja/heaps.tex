@@ -11,3 +11,111 @@
 この効率的な実装はヒープソート（\secref{heapsort}参照）という名の、最速の整列アルゴリズムのうちのひとつの基礎になっている。
 ふたつめの実装はより柔軟である。
 これはある優先度付きキューの要素を別の優先度付きキューに取り込む#meld(h)#操作を提供する。
+
+\section{#BinaryHeap#：暗黙の二分木}
+\seclabel{binaryheap}
+
+\index{BinaryHeap@#BinaryHeap#}%
+（優先度付き）キューの最初の実装は400年以上前に発見された手法に基づく。
+\emph{Eytzinger法}
+\index{Eytzinger's method}%
+では木のノードを幅優先順に配列に入れて完全二分木を表現する。
+（\secref{bintree:traversal}を参照せよ。）
+こうすると、根は0番目、根の左の子は1番目、右の子は2番目、根の左の子の左の子は3番目の位置に格納される。
+\figref{eytzinger}を参照せよ。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/eytzinger}
+  \end{center}
+  \caption{Eytzinger's method represents a complete binary tree as an array.}
+  \figlabel{eytzinger}
+\end{figure}
+
+Eytzinger法を大きな木に適用してみると、規則性が見えてくる。
+添え字#i#のノードの左の子の添え字は$#left(i)#=2#i#+1$であり、右の子の添え字は$#right(i)#=2#i#+2$である。
+また、添え字#i#のノードの親の添え字は$#parent(i)#=(#i#-1)/2$である。
+\codeimport{ods/BinaryHeap.left(i).right(i).parent(i)}
+
+#BinaryHeap#はこの手法を使って完全二分木を暗黙に表現する。
+特に、この木の中では要素は\emph{ヒープ順}に並んでいる。
+\index{heap-ordered binary tree}%
+\index{binary tree!heap-ordered}%
+\index{heap order}%
+すなわち、添え字#i#の位置に格納されている値は、#parent(i)#に格納されている値以上である。（ただし、$#i#=0$である根は除く。）
+このとき、優先度付き#Queue#における最小値が0番目の位置（根）に格納されていることがわかる。
+
+#BinaryHeap#では#n#個の要素が配列#a#に格納されている。
+\codeimport{ods/BinaryHeap.a.n}
+
+#add(x)#の実装は簡単である。
+他の配列ベースのデータ構造と同じく、まずは#a#が一杯かどうかを確認する。
+（$#a.length#=#n#$かどうかを確認する。）
+もしそうなら#a#を拡張する。
+続いて#x#を#a[n]#に入れ、#n#を1増やす。
+あとはヒープ性を保てばよい。
+これは#x#とその親とを交換する操作を、#x#が親以上になるまで繰り返せばよい。
+\figref{heap-insert}を参照せよ。
+\codeimport{ods/BinaryHeap.add(x).bubbleUp(i)}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-1} \\
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-2} \\
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-3} \\
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-4} \\
+  \end{center}
+  \caption[Adding to a BinaryHeap]{Adding the value 6 to a #BinaryHeap#.}
+  \figlabel{heap-insert}
+\end{figure}
+
+#remove()#はヒープから最小の値を削除するが、この実装にはすこし工夫が必要だ。
+根が最小値なのはわかっているが、これを削除したあとにもヒープ性が成り立つことを保証しなければならない。
+
+もっとも簡単な方法は根と#a[n-1]#を交換し、交換後に#a[n-1]#にある値を削除し、#n#を1小さくすることだ。
+しかし、その結果新たな根はおそらく最小値ではなくなっている。
+そのためこれを下方向に動かす必要がある。
+このため、この要素を子供と比較することを繰り返す。
+もしこの要素が三つ（自分と子供達）のうち最小ならば処理を終了する。
+そうでないなら、子供達のうち小さいものと、この要素とを入れ替え、処理を繰り返す。
+\codeimport{ods/BinaryHeap.remove().trickleDown(i)}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-1} \\
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-2} \\
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-3} \\
+    \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-4} \\
+  \end{center}
+  \caption[Removing from a BinaryHeap]{Removing the minimum value, 4, from a #BinaryHeap#.}
+  \figlabel{heap-remove}
+\end{figure}
+
+他の配列ベースのデータ構造と同様に、#resize()#のための時間を無視する。
+この実行時間は\lemref{arraystack-amortized}の償却解析によってわかる。
+すると、#add(x)#・#remove()#の実行時間は（暗黙の）二分木の高さに依存する。
+嬉しいことに、これは\emph{完全}二分木である。
+\index{binary tree!complete}%
+\index{complete binary tree}%
+最大の深さを除く各深さには、可能な最大数のノードがある。
+よって、$h$を木の高さとすると、少なくとも$2^h$個のノードがある。
+言い換えると、次の式が成り立つ。
+\[
+  #n# \ge 2^h
+\]  
+両辺の対数を取ると、次の式が成り立つ。
+\[
+   h \le \log #n#
+\]
+以上より、#add(x)#・#remove()#のいずれの実行時間も$O(\log #n#)$である
+
+\subsection{要約}
+
+次の定理は#BinaryHeap#の性能をまとめたものだ。
+
+\begin{thm}\thmlabel{binaryheap}
+  #BinaryHeap#は（優先度付き）#Queue#インターフェースの実装である。
+  #BinaryHeap#は#add(x)#・#remove()#をサポートし、#resize()#のコストを無視すると、いずれの実行時間も$O(\log #n#)$である。
+
+  空の#BinaryHeap#から任意の$m$個の#add(x)#・#remove()#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
+\end{thm}

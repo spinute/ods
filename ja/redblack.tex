@@ -496,3 +496,131 @@ which also terminates.  Since the height of the tree is at most $2\log
 分割と併合以外では、追加と削除はポテンシャルを最大で3増やし、ポテンシャルは常に非負である。
 よって、空の木に対して$m$回の追加と削除を実行するとき、分割・併合は合わせて$3m/2$回までしか行われない。
 \thmref{redblack-amortized}はこの解析の帰結であり、2-4木と赤黒木の間の対応でもある。
+
+\section{ディスカッションと練習問題}
+
+赤黒木はGuibasとSedgewick\cite{gs78}によってはじめに提案された。
+赤黒木は実装が非常に複雑であるにも関わらず、ライブラリやアプリで最も頻繁に使われるもののうちの一つである。
+ほとんどのアルゴリズムやデータ構造の本では何種類化の赤黒木を説明している。
+
+Andersson \cite{a93}はleft-learningなバランスされた木であって、赤黒木に似ているが任意のノードは最大で一つの赤い子を持つという制約を加えたものを提案している。
+そのためこのデータ構造がシミュレートするのは、2-4木ではなく2-3木である。
+しかし、このデータ構造はこの章で説明した#RedBlackTree#よりもかなり単純である。
+
+Sedgewick \cite{s08}は二種類のleft-learning赤黒木を提案している。
+これらのデータ構造では、2-4木における上から下方向への分割・併合のシミュレーションに加えて、再帰を使っている。
+こうすると、プログラムが短くエレガントになる。
+
+関連するより古いデータ構造としては\emph{AVL木} \cite{avl62}がある。
+\index{AVL tree}%
+AVL木は次の\emph{height-balanced}性を満たす木である。
+\index{height-balanced}%
+\index{binary search tree!height balanced}%
+任意のノード$u$について、#u.left#を根とする部分木の高さと、#u.right#を根とする部分木の高さとの差は、高々1である。
+$F(h)$を高さ$h$である木のうち、葉が最も少ないものの葉の数とするとき、$F(h)$は次のフィボナッチの漸化式を満たす。
+\[
+   F(h) = F(h-1) + F(h-2)
+\]
+ただし$F(0)=1$, $F(1)=1$である。
+ここで\emph{黄金比}$\varphi=(1+\sqrt{5})/2\approx1.61803399$とするとき、$F(h)$は近似的に$\varphi^h/\sqrt{5}$である。
+（より正確には$|\varphi^h/\sqrt{5} - F(h)|\le 1/2$である。）
+\lemref{twofour-height}の証明で述べたように、これは式を含意する。
+\[
+   h \le \log_\varphi #n# \approx 1.440420088\log #n#
+\]
+よって、AVL木の高さは赤黒木の高さよりも低い。
+% XXX: rebalancing -> バランスの再調整
+#add(x)#・#remove(x)#の際、根に向かって戻り、通過する各ノード#u#について、#u#の左右の部分木の高さが2以上異なるときバランスの再調整を行うことで高さのバランスを保つ。
+\figref{avl-rebalance}を参照せよ。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/avl-rebalance}
+  \end{center}
+  \caption{Rebalancing in an AVL tree.  At most two rotations are required
+  to convert a node whose subtrees have a height of $h$ and $h+2$ into a node
+  whose subtrees each have a height of at most $h+1$.}
+  \figlabel{avl-rebalance}
+\end{figure}
+
+AnderssonのものやSedgewickのもの、AVL木のいずれも#RedBlackTree#よりも実装は単純である。
+しかし、いずれもバランスの再調整のための償却実行時間が$O(1)$であることを保証できない。
+特に\thmref{redblack-amortized}のような保証はない。
+
+\begin{figure}
+  \centering{\includegraphics[scale=0.90909]{figs/redblack-example}}
+  \caption{A red-black tree on which to practice.}
+  \figlabel{redblack-example2}
+\end{figure}
+
+\begin{exc}
+  \figref{redblack-example2}の#RedBlackTree#に対応する2-4木を図示せよ。
+\end{exc}
+
+\begin{exc}
+  \figref{redblack-example2}の#RedBlackTree#に13, 3.5, 3.3を順に追加する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+  \figref{redblack-example2}の#RedBlackTree#から11, 9, 5を順に削除する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+どれだけ大きな#n#についても、#n#個のノードを持ち、高さが$2\log #n#-O(1)$である赤黒木が存在することを示せ。
+\end{exc}
+
+\begin{exc}
+  操作#pushBlack(u)#・#pullBlack(u)#を考える。
+  これらの操作は赤黒木によって表現されている2-4木に対して何を行うか。
+\end{exc}
+
+\begin{exc}
+どれだけ大きな#n#についても、
+どれだけ大きな#n#についても、#n#個のノードを持ち、高さが$2\log #n#-O(1)$である赤黒木を校正する#add(x)#・#remove(x)#からなる操作の列が存在することを示せ。
+\end{exc}
+
+\begin{exc}
+#RedBlackTree#の実装における#remove(x)#で#u.parent=w.parent#とするのはなぜか説明せよ。
+これは#splice(w)#において既に行われているはずではないか。
+\end{exc}
+
+\begin{exc}
+2-4木$T$は$#n#_\ell$個の葉と$#n#_i$個の内部ノードを持つとする。
+  \begin{enumerate}
+    \item $#n#_\ell$が与えられたとき、$#n#_i$の最小値を求めよ。
+    \item $#n#_\ell$が与えられたとき、$#n#_i$の最大値を求めよ。
+    \item $T$を表現する赤黒木を$T'$とすると、$T'$の持つ赤いノードの個数を求めよ。
+  \end{enumerate}
+\end{exc}
+
+\begin{exc}
+#n#個のノードを持ち、高さが$2\log #n#-2$以下の二分探索木があるとする。
+このとき、この木のすべてのノードを、黒い高さの制約と赤い辺の制約をいずれも満たすように、赤または黒に塗ることはできるか。
+もしそうならそれに加えてleft-learning性を満たすことはできるか。
+\end{exc}
+
+\begin{exc}\exclabel{redblack-merge}
+赤黒木$T_1$, $T_2$は黒い高さがいずれも$h$であり、$T_1$の最大のキーは$T_2$の最小のキーよりも小さいものであるとする。
+このとき、$O(h)$の時間で$T_1$と$T_2$を一つの赤黒木に併合する方法を示せ。
+\end{exc}
+
+\begin{exc}
+\excref{redblack-merge}の解法を拡張し、$T_1$, $T_2$の黒い高さ$h_1$, $h_2$が異なるとき、すなわち$h_1\neq h_2$であるときにも適用可能にせよ。
+ただし、実行時間は$O(\max\{h_1,h_2\})$とする。
+\end{exc}
+
+\begin{exc}
+AVL木における#add(x)#の間に、最大で一度だけバランスの再調整操作を実行しなければならないことを証明せよ。（このとき最大二度の回転を実行することになる。\figref{avl-rebalance}を参照せよ。）
+また、#remove(x)#操作の際にオーダーで$\log #n#$だけのバランスの再調整操作が必要なAVL木の例を挙げよ。
+\end{exc}
+
+\begin{exc}
+上で説明したAVL木の実装である#AVLTree#クラスを作成せよ。
+この性能と#RedBlackTree#の性能とを比較せよ。
+#find(x)#が高速に行えるのはどちらの実装か。
+\end{exc}
+
+\begin{exc}
+#SSet#の実装である#SkiplistSSet#・#ScapegoatTree#・#Treap#・#RedBlackTree#における#find(x)#・#add(x)#・#remove(x)#の相対的な性能を評価する一連の実験を設計・実装せよ。
+なお、ランダムなデータや整列済みのデータ、ランダム・規則正しい順序での削除などを含む、多くのテストのシナリオを作ること。
+\end{exc}
