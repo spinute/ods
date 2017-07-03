@@ -119,3 +119,140 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
 
   空の#BinaryHeap#から任意の$m$個の#add(x)#・#remove()#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
+
+\section{#MeldableHeap#：ランダムなMeldableヒープ}
+\seclabel{meldableheap}
+XXX: melbadleは定訳がある?
+
+\index{MeldableHeap@#MeldableHeap#}%
+この節では、#MeldableHeap#を紹介する。
+これは優先度付き#Queue#の実装で、背後にある構造もまたヒープであるものである。
+しかし、#BinaryHeap#のようには要素数から二分木の形が一意には決まらず、#MeldableHeap#における背後にある二分木の形状には制約がない。
+
+#MeldableHeap#における#add(x)#・#remove()#は#merge(h1,h2)#を使って実装される。
+この操作はヒープのノード#h1#と#h2#を引数にとり、それぞれを根とするふたつの部分木内のすべてのノードを含むヒープの根を返す。
+
+嬉しいことに#merge(h1,h2)#は再帰的に定義できる。
+\figref{meldable-merge}を参照せよ。
+#h1#または#h2#が#nil#なら、単に#h2#, #h1#をそれぞれ返せばよい。
+そうでないとき、$#h1.x# \le #h2.x#$として一般性を失わない。
+このとき新たなヒープの根は#h1.x#を含む。
+#h2#は再帰的に#h1.left#か#h1.right#の望む方と併合してよい。
+ここでランダム性の出番だ。
+コインを投げ、#h#を#h1.left#と#h1.right#のどちらと併合するかを決める。
+\codeimport{ods/MeldableHeap.merge(h1,h2)}
+
+\begin{figure}
+  \centering{\includegraphics[width=\ScaleIfNeeded]{figs/meldable-merge}}
+  \caption[Merging in a MeldableHeap]{Merging #h1# and #h2# is done by merging #h2# with one of
+  #h1.left# or #h1.right#.}
+  \figlabel{meldable-merge}
+\end{figure}
+
+次の節では#merge(h1,h2)#の実行時間の期待値が$O(\log #n#)$であることを示す。
+ここで、#n#は#h1#と#h2#の要素数の合計である。
+
+#merge(h1,h2)#を使えば、#add(x)#は簡単である。
+#x#を含む新たなノード#u#を作り、#u#をヒープの根と併合すればよい。
+\codeimport{ods/MeldableHeap.add(x)}
+このとき実行時間の期待値は$O(\log (#n#+1)) = O(\log #n#)$である。
+
+#remove()#も同様に簡単である。
+削除したいのは根なので、そのふたつの子を併合し、その結果を新たな根とすればよい。
+\codeimport{ods/MeldableHeap.remove()}
+このときも実行時間の期待値は$O(\log #n#)$である。
+
+さらに#MeldableHeap#は他の色々な操作も$O(\log #n#)$の期待実行時間で実装できる。
+例えば次のものがある。
+\begin{itemize}
+\item #remove(u)#：ヒープからノード#u#を削除する
+\item #absorb(h)#：このヒープに#h#の要素をすべて追加し、#h#を空にする
+\end{itemize}
+いずれの操作も定数回だけの#merge(h1,h2)#を使って実装できる。
+
+\subsection{#merge(h1,h2)#の解析}
+
+#merge(h1,h2)#の解析は二分木のランダムウォークに基づく。
+二分木の\emph{ランダムウォーク}は根から始まる。
+各ステップではコインを投げ、その結果に応じて今のノードの右か左の子に進む。
+木からはみ出ると処理を終了する。（これは今のノードが#nil#になったときである。）
+
+次の補題は注目に値する。
+これは二分木の形状に関わらず成り立つためである。
+
+\begin{lem}\lemlabel{tree-random-walk}
+#n#個のノードからなる二分木におけるランダムウォークの長さの期待値は#\log (n+1)#以下である。
+\end{lem}
+
+\begin{proof}
+#n#に関する帰納法により証明する。
+$#n#=0$のとき、ステップ数は$0=\log (#n#+1)$である。
+以下では、任意の非負整数$#n#'< #n#$について、示したい補題が成り立つと仮定する。
+
+$#n#_1$を根の左の部分木の大きさとし、$#n#_2=#n#-#n#_1-1$を根の右の部分木の大きさとする。
+根からはじめて、一歩進み、大きさ$#n#_1$または$#n#_2$の部分木について処理を続ける。
+仮定より、ステップ数の期待値は次のようになる。
+\[
+    \E[W] = 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1)
+\]
+これは$#n#_1$と$#n#_2$はいずれも$#n#$より小さいためである。
+$\log$は凹関数なので、$\E[W]$は$#n#_1=#n#_2=(#n#-1)/2$で最大値を取る。
+%To maximize this,
+%over all choices of $#n#_1\in[0,#n#-1]$, we take the derivative and obtain
+%\[
+%    (\E[W])' = \frac{1}{2}(c/#n#_1 - c/(#n#-#n#_1-1)) \enspace , 
+%\]
+%which is equal to 0 when $#n#_1 = (#n#-1)/2$.  We can establish that
+%this is a maximum fairly easily, so
+よって、ランダムウォークのステップ数の期待値は次のようになる。
+\begin{align*}
+    \E[W]
+    & = 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1) \\
+   & \le  1 + \log ((#n#-1)/2+1) \\
+   & =  1 + \log ((#n#+1)/2) \\
+   & =  \log (#n#+1)  \enspace . \qedhere
+\end{align*}
+\end{proof}
+
+余談だが、情報理論について知っている読者は\lemref{tree-random-walk}の証明をエントロピーの用語で言い換えることができるだろう。
+\begin{proof}[Information Theoretic Proof of \lemref{tree-random-walk}]
+$d_i$を$i$番目の外部ノードとする。
+#n#個のノードを持つ二分木は#n+1#個の外部ノードを持つことを思い出すこと。
+ランダムウォークが$i$番目の外部ノードにたどり着く確率は$p_i=1/2^{d_i}$である。
+よってランダムウォークのステップ数の期待値は次のように計算できる。
+\[
+   H=\sum_{i=0}^{#n#} p_id_i
+    =\sum_{i=0}^{#n#} p_i\log\left(2^{d_i}\right)
+    = \sum_{i=0}^{#n#}p_i\log({1/p_i})
+\]
+右辺は$#n#+1$の要素に渡って確率分布のエントロピーを求めたものだとわかるだろう。
+$#n#+1$個の要素にわたる分布のエントロピーに関する基本的な事実として、これはこの値は$\log(#n#+1)$を超えない。
+よって補題が示された。
+\end{proof}
+
+ランダムウォークに関するこの結果より、#merge(h1,h2)#の実行時間の期待値は$O(\log #n#)$であることを示せる。
+
+\begin{lem}
+  #h1#・#h2#はふたつのヒープの根であり、それぞれのヒープは$#n#_1$, $#n#_2$個のノードを含むとする。
+  このとき、#merge(h1,h2)#の実行時間は$O(\log #n#)$以下である。
+  ただし、ここで$#n#=#n#_1+#n#_2$である。
+\end{lem}
+
+\begin{proof}
+併合の各ステップはランダムウォークを1ステップで、#h1#か#h2#のいずれかを根とする部分木に進む。
+このアルゴリズムはふたつのランダムウォークのどちらかが木からはみ出すと終了する。
+（これは$#h1#=#null#$または$#h2#=#null#$のときである。）
+よって、併合アルゴリズムのステップ数の期待値は次の値以下である。
+  \[
+     \log (#n#_1+1) + \log (#n#_2+1) \le 2\log #n# \qedhere
+  \]
+\end{proof}
+
+\subsection{要約}
+
+次の定理は#MeldableHeap#をまとめるものである。
+
+\begin{thm}\thmlabel{meldableheap}
+  #MeldableHeap#は優先度付き#Queue#インターフェースを実装する。
+  #add(x)#・#remove()#をサポートし、いずれの実行時間の期待値も$O(\log #n#)$である。
+\end{thm}
