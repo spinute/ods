@@ -256,3 +256,99 @@ $#n#+1$個の要素にわたる分布のエントロピーに関する基本的�
   #MeldableHeap#は優先度付き#Queue#インターフェースを実装する。
   #add(x)#・#remove()#をサポートし、いずれの実行時間の期待値も$O(\log #n#)$である。
 \end{thm}
+
+\section{ディスカッションと練習問題}
+
+完全二分木を配列またはリストを使って暗黙に表現する方法はEytzinger \cite{e1590}が最初に提案したようである。
+彼は高貴な一族の家系図が書いてある本でこれを使った。
+\index{pedigree family tree}%
+この章で説明した#BinaryHeap#はWilliams \cite{w64}が最初に提案したものである。
+
+この章で説明したランダム操作を利用した#MeldableHeap#はGambinとMalinowski \cite{gm98}が最初に提案した。
+他のMeldable Heapも存在し、
+leftist heaps \cite[Section~5.3.2]{c72,k97v3}、
+\index{leftist heap}%
+\index{heap!leftist}%
+binomial heaps \cite{v78}、
+\index{binomial heap}%
+\index{heap!binomial}%
+Fibonacci heaps \cite{ft87}、
+\index{Fibonacci heap}%
+\index{heap!Fibonacci}%
+pairing heaps \cite{fsst86}、
+\index{pairing heap}%
+\index{heap!pairing}%
+skew heaps \cite{st83}などがある。
+\index{skew heap}%
+\index{heap!skew}%
+しかし、いずれも#MeldableHeap#ほどシンプルではない。
+
+上のデータ構造の中には#decreaseKey(u,y)#をサポートするものもある。
+\index{decreaseKey@#decreaseKey(u,y)#}%
+これはノード#u#に格納される値を小さくして#y#とするものである。
+（これを実行する前には$#y#\le#u.x#$である必要がある。）
+上に挙げたデータ構造の大部分では、ノード#u#を削除し、#y#を追加するので$O(\log #n#)$の時間がかかる。
+しかし、一部のデータ構造ではこれをもっと効率的に実装できる。
+とくに、Fibonacci heapsでは$O(1)$の償却実行時間で、pairing heaps \cite{e09}の特殊なものでは$O(\log\log #n#)$の償却実行時間でそれぞれ#decreaseKey(u,y)#を実行できる。
+効率的な#decreaseKey(u,y)#はグラフアルゴリズムの高速化に役立つ。（例えばダイクストラ法）
+\cite{ft87}
+
+\begin{exc}
+  \figref{heap-insert}に示した#BinaryHeap#に7, 3を順に追加する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+\figref{heap-remove}に示した#BinaryHeap#から次のふたつの値（6と8）を順に削除する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+  #remove(i)#を実装せよ。
+  これは#BinaryHeap#における#a[i]#の値を削除するメソッドである。
+  このメソッドの実行時間は$O(\log #n#)$でなければならない。
+  また、なぜこのメソッドが役立ちそうにないかを説明せよ。
+\end{exc}
+
+\begin{exc}\exclabel{general-eytzinger}
+  \index{tree!$d$-ary}%
+  $d$分木は二分木の一般化である。
+  これは各内部ノードが$d$個の子を持つ木である。
+  Eytzingerの方法を使えば、完全$d$分木も配列を使って表現できる。
+  すなわち、添え字#i#が与えられたとき、#i#の親と、#i#の$d$個の子、それぞれの添え字を計算する方法を与えよ。
+\end{exc}
+
+\begin{exc}
+  \index{DaryHeap@#DaryHeap#}%
+  \excref{general-eytzinger}で学んだことを使って\emph{#DaryHeap#}を設計・実装せよ。
+  これは$d$分木版の#BinaryHeap#である。
+  #DaryHeap#の操作の実行時間を解析し、#DaryHeap#の性能を#BinaryHeap#と比較せよ。
+\end{exc}
+
+\begin{exc}
+  \figref{meldable-merge}に示した#MeldableHeap#に17, 82を順に追加する様子を図示せよ。
+  ランダムなビットが必要なときにはコインを使うこと。
+\end{exc}
+
+\begin{exc}
+  \figref{meldable-merge}に示した#MeldableHeap#から、次のふたつの値（4と8）を削除せよ。
+  ランダムなビットが必要なときにはコインを使うこと。
+\end{exc}
+
+\begin{exc}
+#MeldableHeap#からノード#u#を削除する#remove(u)#を実装せよ。
+ただし、このメソッドの実行時間の期待値は$O(\log #n#)$でなければならない。
+\end{exc}
+
+\begin{exc}
+#BinaryHeap#・#MeldableHeap#における二番目に小さい値を定数時間で見つける方法を示せ。
+\end{exc}
+
+\begin{exc}
+#BinaryHeap#・#MeldableHeap#におけるk番目に小さい値を$O(k\log k)$の時間で見つける方法を示せ。
+（ヒント：別のヒープを使うといいかもしれない。）
+\end{exc}
+
+\begin{exc}
+#k#個の整列済みリストであって、合計の長さが#n#であるものがあるとき、ヒープを使ってこれらのリストを一つの整列済みリストにする方法を示せ。
+このとき実行時間は$O(n\logk)$でなければならない。
+（ヒント：$k=2$の場合から考えてみるのがよいかもしれない。）
+\end{exc}
