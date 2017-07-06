@@ -412,3 +412,100 @@ $b$を特定の列$\hat{b}$に替えると、$\mathcal{R}$は決定的なアル�
 \begin{thm}\thmlabel{randomized-sorting-lower-bound}
 任意の整数$n\ge 1$と、任意の（決定的でもランダムでもよい）比較に基づく整列アルゴリズム$\mathcal{A}$について、$\{1,\ldots,n\}$の置換からランダムに選んだ入力を整列するときに実行する比較の回数の期待値は$\log(#n#!) = #n#\log#n#-O(#n#)$以上である。
 \end{thm}
+
+\section{計数ソートと基数ソート}
+
+この節では比較に基づいたものでないアルゴリズムをふたつ紹介する。
+小さい整数に特化し、要素（の一部）を配列の添え字として使うことで、これらのアルゴリズムは\thmref{deterministic-sorting-lower-bound}の下界に縛られない。
+次の文を考えよう。
+\[
+  #c[a[i]]# = 1
+\]
+この文は定数時間で実行できるが、#a[i]#の値により#c.length#の値は異なる。
+これはこのような文を使うアルゴリズムは二分木でモデル化できないということである。
+突き詰めると、これこそがこの節のアルゴリズムが比較に基づくアルゴリズムよりも速く整列をこなせる理由なのである。
+
+\subsection{計数ソート}
+
+$0,\ldots,#k#-1$の範囲の要素#n#個からなる入力の配列#a#があるとする。
+\emph{計数ソート}はカウンタの補助配列#c#使って#a#を整列する。
+\index{counting-sort}%
+そして、補助配列#b#として整列された#a#を返す。
+
+計数ソートのアイデアは単純だ。
+任意の$#i#\in\{0,\ldots,#k#-1\}$について、#i#の出て来る回数を数え、これを#c[i]#に入れておく。
+整列の後では、出力は#c[0]#個の0からはじまり、#c[1]#個の1が続き、#c[2]#個の2が続き、\ldots、#c[k-1]#個の#k-1#で終わる。
+このコードは巧妙である。実行の様子を\figref{countingsort}に示す。
+\codeimport{ods/Algorithms.countingSort(a,k)}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/countingsort}
+  \end{center}
+  \caption{The operation of counting sort on an array of length $#n#=20$ that stores integers $0,\ldots,#k#-1=9$.}
+  \figlabel{countingsort}
+\end{figure}
+
+このコードと最初の#for#ループでは各カウンタ#c[i]#が#a#において#i#が何回現れるかを数えている。
+#a#の値を添え字として使うことで、この処理を合計$O(#n#)$のひとつのforループで終えている。
+続いて、#c#を使って直接出力配列#b#を埋めていける。
+しかし、#a#にデータが関連づけられているときはこれはできない。
+よって、#a#から#b#に要素をコピーするための追加の仕事が必要になる。
+
+次の#for#ループでは、$O(#k#)$の時間をかけてカウンタを順に足しこんでいる。
+こうすると#c[i]#は#a#における#i#以下の要素の個数になる。
+特に、任意の$#i#\in\{0,\ldots,#k#-1\}$について、出力配列#b#は次の式を満たす。
+\[
+   #b[c[i-1]]#=#b[c[i-1]+1]=#\cdots=#b[c[i]-1]#=#i#
+\]
+最後に#a#を逆に辿って、要素を#b#に入れる。
+#a#を辿りながら、要素#a[i]=j#は#b[c[j]-1]#に入れられ、#c[j]#をひとつ減らす。
+
+\begin{thm}
+#countingSort(a,k)#は$\{0,\ldots,#k#-1\}$の要素#n#個からなる配列#a#を$O(#n#+#k#)$の時間で整列する。
+\end{thm}
+
+計数ソートは\emph{安定性}という良い性質を持つ。
+\index{stable sorting algorithm}%
+これは等しい要素の相対的な位置を保つ性質である。
+すなわち、要素#a[i]#と#a[j]#が等しい値で、$#i#<#j#$であるとき、#b#においても#a[i]#が#a[j]#の前に来るのである。
+この性質は次の節で役立つ。
+
+\subsection{基数ソート}
+
+計数ソートは配列の長さ#n#が、配列内の最大値$#k#-1$と比べてかなり小さくないなら、非常に効率的である。
+今から説明する\emph{基数ソート}は複数回の計数ソートにより、もっと大きな範囲の最大値があっても大丈夫なアルゴリズムである。
+\index{radix-sort}%
+
+基数ソートは#w#ビットの整数を$#w#/#d#$回の計数ソートにより、一度に#d#ビットずつ整列する。
+\footnote{#d#は#w#を割り切れると仮定する。もしそうでないときは#w#を$#d#\lceil #w#/#d#\rceil$に増やす必要がある。}
+より正確に言うと、基数ソートはまず整数の最下位#d#ビットだけを見て整列する。続いて、次の#d#ビットだけを見て整列する。このような処理を繰り返し、最後には整数の最高位#d#ビットだけを見て整列する。
+\codeimport{ods/Algorithms.radixSort(a)}
+（このコードでは#(a[i]>>d*p)&((1<<d)-1)#と書いて、#a[i]#の2進数表記において$(#p#+1)#d#-1,\ldots,#p##d#$ビット目である整数を抽出している。）
+このアルゴリズムの例を\figref{radixsort}に示した。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/radixsort}
+  \end{center}
+  \caption{Using radixsort to sort $#w#=8$-bit integers by using 4 passes
+   of counting sort on $#d#=2$-bit integers.}
+  \figlabel{radixsort}
+\end{figure}
+
+この注目に値するアルゴリズムが正しく整列を行うのは、計数ソートが安定なソートアルゴリズムであるからである。
+#a#のふたつの要素#x#と#y#が$#x# < #y#$を満たし、#x#と#y#が添え字$r$の位置で異なるなら、$\lfloor r/#d#\rfloor$回目の整列で#x#は#y#より前に置かれる。
+そして、以降は#x#と#y#の相対的な位置は変わらない。
+
+基数ソートは#w/d#回の計数ソートを行う。
+各計数ソートの実行時間は$O(#n#+2^{#d#})$である。
+よって、基数ソートの性能は次の定理のようになる。
+\begin{thm}\thmlabel{radix-sort}
+任意の整数$#d#>0$について、#radixSort(a,k)#は#n#個の#w#ビット整数を含む配列#a#を$O((#w#/#d#)(#n#+2^{#d#}))$の時間で整列する。
+\end{thm}
+
+配列の要素は$\{0,\ldots,#n#^c-1\}$の範囲の整数であり、$#d#=\lceil\log#n#\rceil$だとすれば、\thmref{radix-sort}は次のように整理できる。
+\begin{cor}\corlabel{radix-sort-poly}
+#radixSort(a,k)#は、$\{0,\ldots,#n#^c-1\}$の範囲の#n#個の整数からなる配列#a#を、$O(c#n#)$の時間で整列する。
+\end{cor}
+
