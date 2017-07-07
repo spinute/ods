@@ -509,3 +509,133 @@ $0,\ldots,#k#-1$の範囲の要素#n#個からなる入力の配列#a#がある�
 #radixSort(a,k)#は、$\{0,\ldots,#n#^c-1\}$の範囲の#n#個の整数からなる配列#a#を、$O(c#n#)$の時間で整列する。
 \end{cor}
 
+\section{ディスカッションと練習問題}
+
+整列は計算機科学における基本的なアルゴリズムであり、長い歴史がある。
+Knuth \cite{k97v3}によればマージソートはvon~Neumann (1945)が考案したものだという。
+クイックソートはHoare \cite{h61}が考案した。
+はじめにヒープソートを考案したのは
+The original heap-sort algorithm is due to 
+Williams \cite{w64}だが、本節で説明した$O(#n#)$の時間でボトムアップにヒープを構築する方法はFloyd \cite{f64}によるものである。
+比較に基づくソートの下界は言い継がれてきたものである。
+次の表は比較に基づくアルゴリズムの性能をまとめたものだ。
+
+\begin{center}
+  \begin{tabular}{|l|r@{}l@{ }l|l|} \hline
+      & \multicolumn{3}{c|}{comparisons} & in-place  \\ \hline
+    Merge-sort & $#n#\log #n#$ & &  worst-case & No  \\
+    Quicksort & $1.38#n#\log #n#$ & ${}+ O(#n#)$ & expected & Yes \\
+    Heap-sort & $2#n#\log #n#$ & ${}+ O(#n#)$ & worst-case & Yes \\ \hline
+  \end{tabular}
+\end{center}
+
+これらの比較に基づくアルゴリズムにはそれぞれの長所・短所がある。
+マージソートは比較の回数が最も少なく、ランダムでもない。
+しかしマージのときに補助配列が必要だ。
+この配列を確保するのはコストが高く、またメモリの制限によりソートに失敗する可能性もある。
+クイックソートは入力配列の中だけで処理を済ませ、比較の回数も二番目に少ないか、ランダムなアルゴリズムなので実行時間の保証が常には成り立たない。
+\index{in-place algorithm}%
+ヒープソートは比較の回数は最も多いが、入力配列だけを使った決定的なアルゴリズムである。
+
+マージソートが明らかに一番優れている場面がある。
+これは連結リストを整列するときである。
+この場合は補助的な配列が必要ないのである。
+ふたつの整列済みの連結リストはポインタ操作によって簡単に併合でき、整列済みの一つの配列が得られる。
+（\excref{list-merge-sort}を参照せよ。）
+
+この章で説明した計数ソートと基数ソートはSeward \cite[Section~2.4.6]{s54}によるものである。
+しかし、基数ソートの一種が1920年代からパンチカードを整列するために機械によって使われていた。
+この機械はカードの山を、ある場所に穴が空いているかどうかを判定してふたつの山に分けた。
+色々な穴の位置についてこの処理を繰り返すことで、基数ソートになる。
+
+最後に、計数ソート・基数ソートはいずれも非負整数以外の数も整列できることを確認しておく。
+計数ソートを$\{a,\ldots,b\}$の範囲の整数を整列できるよう素直に修正すれば、実行時間は$O(#n#+b-a)$になる。
+同様に基数ソートは同じ範囲の整数を$O(#n#(\log_{#n#}(b-a))$の時間で整列できる。
+また、いずれのアルゴリズムも、IEEE754形式の浮動小数点数を整列するのにも使える。
+これはIEEEの形式では数の大きさに符号が付いた二進整数表現だと見なして比較ができるように設計されているからである。
+\cite{ieee754}.
+
+\begin{exc}
+$1,7,4,6,2,8,3,5$からなる配列を入力とする、マージソートとヒープソートの実行の様子を描け。
+また同じ配列について、クイックソートを実行の様子として、ありえるもののうちのひとつを描け。
+\end{exc}
+
+\begin{exc}\exclabel{list-merge-sort}
+マージソートの一種で、補助配列を使わずに#DLList#を整列するものを実装せよ。
+（\excref{dllist-sort}を参照せよ。）
+\end{exc}
+
+\begin{exc}
+#quickSort(a,i,n,c)#の実装には、軸として常に#a[i]#を選ぶものがある。
+この実装が、$\binom{#n#}{2}$回の比較を実行する長さ#n#の入力の例を示せ。
+\end{exc}
+
+\begin{exc}
+#quickSort(a,i,n,c)#の実装には、軸として常に#a[i+n/2]#を選ぶものがある。
+この実装が、$\binom{#n#}{2}$回の比較を実行する長さ#n#の入力の例を示せ。
+\end{exc}
+
+\begin{exc}
+どのような#quickSort(a,i,n,c)#の実装でも、軸を決定的に選び、$#a[i]#,\ldots,#a[i+n-1]#$を先に見ないならば、長さ#n#のある入力が存在し、$\binom{#n#}{2}$回の比較を実行することを示せ。
+\end{exc}
+
+\begin{exc}
+#quickSort(a,i,n,c)#を実行するとき$\binom{#n#}{2}$回の比較を実行する#Comparator# #c#を設計せよ。
+（ヒント：comparatorは比較する値を実際に見なくてもよい。）
+\end{exc}
+
+\begin{exc}
+\thmref{quicksort}の証明よりも細かくクイックソートが実行する比較の回数の期待値を解析せよ。
+具体的には、比較の回数の期待値が$2#n#H_#n# -#n# + H_#n#$であることを示せ。
+\end{exc}
+
+\begin{exc}
+ヒープソートを実行するときの、比較の回数が$2#n#\log #n#-O(#n#)$回になる入力配列を与え、そのことを説明せよ。
+\end{exc}
+
+\javaonly{
+\begin{exc}
+この章で説明したヒープソートの実装では、要素を逆順に並び替え、その後で順番を逆にしていた。
+入力の#Comparator# #c#の結果を否定して新しい#Comparator#を定義すれば、最後のステップを省ける。
+これがよい最適化でない理由を説明せよ。
+（ヒント：配列を逆さまにするのと比べて、否定のためにどのくらい時間が必要になるかを考えよ。）
+\end{exc}
+}
+
+\begin{exc}
+\figref{comparison-tree-2}の比較木によって正しく整列できない$1,2,3$の別の置換を見つけよ。
+\end{exc}
+
+\begin{exc}\exclabel{log-factorial}
+$\log #n#! = #n#\log #n#-O(#n#)$を示せ。
+\end{exc}
+
+\begin{exc}
+$k$個の葉を持つ二分木の高さは$\log k$以上であることを示せ。
+\end{exc}
+
+\begin{exc}\exclabel{randomized-lower-bound}
+$k$個の葉を持つ二分木の葉をランダムに選ぶとき、その葉の高さの期待値は$\log k$以上であることを示せ。
+%  (Hint: Use induction along with the inequality $(k_1/k)\log k_1 +
+%  (k_2/k)\log k_2) \ge  \log k-1$, when $k_1+k_2=k$.)
+\end{exc}
+
+% This was a stupid exercise, since IEEE 754 floating point numbers 
+% are correctly ordered when they are treated as signed magnitude integers
+% [i.e., a sign bit followed by an integer ]
+%\begin{exc}
+%  Simple floating point numbers are numbers of the form $x\cdot10^{y}$,
+%  where $0\le x\le 1$ and $y$ is an integer and each of $x$ and $y$ can
+%  be represented by at most $k$ bits.  Describe a version of radix-sort
+%  that can be used to sort simple floating point numbers.
+%
+%  Extend your version of radix sort so that it can handle signed values
+%  of both $x$ and $y$ and implement a version of radix-sort that sorts
+%  arrays of type #float#.
+%\end{exc}
+
+\begin{exc}
+この章で説明した#radixSort(a,k)#は入力配列#a#が非負整数だけからなるとき動作する。
+入力配列が負の整数を含むときにも、正しく動作するように実装を修正せよ。
+\end{exc}
+
