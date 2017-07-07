@@ -78,3 +78,82 @@ $v_j$は$v_i$から\emph{到達可能}であるという。
 
 しかし、グラフにおける応用によって、各操作への要求が異なり、理想的にはこの要求をすべて満たす中で最も単純な実装を使いたい。
 そのため、ふたつのグラフの表現方法のカテゴリについての説明をする。
+
+\section{#AdjacencyMatrix#：行列によるグラフの表現}
+\seclabel{adjacency-matrix}
+
+\index{adjacency matrix}%
+\emph{隣接行列}は#n#個の頂点を持つグラフ$G=(V,E)$を、各エントリが真偽値である$#n#\times#n#$行列#a#を使って表現したものである。
+\codeimport{ods/AdjacencyMatrix.a.n.AdjacencyMatrix(n0)}
+
+行列のエントリ#a[i][j]#は次のように定義される。
+\[  #a[i][j]#=
+    \begin{cases}
+      #true# & \text{if $#(i,j)#\in E$} \\
+      #false# & \text{otherwise}
+    \end{cases}
+\]
+\figref{graph}のグラフの隣接行列を\figref{graph-adj}に示した。
+
+この表現における#addEdge(i,j)#・#removeEdge(i,j)#・#hasEdge(i,j)#はいずれもエントリ#a[i][j]#を読み書きすればよい。
+\codeimport{ods/AdjacencyMatrix.addEdge(i,j).removeEdge(i,j).hasEdge(i,j)}
+これらの操作は明らかに定数時間で実行できる。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/graph} \\[3ex]
+    \begin{tabular}{c|cccccccccccc}
+        &0&1&2&3&4&5&6&7&8&9&10&11 \\\hline
+       0&0&1&0&0&1&0&0&0&0&0&0 &0\\
+       1&1&0&1&0&0&1&1&0&0&0&0 &0\\
+       2&1&0&0&1&0&0&1&0&0&0&0 &0\\
+       3&0&0&1&0&0&0&0&1&0&0&0 &0\\
+       4&1&0&0&0&0&1&0&0&1&0&0 &0\\
+       5&0&1&1&0&1&0&1&0&0&1&0 &0\\
+       6&0&0&1&0&0&1&0&1&0&0&1 &0\\
+       7&0&0&0&1&0&0&1&0&0&0&0 &1\\
+       8&0&0&0&0&1&0&0&0&0&1&0 &0\\
+       9&0&0&0&0&0&1&0&0&1&0&1 &0\\
+      10&0&0&0&0&0&0&1&0&0&1&0 &1\\
+      11&0&0&0&0&0&0&0&1&0&0&1 &0\\
+    \end{tabular}
+  \end{center}
+  \caption{A graph and its adjacency matrix.}
+  \figlabel{graph-adj}
+\end{figure}
+
+隣接行列で効率がよくないのは#outEdges(i)#と#inEdges(i)#である。
+これを実装するためには、#a#における対応する行または列の#n#個のエントリを順に見て、各添え字#j#についてそれぞれ#a[i][j]#と#a[j][i]#が真かどうかを確認しなければならない。
+\javaimport{ods/AdjacencyMatrix.outEdges(i).inEdges(i)}
+\cppimport{ods/AdjacencyMatrix.outEdges(i,edges).inEdges(i,edges)}
+これらの操作は明らかに$O(#n#)$の時間がかかる。
+
+隣接行列による表現のもうひとつの短所は、これが大きいことである。
+
+$#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上のメモリが必要である。
+真偽値を単純にならべた行列では実際は$#n#^2$バイトのメモリを使う。
+より手の込んだ実装で、#w#個の真偽値をワードに詰め込めば、領域使用量は$O(#n#^2/#w#)$ワードのメモリに減らせる。
+
+\begin{thm}
+#AdjacencyMatrix#は#Graph#インターフェースを実装する。
+#AdjacencyMatrix#は次の操作をサポートする。
+\begin{itemize}
+  \item #addEdge(i,j)#・#removeEdge(i,j)#・#hasEdge(i,j)#を定数時間で実行できる。
+  \item #inEdges(i)#・#outEdges(i)#を時間$O(#n#)$で実行できる。
+\end{itemize}
+#AdjacencyMatrix#の領域使用量は$O(#n#^2)$である。
+\end{thm}
+
+メモリ使用量の多さと#inEdges(i)#・#outEdges(i)#の性能の低さにもかかわらず、#AdjacencyMatrix#が有向な場合もある。
+具体的にはグラフ$G$が\emph{密}なとき、つまり辺の数が$#n#^2$に近く、メモリ使用量$#n#^2$が許容できる場合である。
+
+#AdjacencyMatrix#が広く使われるのは、グラフ#G#の性質を計算するための行列#a#の代数的な操作を効率的に実行できるからでもある。
+これはアルゴリズムの授業のトピックだが、ここでもひとつだけそのような性質を挙げる。
+#a#のエントリを整数（#true#が1、#false#が0）であると見なして、#a#同士の積を行列の掛け算を使って計算すると、行列$#a#^2$が求まる。
+積の定義から、次の関係を思い出してほしい。
+\[
+    #a^2[i][j]# = \sum_{k=0}^{#n#-1} #a[i][k]#\cdot #a[k][j]#
+\]
+この和をグラフ$G$の文脈で解釈すると、これは$g$が辺#(i,k)#と辺#(k,j)#を共に持つ頂点$#k#$の個数を数えている。
+つまりこれは$#i#$から$#j#$への（中間頂点$#k#$を通る）経路であって、長さがちょうど2であるものの個数である。
+この観察は、$G$におけるすべての頂点の対についての最短経路を$O(\log #n#)$回だけの行列の積で計算するアルゴリズムの基礎になっている。
