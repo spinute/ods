@@ -157,3 +157,98 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
 この和をグラフ$G$の文脈で解釈すると、これは$g$が辺#(i,k)#と辺#(k,j)#を共に持つ頂点$#k#$の個数を数えている。
 つまりこれは$#i#$から$#j#$への（中間頂点$#k#$を通る）経路であって、長さがちょうど2であるものの個数である。
 この観察は、$G$におけるすべての頂点の対についての最短経路を$O(\log #n#)$回だけの行列の積で計算するアルゴリズムの基礎になっている。
+
+\section{#AdjacencyLists#：リストの集まりとしてのグラフ}
+\seclabel{adjacency-list}
+
+\index{adjacency list}%
+グラフの\emph{隣接リスト}表現は辺を重視するアプローチである。
+隣接リストの実装方法は色々ありうる。
+この節では単純なものを説明する。
+そしてこの節の最後に別のやり方について述べる。
+隣接リスト表現ではグラフ$G=(V,E)$はリストの配列#adj#で表現される。
+リスト#adj[i]#は頂点#i#と隣接するすべての頂点を含む。
+つまり、$#(i,j)#\in E$を満たす添え字#j#をすべて含むのである。
+\codeimport{ods/AdjacencyLists.adj.n.AdjacencyLists(n0)}
+（例を\figref{graph-adjlist}に示す）
+この実装ではリスト#adj#は#ArrayStack#\cpponly{のサブクラス}としている。
+なぜなら添え字を使って定数時間で要素にアクセスしたいからである。
+他の選択肢もありうる。
+特に#adj#を#DLList#として実装してもよいだろう。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/graph} \\[3ex]
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        0&1&2&3&4&5&6 &7 &8&9 &10&11 \\\hline
+        1&0&1&2&0&1&5 &6 &4&8 &9 &10 \\
+        4&2&3&7&5&2&2 &3 &9&5 &6 &7 \\
+         &6&6& &8&6&7 &11& &10&11& \\
+         &5& & & &9&10&  & &  &  & \\
+         & & & & &4&  &  & &  &  & \\
+    \end{tabular}
+  \end{center}
+  \caption{A graph and its adjacency lists}
+  \figlabel{graph-adjlist}
+\end{figure}
+
+#addEdge(i,j)#はリスト#adj[i]#に#j#を加えるだけだ。
+\codeimport{ods/AdjacencyLists.addEdge(i,j)}
+これは定数時間で実行できる。
+
+#removeEdge(i,j)#はリスト#adj[i]#から#j#を見つけ、それを削除する。
+\codeimport{ods/AdjacencyLists.removeEdge(i,j)}
+これは$O(\deg(#i#))$の時間がかかる。
+ここで$\deg(#i#)$（$#i#$の\emph{次数}）は$E$のうち$#i#$から出ているものの個数である。
+\index{degree}%
+
+#hasEdge(i,j)#も同様だ。
+リスト#adj[i]#から#j#を探して、見つかれば真を、そうでないなら偽を返す。
+\codeimport{ods/AdjacencyLists.hasEdge(i,j)}
+これにかかる時間は$O(\deg(#i#))$である。
+
+#outEdges(i)#は単純である。
+\pcodeonly{これはリスト#adj[i]#を返す。}
+\javaonly{これはリスト#adj[i]#を返す。}
+\cpponly{これはリスト#adj[i]#中身を出力リストにコピーする。}
+\pcodeimport{ods/AdjacencyLists.outEdges(i)}
+\javaimport{ods/AdjacencyLists.outEdges(i)}
+\cppimport{ods/AdjacencyLists.outEdges(i,edges)}
+\javaonly{これは定数時間で実行できる}
+\cpponly{これにかかる時間は$O(\deg(#i#))$である。}
+
+#inEdges(i)#はもう少しタイヘンだ。
+すべての頂点$j$について#(i,j)#が存在するかどうか確認し、もしそうなら#j#を出力リストに追加する。
+\pcodeimport{ods/AdjacencyLists.inEdges(i)}
+\javaimport{ods/AdjacencyLists.inEdges(i)}
+\cppimport{ods/AdjacencyLists.inEdges(i,edges)}
+この操作は非常に時間がかかる。
+すべての頂点の隣接リストを見て回る必要があるので、$O(#n# + #m#)$の時間がかかる。
+
+次の定理は上で説明したデータ構造の性能をまとめたものである。
+
+\begin{thm}
+#AdjacencyLists#は#Graph#インターフェースを実装する。
+#AdjacencyLists#は次の操作をサポートする。
+\begin{itemize}
+  \item #addEdge(i,j)#は定数時間で実行できる。
+  \item #removeEdge(i,j)#・#hasEdge(i,j)#にかかる時間は$O(\deg(#i#))$である。
+  \javaonly{\item #outEdges(i)#は定数時間で実行できる。}
+  \cpponly{\item #outEdges(i)#にかかる時間は$O(\deg(#i#))$である。}
+  \item #inEdges(i)#にかかる時間は$O(#n#+#m#)$である。
+\end{itemize}
+#AdjacencyLists#の領域使用量は$O(#n#+#m#)$である。
+\end{thm}
+
+先程少し言ったように、グラフを隣接リストとして実装する方法には色々ある。
+いくつか気になることがあるだろう。
+\begin{itemize}
+  \item #adj#の要素を格納するにはどんなデータ構造を使うのがいいだろう。
+  配列ベースのもの、ポインタベースのもの、あるいはハッシュテーブルだろうか。
+  \item 任意の#i#について$#(j,i)#\in E$を満たす#j#のリストであ 二次隣接リスト#inadj#があるべきだろうか。
+  これは#inEdges(i)#の実行時間を劇的に改善するが、辺を追加・削除する際の仕事をを少し増やす。
+  \item #adj[i]#における辺#(i,j)#は対応する#inadj[j]#のエントリへの参照を持つべきだろうか。
+  \item 辺は一級オブジェクトであるべきだろうか。
+  このとき#adj#はは頂点のリストではなく、辺のリストを持つことになる。
+\end{itemize}
+これらの選択肢の大部分は、実装の複雑さと性能とのトレードオフをふまえて考えることになる。
