@@ -384,3 +384,104 @@ XXX: black にしなくていいのか?
   \figlabel{dfs-cycle}
 \end{figure}
 
+\section{ディスカッションと練習問題}
+
+\ref{thm:bfs-graph}と\ref{thm:dfs-graph}では、幅優先探索・深さ優先探索の実行時間は少し雑に述べられている。
+$#n#_{#r#}$を$G$における頂点#i#であって、#i#から#r#への経路が存在するものの個数と定義する。
+$#m#_#r#$をこのような頂点から出る辺の個数とする。
+このとき、幅優先探索・深さ優先探索の実行時間に関してより正確に述べる次の定理が成り立つ。
+（練習問題で扱うアルゴリズムのうちの一部で、この定理は役に立つ。）
+\begin{thm}\thmlabel{graph-traversal}
+#AdjacencyLists#で実装された#Graph# #g#を入力すると、#bfs(g,r)#・#dfs(g,r)#・#dfs2(g,r)#の実行時間はいずれも$O(#n#_{#r#}+#m#_{#r#})$である。
+\end{thm}
+
+幅優先探索はMoore \cite{m59}とLee \cite{l61}によって独立に考案されたようである。
+それぞれは迷路の探索と回路における経路に関する文脈で発見された。
+
+グラフの隣接リスト表現は（より一般的であった）隣接行列表現の代替としてHopcroft and Tarjan \cite{ht73}が提案した。
+隣接リスト表現は、深さ優先探索の他にも、Hopcroft-Tarjanの平面性テストのアルゴリズムにおいて重要な役割を果たす。
+\index{planarity testing}%
+これはグラフを辺が交差しないように平面に描けるかどうかを$O(#n#)$の時間で調べるアルゴリズムである。\cite{ht74}.
+
+以下の練習問題において、無向グラフとは辺$(#i#,#j#)$が存在するならば、またそのときに限って辺$(#j#,#i#)$が存在するようなグラフであるとする。
+\index{undirected graph}%
+\index{graph!undirected}%
+
+\begin{exc}
+\figref{graph-example2}のグラフの隣接リスト表現および隣接行列表現を書け。
+\end{exc}
+
+\begin{figure}
+  \centering{\includegraphics[scale=0.90909]{figs/graph-example2}}
+  \caption{An example graph.}
+  \figlabel{graph-example2}
+\end{figure}
+
+\begin{exc}
+  \index{incidence matrix}%
+  グラフ$G$の\emph{接続行列}とは、$#n#\times#m#$行列$A$であって、次のように定義されるものである。
+  \[
+     A_{i,j} = \begin{cases}
+        -1 & \text{if vertex $i$ the source of edge $j$} \\
+        +1 & \text{if vertex $i$ the target of edge $j$} \\
+        0 & \text{otherwise.}
+     \end{cases}
+  \]
+  \begin{enumerate}
+    \item \figref{graph-example2}のグラフの接続行列を書け。
+    \item グラフの隣接行列表現を設計・実装せよ。また、領域使用量を解析し、#addEdge(i,j)#・#removeEdge(i,j)#・#hasEdge(i,j)#・#inEdges(i)#・#outEdges(i)#の実行時間を求めよ。
+  \end{enumerate}
+\end{exc}
+
+\begin{exc}
+\figref{graph-example2}のグラフ$G$について、#bfs(G,0)#・#dfs(G,0)#を実行する様子を図示せよ。
+\end{exc}
+
+\begin{exc}
+  \index{connected graph}%
+  \index{graph!connected}%
+  $G$を無向グラフとする。
+  $G$が\emph{連結}であるとは、任意の相異なる頂点の組み#i#, #j#について、$#i#$から$#j#$への辺があることをいう。（なお、このとき$G$は無向グラフなので、#j#から#i#にも辺がある。）
+  $G$が連結かどうかを$O(#n#+#m#)$の時間で確認する方法を示せ。
+\end{exc}
+
+\begin{exc}
+  \index{connected components}%
+  $G$を無向グラフとする。
+  $G$の\emph{連結成分ラベル付け}とは、それぞれが連結な部分グラフになるような$G$の分割方法のうち、分割後の集合が極大であるものである。
+  これを$O(#n#+#m#)$の時間で計算する方法を示せ。
+\end{exc}
+
+\begin{exc}
+  \index{spanning forest}%
+  $G$を無向グラフとする。
+  $G$の\emph{全域森}は木の集まりであって、各木の辺は$G$の辺であり、$G$のすべての頂点をある木に含むものである。
+  これを$O(#n#+#m#)$の時間で計算する方法を示せ。
+\end{exc}
+
+\begin{exc}
+  \index{strongly-connected graph}%
+  \index{graph!strongly-connected}%
+  グラフ$G$が\emph{強連結}であるとは、$G$の任意の頂点の組み#i#, #j#について、$#i#$から$#j#$への経路が存在することをいう。
+  これを$O(#n#+#m#)$の時間で確認する方法を示せ。
+\end{exc}
+
+\begin{exc}
+  グラフ$G=(V,E)$と、特別な頂点$#r#\in V$があるとき、$#r#$から全頂点$#i# \in V$への最短経路の長さを計算する方法を示せ。
+\end{exc}
+
+\begin{exc}
+#dfs(g,r)#が#dfs2(g,r)#と異なる順番で頂点を訪問する単純な例を与えよ。
+また、#dfs(g,r)#と常に同じ順番で頂点を訪問する#dfs2(g,r)#を実装せよ。
+（ヒント：#r#からふたつ以上の辺が出ているグラフをいくつか作り、それぞれのアルゴリズムがどう動くか考えてみるといいだろう。）
+\end{exc}
+
+\begin{exc}
+  \index{universal sink}%
+  \index{celebrity|see{universal sink}}%
+  XXX: universal sinkの訳語
+  グラフ$G$の\emph{universal sink}とは、$#n#-1$個の辺の行き先になっており、かつそこから辺が出ていない頂点である。
+  \footnote{universal sink #v#を\emph{celebrity}と言うこともある。部屋の中のみなが#v#のことを知っているが、#v#は部屋の中の他の人が誰だか全く知らないのである。}
+  #AdjacencyMatrix#で表現されるグラフ$G$がuniversal sinkを持つかどうかを判定するアルゴリズムを設計・実装せよ。
+  ただし、実行時間は$O(#n#)$でなければならない。
+\end{exc}
