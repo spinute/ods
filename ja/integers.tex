@@ -371,3 +371,53 @@ Treap #t#は#x#以上の要素を含む。
 実装を修正し、この値を格納せずに済ませることも可能だ。
 （ただし、いくつか場合分けをコードに追加する必要がある。）
 この場合、上の定理における領域使用量は$O(#n#)$になる。
+
+\section{ディスカッションと練習問題}
+#add(x)#・#remove(x)#・#find(x)#の実行時間がいずれも$O(\log#w#)$であるデータ構造としてはじめて提案されたのは、van~Emde~Boasによるもので、
+\emph{van~Emde~Boas}
+\index{van Emde Boas tree}%
+(or \emph{stratified})
+\index{stratified tree}%
+\emph{木}という名で知られている。\cite{e77}
+オリジナルのvan~Emde~Boas木の大きさは$2^{#w#}$で、このために大きな整数についてこのデータ構造は非実用的であった。
+
+#XFastTrie#・#YFastTrie#はWillard \cite{w83}によって提案された。
+#XFastTrie#とvan~Emde~Boasには密接な関係がある。
+例えば、
+#XFastTrie#におけるハッシュテーブルはvan~Emde~Boas treeの配列を置き換えたものである。
+つまり、ハッシュテーブル#t[i]#に要素を格納する代わりに、van~Emde~Boasでは長さ$2^{#i#}$の配列に要素を格納する。
+
+他の整数を格納するためのデータ構造としては、FredmanとWillardのfusion treeがある。\cite{fw93}
+\index{fusion tree}%
+このデータ構造は#n#個の#w#ビット整数を$O(#n#)$の領域に格納でき、#find(x)#を$O((\log #n#)/(\log #w#))$の時間で実行できる。
+$\log #w# > \sqrt{\log #n#}$ならばfusion treeを、$\log #w# \le \sqrt{\log #n#}$なら#YFastTrie#を使えば、領域使用量$O(#n#)$であり、#find(x)#にかかる時間は$O(\sqrt{\log #n#})$であるデータ構造が得られる。
+近年のP\v{a}tra\c{s}cu and Thorup \cite{pt07}が示した下界によると、$O(#n#)$だけの領域を使うデータ構造としてはすくなくともほぼ最適である。
+
+\begin{exc}
+単純化された#BinaryTrie#を設計・実装せよ。
+これは連結リストやジャンプポインタを持たないが、#find(x)#の実行時間は依然として$O(#w#)$である必要がある。
+\end{exc}
+
+\begin{exc}
+単純化された#XFastTrie#を設計・実装せよ。
+これは二分トライを使わない。
+代わりに、この実装ではすべてを双方向連結リストと、$#w#+1$個のハッシュテーブルとに格納する。
+\end{exc}
+
+\begin{exc}
+#BinaryTrie#は、長さ#w#のビット列を根から葉への経路として表現するデータ構造であると考えられる。
+この発想を可変章の文字列を格納する#SSet#の実装に拡張し、#add(s)#・#remove(s)#・#find(s)#をいずれも#s#の長さに比例する時間で実行できるデータ構造を実装せよ。
+
+\noindent ヒント：データ構造の各ノードは文字の値によってインデックスを計算するハッシュテーブルを格納する。
+\end{exc}
+
+\begin{exc}
+整数$#x#\in\{0,\ldots2^{#w#}-1\}$について、$d(#x#)$を#x#と#find(x)#の返り値との差と定義する。
+（なお、#find(x)#が#null#を返すときは、$d(#x#)$は$2^#w#$であるとする。）
+例えば、#find(23)#が43を返すとき、$d(23)=20$である。
+  \begin{enumerate}
+    \item #XFastTrie#における#find(x)#を修正し、実行時間の期待値が$O(1+\log d(#x#))$であるものを設計・実装せよ。
+	ヒント：ハッシュテーブル$t[#w#]$は$d(#x#)=0$であるすべての値#x#を格納することで、処理を開始する良い位置を見つけられる。
+    \item #XFastTrie#における#find(x)#を修正し、実行時間の期待値が$O(1+\log\log d(#x#))$であるものを設計・実装せよ。
+  \end{enumerate}
+\end{exc}
