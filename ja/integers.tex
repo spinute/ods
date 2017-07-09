@@ -22,3 +22,112 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
 この章における実装例は整数と対応付けられる任意の型のデータを格納できる。
 サンプルコードにおける#ix#は#x#に対応する整数を表し、#intValue(x)#は#x#を#ix#に変換するメソッドであるとする。
 しかし、文章中においては単に#x#が整数であるかのように扱う。
+
+\section{#BinaryTrie#：デジタル探索木}
+\seclabel{binarytrie}
+
+\index{BinaryTrie@#BinaryTrie#}%
+#BinaryTrie#は#w#ビットの整数の集まりを二分木で符号化したものである。
+この木の任意の葉の深さは#w#であって、各整数は根から葉への経路として符号化される。
+整数#x#への経路は深さ#i#において、もし上から#i#番目のビットが0なら左、1なら右に向かう。
+\figref{binarytrie-ex}は$#w#=4$の場合の例を示しており、ここでは整数3(0011), 9(1001), 12(1100), 13(1101)がトライに格納されている。
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-1}
+  \end{center}
+  \caption{The integers stored in a binary trie are encoded as
+    root-to-leaf paths.}
+  \figlabel{binarytrie-ex}
+\end{figure}
+
+#x#の探索経路は#x#の二進表現によって決まるので、ノード#u#の子を#u.child[0]# (#left#)・#u.child[1]# (#right#)と呼ぶことにすると便利である。
+この子を指すポインタは二重の意味で使われる。
+二分トライの葉は子を持たないので、ここではポインタを使って葉の双方向連結リストを作る。
+二分トライの葉では、#u.child[0]# (#prev#)はリストにおける#u#の直前のノードを、#u.child[1]# (#next#)はリストにおける#u#の直後のノードを指す。
+特別なノード#dummy#は先頭のノードの前のノード、および末尾のノードの後のノードを表現するために使われる。
+（\secref{dllist}を参照せよ。）
+\cpponly{サンプルコードでは、#u.child[0]#, #u.left#, #u.prev# はノード#u#の同じフィールドを参照している。#u.child[1]#, #u.right#, #u.next#についても同様である。}
+
+ノード#u#は#u.jump#というポインタも持つ。
+#u#が左の子を持たないとき、#u.jump#は#u#の部分木における最小の葉を指す。
+#u#が右の子を持たないとき、#u.jump#は#u#の部分木における最大の葉を指す。
+#BinaryTrie#の#jump#ポインタと葉の双方向連結リストとを描いた例を、\figref{binarytrie-ex2}に示す。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-2}
+  \end{center}
+  \caption[A BinaryTrie]{A #BinaryTrie# with #jump# pointers shown as curved dashed
+  edges.}
+  \figlabel{binarytrie-ex2}
+\end{figure}
+
+
+%\jxavaimport{ods/BinaryTrie.Node<Node}
+%\cxppimport{ods/BinaryTrie.BinaryTrieNode<Node}
+
+#BinaryTrie#における#find(x)#操作は簡単である。
+#x#の探索経路を辿ればよい。
+葉にたどり着けば、#x#が見つかる。
+（進みたい方向の子を持っていないため）それ以上進めないノード#u#に辿り着いたときは、#u.jump#を辿る。
+そうすると、#x#より大きい最小の葉、または#x#より小さい最大の葉が見つかる。
+どちらになるかは#u#が左右どちらの子を持たないのかに応じて決まる。
+#u#が左の子を持たないなら、欲しいノードを見つけたことになる。
+#u#が右の子を持たないなら、連結リストを辿れば欲しいノードが見つかる。
+\figref{binarytrie-find}にはこのふたつの場合を描いた。
+\codeimport{ods/BinaryTrie.find(x)}
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-3}
+  \end{center}
+  \caption[Search paths in a BinaryTrie]{The paths followed by #find(5)# and #find(8)#.}
+  \figlabel{binarytrie-find}
+\end{figure}
+#find(x)#の実行時間において支配的なのは、根から葉への経路を辿る処理であり、この時間は$O(#w#)$である。
+
+#BinaryTrie#における#add(x)#も単純だが、やらなければならない処理はたくさんある。
+\begin{enumerate}
+  \item #x#の探索経路を辿り、それ以上進めないノード#u#を得る。
+  \item #u#から#x#を含む葉への、探索経路の足りない部分を作る。
+  \item #x#を含むノード#u'#を葉の連結リストに追加する。
+  （最初のステップで得た#u#の#jump#ポインタを利用して、連結リストにおける#u'#の直前のノード#pred#を得られる。）
+  \item これまで来た経路を逆に辿り、#x#を指す必要のある#jump#ポインタを調整する。
+\end{enumerate}
+\figref{binarytrie-add}に要素を追加する様子を示した。
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-add}
+  \end{center}
+  \caption[Adding to a BinaryTrie]{Adding the values 2 and 15 to the #BinaryTrie# in
+  \figref{binarytrie-ex2}.}
+  \figlabel{binarytrie-add}
+\end{figure}
+\codeimport{ods/BinaryTrie.add(x)}
+このメソッドは#x#の探索経路を辿り、根方向に向かって戻る。
+この各ステップは定数時間で実行できるので、#add(x)#の実行時間は$O(#w#)$である。
+
+
+#remove(x)#は#add(x)#のすることを取り消す。
+#add(x)#と同様にやらなければならないことがたくさんある。
+\begin{enumerate}
+  \item #x#の探索経路を辿り、#x#を含む葉#u#を見つける。
+  \item #u#を双方向連結リストから削除する。
+  \item #u#を削除し、#x#の探索経路に含まれない子を持つノード#v#を見つけるまで#x#の探索経路を逆に辿りながら、その過程で訪問したノードを削除する。
+  \item #v#から根まで辿りながら、#u#を指していた#jump#があれば更新する。
+\end{enumerate}
+\figref{binarytrie-remove}に削除の様子を描いた。
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.90909]{figs/binarytrie-remove}
+  \end{center}
+  \caption[Removing from a BinaryTrie]{Removing the value 9 from the #BinaryTrie# in
+  \figref{binarytrie-ex2}.}
+  \figlabel{binarytrie-remove}
+\end{figure}
+\codeimport{ods/BinaryTrie.remove(x)}
+
+\begin{thm}
+#BinaryTrie#は#w#ビット整数のための#SSet#インターフェースの実装である。
+#BinaryTrie#は#add(x)#・#remove(x)#・#find(x)#をいずれも$O(#w#)$の時間で実行できる。
+#n#個の要素を格納する#BinaryTrie#の領域使用量は$O(#n#\cdot#w#)$である。
+\end{thm}
