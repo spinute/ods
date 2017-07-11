@@ -109,3 +109,416 @@ XXX: 著者の環境の話?
 さらに、#BlockStore#は利用可能なブロックからなる\emph{フリーリスト}を保持してもよい。
 #freeBlock(i)#により解放されたブロックはフリーリストに追加される。
 こうすれば、#placeBlock(b)#はフリーリストのブロックを使い、利用可能なブロックがないときだけファイルの末尾に新しいブロックを追加するようにできる。
+
+\section{B木}
+\seclabel{btree}
+
+この節では二分木の一般化である、$B$木と呼ばれる、外部メモリモデルにおいて効率的なデータ構造を紹介する。
+それ以外にも$B$木は\secref{twofour}で説明した2-4木の自然な一般化だと考えることもできる。
+（$B$木において$B=2$とした特殊可すると2-4木になる。）
+
+\index{B-tree@$B$-tree}%
+For any integer 
+任意の整数$B\ge 2$について\emph{$B$木}とは木であって、すべての葉は同じ深さにあり、すべての根でない内部ノードの子の数が$B$以上$2B$以下なものである。
+ノード#u#の子は配列#u.children#に格納される。
+ただし、子の数の条件は根では緩和され、2以上$2B$以下である。
+
+$B$木の高さが$h$のとき、葉の数$\ell$は次の式を満たす。
+\[
+    2B^{h-1} \le \ell \le 2(2B)^{h-1}
+\]
+最初の不等式の両辺から対数を取り、項を並べ替えると次の式が得られる。
+\begin{align*}
+    h & \le \frac{\log \ell-1}{\log B} + 1  \\
+      & \le \frac{\log \ell}{\log B} + 1 \\
+      & = \log_B \ell + 1
+\end{align*}
+つまり、$B$木の高さは葉の数の$B$を底とする対数に比例する。
+
+$B$木における各ノード#u#にはキーの配列$#u.keys#[0],\ldots,#u.keys#[2B-1]$を格納する。
+#u#が$k$個の子を持つ内部ノードのとき、#u#に格納されるキーの数はちょうど$k-1$であり、それぞれ$#u.keys#[0],\ldots,#u.keys#[k-2]$に格納される。
+#u.keys#における残りの$2B-k+1$個の配列のエントリには#null#にしておく。
+#u#が根でない葉ノードのとき、#u#は$B-1$個以上$2B-1$個以下のキーを持つ。
+$B$木のキーは二分探索木と同様の順序を守る。
+$k-1$個のキーを格納する任意のノード#u#は次の式を満たす。
+\[
+   #u.keys[0]# < #u.keys[1]# < \cdots < #u.keys#[k-2]
+\]
+#u#が内部ノードなら、任意の$#i#\in\{0,\ldots,k-2\}$について$#u.keys[i]#$は#u.children[i]#を根とする部分木に格納されるどのキーよりも大きく、$#u.children[i+1]#$を根とする部分木に格納されるどのキーよりも小さい。
+つまり、厳密な書き方ではないが、次が成り立つ。
+\[
+   #u.children[i]# \prec #u.keys[i]# \prec #u.children[i+1]#
+\]
+$B=2$である$B$の例を\figref{btree}に示す。
+
+\begin{figure}
+  \centering{\includegraphics[width=\ScaleIfNeeded]{figs/btree-1}}
+  \caption{A $B$-tree with $B=2$.}
+  \figlabel{btree}
+\end{figure}
+
+$B$木のノードに格納されるデータの大きさは$O(B)$である。
+そのため外部メモリのことを考えると、$B$木の$B$の値は外部メモリのブロックサイズの大きさに合わせて選ばれる。
+こうすれば外部メモリモデルにおいて$B$木の操作にかかる時間は、操作の際にアクセス（読み書き）するノードの数に比例する。
+
+例えば、キーが4バイト整数であり、ノードの添字も4バイトであるとる。
+このとき$B=256$とすれば各ノードは
+\[
+(4+4)\times 2B
+ = 8\times512=4096
+\]
+バイトのデータを格納することになる。
+この章の最初に説明したように、ハードディスクやSSDのブロックサイズは$4096$バイトなので、この$B$はこれらのデバイスに適した値である。
+
+XXX: インデックス?添え字?
+#BTree#クラスは$B$木の実装である。
+#BTree#のノードを格納する#BlockStore# #bs#と、根のインデックス#ri#を格納する。
+また、他のデータ構造と同様に、整数#n#はデータ構造の要素数を表す。
+\cppimport{ods/BTree.n.ri.bs}
+\javaimport{ods/BTree.n.ri.bs}
+\pcodeimport{ods/BTree.initialize(b)}
+
+\subsection{要素の検索}
+
+\figref{btree-find}に示した#find(x)#の実装は、二分探索木における#find(x)#の実装の一般化である。
+#x#を検索するために、根から処理を開始し、ノード#u#のキーを利用して次に#u#の子のうちのどれに進むべきかを決める。
+
+\begin{figure}
+  \centering{\includegraphics[width=\ScaleIfNeeded]{figs/btree-2}}
+  \caption[Searching in a $B$-tree]{A successful search (for the value 4)
+    and an unsuccessful search (for the value 16.5) in a $B$-tree. Shaded nodes show where the value of #z# is updated during the searches.}
+  \figlabel{btree-find}
+\end{figure}
+より具体的には、ノード#u#にいるとき、まずは#x#が#u.keys#に格納されているかどうかを確認する。
+もしそうなら、#x#が見つかったので処理を終了する。
+そうでなければ、最小の$#u.keys[i]# > #x#$を満たす最小の整数#i#を求め、#u.children[i]#を根とする部分木に進んで探索を続ける。
+もし#u.keys#に#x#より大きなキーがないときは、#u#の一番右の子に進んで探索を続ける。
+二分探索木と同じように、このアルゴリズムは#x#より大きなキーのうち、最後に見たもの#z#を記録しておく。
+#x#が見つからなかったときは、#x#以上の最小の値である#z#を返す。
+\codeimport{ods/BTree.find(x)}
+#find(x)#の肝は#findIt(a,x)#であり、これは#null#埋めされた配列#a#から#x#を探すメソッドである。
+\figref{findit}に示したように、$#a#[0],\ldots,#a#[k-1]$にはキーが整列された状態で、$#a#[k],\ldots,#a#[#a.length#-1]$にはすべて#null#が入っている。
+#x#がこの配列の#i#番目の位置に入っているとき、#findIt(a,x)#は$-#i#-1$を返す。
+そうでないときは、$#a[i]#>#x#$または$#a[i]#=#null#$を満たす最小の添え字#i#を返す。
+\begin{figure}
+  \centering{\includegraphics[scale=0.90909]{figs/findit}}
+  \caption[The findIt(a,x) method]{The execution of #findIt(a,27)#.}
+  \figlabel{findit}
+\end{figure}
+\codeimport{ods/BTree.findIt(a,x)}
+#findIt(a,x)#は二分探索を使う。
+\index{binary search}%
+これは各ステップで探索空間を半分に減らすことで、$O(\log(#a.length#))$の時間で処理を終える。
+ここでは$#a.length#=2B$なので#findIt(a,x)#の実行時間は$O(\log B)$である。
+
+$B$木における#find(x)#の実行時間をいつものワードRAMモデル（全命令を数える）でも、または外部メモリモデル（アクセスするノードの数だけを数える）でも解析できる。
+$B$木の葉は少なくともひとつのキーを格納し、$\ell$個の葉を持つ$B$木の高さは$O(\log_B\ell)$なので、#n#個のキーを格納する$B$木の高さは$O(\log_B #n#)$である。
+よって、外部メモリモデルでは、#find(x)#の実行時間は$O(\log_B #n#)$である。
+ワードRAMモデルにおける実行時間を計算するためには、アクセスするすべてのノードについて#findIt(a,x)#呼び出しのコストを考えればよい。
+よって、この場合の#find(x)#の実行時間は次のようになる。
+\[
+   O(\log_B #n#)\times O(\log B) = O(\log #n#)
+\]
+
+\subsection{要素の追加}
+
+$B$木と\secref{binarysearchtree}で説明した#BinarySearchTree#との重要な違いは、$B$木のノードは親へのポインタを持っていないことである。
+この理由を軽く説明する。
+親へのポインタがないため、$B$木における#add(x)#・#remove(x)#は再帰を使って簡単に実装できるのだ。
+
+他のバランスされた探索木と同様に、#add(x)#の際にある種のバランスの調整が必要になる。
+$B$木ではこれはノードの\emph{分割}によって行われる。
+\index{split}%
+\figref{btree-split}を続く内容の参考にしてほしい。
+分割はふたつの再帰レベルに渡って起きるが、$2B$個のキーを含み$2B+1$個の子を持つノード#u#の操作であると考えると理解しやすいだろう。
+新たなノード#w#を作り、このノードは$#u.children#[B],\ldots,#u.children#[2B]$を引き受ける。
+#u#のキーのうち大きい方から$B$個$#u.keys#[B],\ldots,#u.keys#[2B-1]$も#w#に持たせる。
+この段階で、#u#は$B$個の子と、$B$個のキーを持っている。
+さらに追加で$#u.keys#[B-1]$は#u#の親に渡され、#u#の親は#w#も子として引き受ける。
+
+分割操作は3つのノードを修正する。
+これは#u#・#u#の親・新たなノード#w#である。
+これが$B$木において親へのポインタを持たない理由なのである。
+もし親へのポインタがあると、#w#が引き取る$B+1$個の子、すべての親へのポインタを書き換える必要がある。
+これは外部メモリのアクセスを3回から$B+4$回に増やすことになり、$B$が大きいときに$B$木が非効率になってしまう。
+
+\begin{figure}
+   \centering{\begin{tabular}{@{}l@{}}
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-split-1} \\[2ex]
+     \multicolumn{1}{c}{#u.split()#} \\ 
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-split-2} \\
+   \end{tabular}}
+   \caption[Splitting a $B$-tree node]{Splitting the node #u# in a
+     $B$-tree ($B=3$). Notice that the key $#u.keys#[2]=\mathrm{m}$
+     passes from #u# to its parent.}
+   \figlabel{btree-split}
+\end{figure}
+
+\figref{btree-add}に$B$木における#add(x)#の様子を示す。
+XXX: at a high level? なにが?
+ざっくり言うと、まずこのメソッドは値#x#を追加する葉#u#を見つける。
+このときに#u#が一杯になったら（つまり既に$B-1$個のキーを持っていれば）、#u#を分割する。この結果#u#の親が一杯になるかもしれず、その場合には#u#の親を分割する。さらにその結果#u#の親の親が一杯になるかもしれず...ということを繰り返す。
+ひとつずつ木を上に登りながら、一杯でないノードを見つけるか、根を分割するまでこの処理を繰り返す。
+一杯でないノードが見つかった場合には単に処理を終了する。
+根を分割した場合には、新たな根を作り、元の根を分割して得られたふたつのノードを共に新たな根の子にする。
+
+\begin{figure}
+   \centering{\begin{tabular}{@{}l@{}}
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-add-1} \\[2ex]
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-add-2} \\[2ex]
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-add-3}
+   \end{tabular}}
+   \caption[Adding to a $B$-tree]{The #add(x)# operation in a
+      #BTree#. Adding the value 21 results in two nodes being split.}
+   \figlabel{btree-add}
+\end{figure}
+
+#add(x)#の実行について整理すると、まずは根からスタートし、#x#を追加すべき葉を見つけ、その葉に#x#を追加し、根に向かって戻りながら、その途中で見かけた一杯になったノードを分割する。
+この高レベルな様子を頭に入れて、次はこのメソッドをどう再帰的に実装するかの詳細を見ていく。
+
+#add(x)#の処理は実際には#addRecursive(x,ui)#が行う。
+これは識別子#ui#を持つノード#u#を根とする部分木に#x#を追加するメソッドだ。
+#u#が葉なら、単に#x#は#u.keys#に挿入する。
+そうでないときは、#x#を#u#の子のうち適切なもの$#u#'$に再帰的に追加する。
+この再帰的な呼び出しはふつうは#null#を返すが、$#u#'$が分割されるときは新たに作られたノード#w#の参照を返す。
+この場合は#u#は#w#を取り込み、#w#の最初の子を奪って、$#u#'$の分割処理を終える。
+
+#x#が（#u#または#u#の子孫に）追加された後、#addRecursive(x,ui)#は#u#の持つキーが多すぎないか（$2B-1$より多くないか）どうかを確認する。
+もしそうなら#u#を\emph{分割}しなければならず、#u.split()#を呼ぶ。
+#u.split()#の返り値である新しいノードは#addRecursive(x,ui)#の返り値として使われる。
+\codeimport{ods/BTree.addRecursive(x,ui)}
+
+#addRecursive(x,ui)#は#add(x)#のヘルパーであり、#add(x)#は#addRecursive(x,ri)#を読んで#x#を$B$木の根に挿入する。
+#addRecursive(x,ri)#によって根が分割されるときは、古い根と古い根の分割において新たに作られたノードとを、新たな根は子として持つ。
+\codeimport{ods/BTree.add(x)}
+
+#add(x)#とそのヘルパー#addRecursive(x,ui)#は二段階に分けて分析できる。
+
+\begin{description}
+  \item[下向きに進む段階]
+  再帰の下向きに進む段階では、#x#を追加する前に、各ノードにて#findIt(a,x)#を呼び、#BTree#のノードを順番にアクセスする。
+#find(x)#と同様に、このメソッドの実行時間は、外部メモリモデルでは$O(\log_B #n#)$、ワードRAMモデルでは$O(\log #n#)$である。
+
+  \item[上向きに進む段階]
+  再帰の上向きに進む段階では、#x#を追加した後、合わせて最大$O(\log_B #n#)$回の分割を行う。
+  各分割は3つのノードだけに影響するので、この段階の実行時間は外部メモリモデルでは$O(\log_B #n#)$である。
+  しかし、各分割は$B$個のキーと子をノードからノードに移すので、ワードRAAMモデルでは、この実行時間は$O(B\log #n#)$である。
+  \end{description}
+
+$B$の値はかなり大きく、$\log #n#$よりもだいぶ大きいことを思い出そう。
+そのため、ワードRAMモデルでは$B$木への要素の追加はバランスされた二分探索木よりもかなり遅いかもしれない。
+\secref{btree-amortized}では、それほど悪くはないことを示す。
+実は償却すると、#add(x)#で実行される分割の回数は定数なのである。
+そのため、ワードRAMモデルにおける#add(x)#の償却実行時間は$O(B+\log #n#)$なのである。
+
+\subsection{ノードの削除}
+繰り返しになるが、#BTree#における#remove(x)#は再帰で実装するのが簡単だ。
+#remove(x)#を再帰で実装するといくつかのメソッドは複雑になるものの、\figref{btree-remove-full}に示したように全体としては非常に素直になる。
+ここでは結局、うまくキーを入れ替えて、ある葉#u#から値$#x#'$を削除したい。
+$#x#'$を削除すると、#u#の持つキーの数は$B-1$未満になるかもしれない。
+この状態を\emph{アンダーフロー}と呼ぶことにする。
+\index{underflow}%
+
+\begin{figure}
+   \centering{\begin{tabular}{@{}l@{}}
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-full-1} \\[2ex]
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-full-2} \\[2ex]
+     \multicolumn{1}{c}{#merge(v,w)#} \\
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-full-3} \\[2ex]
+     \multicolumn{1}{c}{#shiftLR(w,v)#} \\
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-full-4} \\[2ex]
+   \end{tabular}}
+   \caption[Removing from a $B$-tree]{Removing the value 4 from a $B$-tree
+     results in one merge and one borrowing operation.}
+   \figlabel{btree-remove-full}
+\end{figure}
+
+アンダーフローが発生すると、兄弟から#u#はキーを借りてくるか、兄弟のいずれかと併合される。
+#u#が兄弟と併合される場合には、#u#の親が持つ子とキーの数はそれぞれ1減り、その結果今度は#u#の親でアンダーフローが発生するかもしれない。
+これは再度、兄弟からキーを借りるか、兄弟と併合されるかで解決されるが、併合する場合には、今度は#u#の親の親がアンダーフローするかもしれない。
+この処理は、根に向かいながら行われ、アンダーフローが発生しなくなるか、根のふたつの子が一つに併合されるかすると終了する。
+後者の場合には、根は削除され、その唯一の子が新たな根になる。
+
+続いて、各ステップの実装方法を詳細に見ていく。
+#remove(x)#はまず、削除したい要素#x#を見つける。
+#x#が葉で見つかれば、#x#をこの葉から削除する
+そうでなく、#x#がある内部ノード#u#の#u.keys[i]#で見つかれば、#u.children[i+1]#を根とする部分木の最小値#x'#を削除する。
+#x'#は#x#より大きい値を格納する#BTree#の最小値である。
+続いて、#x'#の値で#u.keys[i]#の#x#を置き換える。
+\figref{btree-remove}にこの処理の様子を示す。
+
+\begin{figure}
+   \centering{\begin{tabular}{@{}l@{}}
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-1} \\[2ex]
+     \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+     \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-2}
+   \end{tabular}}
+   \caption[The remove operation in a $B$-tree] {The #remove(x)# operation
+      in a #BTree#. To remove the value $#x#=10$ we replace it with the
+      the value $#x'#=11$ and remove 11 from the leaf that contains it.}
+   \figlabel{btree-remove}
+\end{figure}
+
+#removeRecursive(x,ui)#は上のアルゴリズムの再帰的な実装である。
+\codeimport{ods/BTree.removeRecursive(x,ui).removeSmallest(ui)}
+
+#u#の#i#番目の子から値#x#を再帰的に削除したあと、#removeRecursive(x,ui)#はこの子が$B-1$個のキーを持っていることを保証しなければならない。
+先のコードでは#checkUnderflow(x,i)#がこの処理を行っている。
+これは#u#の#i#番目の子についてアンダーフローの発生を確認し、修正する。
+#w#を#u#の#i#番目の子とする。
+#w#が$B-2$個のキーしか持たないなら、修正の必要がある。
+これには#w#の兄弟を利用する。
+#u#の$#i#+1$番目または$#i#-1$番目の子を使う。
+ふつうは#u#の$#i#-1$の子#v#、つまり#w#のすぐ左の兄弟を使う。
+$#i#=0$のときだけはこれがうまくいかないので、#w#のすぐ右の兄弟を使う。
+\codeimport{ods/BTree.checkUnderflow(u,i)}
+ここでは$#i#\neq 0$の場合のみを考え、#u#の#i#番目の子で発生したアンダーフローは #u#の$(#i#-1)$番目の子の助けを借りて修正できることを確認する。
+$#i#=0$の場合も同様に処理できるので、詳細は付属のソースコードを参照してほしい。
+
+#w#におけるアンダーフローを解決するために、#w#のためのキー（や子）を見つけてくる必要がある。
+このための方法はふたつある。
+
+\begin{description}
+  \item[借りてくる]
+  \index{borrow}%
+  #w#の兄弟#v#が$B-1$個よりも多くのキーを持っているなら、#w#はキーを（あとは可能なら子も）#v#から借りる。
+  より具体的には#v#が#size(v)#個のキーを持つなら、#v#と#w#とが持っているキーの個数の合計は次のようになる。
+  \[
+     B-2 + #size(w)# \ge 2B-2
+  \]
+  よって#v#から#w#にキーを移し、#v#と#w#のいずれもが$B-1$個以上のキーを持つ状態にできる。
+  この処理の様子を\figref{btree-borrow}に示す。
+
+  \begin{figure}
+      \centering{\begin{tabular}{@{}l@{}}
+       \includegraphics[width=\ScaleIfNeeded]{figs/btree-borrow-1} \\[2ex]
+       \multicolumn{1}{c}{#shiftRL(v,w)#} \\ 
+       \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+       \includegraphics[width=\ScaleIfNeeded]{figs/btree-borrow-2} \\
+     \end{tabular}}
+    \caption[Borrowing in a $B$-tree]{If #v# has more than $B-1$ keys,
+       then #w# can borrow keys from #v#.}
+    \figlabel{btree-borrow}
+  \end{figure}
+
+  \item[併合する]
+  \index{merge}%
+  #v#が$B-1$個だけしかキーを持っていないとき、#v#にはキーを渡す余裕が無いので、もっと思い切ったことをする必要がある。
+  そのために、\figref{btree-merge}に示したように#v#と#w#とを\emph{併合}する。
+  併合は分割の逆の操作である。
+  これは合わせて$2B-3$個のキーを持つふたつのノードを併合し、$2B-2$個のキーを持つひとつのノードとする操作である。
+  （#v#と#w#を併合すると、それらの共通の親#u#の子の数がひとつ減ることから、#u#がキーをひとつ持てなくなり、これがひとつキーが増える原因である。）
+
+  \begin{figure}
+     \centering{\begin{tabular}{@{}l@{}}
+       \includegraphics[width=\ScaleIfNeeded]{figs/btree-merge-1} \\[2ex]
+       \multicolumn{1}{c}{#merge(v,w)#} \\ 
+       \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
+       \includegraphics[width=\ScaleIfNeeded]{figs/btree-merge-2} \\
+     \end{tabular}}
+     \caption[Merging in a $B$-tree]{Merging two siblings #v# and #w#
+     in a $B$-tree ($B=3$).}
+     \figlabel{btree-merge}
+  \end{figure}
+\end{description}
+
+\codeimport{ods/BTree.checkUnderflowNonZero(u,i).checkUnderflowZero(u,i)}
+
+まとめると、$B$木における#remove(x)#は根から葉まである経路を辿り、#x'#を葉#u#から削除し、その後0回以上の併合を#u#とその祖先に対して実行し、高々一回ノードを借りてくる。
+併合やノードを借りるときには3つのノードしか修正せず、$O(\log_B #n#)$回だけの操作を行うので、外部メモリモデルにおける全体としての実行時間は$O(\log_B #n#)$である。
+しかしここでも、ワードRAMモデルでは併合やノードを借りる操作には$O(B)$だけの時間がかかるので、ワードRAMモデルにおける#remove(x)#の実行時間は$O(B\log_B #n#)$であるとしか（現時点では）言えない。
+
+\subsection{$B$木の償却解析}
+\seclabel{btree-amortized}
+
+ここまでに、次のことを示してきた。
+\begin{enumerate}
+  \item 外部メモリモデルでは、$B$木における#find(x)#・#add(x)#・#remove(x)#の実行時間はそれぞれ$O(\log_B #n#)$である。
+  \item ワードRAMモデルでは、#find(x)#の実行時間は$O(\log #n#)$であり、#add(x)#・#remove(x)#の実行時間は$O(B\log #n#)$である。
+\end{enumerate}
+
+次の補題は、これまで$B$木における分割・併合操作の数を過大評価していたことを示す。
+
+\begin{lem}\lemlabel{btree-split}
+空の$B$木からはじめて、#add(x)#・#remove(x)#からなる$m$個の操作の列を順に実行するとき、分割・併合・借用は合わせて高々$3m/2$回しか実行されない。
+\end{lem}
+
+\begin{proof}
+   $B=2$の特別な場合について、\secref{redblack-summary}で既に証明の概要を示している。
+   XXX: credit scheme
+   この補題はここではクレジット法で証明する。
+   \index{credit scheme}%
+  \begin{enumerate}
+    \item 分割・併合・借用の際にクレジット2を支払う。
+    \item #add(x)#または#remove(x)#の際には、最大3のクレジットが得られる。
+  \end{enumerate}
+  最大で$3m$のクレジットが得られており、各分割・併合・借用はクレジットを2消費するので、最大$3m/2$回の分割・併合・借用が実行される。
+  ~\ref{fig:btree-split}、\ref{fig:btree-borrow}、\ref{fig:btree-merge}ではクレジットは \cent\ で表した。
+
+  クレジットの値を追うために、証明では次の\emph{クレジット不変条件}を保つ。
+  \index{credit invariant}%
+  $B-1$個のキーを持つ任意の根でないノードはクレジットを1だけ持つ。
+  $2B-1$個のキーを持つノードはクレジットを3だけ持つ。
+  $B$以上$2B-2$以下のキーを持つノードはクレジットを持たない。
+  あとは、各#add(x)#・#remove(x)#の間に、クレジット不変条件を保つことと、上で説明した性質1・2を満たすこととを示す。
+
+  \paragraph{追加の場合}
+  #add(x)#は併合や借用を行わないため、分割だけを考えれば十分である。
+
+  既に$2B-1$個のキーを持つノード#u#にキーを追加すると分割が発生する。
+  この場合、#u#はふたつのノード#u'#と#u''#に分割され、それぞれは$B-1$個、$B$個のキーを持つ。
+  直前には#u#が$2B-1$個のキーを持っていたのでクレジットは3あった。
+  そのうちの2は分割のために支払われ、あと1は#u'#（$B-1$個のキーを持つ）に渡されるので、クレジット不変条件が保たれる。
+  よって、分割の際に、そのためのクレジットを支払え、クレジット不変条件を保つことができる。
+
+  #add(x)#を実行するとき、ノードに対する他の修正は、すべての分割処理を終えたあと実行される。
+  これは新たなキーをあるノード#u'#に追加する処理である。
+
+  直前に#u'#が$2B-2$個の子を持っていれば、子の数は$2B-1$になるので、クレジットを3得ることになる。これは高々#add(x)#によって得られることになっているクレジットの範囲内である。
+
+  \paragraph{削除の場合}
+  #remove(x)#の際には、0回以上の併合と、それに続く借用が一度発生するかもしれない。
+  併合のシナリオとしては、ふたつの#v#と#w#がともに$B-1$個のキーを#remove(x)#を呼ぶ直前に持っており、これらが$2B-2$個のキーをもつひとつのノードに併合されるというものである。
+  そのため、この併合によってクレジットを2得られ、これを併合のコストとして使える。
+
+  併合のあとには、高々一度の借用処理があり、その後にはもう併合・借用は発生しない。
+  この借用が起きるのは、$B-1$個のキーを持つ葉#v#からキーを削除する場合に限る。
+  このとき#v#はクレジットを1持っており、このクレジットは借用のコストとして使われる。
+  しかし、借用のコストは2なので、クレジットが1足らず、支払いを完了するためにクレジットをあと1必要である。
+
+  ここまでで、クレジットを1得ており、クレジット不変条件が保たれていることを示す必要がある。
+  最悪の場合には#v#の兄弟#w#が、借用の前にちょうど$B$個のキーを持っていて、直後には#v#も#w#も$B-1$個のキーを持つことになる。
+  これは操作が完了するとき、#v#と#w#がクレジットを1持っている必要があることを意味する。
+  よってこの場合には#v#と#w#とに渡すための追加のクレジットを2作る必要がある。
+  借用は#remove(x)#の処理の間に高々一回発生するので、最大で3のクレジットを作る必要があることがわかった。
+
+  もし#remove(x)# において借用がないなら、これはあるノードでキーを削除して終了したためであり、このノードは操作の前には$B$個以上のキーを持っていたことになる。
+  最悪の場合には、このノードがちょうど$B$個のキーを持っており、そのため操作の後では$B-1$個のキーを持ち、クレジットを1作って与えなければならない。
+
+XXX: ちょっと迷子
+  いずれの場合にも、つまり削除が借用で終わっても、そうでなくても、クレジット不変条件を保ち、併合と借用のコストを支払うためには、高々3のクレジットを#remove(x)#の間に作る必要がある。
+  以上より定理が示された。
+\end{proof}
+
+\lemref{btree-split}の目的は、ワードRAMモデルにおいて、#add(x)#・#remove(x)#からなる$m$個の操作の列を順に実行するとき、分割・併合・借用にかかる時間は合わせて$O(Bm)$であることを示すことであった。
+つまり、これらの操作の償却コストは$O(B)$であり、ワードRAMモデルにおける#add(x)#・#remove(x)#の償却コストは$O(B+\log #n#)$である。
+この結果を次のふたつの定理にまとめる。
+This is summarized by the following pair of theorems:
+
+\begin{thm}[外部メモリモデルにおける$B$木]
+#BTree#は#SSet#インターフェースを実装する。
+外部メモリモデルでは、#BTree#はadd(x)#・#remove(x)#・#find(x)#をサポートし、いずれの実行時間も$O(\log_B #n#)$である。
+\end{thm}
+
+\begin{thm}[ワードRAMモデルにおける$B$木]
+#BTree#は#SSet#インターフェースを実装する。
+#BTree#はadd(x)#・#remove(x)#・#find(x)#をサポートする。ワードRAMモデルでは、分割・併合・借用のコストを無視すると、いずれの実行時間も$O(\log_B #n#)$である。
+さらに、空の#BTree#に対して、#add(x)#・#remove(x)#からなる$m$個の操作の列を順に実行するとき、分割・併合・借用のためにかかる時間は合わせて$O(Bm)$である。
+\end{thm}
+
