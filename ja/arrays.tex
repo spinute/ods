@@ -677,11 +677,11 @@ XXX: Pseudo-code editionでは無い節だが、Ruby editionでは書くか?
 
 \section{ディスカッションと練習問題}
 
-この章で説明したデータ構造は民俗学のようなものだ。
+この章で説明したデータ構造は伝承のようなものだ。
 30年以上前の実装さえ見つかる。
 例えば、ここで扱った#ArrayStack#・#ArrayQueue#・#ArrayDeque#の実装を簡単に一般化できるスタック・キュー・双方向キューがKnuth \cite[Section~2.2.2]{k97v1}により議論されている。
 
-Brodnik \etal\ \cite{bcdms99}が#RootishArrayStack#についての記述であり、\secref{rootishspaceusage}で述べたような下界$\sqrt{n}$を示したようである。
+恐らくBrodnik \etal\ \cite{bcdms99}が#RootishArrayStack#を記述し、\secref{rootishspaceusage}で述べたような下界$\sqrt{n}$を示した最初の文献である。
 彼らは他の洗練されたブロックサイズの選び方も示しており、これは#i2b(i)#の中で冪根の計算をせずに済むものだ。
 このやり方では#i#番目の要素を含むブロックは$\lfloor\log (#i#+1)\rfloor$番目のもので、これは単に$#i#+1$の二進表現における最高位の桁である。
 この計算をするための命令を提供するコンピュータ・アーキテクチャもある。
@@ -706,13 +706,13 @@ Brodnik \etal\ \cite{bcdms99}が#RootishArrayStack#についての記述であ�
   これは#Queue#インターフェースの実装で、#remove()#操作はそのときキューに入っている要素から一様な確率でひとつ選んで取り出すものである。
   （#RandomQueue#はカバンに要素を入れておき、中を見ずに適当に要素を取り出すようなものだと考えればよい。）
 
-  #RandomQueue#における#add(x)#・#remove()#の償却実行時間は定数でなければならない。
+  ただし#RandomQueue#における#add(x)#・#remove()#の償却実行時間は定数でなければならないとする。
 \end{exc}
 
 \begin{exc}
   #Treque# (triple-ended queue)を設計・実装せよ。
   \index{Treque@#Treque#}%
-  これは#List#の実装であって、
+  #Treque#は#List#の実装であって、
   #get(i)#・#set(i,x)#は定数時間で実行でき、
   #add(i,x)#・#remove(i)#の実行時間は次のように表せるものだ。
   \[
@@ -729,10 +729,12 @@ Brodnik \etal\ \cite{bcdms99}が#RootishArrayStack#についての記述であ�
 \begin{exc}
   #List#の回転操作#rotate(r)#を実装せよ。
   これはリストの#i#番目の要素を$(#i#+#r#)\bmod #n#$番目に移す。
-  なお#ArrayDeque#や#DualArrayDeque#に対しての#rotate(r)#の実行時間は$O(1+\min\{#r#,#n#-#r#\})$である必要がある。
+  ただし#ArrayDeque#や#DualArrayDeque#に対しての#rotate(r)#の実行時間は$O(1+\min\{#r#,#n#-#r#\})$でなければならないとする。
 \end{exc}
 
 \begin{exc}
+% TODO: YJ I guess memcpy is not possible in Ruby?
+%   この問は\lang\ 版からは除外されている。
   #ArrayDeque#を実装せよ。
   ただし、#add(i,x)#・#remove(i)#・#resize()#におけるシフト処理は高速な#System.arraycopy(s,i,d,j,n)#を利用して実現すること。
 \end{exc}
@@ -746,7 +748,7 @@ Brodnik \etal\ \cite{bcdms99}が#RootishArrayStack#についての記述であ�
 \end{exc}
 
 \begin{exc}
-  剰余演算を使わない#ArrayDeque#の実装を考えよ。
+  剰余演算を一切使わない#ArrayDeque#の実装を考えよ。
   すべてのデータは配列内の連続した領域に順番に並んでいることを利用してよい。
   データがこの配列の先頭・末尾の外にはみ出たときは、#rebuild()#操作を実行する。
   全ての操作の償却実行時間は#ArrayDeque#と同じになるように注意すること。
@@ -773,7 +775,7 @@ Brodnik \etal\ \cite{bcdms99}が#RootishArrayStack#についての記述であ�
 \begin{exc}
   #CubishArrayStack#を設計・実装せよ。
   \index{CubishArrayStack@#CubishArrayStack#}%
-  これは#List#インターフェースを実装する三段階のデータ構造であって、無駄な領域量が$O(#n#^{2/3})$であるものだ。
+  #CubishArrayStack#は#List#インターフェースを実装する三段階のデータ構造であって、無駄な領域量が$O(#n#^{2/3})$であるものだ。
   #get(i)#・#set(i,x)#は定数時間で実行できる。
   #add(i,x)#・#remove(i)#の償却実行時間は$O(#n#^{1/3})$である。
 \end{exc}
