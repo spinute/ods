@@ -65,7 +65,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
   \item #remove()#：（以前に追加された）次の値#y#を#Queue#から削除し、#y#を返す。
 \end{itemize}
 
-#remove()#操作の引数はないことに注意する。#Queue#は\emph{取り出し規則}に従って削除する次の要素を決める。取り出し規則は色々と考えられるが、主なものとしてはFIFOや優先度、LIFOなどがある。 % queueing discipline = 取り出し規則
+#remove()#操作の引数はないことに注意する。#Queue#は\emph{取り出し規則}に従って次に削除する要素を決める。取り出し規則は色々と考えられるが、主なものとしてはFIFOや優先度、LIFOなどがある。 % queueing discipline = 取り出し規則
 
 \figref{queue}に示す\emph{FIFO（first-in-first-out、先入れ先出し）#Queue#}\index{FIFO queue} \index{queue!FIFO}は、追加したのと同じ順番で要素を削除する。これはコンビニのレジで並ぶ列と同じようなものだ。これは最も一般的な#Queue#なので、修飾子のFIFOは省略されることが多い。他の教科書ではFIFO #Queue#の#add(x)#、#remove()#は、それぞれ#enqueue(x)#、#dequeue()#と呼ばれていることも多い。
 
