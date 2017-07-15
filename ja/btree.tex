@@ -513,12 +513,12 @@ This is summarized by the following pair of theorems:
 
 \begin{thm}[外部メモリモデルにおける$B$木]
 #BTree#は#SSet#インターフェースを実装する。
-外部メモリモデルでは、#BTree#はadd(x)#・#remove(x)#・#find(x)#をサポートし、いずれの実行時間も$O(\log_B #n#)$である。
+外部メモリモデルでは、#BTree#は#add(x)#・#remove(x)#・#find(x)#をサポートし、いずれの実行時間も$O(\log_B #n#)$である。
 \end{thm}
 
 \begin{thm}[ワードRAMモデルにおける$B$木]
 #BTree#は#SSet#インターフェースを実装する。
-#BTree#はadd(x)#・#remove(x)#・#find(x)#をサポートする。ワードRAMモデルでは、分割・併合・借用のコストを無視すると、いずれの実行時間も$O(\log_B #n#)$である。
+#BTree#は#add(x)#・#remove(x)#・#find(x)#をサポートする。ワードRAMモデルでは、分割・併合・借用のコストを無視すると、いずれの実行時間も$O(\log_B #n#)$である。
 さらに、空の#BTree#に対して、#add(x)#・#remove(x)#からなる$m$個の操作の列を順に実行するとき、分割・併合・借用のためにかかる時間は合わせて$O(Bm)$である。
 \end{thm}
 

@@ -88,7 +88,7 @@ $\ddiv$は割り算の商を求める演算子である。
 整数の演算は整数のビット数を$#w#$とするとき、$2^{#w#}$で勝手に剰余を取られることを利用すると、このハッシュ関数は非常に効率よく実現できる。
 \footnote{ほとんどのプログラミング言語ではこうなのだが、残念なことにRuby（やPythonなど）ではそうではない。#w#ビットの固定桁の演算の結果がビットに収まらなくなったときには、可変桁数の整数表現が使われるのである。}
 integer operation
-that overflows is upgraded to a variable-length representation.}  
+that overflows is upgraded to a variable-length representation. 
 （\figref{multihashing}を参照せよ。）
 さらに、$2^{#w#-#d#}$による整数の割り算は二進法で右側の$#w#-#d#$ビットを落とせば計算できる。（これはビットを右に$#w#-#d#$個だけシフトすればよく、実装は上の式よりも単純になる。）
 \codeimport{ods/ChainedHashTable.hash(x)}
@@ -296,7 +296,7 @@ $#i#=#hash(x)#$として、#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\
 \codeimport{ods/LinearHashTable.add(x)}
 
 ここまでで#remove(x)#の実装も明らかだろう。
-t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\bmod #t.length#]$, ...と#t[i']=x#または#t[i']=null#である添え字#i'#を見つけるまで探す。
+#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\bmod #t.length#]$, ...と#t[i']=x#または#t[i']=null#である添え字#i'#を見つけるまで探す。
 #t[i']=x#ならば#t[i']=del#とし#true#を返す。
 #t[i']=null#ならば#x#はテーブルに入っていなかった（そのため削除できない）として#false#を返す。
 \codeimport{ods/LinearHashTable.remove(x)}
@@ -686,7 +686,7 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 ハッシュテーブルには他にも様々な実装がある。
 
 \secref{hashtable}で説明したものはチェイン法\emph{hashing with chaining}である。\index{hashing with chaining}%
-（各配列のエントリは要素のチェイン（#List）である。）
+（各配列のエントリは要素のチェイン（#List#）である。）
 チェイン法によるハッシュテーブルはIBMにてH. P. Luhnが1953年1月に出した内部報告書で提案された。この報告書は連結リストの最古の文献のうちの一つでもあると思われる。
 
 \index{open addressing}%
