@@ -32,10 +32,9 @@
 
 \begin{figure}
   \begin{center}
-    \includegraphics[scale=0.90909]{figs/bintree-traverse-1} 
+    \includegraphics[scale=0.90909]{figs/bintree-traverse-1}
   \end{center}
-  \caption[Parent, left child, and right child]{The parent, left child, and right child of the node #u#
-    in a #BinaryTree#.}
+  \caption{#BinaryTree#における、ノード#u#の親・左の子・右の子}
   \figlabel{bintree-orientation}
 \end{figure}
 
@@ -48,7 +47,7 @@
       (a) & (b)
     \end{tabular}
   \end{center}
-  \caption{A binary tree with (a)~nine real nodes and (b)~ten external nodes.}
+  \caption{(a)~9個の本物のノードを持つ二分木と、(b)~10個の外部ノードを持つ二分木}
   \figlabel{binary-tree}
 \end{figure}
 
@@ -56,12 +55,12 @@
 二分木におけるノード#u#の\emph{深さ}とは、
 \index{depth}%
 #u#から根までの経路の長さである。
-ノード#w#が#u#から#r#へのパスに含まれるとき、#w#は#u#の\emph{祖先}と呼ばれる。
+ノード#w#が#u#から#r#への経路に含まれるとき、#w#は#u#の\emph{祖先}と呼ばれる。
 \index{ancestor}%
 一方#u#は#w#の\emph{子孫}と呼ばれる。
 \index{descendant}%
 二分木によけるノード#u#の\emph{部分木}とは、#u#を根とし、#u#のすべての子孫を含む二分木である。
-ノード#u#の\emph{高さ}とは、#u#から#u#の子孫へのパスの長さの最大値である。
+ノード#u#の\emph{高さ}とは、#u#から#u#の子孫への経路の長さの最大値である。
 \index{height!in a tree}
 木の\emph{高さ}とはその根の高さである。
 \index{height!of a tree}%
@@ -88,11 +87,11 @@
 \codeimport{ods/BinaryTree.depth(u)}
 
 
-\subsection{Recursive Algorithms}
+\subsection{再帰的なアルゴリズム}
 
 \index{recursive algorithm}%
 再帰アルゴリズムを使うと二分木に関する計算が簡単になる。
-例えば#u#を根とする二分木のサイズ（ノードの数）は、#u#の子を根とする部分木のサイズを最適に計算し、足し合わせると求まる。
+例えば#u#を根とする二分木のサイズ（ノードの数）は、#u#の子を根とする部分木のサイズを再帰的に計算し、足し合わせると求まる。
 
 \codeimport{ods/BinaryTree.size(u)}
 
@@ -100,7 +99,7 @@
 
 \codeimport{ods/BinaryTree.height(u)}
 
-\subsection{Traversing Binary Trees}
+\subsection{二分木の走査}
 \seclabel{bintree:traversal}
 
 \index{traversal!of a binary tree}%
@@ -130,9 +129,7 @@
       \includegraphics[scale=0.90909]{figs/bintree-3}
     \end{tabular}
   \end{center}
-  \caption[Traversing a BinaryTree]{The three cases that occur at node
-    #u# when traversing a binary tree non-recursively, and the resultant
-    traversal of the tree.}
+  \caption{二分木を非再帰的に走査するとき、三通りの#u#の訪れ方と、その結果として生じる木の走査}
   \figlabel{bintree-traverse}
 \end{figure}
 
@@ -151,7 +148,7 @@
 （\figref{bintree-bfs}を参照せよ。）
 XXX: どういう意味だろう
 これは英語の文章読み方と似ている。
-幅優先の巡回はキュー#q#を使って実装できる。
+幅優先の走査はキュー#q#を使って実装できる。
 はじめは#q#は根だけを含む。
 ステップごとに次のノード#u#を#q#から取り出し、#u#を処理し、#u.left#と#u.right#を（#nil#じゃなければ）#q#に加える。
 \codeimport{ods/BinaryTree.bfTraverse()}
@@ -160,9 +157,7 @@ XXX: どういう意味だろう
   \begin{center}
     \includegraphics[scale=0.90909]{figs/bintree-4}
   \end{center}
-  \caption{During a breadth-first traversal, the nodes of a binary tree
-  are visited
-level-by-level, and left-to-right within each level.}
+  \caption{幅優先の走査においては、二分木の各ノードは深さ毎に、また各深さでは左から右の順で訪問される。}
   \figlabel{bintree-bfs}
 \end{figure}
 
@@ -184,7 +179,7 @@ level-by-level, and left-to-right within each level.}
     \includegraphics[scale=0.90909]{figs/bst-example}
     %\includegraphics[scale=0.90909]{figs/binary-tree-4}
   \end{center}
-  \caption{A binary search tree.}
+  \caption{二分探索木の例}
   \figlabel{bst}
 \end{figure}
 
@@ -206,7 +201,6 @@ level-by-level, and left-to-right within each level.}
 後者なら#x#が二分探索木には入っていなかったとわかる。
 \codeimport{ods/BinarySearchTree.findEQ(x)}
 
-Two examples of searches in a binary search tree are shown in
 二分探索木における探索の例をふたつ\figref{bst-search}に示す。
 二つ目の例として#x#が見つからない場合にも、役に立つ情報が得られることを示している。
 探索における最後のノード#u#で先の場合分けの一つ目のケースだったなら、#u.x#は木に含まれるデータであって#x#よりも大きい値のうち、最小のものである。
@@ -222,12 +216,12 @@ Two examples of searches in a binary search tree are shown in
     (a) & (b)
     \end{tabular}
   \end{center}
-  \caption{An example of (a)~a successful search (for $6$) and (b)~an unsuccessful search (for $10$) in a binary search tree.}
+  \caption{二分探索木において、(a)~探索が成功する例（$6$が見つかる）と、(b)~探索が失敗する（$10$が見つからない）例}
   \figlabel{bst-search}
 \end{figure}
 
 
-\subsection{Addition}
+\subsection{追加}
 
 #BinarySearchTree#に値#x#を追加するためには最初に#x#を検索する。
 もし見つかれば挿入する必要がない。
@@ -248,12 +242,12 @@ Two examples of searches in a binary search tree are shown in
     \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-5} 
     \end{tabular}
   \end{center}
-  \caption{Inserting the value $8.5$ into a binary search tree.}
+  \caption{二分探索木に$8.5$を追加する様子}
   \figlabel{bst-insert}
 \end{figure}
 
 
-\subsection{Removal}
+\subsection{削除}
 
 #BinarySearchTree#から値#u#を削除する処理はもう少し複雑だ。
 #u#が葉なら#u#を単に親から切り離すだけでよい。
@@ -265,7 +259,7 @@ Two examples of searches in a binary search tree are shown in
   \begin{center}
     \includegraphics[scale=0.90909]{figs/bst-splice}
   \end{center}
-  \caption{Removing a leaf ($6$) or a node with only one child ($9$) is easy.}
+  \caption{葉($6$)、または一つだけの個を持つノード($9$)を削除するのは簡単である。}
   \figlabel{bst-splice}
 \end{figure}
 
@@ -287,7 +281,7 @@ Two examples of searches in a binary search tree are shown in
     \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-delete-2}
     \end{tabular}
   \end{center}
-  \caption[Deleting from a BinarySearchTree]{Deleting a value ($11$) from a node, #u#, with two children is done by replacing #u#'s value with the smallest value in the right subtree of #u#.}
+  \caption{ふたつの子を持つノード#u#から値$11$を削除するには、#u#の値と、#u#の右の部分木における最小の値とを入れかえる。}
   \figlabel{bst-remove}
 \end{figure}
 
@@ -321,7 +315,6 @@ Two examples of searches in a binary search tree are shown in
 最近の数百年では二分木は生物学における系統樹にも使われている。
 \index{species tree}
 ここでは葉は現存の種を表し、内部ノードは\emph{分化}の発生を示す。
-\emph{speciation events}
 これは一つの種のふたつの集団からふたつの別々の種が派生することだ。
 
 二分探索木は1950年代に、複数のグループが独立に発見した。
@@ -396,7 +389,7 @@ Two examples of searches in a binary search tree are shown in
     \includegraphics[scale=0.90909]{figs/binarytree-numbering-2} \\[2ex]
     \includegraphics[scale=0.90909]{figs/binarytree-numbering-3}
   \end{center}
-  \caption{Pre-order, post-order, and in-order numberings of a binary tree.}
+  \caption{二分木における行きがけ順・通りがけ順・帰りがけ順}
   \figlabel{binarytree-numbering}
 \end{figure}
 
