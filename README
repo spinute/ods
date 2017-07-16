@@ -1,0 +1,49 @@
+latex/ contains the latex sources
+java/ods contains the java sources
+cpp contains the C++ sources (still under development)
+
+To make the books (ods-java.pdf and ods-cpp.pdf and ods-python.pdf):
+  mkdir ~/texmf/tex/latex/ods/
+  cp ods-colors.sty ~/texmf/tex/latex/ods/
+  cd latex ; make
+This will require a decent installation of pdflatex, perl, ipe, inkscape,
+gnuplot, and pdftk.  
+
+If you have problems with tikz figures, consult the solution here: 
+http://goo.gl/hCvlyp
+
+If ipetoipe generates errors about ods-colors.sty, then try this:
+
+  mkdir -p ~textmf/tex/latex/ods/
+  ln -s $PWD/latex/ods-colors.sty ~textmf/tex/latex/ods/
+  texhash
+
+
+To make the Java archive ods.jar:
+  cd java ; make
+
+To make both:
+  make
+
+What's in here:
+  java/test    - Test code from Sun/Oracle and Apache
+  java/junk    - Small sample code snippets used in the text
+  java/ods     - The Java data structures sources
+  cpp          - The C++ data structures sources and sample code
+  python       - The Python code used to generate the pseudocode version
+  python/tests - Unit tests for the Python code
+  latex        - The book's latex source code and scripts
+  latex/figs   - The book's ipe figures
+  latex/images - Images used in the book
+
+
+How it works:
+The Makefile and Perl script in ./latex do the following:
+  1. Convert ipe figures in ./latex/figs into pdf
+  2. Convert svg figures in ./latex/images into pdf
+  3. Scan the latex sources and generate -java.tex and -cpp.tex files
+     that include source code from ./java and ./cpp directories
+  4. Run pdflatex and bibtex to generate the file ods-java.pdf and
+     ods-cpp.pdf
+
+
