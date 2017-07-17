@@ -188,25 +188,25 @@
 \subsection{探索}
 
 \index{search path!in a binary search tree}%
-二分探索木性は非常に有用である。
-この性質を利用して二分探索木から値#x#の位置を高速に特定できる。
-具体的には、根#r#から#x#を探し始める。
-ノード#u#にいるとき、次の3つの場合がありうる。
+二分探索木性は有用だ。
+この性質を利用して、二分探索木から値#x#を高速に見つけられる。
+具体的には、まず根#r#から#x#を探し始める。
+ノード#u#に訪問しているとき、次の3つの場合がありうる。
 \begin{enumerate}
 \item $#x#< #u.x#$なら#u.left#に進む。
 \item $#x#> #u.x#$なら#u.right#に進む。
-\item $#x#= #u.x#$なら#u#の値は#x#である。
+\item $#x#= #u.x#$なら値が#x#であるノード#u#を見つけた。
 \end{enumerate}
-この探索は三つ目のケースか、#u=nil#になると終了する。
-前者なら#x#を見つけたことになる。
-後者なら#x#が二分探索木には入っていなかったとわかる。
+この探索は三つ目のケース、または#u=nil#になると終了する。
+前者なら#x#が見かったことになる。
+後者なら#x#がこの木に含まれていないとわかる。
 \codeimport{ods/BinarySearchTree.findEQ(x)}
 
 二分探索木における探索の例をふたつ\figref{bst-search}に示す。
-二つ目の例として#x#が見つからない場合にも、役に立つ情報が得られることを示している。
-探索における最後のノード#u#で先の場合分けの一つ目のケースだったなら、#u.x#は木に含まれるデータであって#x#よりも大きい値のうち、最小のものである。
-同様に場合分けの二つ目のケースだったなら、#u.x#は#x#より小さい値のうち、最大のものである。
-よって場合分けの一つ目のケースが発生した最後のノード#z#を保持しておけば、#BinarySearchTree#の#find(x)#操作は、#x#以上の値のうち最小の値を返すように実装することもできる。
+二つ目の例から、#x#が見つからない場合でも、役に立つ情報が得られることがわかる。
+探索における最後のノード#u#にて、先の場合分けの一つ目のケースであったなら、#u.x#は木に含まれるデータであって#x#よりも大きい値のうち、最小のものである。
+同様に場合分けの二つ目のケースであったなら、#u.x#は#x#より小さい値のうち、最大のものである。
+よって、場合分けの一つ目のケースが最後に発生したノード#z#を記録しておけば、#BinarySearchTree#の#find(x)#を、#x#以上の値のうち最小のものを返すよう実装することもできる。
 \codeimport{ods/BinarySearchTree.find(x)}
 
 \begin{figure}
@@ -224,23 +224,26 @@
 
 \subsection{追加}
 
-#BinarySearchTree#に値#x#を追加するためには最初に#x#を検索する。
-もし見つかれば挿入する必要がない。
-そうでなければ、検索において最後に出会ったノード#p#の子である葉として、#x#を保存する。
-新しいノードが#p#の右の子か左の子かは#x#と#p.x#の比較結果によって決める。
+#BinarySearchTree#に値#x#を追加するために、まずは#x#を検索する。
+もし見つかれば挿入の必要がない。
+見つからなければ、検索において最後に出会ったノード#p#の子である葉として、#x#を保存する。
+このとき、新しいノードが#p#の右の子か左の子かを、#x#と#p.x#の比較結果によって決める。
 \codeimport{ods/BinarySearchTree.add(x)}
 \codeimport{ods/BinarySearchTree.findLast(x)}
 \codeimport{ods/BinarySearchTree.addChild(p,u)}
 \figref{bst-insert}に例を示した。
-最も時間がかかるのは#x#を検索する処理で、この時間は新たに追加するノード#u#の高さに比例する。
+% XXX: 原著が間違ってる? According to the definition at the head of this chapter, it seems to be appropriate to use not "height" but "depth" here.
+% > An example is shown in \figref{bst-insert}. The most time-consuming
+% part of this process is the initial search for #x#, which takes an
+% amount of time proportional to the height of the newly added node #u#.
+最も時間がかかるのは#x#を検索する処理で、この時間は新たに追加するノード#u#の深さに比例する。
 最悪の場合にはこれは#BinarySearchTree#の高さである。
-
 
 \begin{figure}
   \begin{center}
     \begin{tabular}{cc}
     \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-4} &
-    \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-5} 
+    \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-5}
     \end{tabular}
   \end{center}
   \caption{二分探索木に$8.5$を追加する様子}
@@ -250,9 +253,9 @@
 
 \subsection{削除}
 
-#BinarySearchTree#から値#u#を削除する処理はもう少し複雑だ。
-#u#が葉なら#u#を単に親から切り離すだけでよい。
-#u#がひとつだけの子を持つなら#u#の点を継ぎ合せる、すなわち#u.parent#と#u#の子を新たに親子関係とすればよい。
+#BinarySearchTree#から、ある値を格納するノード#u#を削除する処理はもう少し複雑だ。
+#u#が葉なら、#u#を単に親から切り離せばよい。
+#u#がひとつだけの子を持つなら、#u#の点を継ぎ合わせる、すなわち#u.parent#と#u#の子とを新たに親子関係とすればよい。
 （\figref{bst-splice}を参照せよ。）
 \codeimport{ods/BinarySearchTree.splice(u)}
 
@@ -260,16 +263,17 @@
   \begin{center}
     \includegraphics[scale=0.90909]{figs/bst-splice}
   \end{center}
-  \caption{葉($6$)、または一つだけの個を持つノード($9$)を削除するのは簡単である。}
+  \caption{葉($6$)、または一つだけの子を持つノード($9$)を削除するのは簡単である。}
   \figlabel{bst-splice}
 \end{figure}
 
 #u#がふたつの子を持つ場合はもっと手の込んだことをする必要がある。
-この場合、子の数が1以下で、#w.x#と#u.x#を入れ替えても大丈夫なノード#w#を見つけるのが最も単純なやり方だ。
-二分探索木性を保つためには、#w.x#が#u.x#より大きい中で最小の値であれば十分である。
-このような#w#を見つけるのは簡単である。
+この場合、子の数が1以下のノード#w#であって、#w.x#と#u.x#とを入れ替えられるものを見つけるのが最も単純なやり方だ。
+二分探索木性を保つためには、#w.x#の値は#u.x#の値に近いのがよい。
+例えば、#w.x#が#u.x#より大きい中で最小の値であればよい。
+このような#w#は簡単に見つけられる。
 これは#u.right#を根とする部分木の中で最小の値である。
-このノードは左の子を持たないため、取り除くのは簡単である。
+このノードは左の子を持たないため、取り除くのも簡単である。
 （\figref{bst-remove}を参照せよ。）
 \javaimport{ods/BinarySearchTree.remove(u)}
 \cppimport{ods/BinarySearchTree.remove(u)}
@@ -282,26 +286,26 @@
     \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-delete-2}
     \end{tabular}
   \end{center}
-  \caption{ふたつの子を持つノード#u#から値$11$を削除するには、#u#の値と、#u#の右の部分木における最小の値とを入れかえる。}
+  \caption{ふたつの子を持つノード#u#から値$11$を削除するために、#u#の値と、#u#の右の部分木における最小の値とを入れかえる。}
   \figlabel{bst-remove}
 \end{figure}
 
 \subsection{要約}
 
-#BinarySearchTree#における#find(x)#・#add(x)#・#remove(x)#操作はいずれも根からあるノードを見つけることに関連している。
-木の形状についてなにか仮定しない限り、この探索経路の長さについて「木の中のノード数より短い」ことよりも有用なことを言うのは難しい。
+#BinarySearchTree#における#find(x)#・#add(x)#・#remove(x)#の処理は、いずれも根から特定のノードへの経路を辿る処理を伴う。
+木の形状についてなにか仮定しない限り、この経路の長さについて「木の中のノード数は超えない」より強い主張をするのは難しい。
 次の（あまりパッとしない）定理は#BinarySearchTree#の性能をまとめたものだ。
 
 \begin{thm}\thmlabel{bst}
   #BinarySearchTree#は#SSet#インターフェースの実装であって、#add(x)#・#remove(x)#・#find(x)#の実行時間は$O(#n#)$である。
 \end{thm}
 
-\thmref{bst}は\thmref{skiplist}と比べるとショボい。
+\thmref{skiplist}と比べると、\thmref{bst}の性能は良くない。
 #SkiplistSSet#は#SSet#インターフェースの操作を期待実行時間$O(\log #n#)$で実装していた。
 #BinarySearchTree#の問題は木の形状が\emph{アンバランス}かもしれないことだ。
-\figref{bst}のようではなく、ほとんどのノードがひとつの子だけを持ち、#n#個のノードの長いチェインみたいな見た目をしているかもしれないのである。
+\figref{bst}のような形ではなく、ほとんどのノードがひとつだけの子を持ち、#n#個のノードからなる長い鎖のような見た目かもしれないのである。
 
-アンバランスな二分探索木を避ける方法はたくさんあり、いずれも実行時間$O(\log #n#)$での操作を可能にする。
+アンバランスな二分探索木を避ける方法はたくさんあり、そうすると$O(\log #n#)$の時間で各操作を行えるようになる。
 \chapref{rbs}で\emph{期待実行時間}$O(\log #n#)$を、ランダム性を利用して達成する方法を説明する。
 \chapref{scapegoat}では\emph{償却実行時間}$O(\log #n#)$を、部分的な再構築を利用して達成する方法を説明する。
 \chapref{redblack}では\emph{最悪実行時間}$O(\log #n#)$を、4つまで子を持ちうる木をシミュレートすることで達成する方法を説明する。
