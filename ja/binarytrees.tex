@@ -1,41 +1,40 @@
 \chapter{二分木}
 \chaplabel{binarytrees}
 
-この章ではコンピュータサイエンスで最も基本的な構造のうちのひとつである二分木を紹介する。
-\emph{木}と呼ばれるのは図示した場合の構造が（森に生えてる）木に似ているためである。
+この章では、コンピュータサイエンスで現れる最も基本的な構造のうちのひとつ、二分木を紹介する。
+この構造を\emph{木}と呼ぶのは、図示したときに（森に生えてる）木に似ているためである。
 \index{tree}%
 \index{tree!binary}%
 \index{binary tree}%
-二分木の定義は複数ある。
-数学的には\emph{二分木}とは連結な有限無向グラフであって、サイクルがなく、すべての頂点の次数が2以下であるものである。
+二分木には複数の定義がある。
+数学的には、\emph{二分木}とは連結な有限無向グラフであって、サイクルを持たず、すべての頂点の次数が3以下のものである。
 
-コンピュータサイエンスでの二分木には\emph{根付き}である。
+コンピュータサイエンスにおける応用では、二分木はふつう\emph{根を持つ}。
 \index{tree!rooted}%
 \index{rooted tree}%
-次数2以下の特別なノード#r#を、木の\emph{根}と呼ぶ。
-すべてのノード$#u#(\neq #r#)$について#u#から#r#に向かう経路上の二番目のノードを#u#の\emph{親}という。
+次数2以下のノードのうち、特別なもの#r#を、木の\emph{根}と呼ぶ。
+ノード$#u#(\neq #r#)$から#r#に向かう経路における二番目のノードを#u#の\emph{親}という。
 \index{parent}%
-それ以外の#u#に隣接するノードを#u#の\emph{子}と呼ぶ。
-\emph{順序付けられた}二分木に興味がある事が多い。
+#u#に隣接する親以外のノードを#u#の\emph{子}という。
+特に\emph{順序付けられている}二分木に興味があることが多いので、
 \index{ordered tree}%
 \index{tree!ordered}%
-これは\emph{左の子}と\emph{右の子}を区別するということだ。
+子を\emph{左の子}・\emph{右の子}と呼び分けることにする。
 \index{left child}%
 \index{child!left}%
 \index{right child}%
 \index{child!right}%
 
-図示するとき、二分木はふつう根から下に向かって書かれる。
-根が一番上にあり、左右の子はそれぞれ左下・右下に書かれる。
+二分木を図示するとき、ふつう根から下に向かって描く。
+根が一番上に描かれる。また、ノード#u#の左右の子は、#u#の左下・右下にそれぞれ描かれる。
 （\figref{bintree-orientation}）
-例えば\figref{binary-tree}.a は9個のノードを持つ二分木である。
+\figref{binary-tree}.a は9個のノードを持つ二分木の例である。
 
 \begin{figure}
   \begin{center}
-    \includegraphics[scale=0.90909]{figs/bintree-traverse-1} 
+    \includegraphics[scale=0.90909]{figs/bintree-traverse-1}
   \end{center}
-  \caption[Parent, left child, and right child]{The parent, left child, and right child of the node #u#
-    in a #BinaryTree#.}
+  \caption{#BinaryTree#における、ノード#u#の親・左の子・右の子}
   \figlabel{bintree-orientation}
 \end{figure}
 
@@ -48,59 +47,61 @@
       (a) & (b)
     \end{tabular}
   \end{center}
-  \caption{A binary tree with (a)~nine real nodes and (b)~ten external nodes.}
+  \caption{(a)~9個の本物のノードを持つ二分木と、(b)~10個の外部ノードを持つ二分木}
   \figlabel{binary-tree}
 \end{figure}
 
-二分木は重要なので、そのための専用の語彙がいくつかある。
+% XXX: 別に二分木専用の用語ではないような気が...?
+二分木は重要なので、その性質を記述するための専用の語彙が使われている。
 二分木におけるノード#u#の\emph{深さ}とは、
 \index{depth}%
 #u#から根までの経路の長さである。
-ノード#w#が#u#から#r#へのパスに含まれるとき、#w#は#u#の\emph{祖先}と呼ばれる。
+ノード#w#が#u#から#r#への経路に含まれるとき、#w#を#u#の\emph{祖先}という。
 \index{ancestor}%
-一方#u#は#w#の\emph{子孫}と呼ばれる。
+一方、このとき#u#を#w#の\emph{子孫}という。
 \index{descendant}%
-二分木によけるノード#u#の\emph{部分木}とは、#u#を根とし、#u#のすべての子孫を含む二分木である。
-ノード#u#の\emph{高さ}とは、#u#から#u#の子孫へのパスの長さの最大値である。
+二分木におけるノード#u#の\emph{部分木}とは、#u#を根とし、#u#のすべての子孫を含む二分木である。
+ノード#u#の\emph{高さ}とは、#u#から#u#の子孫への経路の長さの最大値である。
 \index{height!in a tree}
 木の\emph{高さ}とはその根の高さである。
 \index{height!of a tree}%
-ノード#u#が子を持たないとき、#u#は\emph{葉}である。
+ノード#u#が子を持たないなら、#u#は\emph{葉}である。
 \index{leaf}%
 
 \emph{外部ノード}を考えると便利なことがある。
-左の子を持たないノードは外部ノードを左の子として持ち、同様に右の子を持たないノードは外部ノードを右の子として持つとする。（\figref{binary-tree}.bを参照）
-帰納法により、$#n#\ge 1$個の（本物の）ノードを持つ二分木は$#n#+1$個の外部ノードを持つことを示せる。
+左の子を持たないノードは左の子として外部ノードを持ち、右の子を持たないノードは右の子として外部ノードを持つとする。（\figref{binary-tree}.bを参照せよ。）
+帰納法により、$#n#\ge 1$個の（本物の）ノードを持つ二分木は、$#n#+1$個の外部ノードを持つことを示せる。
+% NOTE: n = 0 の場合はどう扱うのが自然なのだろう？
 
 \section{#BinaryTree#：基本的な二分木}
 
 \index{BinaryTree@#BinaryTree#}%
-二分木のノード#u#を表す最も単純なやり方は、明示的に（3つ以下の）隣接するノードを保持することだ。
+二分木におけるノード#u#を表現するには、（3つ以下の）#u#に隣接するノードを明示的に保持するのが簡単だ。
 \javaimport{ods/BinaryTree.BTNode<Node}
 \cppimport{ods/BinaryTree.BTNode}
-隣接する頂点が3つもないときはそこには#nil#を入れる。
-こうすれば外部ノードと根の親が#nil#に対応することになる。
+隣接する頂点が3つ揃っていないときには、そこは#nil#とする。
+このとき、外部ノードと根の親とが#nil#に対応する。
 
-すると、二分木自体は根#r#への参照として表現できる。
+すると、根#r#への参照として二分木自体は表現できる。
 \codeimport{ods/BinaryTree.r}
 
-ノード#u#の深さは#u#から根への経路をたどるときのステップ数である。
+ノード#u#の深さを、#u#から根への経路を辿るときのステップ数として計算できる。
 \codeimport{ods/BinaryTree.depth(u)}
 
 
-\subsection{Recursive Algorithms}
+\subsection{再帰的なアルゴリズム}
 
 \index{recursive algorithm}%
 再帰アルゴリズムを使うと二分木に関する計算が簡単になる。
-例えば#u#を根とする二分木のサイズ（ノードの数）は、#u#の子を根とする部分木のサイズを最適に計算し、足し合わせると求まる。
+例えば#u#を根とする二分木のサイズ（ノードの数）は、#u#の子を根とする部分木のサイズを再帰的に計算し、足し合わせ、その結果に1加えると求まる。
 
 \codeimport{ods/BinaryTree.size(u)}
 
-ノード#u#の高さは#u#のふたつの部分木の高さの最大値を計算し、それに1加えると求まる。
+ノード#u#の高さは、#u#のふたつの部分木の高さの最大値を計算し、その結果に1加えると求まる。
 
 \codeimport{ods/BinaryTree.height(u)}
 
-\subsection{Traversing Binary Trees}
+\subsection{二分木の走査}
 \seclabel{bintree:traversal}
 
 \index{traversal!of a binary tree}%
@@ -108,17 +109,18 @@
 \index{binary-tree traversal}%
 先の小節で説明したふたつのアルゴリズムは二分木のすべてのノードを訪問するために再帰を使った。
 いずれのアルゴリズムも二分木のノードを次のコードと同じ順番で訪問していた。
+% NOTE: （C++では？）部分表現の評価順序は未規定で、訪問順は必ずしもこうなるわけではないのではないか
 \codeimport{ods/BinaryTree.traverse(u)}
 
-このように再帰を使うと、短くて単純なコードを書けるが、これには問題もある。
-再帰の深さの最大値は二分木の深さの最大値、すなわち木の高さである。
-木の高さが非常に大きいと、この再帰は利用できるスタックの量以上の領域を要求し、プログラムがクラッシュしてしまう。
+再帰を使うとこのように簡潔なコードを書けるが、時に困ることもある。
+再帰の深さの最大値は、二分木におけるノードの深さの最大値、すなわち木の高さである。
+これが非常に大きいと、再帰のためのスタックとして、利用できる量以上の領域を要求し、プログラムがクラッシュしてしまうことがある。
 
-再帰なしで二分木を辿るためには、どこから来たかに基づき次の行き先を決めるアルゴリズムを使える。
-\figref{bintree-traverse}を見よ。
+再帰なしで二分木を走査するためには、どこから来たかによって次の行き先を決めるアルゴリズムを使えばよい。
+\figref{bintree-traverse}を参照せよ。
 ノード#u#に#u.parent#から来たときは、次は#u.left#に向かう。
 #u.left#から来たときは、次は#u.right#に向かう。
-#u.right#から来たときは、#u#の部分木は辿り終えたので#u.parent#に戻る。
+#u.right#から来たときは、#u#の部分木を辿り終えたので#u.parent#に戻る。
 次のコードはこれを実装したものである。
 ただし、#u.left#・#u.right#・#u.parent#が#nil#であるケースも適切に処理している。
 \codeimport{ods/BinaryTree.traverse2()}
@@ -130,9 +132,7 @@
       \includegraphics[scale=0.90909]{figs/bintree-3}
     \end{tabular}
   \end{center}
-  \caption[Traversing a BinaryTree]{The three cases that occur at node
-    #u# when traversing a binary tree non-recursively, and the resultant
-    traversal of the tree.}
+  \caption{二分木を再帰を使わずに走査するときの、三通りのノード#u#の訪れ方と、その結果として生じる木の走査}
   \figlabel{bintree-traverse}
 \end{figure}
 
@@ -140,29 +140,25 @@
 例えば木のサイズを計算するためには、カウンタ#n#を保持し、新しいノードを訪問するたびにその値をひとつずつ増やせばよい。
 \codeimport{ods/BinaryTree.size2()}
 
-二分木の実装には、#parent#を使わないものもある。
-この場合、再帰でない実装はやはり可能だが、#List#か#Stack#を使って今見ているノードから根までの経路を記録する必要がある。
+二分木の実装には、#parent#を使わないこともある。
+この場合にも再帰を使わない実装は可能だが、#List#か#Stack#を使って、今訪問しているノードから根までの経路を記録しておく必要がある。
 
-
-これまで説明したものとは別の辿り方は\emph{幅優先}なものである。
+ここまで説明したものとは別の走査方法として、\emph{幅優先}な走査がある。
 \index{breadth-first traversal}%
 \index{traversal!breadth-first}%
-幅優先でノードを辿る場合、根から深さごとに下に向かって、同じ深さのものは左から順に、すべてのノードは訪問される。
+幅優先に走査する場合、根から下に向かって深さごとに、同じ深さのノードは左から右の順に、すべてのノードを訪問する。
 （\figref{bintree-bfs}を参照せよ。）
-XXX: どういう意味だろう
-これは英語の文章読み方と似ている。
-幅優先の巡回はキュー#q#を使って実装できる。
-はじめは#q#は根だけを含む。
-ステップごとに次のノード#u#を#q#から取り出し、#u#を処理し、#u.left#と#u.right#を（#nil#じゃなければ）#q#に加える。
+これは英語の文章の読み方と似ている。（訳注：横書きなら、日本語でも同様である。）
+幅優先の走査はキュー#q#を使って実装できる。
+初期状態では#q#は根だけを含む。
+各ステップでは、#q#から次のノード#u#を取り出し、#u#を処理し、#u.left#と#u.right#を（#nil#でなければ）#q#に追加する。
 \codeimport{ods/BinaryTree.bfTraverse()}
 
 \begin{figure}
   \begin{center}
     \includegraphics[scale=0.90909]{figs/bintree-4}
   \end{center}
-  \caption{During a breadth-first traversal, the nodes of a binary tree
-  are visited
-level-by-level, and left-to-right within each level.}
+  \caption{幅優先な走査では、二分木の各ノードは深さ毎に、また各深さでは左から右の順で訪問される。}
   \figlabel{bintree-bfs}
 \end{figure}
 
@@ -184,7 +180,7 @@ level-by-level, and left-to-right within each level.}
     \includegraphics[scale=0.90909]{figs/bst-example}
     %\includegraphics[scale=0.90909]{figs/binary-tree-4}
   \end{center}
-  \caption{A binary search tree.}
+  \caption{二分探索木の例}
   \figlabel{bst}
 \end{figure}
 
@@ -192,26 +188,25 @@ level-by-level, and left-to-right within each level.}
 \subsection{探索}
 
 \index{search path!in a binary search tree}%
-二分探索木性は非常に有用である。
-この性質を利用して二分探索木から値#x#の位置を高速に特定できる。
-具体的には、根#r#から#x#を探し始める。
-ノード#u#にいるとき、次の3つの場合がありうる。
+二分探索木性は有用だ。
+この性質を利用して、二分探索木から値#x#を高速に見つけられる。
+具体的には、まず根#r#から#x#を探し始める。
+ノード#u#に訪問しているとき、次の3つの場合がありうる。
 \begin{enumerate}
 \item $#x#< #u.x#$なら#u.left#に進む。
 \item $#x#> #u.x#$なら#u.right#に進む。
-\item $#x#= #u.x#$なら#u#の値は#x#である。
+\item $#x#= #u.x#$なら値が#x#であるノード#u#を見つけた。
 \end{enumerate}
-この探索は三つ目のケースか、#u=nil#になると終了する。
-前者なら#x#を見つけたことになる。
-後者なら#x#が二分探索木には入っていなかったとわかる。
+この探索は三つ目のケース、または#u=nil#になると終了する。
+前者なら#x#が見かったことになる。
+後者なら#x#がこの木に含まれていないとわかる。
 \codeimport{ods/BinarySearchTree.findEQ(x)}
 
-Two examples of searches in a binary search tree are shown in
 二分探索木における探索の例をふたつ\figref{bst-search}に示す。
-二つ目の例として#x#が見つからない場合にも、役に立つ情報が得られることを示している。
-探索における最後のノード#u#で先の場合分けの一つ目のケースだったなら、#u.x#は木に含まれるデータであって#x#よりも大きい値のうち、最小のものである。
-同様に場合分けの二つ目のケースだったなら、#u.x#は#x#より小さい値のうち、最大のものである。
-よって場合分けの一つ目のケースが発生した最後のノード#z#を保持しておけば、#BinarySearchTree#の#find(x)#操作は、#x#以上の値のうち最小の値を返すように実装することもできる。
+二つ目の例から、#x#が見つからない場合でも、役に立つ情報が得られることがわかる。
+探索における最後のノード#u#にて、先の場合分けの一つ目のケースであったなら、#u.x#は木に含まれるデータであって#x#よりも大きい値のうち、最小のものである。
+同様に場合分けの二つ目のケースであったなら、#u.x#は#x#より小さい値のうち、最大のものである。
+よって、場合分けの一つ目のケースが最後に発生したノード#z#を記録しておけば、#BinarySearchTree#の#find(x)#を、#x#以上の値のうち最小のものを返すよう実装することもできる。
 \codeimport{ods/BinarySearchTree.find(x)}
 
 \begin{figure}
@@ -222,42 +217,45 @@ Two examples of searches in a binary search tree are shown in
     (a) & (b)
     \end{tabular}
   \end{center}
-  \caption{An example of (a)~a successful search (for $6$) and (b)~an unsuccessful search (for $10$) in a binary search tree.}
+  \caption{二分探索木において、(a)~探索が成功する例（$6$が見つかる）と、(b)~探索が失敗する（$10$が見つからない）例}
   \figlabel{bst-search}
 \end{figure}
 
 
-\subsection{Addition}
+\subsection{追加}
 
-#BinarySearchTree#に値#x#を追加するためには最初に#x#を検索する。
-もし見つかれば挿入する必要がない。
-そうでなければ、検索において最後に出会ったノード#p#の子である葉として、#x#を保存する。
-新しいノードが#p#の右の子か左の子かは#x#と#p.x#の比較結果によって決める。
+#BinarySearchTree#に値#x#を追加するために、まずは#x#を検索する。
+もし見つかれば挿入の必要がない。
+見つからなければ、検索において最後に出会ったノード#p#の子である葉として、#x#を保存する。
+このとき、新しいノードが#p#の右の子か左の子かを、#x#と#p.x#の比較結果によって決める。
 \codeimport{ods/BinarySearchTree.add(x)}
 \codeimport{ods/BinarySearchTree.findLast(x)}
 \codeimport{ods/BinarySearchTree.addChild(p,u)}
 \figref{bst-insert}に例を示した。
-最も時間がかかるのは#x#を検索する処理で、この時間は新たに追加するノード#u#の高さに比例する。
+% XXX: 原著が間違ってる? According to the definition at the head of this chapter, it seems to be appropriate to use not "height" but "depth" here.
+% > An example is shown in \figref{bst-insert}. The most time-consuming
+% part of this process is the initial search for #x#, which takes an
+% amount of time proportional to the height of the newly added node #u#.
+最も時間がかかるのは#x#を検索する処理で、この時間は新たに追加するノード#u#の深さに比例する。
 最悪の場合にはこれは#BinarySearchTree#の高さである。
-
 
 \begin{figure}
   \begin{center}
     \begin{tabular}{cc}
     \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-4} &
-    \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-5} 
+    \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-example-5}
     \end{tabular}
   \end{center}
-  \caption{Inserting the value $8.5$ into a binary search tree.}
+  \caption{二分探索木に$8.5$を追加する様子}
   \figlabel{bst-insert}
 \end{figure}
 
 
-\subsection{Removal}
+\subsection{削除}
 
-#BinarySearchTree#から値#u#を削除する処理はもう少し複雑だ。
-#u#が葉なら#u#を単に親から切り離すだけでよい。
-#u#がひとつだけの子を持つなら#u#の点を継ぎ合せる、すなわち#u.parent#と#u#の子を新たに親子関係とすればよい。
+#BinarySearchTree#から、ある値を格納するノード#u#を削除する処理はもう少し複雑だ。
+#u#が葉なら、#u#を単に親から切り離せばよい。
+#u#がひとつだけの子を持つなら、#u#の点を継ぎ合わせる、すなわち#u.parent#と#u#の子とを新たに親子関係とすればよい。
 （\figref{bst-splice}を参照せよ。）
 \codeimport{ods/BinarySearchTree.splice(u)}
 
@@ -265,16 +263,17 @@ Two examples of searches in a binary search tree are shown in
   \begin{center}
     \includegraphics[scale=0.90909]{figs/bst-splice}
   \end{center}
-  \caption{Removing a leaf ($6$) or a node with only one child ($9$) is easy.}
+  \caption{葉($6$)、または一つだけの子を持つノード($9$)を削除するのは簡単である。}
   \figlabel{bst-splice}
 \end{figure}
 
 #u#がふたつの子を持つ場合はもっと手の込んだことをする必要がある。
-この場合、子の数が1以下で、#w.x#と#u.x#を入れ替えても大丈夫なノード#w#を見つけるのが最も単純なやり方だ。
-二分探索木性を保つためには、#w.x#が#u.x#より大きい中で最小の値であれば十分である。
-このような#w#を見つけるのは簡単である。
+この場合、子の数が1以下のノード#w#であって、#w.x#と#u.x#とを入れ替えられるものを見つけるのが最も単純なやり方だ。
+二分探索木性を保つためには、#w.x#の値は#u.x#の値に近いのがよい。
+例えば、#w.x#が#u.x#より大きい中で最小の値であればよい。
+このような#w#は簡単に見つけられる。
 これは#u.right#を根とする部分木の中で最小の値である。
-このノードは左の子を持たないため、取り除くのは簡単である。
+このノードは左の子を持たないため、取り除くのも簡単である。
 （\figref{bst-remove}を参照せよ。）
 \javaimport{ods/BinarySearchTree.remove(u)}
 \cppimport{ods/BinarySearchTree.remove(u)}
@@ -287,26 +286,26 @@ Two examples of searches in a binary search tree are shown in
     \includegraphics[width=\HalfScaleIfNeeded]{figs/bst-delete-2}
     \end{tabular}
   \end{center}
-  \caption[Deleting from a BinarySearchTree]{Deleting a value ($11$) from a node, #u#, with two children is done by replacing #u#'s value with the smallest value in the right subtree of #u#.}
+  \caption{ふたつの子を持つノード#u#から値$11$を削除するために、#u#の値と、#u#の右の部分木における最小の値とを入れかえる。}
   \figlabel{bst-remove}
 \end{figure}
 
 \subsection{要約}
 
-#BinarySearchTree#における#find(x)#・#add(x)#・#remove(x)#操作はいずれも根からあるノードを見つけることに関連している。
-木の形状についてなにか仮定しない限り、この探索経路の長さについて「木の中のノード数より短い」ことよりも有用なことを言うのは難しい。
+#BinarySearchTree#における#find(x)#・#add(x)#・#remove(x)#の処理は、いずれも根から特定のノードへの経路を辿る処理を伴う。
+木の形状についてなにか仮定しない限り、この経路の長さについて「木の中のノード数は超えない」より強い主張をするのは難しい。
 次の（あまりパッとしない）定理は#BinarySearchTree#の性能をまとめたものだ。
 
 \begin{thm}\thmlabel{bst}
   #BinarySearchTree#は#SSet#インターフェースの実装であって、#add(x)#・#remove(x)#・#find(x)#の実行時間は$O(#n#)$である。
 \end{thm}
 
-\thmref{bst}は\thmref{skiplist}と比べるとショボい。
+\thmref{skiplist}と比べると、\thmref{bst}の性能は良くない。
 #SkiplistSSet#は#SSet#インターフェースの操作を期待実行時間$O(\log #n#)$で実装していた。
 #BinarySearchTree#の問題は木の形状が\emph{アンバランス}かもしれないことだ。
-\figref{bst}のようではなく、ほとんどのノードがひとつの子だけを持ち、#n#個のノードの長いチェインみたいな見た目をしているかもしれないのである。
+\figref{bst}のような形ではなく、ほとんどのノードがひとつだけの子を持ち、#n#個のノードからなる長い鎖のような見た目かもしれないのである。
 
-アンバランスな二分探索木を避ける方法はたくさんあり、いずれも実行時間$O(\log #n#)$での操作を可能にする。
+アンバランスな二分探索木を避ける方法はたくさんあり、そうすると$O(\log #n#)$の時間で各操作を行えるようになる。
 \chapref{rbs}で\emph{期待実行時間}$O(\log #n#)$を、ランダム性を利用して達成する方法を説明する。
 \chapref{scapegoat}では\emph{償却実行時間}$O(\log #n#)$を、部分的な再構築を利用して達成する方法を説明する。
 \chapref{redblack}では\emph{最悪実行時間}$O(\log #n#)$を、4つまで子を持ちうる木をシミュレートすることで達成する方法を説明する。
@@ -314,38 +313,37 @@ Two examples of searches in a binary search tree are shown in
 \section{ディスカッションと練習問題}
 
 二分木は血縁関係のモデルとして数千年に渡って使われている。
-これは家系図は自然と二分木でモデル化されるからだ。
+家系図を自然にモデル化すると二分木になる。
 \index{family tree}%
 \index{pedigree family tree}%
-家系図では根はある人で、左右の子ノードはその人の両親である。
-最近の数百年では二分木は生物学における系統樹にも使われている。
+ある家系図の書き方では、根をある人、左右の子ノードをその人の両親とする。
+ここ数百年の話としては、生物学における系統樹が二分木である。
 \index{species tree}
-ここでは葉は現存の種を表し、内部ノードは\emph{分化}の発生を示す。
-\emph{speciation events}
-これは一つの種のふたつの集団からふたつの別々の種が派生することだ。
+ここでは葉は現存の種を表し、内部ノードは\emph{分化}が起きたことを表す。
+分化とは一つの種から、二つの別々の種が派生することである。
 
-二分探索木は1950年代に、複数のグループが独立に発見した。
+二分探索木は、1950年代に複数のグループが独立に発見したようである。
 \cite[Section~6.2.2]{k97v3}
-個々の二分探索木についてのより詳細な文献は後の章で紹介する。
+個々の二分探索木のより詳細な文献は後の章で紹介する。
 
 ゼロから二分木を実装するとき、いくつか設計上考えることがある。
 ひとつは各ノードが親へのポインタを持つかどうかである。
-多くの操作が単に根から葉への経路を辿るものならば親へのポインタは不要で、メモリを無駄にしたり、バグを入れ込む原因となったりする。
-一方親へのポインタがないと、木探索は再帰を（または明示的にスタックを）使うことになる。
-またいくつか実装が複雑になってしまう操作もある。（ある種の二分探索木における挿入や削除など）
+多くの操作が根から葉への経路を辿るだけのものなら、親へのポインタは不要で、メモリを無駄にし、バグを入れ込む原因となりうる。
+一方親へのポインタがないと、走査のために再帰を（または明示的にスタックを）使うことになる。
+また、実装が複雑になってしまう操作もある。（ある種の二分探索木における挿入や削除など）
 
-もうひとつの設計上のポイントは親と左右の子へのポインタをどう保持するかである。
-この章の実装ではそれぞれ別々の変数にこれを保持していた。
-長さ3の配列#p#を使う選択肢もある。
-ここで#u.p[0]#・#u.p[1]#・#u.p[2]#がそれぞれ、#u#の左右の子と親へのポインタを保持する。
-配列を使うとプログラム内の#if#文の連続を代数的な表現でより単純に書くことができる。
+もうひとつの設計上のポイントは、親と左右の子へのポインタをどう持つかである。
+この章の実装では、それぞれを別々の変数に保持していた。
+一方、長さ3の配列#p#を使うこともできる。
+この場合、#u.p[0]#・#u.p[1]#・#u.p[2]#がそれぞれ、#u#の左右の子と親へのポインタを保持する。
+配列を使うと、プログラム内の#if#文の連続を、代数的な表現でより単純に書ける。
 
-この単純化を木を辿るときに使える。
-例えば、#u.p[i]#から#u#に来たとき、次のノードは$#u.p#[(#i#+1)\bmod 3]$である。
+例えば、この単純化は木を辿るときに役立つ。
+#u.p[i]#から#u#に来たとき、次に向かうのは$#u.p#[(#i#+1)\bmod 3]$である。
 左右の対称性があるときにも似たようなことができる。
 すなわち、#u.p[i]#の兄弟は$#u.p#[(#i#+1)\bmod 2]$である。
-これは#u.p[i]#が左の子($#i#=0$)であっても右の子($#i#=1$)であっても使える。
-これにより、左右の場合それぞれのために複雑なコードを書いていたのをまとめられることがある。
+これは#u.p[i]#が左の子($#i#=0$)であっても右の子($#i#=1$)であっても有効だ。
+この表現を使うと、左右の場合ためにそれぞれ書いていた複雑なコードを、ひとつにまとめられることがある。
 例として\pageref{page:rotations}の#rotateLeft(u)#・#rotateRight(u)#を参照せよ。
 
 \begin{exc}
@@ -357,7 +355,7 @@ Two examples of searches in a binary search tree are shown in
 \end{exc}
 
 \begin{exc}
-  二分木$T$が一つ以上葉を持つとき、$T$の根の高々ひとつの子を持つか、$T$は二つ以上の葉を持つかのいずれかであることを示せ。
+  二分木$T$が一つ以上葉を持つとき、$T$における根の子の数が1以下であるか、$T$は二つ以上の葉を持つかのいずれかであることを示せ。
 \end{exc}
 
 \begin{exc}
@@ -365,17 +363,17 @@ Two examples of searches in a binary search tree are shown in
 \end{exc}
 
 \begin{exc}
-ノード#u#をの高さを計算する再帰的でないメソッド#height2(u)#を実装せよ。
+ノード#u#の高さを計算する再帰的でないメソッド#height2(u)#を実装せよ。
 \end{exc}
 
 \begin{exc}
 二分木が\emph{サイズでバランスされている}とは、
   \index{size-balanced}%
   \index{binary search tree!size-balanced}%
-任意のノード#u#について、#u.left#・#u.right#を根とする部分木のサイズの差が高々1であることをいう。
-二分木がこの意味でバランスされているかを判定する再帰的メソッド#isBalanced()#を書け。
-このメソッドの実行時間は$O(#n#)$でなければならない。
-（色々な形状の大きい木でテストしてみること。$O(#n#)$より多く時間がかかる実装は簡単である。）
+任意のノード#u#について、#u.left#を根とする部分木のサイズと、#u.right#を根とする部分木のサイズとの差が1以下であることをいう。
+二分木がこの意味でバランスされているか判定する再帰的なメソッド#isBalanced()#を書け。
+なお、このメソッドの実行時間は$O(#n#)$でなければならない。
+（色々な形状の大きい木でテストしてみること。$O(#n#)$より多く時間を使う実装は簡単である。）
 \end{exc}
 
 \index{traversal!pre-order}%
@@ -396,7 +394,7 @@ Two examples of searches in a binary search tree are shown in
     \includegraphics[scale=0.90909]{figs/binarytree-numbering-2} \\[2ex]
     \includegraphics[scale=0.90909]{figs/binarytree-numbering-3}
   \end{center}
-  \caption{Pre-order, post-order, and in-order numberings of a binary tree.}
+  \caption{二分木における行きがけ順・通りがけ順・帰りがけ順}
   \figlabel{binarytree-numbering}
 \end{figure}
 
@@ -408,15 +406,15 @@ Two examples of searches in a binary search tree are shown in
   \index{post-order number}%
   \index{in-order number}%
 #BinarySearchTree#のサブクラスとしてノードのフィールドに行きがけ番号・通りがけ番号・帰りがけ番号を持つものを作れ。
-これらの値を適切に割り当てる再帰的なメソッド#preOrderNumber()#・#inOrderNumber()#・#postOrderNumbers()#を書け。
-なお、いずれのメソッドの実行時間も$O(#n#)$であること。
+これらの値を適切に割り当てる再帰的な関数#preOrderNumber()#・#inOrderNumber()#・#postOrderNumber()#を書け。
+なお、いずれの実行時間も$O(#n#)$でなければならない。
 \end{exc}
 
 \begin{exc}\exclabel{tree-traversal}
 再帰的でない関数#nextPreOrder(u)#・#nextInOrder(u)#・#nextPostOrder(u)#を実装せよ。
-これらは各順序においてノード#u#の次であるノードを返す関数である。
-いずれも償却実行時間は定数である必要がある。
-ノード#u#からはじめて、この関数を繰り返し呼んでノードを辿り、$#u#=#null#$になるまでこれを続けるとき、すべての呼び出しの合計コストは$O(#n#)$でなければならない。
+これらは各順序におけるノード#u#の次のノードを返す関数である。
+いずれの償却実行時間も高々定数でなければならない。
+また、ノード#u#からはじめて、この関数を繰り返し呼んでノードを辿り、$#u#=#null#$になるまでこれを続けるとき、すべての呼び出しの合計コストは$O(#n#)$でなければならない。
 \end{exc}
 
 \begin{exc}
@@ -450,7 +448,7 @@ Two examples of searches in a binary search tree are shown in
 
 \begin{exc}
 #BinarySearchTree#のメソッド#getLE(x)#を実装せよ。
-これは木に含まれる要素のうち、#x#以下のものを集めたリストを返すものだ。
+これは木に含まれる要素のうち、#x#以下のものを集めたリストを返すものである。
 このメソッドの実行時間は$O(#n#'+#h#)$でなければならない。
 ここで$#n#'$は木に含まれる#x#以下の要素の数、#h#は木の高さである。
 \end{exc}
@@ -461,7 +459,7 @@ Two examples of searches in a binary search tree are shown in
 \end{exc}
 
 \begin{exc}
-ある#BinarySearchTree#に#add(x)#を実行し、（同じ#x#について）#remove(x)#を実行すると、木は常に元の状態に戻るか?
+ある#BinarySearchTree#に#add(x)#を実行し、（同じ#x#について）#remove(x)#を実行すると、必ず木は元の状態に戻るか?
 \end{exc}
 
 \begin{exc}
@@ -478,5 +476,5 @@ Two examples of searches in a binary search tree are shown in
 \begin{exc}
 #BinarySearchTree#の一種であり、各ノード#u#が#u.size#（#u#を根とする部分木の大きさ）、#u.depth#（#u#の深さ）、#u.height#（#u#を根とする部分木の高さ）を保持するものを設計・実装せよ。
 
-なお、#add(x)#・#remove(x)#を読んでもこれらの値は適切に保たれる必要があり、一方でこれらの操作のコストを定数時間より大きくはしないように注意すること。
+なお、#add(x)#・#remove(x)#を読んでもこれらの値は適切に保たれる必要があり、一方で、これらの操作のコストが定数時間より大きくはならないように注意すること。
 \end{exc}
