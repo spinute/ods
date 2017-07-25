@@ -1,15 +1,15 @@
 \chapter{ランダム二分探索木}
 \chaplabel{rbs}
 
-この章ではランダム化を利用することで各操作の期待実行時間が$O(\log #n#)$であるような二分探索木を紹介する。
+この章では、ランダム化を利用し、各操作を$O(\log #n#)$の期待実行時間で実行できる二分探索木を紹介する。
 
 \section{ランダム二分探索木}
 \seclabel{rbst}
 
-\figref{rbs-lvc}に示したふたつの二分探索木を見てほしい。
-これらはいずれも$#n#=15$個のノードを含む。
+\figref{rbs-lvc}のふたつの二分探索木を見てほしい。
+これらはいずれも$#n#=15$個のノードからなる。
 左のものはリストであり、右のものは完全にバランスされた二分探索木である。
-左のものの高さは$#n#-1=14$で、右のものの高さは3である。
+左の木の高さは$#n#-1=14$で、右の木の高さは3である。
 
 \begin{figure}
   \begin{center}
@@ -18,104 +18,99 @@
       \includegraphics[scale=0.90909,scale=0.95]{figs/bst-balanced}
     \end{tabular}
   \end{center}
-  \caption{Two binary search trees containing the integers $0,\ldots,14$.}
+  \caption{整数$0,\ldots,14$を含むふたつの二分探索木}
   \figlabel{rbs-lvc}
 \end{figure}
 
-このふたつの木がどう構築されるかを考えてみよ。
-左のものは空の#BinarySearchTree#に次の要素の列を順に追加すると得られる。
+このふたつの木をどうすれば構築できるかを考えてみよう。
+左の木は空の#BinarySearchTree#に次の要素を順に追加すると得られる。
 \[
-    \langle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14 \rangle \enspace .
+    \langle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14 \rangle
 \]
-この木が得られる追加操作の列はこれしかない。（証明は#n#についての帰納法で行う。）
-一方右の木は次の列を順に追加すれば得られる。
+この木が得られる追加操作の列はこの列に限る。（証明は#n#についての帰納法で行う。）
+一方、右の木は次の要素を順に追加すると得られる。
 \[
-    \langle 7,3,11,1,5,9,13,0,2,4,6,8,10,12,14 \rangle  \enspace .
+    \langle 7,3,11,1,5,9,13,0,2,4,6,8,10,12,14 \rangle
 \]
 他にも
 \[
-    \langle 7,3,1,5,0,2,4,6,11,9,13,8,10,12,14 \rangle  \enspace ,
+    \langle 7,3,1,5,0,2,4,6,11,9,13,8,10,12,14 \rangle
 \]
 や
 \[
-    \langle 7,3,1,11,5,0,2,4,6,9,13,8,10,12,14 \rangle \enspace .
+    \langle 7,3,1,11,5,0,2,4,6,9,13,8,10,12,14 \rangle
 \]
-でもこの木は得られる。
-右の木を作る操作の列は実は$21,964,800$種類ある。
-一方で左の木の場合には唯一であった。
+からも、この木が得られる。
+右の木が得られる追加操作の列は$21,964,800$種類ある。
+一方で、左の木が得られる追加操作の列は上のものだけである。
 
-上の例は定性的に、$0,\ldots,14$をランダムに並び替えた列の要素を順に二分探索木に入れると、非常に（\figref{rbs-lvc}の右のもののような）バランスの良い木ができることが多く、（\figref{rbs-lvc}の左のもののような）非常にバランスの悪い木は滅多にできないことを示している。
+上の例から、定性的には、$0,\ldots,14$をランダムに並び替え、その要素を順に二分探索木に入れていくと、（\figref{rbs-lvc}の右のもののような）とてもバランスの良い木ができることが多く、（\figref{rbs-lvc}の左のもののような）非常にバランスの悪い木ができることは滅多にないとわかる。
 
-これを形式的に表現するための記法としてランダム二分探索木のことを考える。
-サイズ#n#の\emph{ランダム二分探索木}は
+このことを形式的に述べるために、ランダム二分探索木を考える。
+次の手順で大きさ#n#の\emph{ランダム二分探索木}が得られる。
 \index{random binary search tree}%
 \index{binary search tree!random}%
-次のように得られる。
 
-$0,\ldots,#n#-1$の置換からランダムに選出した$#x#_0,\ldots,#x#_{#n#-1}$をひとつずつ順に#BinarySearchTree#に追加する。
-ここで\emph{ランダムな置換}
+$0,\ldots,#n#-1$のランダムな置換をひとつ選ぶ。
+これを$#x#_0,\ldots,#x#_{#n#-1}$とし、順に#BinarySearchTree#に追加する。
+ここで、\emph{ランダムな置換}
 \index{permutation!random}%
 \index{random permutation}%
-とは、$0,\ldots,#n#-1$の$#n#!$個ある並び替えを、いずれも等しい確率$1/#n#!$でひとつ選出したものことをいう。
+とは、$#n#!$個ある$0,\ldots,#n#-1$の並び替えから、いずれも等しい確率$1/#n#!$でひとつ選出したものをいう。
 
-値$0,\ldots,#n#-1$は順序を持った集合の要素#n#個組みと入れ替えてよく、そうしてもランダム二分探索木の性質は変わらないことに注意する。
-$#x#\in\{0,\ldots,#n#-1\}$は単にサイズ#n#の順序付き集合の#x#番目の数を表しているだけなのである。
+値$0,\ldots,#n#-1$を、順序の定義された集合の要素#n#個組みと置き換えても、ランダム二分探索木の性質には影響しないことに注意する。
+$#x#\in\{0,\ldots,#n#-1\}$は、単にサイズ#n#の順序付き集合における#x#番目の要素を表しているのである。
 
-ランダム二分探索木についての主要な成果を説明する前に、少し脱線してランダムな構造を考える際によく出てくる数についての話をする。
-非負整数$k$について、$k$番目の\emph{調和数}$H_k$は次のように定義される。
+ランダム二分探索木の主要な性質を説明する前に、少し脱線してランダムな構造を考えるときによく出てくる数の話をしよう。
+非負整数を$k$とするとき、$k$番目の\emph{調和数}$H_k$は次のように定義される。
 \index{harmonic number}%
 \index{H@$H_k$ (harmonic number)}%
 \[
-  H_k = 1 + 1/2 + 1/3 + \cdots + 1/k \enspace .
+  H_k = 1 + 1/2 + 1/3 + \cdots + 1/k
 \]
-調和数$H_k$に単純な閉じた書き方はないが、自然対数との間には密接な関係がある。特に次の式が成り立つ。
+調和数$H_k$は単純な閉じた式では書けないが、自然対数と密接な関係を持つ。
+具体的には、次の式が成り立つ。
 \[
-  \ln k < H_k \le \ln k + 1  \enspace .
+  \ln k < H_k \le \ln k + 1
 \]
 \newcommand{\hint}{\int_1^k\! (1/x)\, \mathrm{d}x}%
-解析学を学んだ読者は$\hint = \ln k$からこれを導けるだろう。
-積分は曲線と$x$軸との囲む領域の面積と解釈でき、$H_k$の値の下界として$\hint$、上界として$1+ \hint$がある。
-（\figref{harmonic-integral}を参考にせよ。）
+解析学を学んでいれば、$\hint = \ln k$からこれを導けるだろう。
+積分は曲線と$x$軸との囲む領域の面積として解釈できるので、$H_k$の値の下界は$\hint$、上界は$1+ \hint$である。
+（\figref{harmonic-integral}を見ると視覚的に理解できるだろう。）
 
 \begin{figure}
   \begin{center}
     \begin{tabular}{cc}
-      \includegraphics[width=\HalfScaleIfNeeded]{figs/harmonic-2} 
+      \includegraphics[width=\HalfScaleIfNeeded]{figs/harmonic-2}
         & \includegraphics[width=\HalfScaleIfNeeded]{figs/harmonic-3}
     \end{tabular}
   \end{center}
-  \caption{The $k$th harmonic number $H_k=\sum_{i=1}^k 1/i$ is upper- and lower-bounded by two integrals. The value of these integrals is given by the 
-  area of the shaded region, while the value of $H_k$ is given by the area of
-  the rectangles.}
+  \caption{$k$番目の調和数$H_k=\sum_{i=1}^k 1/i$の上界・下界を積分値として与える。各積分値は図の斜線部の面積であり、$H_k$は長方形の部分の面積である。}
   \figlabel{harmonic-integral}
 \end{figure}
 
-
 \begin{lem}\lemlabel{rbs}
-サイズ#n#のランダム二分探索木について次の命題が成り立つ。
+大きさ#n#のランダム二分探索木について、次の補題が成り立つ。
   \begin{enumerate}
-    \item 任意の$#x#\in\{0,\ldots,#n#-1\}$について、#x#の探索経路の長さの期待値は$H_{#x#+1} + H_{#n#-#x#} - O(1)$である。\footnote{$#x#+1$と$#n#-#x#$はそれぞれ木の要素のうち#x#以上のものと#x#以下のものの数であると解釈できる。}
+    \item 任意の$#x#\in\{0,\ldots,#n#-1\}$について、#x#の探索経路の長さの期待値は$H_{#x#+1} + H_{#n#-#x#} - O(1)$である。\footnote{$#x#+1$と$#n#-#x#$はそれぞれ木の要素のうち#x#以上のものの個数、#x#以下のものの個数と解釈できる。}
     \item 任意の$#x#\in(-1,n)\setminus\{0,\ldots,#n#-1\}$について、#x#の探索経路の長さの期待値は$H_{\lceil#x#\rceil} + H_{#n#-\lceil#x#\rceil}$である。
   \end{enumerate}
 \end{lem}
 
 \lemref{rbs}は次の小節で証明する。
-ここでは\lemref{rbs}のふたつの部分からなにがわかるかを考える。
-ひとつめの項目はサイズ#n#の木から要素を探索するとき、探索経路の長さの期待値が$2\ln n + O(1)$以下であることを主張する。
-ふたつめの項目は木に含まれない要素の探索に関するものだ。
-ふたつを比べると、木に入っている要素を探すのは入っていない要素を探すのに比べて少しだけ早いことがわかる。
+ここでは\lemref{rbs}のふたつの項目の意味を考える。
+ひとつめは、サイズ#n#の木から要素を探索するとき、探索経路の長さの期待値は$2\ln n + O(1)$以下であると主張する。
+ふたつめは、木に含まれない要素を探す場合についても、同じことを主張する。
+これらを比べると、木に含まれない要素を探すより、含まれる要素を探す方が、少しだけ早いことがわかる。
 
 
 \subsection{\lemref{rbs}の証明}
 
-\lemref{rbs}の証明に必要な観察は次のものだ。
-ランダム二分探索木$T$における値$#x# \in (-1,#n#)$の探索経路に$i < #x#$を満たす#i#をキーとするノードが含まれる必要十分条件は、$T$を作るランダムな置換において$i$が$\{i+1,i+2,\ldots,\lfloor#x#\rfloor\}$のいずれかが$i$より前に現れることである。
+\lemref{rbs}を証明するための鍵となる考察は次のものだ。
+ランダム二分探索木$T$における値$#x# \in (-1,#n#)$の探索経路に$i < #x#$を満たす#i#をキーとするノードが含まれる必要十分条件は、$T$を作るランダムな置換において$i$が$\{i+1,i+2,\ldots,\lfloor#x#\rfloor\}$のいずれよりも前に現れることである。
 
-これは\figref{rbst-records}でいうと$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$のいずれかが追加されるまで探索経路$(i-1,\lfloor#x#\rfloor+1)$に含まれる要素の探索経路は等しかったことから確認できる。
-XXX: よくわからん???
-(Remember that for two values to have
-different search paths, there must be some element in the tree that
-compares differently with them.)
+\figref{rbst-records}でいうと、$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$のいずれかが追加されるまで、探索経路$(i-1,\lfloor#x#\rfloor+1)$に含まれる要素の探索経路は等しいことから確認できる。
+（あるふたつの要素の探索経路が異なるならば、ふたつの要素の一方よりは大きく、他方よりは小さいある要素が存在するのである。）
 $j$をランダムな置換において最初に現れる$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$の要素とする。
 $j$はずっと#x#の探索経路上にあることに注意する。
 $j\neq i$ならば$j$を含むノード$#u#_j$は$i$を含むノード$#u#_i$より先に作られる。
@@ -127,37 +122,28 @@ $j\neq i$ならば$j$を含むノード$#u#_j$は$i$を含むノード$#u#_i$よ
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/rbst-records}
   \end{center}
-  \caption[The search path in a random binary search tree]{The value $i<#x#$ is on the search path for #x# if and only
+  \caption{The value $i<#x#$ is on the search path for #x# if and only
    if $i$ is the first element among $\{i,i+1,\ldots,\lfloor#x#\rfloor\}$ added to the tree.}
   \figlabel{rbst-records}
 \end{figure}
 
-同様に$i>#x#$について、$i$が#x#の探索経路に現れる必要十分条件は、$T$を作るランダムな置換において、$i$が$\{\lceil#x#\rceil, \lceil#x#\rceil+1,\ldots,i-1\}$のいずれよりも前に現れることである。
+$i>#x#$の場合も、キー$i$が#x#の探索経路に含まれる必要十分条件は、$T$を作るランダムな置換において、$i$が$\{\lceil#x#\rceil, \lceil#x#\rceil+1,\ldots,i-1\}$のいずれよりも前に現れることである。
 
-$\{0,\ldots,#n#\}$のランダムな置換を考えるとき、$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$・$\{\lceil#x#\rceil, \lceil#x#\rceil+1,\ldots,i-1\}$だけを取り出した部分列もやはりそれぞれのランダムな置換になっている。
-
-XXX: この辺からちょっと意味がわからない
-
-permutations of their respective elements.  Each element, then, in the
-subsets 
-$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$・$\{\lceil#x#\rceil,\lceil#x#\rceil+1,\ldots,i-1\}$もやはり同様に等しい確率で
-is equally likely to appear before
-any other in its subset in the random permutation used to create $T$.
-So we have
+$\{0,\ldots,#n#\}$のランダムな置換を考えるとき、そのうち$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$または$\{\lceil#x#\rceil, \lceil#x#\rceil+1,\ldots,i-1\}$だけを取り出した部分列も、やはりそれぞれのランダムな置換になっている。
+ランダムな置換を作ると、どの要素もみな等しい確率で先頭に来るので次の式が得られる。
 \[
-  \Pr\{\mbox{$i$ is on the search path for #x#}\}
+  \Pr\{\mbox{$i$が#x#の探索経路に含まれる}\}
   = \left\{ \begin{array}{ll}
      1/(\lfloor#x#\rfloor-i+1) & \mbox{if $i < #x#$} \\
-     1/(i-\lceil#x#\rceil+1) & \mbox{if $i > #x#$} 
-     \end{array}\right . \enspace .
+     1/(i-\lceil#x#\rceil+1) & \mbox{if $i > #x#$}
+     \end{array}\right
 \]
 
-With this observation, the proof of \lemref{rbs}
-involves some simple calculations with harmonic numbers:
+この考察により、調和数の簡単な計算で\lemref{rbs}を証明できる。
 
 \begin{proof}[Proof of \lemref{rbs}]
 $I_i$を指示確率変数とする。
-これは$i$が探索経路に現れるなら1、そうでないなら0になる。
+この値は、$i$が探索経路に現れるときは1、そうでないときは0である。
 このとき探索経路の長さを次のように計算できる。
 \[
   \sum_{i\in\{0,\ldots,#n#-1\}\setminus\{#x#\}} I_i
@@ -175,7 +161,7 @@ $I_i$を指示確率変数とする。
    & \quad {} + \frac{1}{2}+\frac{1}{3}+\cdots+\frac{1}{#n#-#x#} \\
    & = H_{#x#+1} + H_{#n#-#x#} - 2  \enspace .
 \end{align*}
-値$#x#\in(-1,n)\setminus\{0,\ldots,#n#-1\}$の対応する計算もほぼ同様である。（\figref{rbst-probs}.bを見よ。）
+値$#x#\in(-1,n)\setminus\{0,\ldots,#n#-1\}$の場合も同様である。（\figref{rbst-probs}.bを見よ。）
 \end{proof}
 
 \begin{figure}
@@ -185,22 +171,20 @@ $I_i$を指示確率変数とする。
       \includegraphics[width=\ScaleIfNeeded]{figs/rbst-probs-b} \\ (b) \\[2ex]
     \end{tabular}
   \end{center}
-  \caption[The probabilities of an element being on a search path]{The probabilities of an element being on the search path for #x#
-   when (a)~#x# is an integer and (b)~when #x# is not an integer.}
+  \caption{#x#の探索経路に各要素が現れる確率~(a)~#x#が整数のとき~(b)~#x#が整数でないとき}
   \figlabel{rbst-probs}
 \end{figure}
 
-\subsection{Summary}
+\subsection{要約}
 
-次の定義はランダム二分探索木の性能をまとめたものだ。
+次の定理はランダム二分探索木の性能をまとめたものだ。
 
 \begin{thm}\thmlabel{rbs}
 ランダム二分探索木は$O(#n#\log #n#)$の時間で構築できる。
 ランダム二分探索木における#find(x)#の期待実行時間は$O(\log #n#)$である。
 \end{thm}
 
-\thmref{rbs}における期待値は、ランダム二分探索木を作るための置換のランダム性によることを強調しておく。
-これは#x#の選び方がランダムであるというわけでなく、任意の#x#について成り立つものなのである。
+\thmref{rbs}における期待値は、ランダム二分探索木を作るための置換のランダム性に基づく。つまり、#x#をランダムに選ぶことには依存しておらず、任意の#x#についてこれは成り立つ。
 
 \section{#Treap#}
 \seclabel{treap}
