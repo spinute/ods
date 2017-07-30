@@ -106,6 +106,7 @@ The binary tree itself can then be represented by a
 
 We can compute the depth of a node, #u#, in a binary tree by counting
 the number of steps on the path from #u# to the root:
+% XXX: If node == nil, should depth(u) return -1 as height(u) do?
 \codeimport{ods/BinaryTree.depth(u)}
 
 
@@ -283,6 +284,7 @@ search for #x#. Whether the new node is the left or right child of #p# depends o
 An example is shown in \figref{bst-insert}. The most time-consuming
 part of this process is the initial search for #x#, which takes an
 amount of time proportional to the height of the newly added node #u#.
+% XXX: According to the definition at the head of this chapter, it seems to be appropriate to use not "height" but "depth" here.
 In the worst case, this is equal to the height of the #BinarySearchTree#.
 
 
@@ -494,7 +496,7 @@ for an example.
   \index{in-order number}%
   Create a subclass of #BinaryTree# whose nodes have fields for storing
   pre-order, post-order, and in-order numbers.  Write recursive methods
-  #preOrderNumber()#, #inOrderNumber()#, and #postOrderNumbers()# that
+  #preOrderNumber()#, #inOrderNumber()#, and #postOrderNumber()# that
   assign these numbers correctly. These methods should each run in
   $O(#n#)$ time.
 \end{exc}
