@@ -49,7 +49,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 これらの背景知識があってもなくても、いったん気軽に飛ばし必要に応じて戻り読みしてもよい。
 
 \section{インターフェース}
-\seclabel{インターフェース}
+\seclabel{interface}
 データ構造について議論するときは、データ構造のインターフェースと実装の違いを理解することが重要だ。インターフェースはデータ構造が何をするかを、実装はデータ構造がどうやるかを示す。
 
 \emph{インターフェース}\index{interface}\index{abstract data type|see{interface}}（\emph{抽象データ型}と呼ばれることもある）は、データ構造がサポートする操作一式とその意味を定義する。インターフェースを見ても操作がどう実装されているかはわからない。サポートする操作の一覧とその引数、返り値の特徴だけを教えてくれる。 % types of arguments -> 型だけでなく色々な特徴がある
@@ -71,7 +71,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/queue}}
-  \caption[FIFOキュー]{FIFO #Queue#.}
+  \caption{FIFOキュー}
   \figlabel{queue}
 \end{figure}
 
@@ -83,7 +83,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/prioqueue}}
-  \caption[優先度付きキュー]{A priority #Queue#.}
+  \caption{優先度付きキュー}
   \figlabel{prioqueue}
 \end{figure}
 
@@ -96,7 +96,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/stack}}
-  \caption[スタック]{スタック}
+  \caption{スタック}
   \figlabel{stack}
 \end{figure}
 
@@ -128,7 +128,7 @@ Google\index{Google|}を考えてみよう。Googleでは85億ものWebページ
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/list}}
-  \caption[A List]{#List#は$0,1,2,\ldots,#n#-1$で添え字づけられた列を表現する。この#List#で#get(2)#を実行すると値$c$が返ってくる。}
+  \caption{#List#は$0,1,2,\ldots,#n#-1$で添え字づけられた列を表現する。この#List#で#get(2)#を実行すると値$c$が返ってくる。}
   \figlabel{list}
 \end{figure}
 
@@ -149,7 +149,7 @@ $#x# = #y#$を満たす集合の要素#y#を探し、集合から取り除く。
 $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素が見つかれば#y#を、見つからなければ#null#を返す。
 \end{enumerate}
 
-今述べた定義で、探したい#x#と、見つかるかもしれない集合の要素#y#の区別を小難しく感じるかもしれない。これを区別する理由は、#x#と#y#は実は異なるオブジェクトだが等しいと判定されるかもしれないためだ。異なるオブジェクトを等しいと判定するインターフェースは、キーを値に対応づける\emph{辞書}(\emph{マップ})を作るのに便利なのだ。 % TODO: YJ need better translation
+今述べた定義で、探したい#x#と、見つかるかもしれない集合の要素#y#の区別を小難しく感じるかもしれない。これを区別する理由は、#x#と#y#は実は異なるオブジェクトだが等しいと判定されるかもしれないためだ。\javaonly{\footnote{Javaでは、クラスの#equals(y)#・#hashCode()#メソッドをオーバーライドするとこれを行える。}}異なるオブジェクトを等しいと判定するインターフェースは、キーを値に対応づける\emph{辞書}(\emph{マップ})を作るのに便利なのだ。 % TODO: YJ need better translation
 \index{dictionary}%
 \index{map}%
 
@@ -171,7 +171,7 @@ $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素
 \]
 \index{compare@#compare(x,y)#}%
 
-#SSET#は#USet#と全く同じセマンティクスを持つ操作#size()#、#add(x)#、#remove(x)#をサポートする。#USet#と#SSet#の違いは#find(x)#にある。 % セマンティクス vs. 意味
+#SSet#は#USet#と全く同じセマンティクスを持つ操作#size()#、#add(x)#、#remove(x)#をサポートする。#USet#と#SSet#の違いは#find(x)#にある。 % セマンティクス vs. 意味
 
 \begin{enumerate}
 \setcounter{enumi}{3}
@@ -194,7 +194,7 @@ $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素
 $b^x$と書いて$b$の$x$乗を表す。$x$が正の整数なら、$b$にそれ自身を$x-1$回掛けた値になる。
 
 \[
-    b^x = \underbrace{b\times b\times \cdots \times b}_{x} \enspace .
+    b^x = \underbrace{b\times b\times \cdots \times b}_{x}
 \]
 
 $ x $が負の整数なら、$b^x=1/b^{-x}$である。$x=0$なら、$b^x=1$である。
@@ -204,7 +204,7 @@ $b$が整数でないときも、やはり（後述する）指数関数$e^x$の
 この本では$\log_b k$と書いて\emph{$b$を底とする対数}を表す。これは次の式を満たす$x$として一意に決まる、
 
 \[
-    b^{x} = k  \enspace .
+    b^{x} = k
 \]
 
 この本に出てくる対数の底はほとんどの場合2である。底が2の対数を\emph{二進対数}という。そのため、底になにも書かない$\log k$は$\log_2 k$の省略記法とする。
@@ -220,12 +220,12 @@ $b$が整数でないときも、やはり（後述する）指数関数$e^x$の
 \index{e@$e$ (Euler's constant)}%
 \[
    e = \lim_{n\rightarrow\infty} \left(1+\frac{1}{n}\right)^n
-   \approx  2.71828 \enspace .
+   \approx  2.71828
 \]
 
 自然対数は頻繁に現れる。これは$e$がよく見かける次のような積分値であるためだ。
 \[
-    \int_{1}^{k} 1/x\,\mathrm{d}x  = \ln k \enspace .
+    \int_{1}^{k} 1/x\,\mathrm{d}x  = \ln k
 \]
 
 よく使う対数の操作は2つある。ひとつは指数部からの取り出し操作だ。
@@ -235,13 +235,13 @@ $b$が整数でないときも、やはり（後述する）指数関数$e^x$の
 
 もう一つは対数の底を取り替え操作だ。
 \[
-    \log_b k = \frac{\log_a k}{\log_a b} \enspace .
+    \log_b k = \frac{\log_a k}{\log_a b}
 \]
 
 これら2つの操作を使えば、例えば自然対数と二進対数を比較できる。
 \[
    \ln k = \frac{\log k}{\log e} = \frac{\log k}{(\ln e)/(\ln 2)} =
-    (\ln 2)(\log k) \approx 0.693147\log k \enspace .
+    (\ln 2)(\log k) \approx 0.693147\log k
 \]
 
 \subsection{階乗}
@@ -250,7 +250,7 @@ $b$が整数でないときも、やはり（後述する）指数関数$e^x$の
 \index{factorials}
 この本で\emph{階乗関数}を使う箇所がいくつかある。$n$が非負整数のとき、$n!$（ 「$n$の階乗」と読む）は次のように定義される。
 \[
-   n! = 1\cdot2\cdot3\cdot\cdots\cdot n \enspace .
+   n! = 1\cdot2\cdot3\cdot\cdots\cdot n
 \]
 
 $n!$は$n$要素の相異なる順列\index{permutation}の個数である。つまり$n$個の相異なる要素の並べ方の数として階乗は現れる。なお、$n=0$のときについて、$0!$は1と定義される。
@@ -259,11 +259,11 @@ $n!$は$n$要素の相異なる順列\index{permutation}の個数である。つ
 $n!$の大きさは、\emph{スターリングの近似}によって近似的に求められる。
 \[
 	n!
-   = \sqrt{2\pi n}\left(\frac{n}{e}\right)^{n}e^{\alpha(n)} \enspace ,
+   = \sqrt{2\pi n}\left(\frac{n}{e}\right)^{n}e^{\alpha(n)}
 \]
 ここで$\alpha(n)$は次の条件を満たす。
 \[
-   \frac{1}{12n+1} <  \alpha(n) < \frac{1}{12n}  \enspace .
+   \frac{1}{12n+1} <  \alpha(n) < \frac{1}{12n}
 \]
 
 スターリングの近似を使って$\ln(n!)$の近似値も計算できる。
@@ -277,7 +277,7 @@ $n!$の大きさは、\emph{スターリングの近似}によって近似的に
 \emph{二項係数}は階乗関数とつながりがある。$n$を非負整数、$k$を$\{0,\ldots,n\}$の要素とするとき、$\binom{n}{k}$は次のように定義される。
 
 \[
-   \binom{n}{k} = \frac{n!}{k!(n-k)!} \enspace .
+   \binom{n}{k} = \frac{n!}{k!(n-k)!}
 \]
 二項係数$\binom{n}{k}$は、大きさ$n$の集合における大きさ$k$の部分集合の個数である。すなわち、集合$\{1,\ldots,n\}$から相異なる$k$個の整数を取り出すときの場合の数である。 % TODO: YJ 元の文でもi.e.とあるが、これは定義ではなく一つの例なのでは？すなわち、と言ってしまってよいのだろうか。「例えば」の方が正確では。
 
@@ -288,45 +288,45 @@ $n!$の大きさは、\emph{スターリングの近似}によって近似的に
 \[
    O(f(n)) = \left\{
      \begin{array}{l}
-       g(n):\mbox{there exists $c>0$, and $n_0$ such that} \\
-             \quad\mbox{$g(n) \le c\cdot f(n)$ for all $n\ge n_0$}
-     \end{array} \right\} \enspace .
+       g(n):\mbox{ある$c>0$と$n_0$が存在し、} \\
+             \quad\mbox{任意の$n\ge n_0$について$g(n) \le c\cdot f(n)$を満たす}
+     \end{array} \right\}
 \]
 グラフ上で考えると、$n$が十分に大きくなると$c\cdot f(n)$が$g(n)$よりも大きくなるか同じになる関数$g(n)$を集めたものがこの集合だ。 % 「上から抑えられる」は既に知識がある人には伝わるが、初学者には伝われないのでは。 % TODO: YJ need revision
 
 漸近表記を使えば関数を単純化できる。たとえば、$5n\log n + 8n - 200$の代わりに$O(n \log n)$と書ける。これは次のように証明できる。
-\begin{align*} 
+\begin{align*}
        5n\log n + 8n - 200
         & \le 5n\log n + 8n \\
-        & \le 5n\log n + 8n\log n & \mbox{ for $n\ge 2$ (so that $\log n \ge 1$)}
+        & \le 5n\log n + 8n\log n & \mbox{ $n\ge 2$のとき（このとき$\log n \ge 1$）}
             \\
-        & \le 13n\log n  \enspace .
+        & \le 13n\log n
 \end{align*}
 $ c = 13 $および$ n_0 = 2 $とすれば、関数$ f(n)= 5n \log n + 8n-200 $が集合$ O(n \log n)$に含まれることがわかる。
 
 漸近表記の便利な性質をいくつか挙げる。
 
 まずは、任意の定数$c_1 < c_2$について以下が成り立つ。
-\[ O(n^{c_1}) \subset O(n^{c_2}) \enspace\]
+\[ O(n^{c_1}) \subset O(n^{c_2}) \]
 
 つづいて、任意の定数$ a, b, c> 0 $について以下が成り立つ。
-\[ O(a) \subset O(\log n) \subset O(n^{b}) \subset O({c}^n) \enspace\]
+\[ O(a) \subset O(\log n) \subset O(n^{b}) \subset O({c}^n) \]
 
 これらの包含関係はそれぞれに正の値を掛けても保たれる。
 たとえば$n$を掛けると次のようになります。
 
-\[ O(n) \subset O(n\log n) \subset O(n^{1+b}) \subset O(n{c}^n) \enspace \]
+\[ O(n) \subset O(n\log n) \subset O(n^{1+b}) \subset O(n{c}^n) \]
 
 これは有名な記号の濫用なのだが、$f_1(n) = O(f(n))$ と書いて$f_1(n) \in O(f(n))$であることを表す。また、「この操作の実行時間は$O(f(n))$に\emph{含まれる}」ことを単に「この操作の実行時間は$O(f(n))$だ」と言う。これらの短い言い方は語感を整え、漸近記法を連続する等式の中で使いやすくするのに役立つ。
 
 この書き方の、奇妙な例を挙げる。
 \[
-  T(n) = 2\log n + O(1)  \enspace
+  T(n) = 2\log n + O(1)
 \]
 
 これは正確に書くとこうなる。
 \[
-  T(n) \le 2\log n + [\mbox{some member of $O(1)$]}  \enspace
+  T(n) \le 2\log n + [\mbox{$O(1)$のある要素]}
 \]
 
 $O(1)$には別の問題もある。この記法には変数が入ってないので、どの変数が大きくなるのかわからないのだ。文脈から読み取る必要がある。上の例では、方程式の中に変数は$n$しかないので、$T(n)= 2 \log n + O(f(n))$の$f(n) = 1$であるものと読み取ることになる。
@@ -348,12 +348,12 @@ $O(1)$には別の問題もある。この記法には変数が入ってない�
 
 よって実行時間は以下のようになる。
 \[
-    T(#n#)=a + b(#n#+1) + c#n# + d#n# + e#n# \enspace
+    T(#n#)=a + b(#n#+1) + c#n# + d#n# + e#n#
 \]
 
 $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存する定数で、それぞれ代入、比較、インクリメント、配列のオフセット計算、間接代入の実行時間を表す。しかしたった2行のコードの実行時間を表す式がこうだと、より複雑なコードやアルゴリズムをこのやり方では扱えないだろう。ビッグオー記法を使うと、実行時間は次のようにより単純になる。
 \[
-    T(#n#)= O(#n#) \enspace .
+    T(#n#)= O(#n#)
 \]
 
 この書き方はよりコンパクトながらさっきの式と同じくらいのことを教えてくれる。実行時間は定数$a$、$b$、$c$、$d$、$e$に依存している。これらの値がわからないと、実行時間はわからず比較できないのだ。これらの定数を明らかにするため努力しても（例えば実際に時間を測ってみる）、得られる結論はそのマシンにおいてのみ有効なだけだ。
@@ -378,10 +378,10 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
 \[
    O(f(n_1,\ldots,n_k)) =
    \left\{\begin{array}{@{}l@{}}
-             g(n_1,\ldots,n_k):\mbox{there exists $c>0$, and $z$ such that} \\
-             \quad \mbox{$g(n_1,\ldots,n_k) \le c\cdot f(n_1,\ldots,n_k)$} \\
-             \qquad \mbox{for all $n_1,\ldots,n_k$ such that $g(n_1,\ldots,n_k)\ge z$}
-   \end{array}\right\} \enspace .
+             g(n_1,\ldots,n_k):\mbox{ある$c>0$と$z$が存在し、} \\
+             \qquad \mbox{$g(n_1,\ldots,n_k)\ge z$を満たす任意の$n_1,\ldots,n_k$について、}
+             \quad \mbox{$g(n_1,\ldots,n_k) \le c\cdot f(n_1,\ldots,n_k)$が成り立つ。} \\
+   \end{array}\right\}
 \]
 
 この定義を使えば我々が考えたいことを表現することが出来る。引数$n_1,\ldots,n_k$が$g$を大きくするときのことだ。この定義は$f(n)$が$n$の増加関数なら一変数の場合の$O(f(n))$の定義と同じだ。我々の目的のためにはこの定義でよいのだが、多変数の場合の漸近記法を異なる定義を与えている教科書もあることには注意が必要だ。
@@ -400,7 +400,7 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
 形式的には、ランダム性を利用するデータ構造における操作の実行時間は確率変数である。そしてその\emph{期待値}を知りたい。全事象$U$の値をとる離散確率変数を$X$とするとき、$X$の期待値$E[X]$は以下のように定義される。
 \index{expected value}%
 \[
-    \E[X] = \sum_{x\in U} x\cdot\Pr\{X=x\} \enspace
+    \E[X] = \sum_{x\in U} x\cdot\Pr\{X=x\}
 \]
 
 ここで、$\Pr\{\mathcal{E}\}$は事象$\mathcal{E}$の発生確率とする。この本の例では、データ構造の内部で発生するランダム性のみを考慮して確率を定める。データ構造に入ってくるデータや実行される操作列がランダムだという仮定は置かないことに注意する。
@@ -409,12 +409,12 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
 \index{linearity of expectation}%
 任意のふたつの確率変数$X$と$Y$について以下の関係が成り立つ。
 \[
-   \E[X+Y] = \E[X] + \E[Y] \enspace
+   \E[X+Y] = \E[X] + \E[Y]
 \]
 
 より一般的には、任意の確率変数$ X_1,\ldots,X_k $について以下の関係が成り立つ。
 \[
-   \E\left[\sum_{i=1}^k X_i\right] = \sum_{i=1}^k \E[X_i] \enspace
+   \E\left[\sum_{i=1}^k X_i\right] = \sum_{i=1}^k \E[X_i]
 \]
 
 期待値の線形性によって、（上の式の左辺のように）複雑な確率変数を(右辺のような)より単純な確率変数の和に分解できる。
@@ -427,7 +427,7 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
    \E[X] & = \sum_{i=0}^k i\cdot\Pr\{X=i\} \\
          & = \sum_{i=0}^k i\cdot\binom{k}{i}/2^k \\
          & = k\cdot \sum_{i=0}^{k-1}\binom{k-1}{i}/2^k \\
-         & = k/2 \enspace .
+         & = k/2
 \end{align*}
 
 この計算は$\Pr\{X=i\} = \binom{k}{i}/2^k$および2項係数の性質$i\binom{k}{i}=k\binom{k-1}{i}$や$\sum_{i=0}^{k} \binom{k}{i} = 2^{k}$を知っていないとできない。
@@ -441,13 +441,13 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
           \end{cases}
 \]
 そして、以下の計算を行う。
-\[ \E[I_i] = (1/2)1 + (1/2)0 = 1/2 \enspace \]
+\[ \E[I_i] = (1/2)1 + (1/2)0 = 1/2 \]
 ここで、$X=\sum_{i=1}^k I_i$なので以下のように所望の値を得られる。
 \begin{align*}
    \E[X] & = \E\left[\sum_{i=1}^k I_i\right] \\
          & = \sum_{i=1}^k \E[I_i] \\
          & = \sum_{i=1}^k 1/2 \\
-         & = k/2 \enspace .
+         & = k/2
 \end{align*}
 
 この計算は少し長いものの、不思議な等式や非自明な確率計算は必要ない。各コイントスは$1/2$の確率で表が出るので結果はたぶんコイン数の半分だ、という直感の説明でもある。
@@ -472,7 +472,10 @@ RAMはランダムアクセスマシン(Random Access Machine)の頭字語であ
 この本で#w#に置く仮定は、#n#をデータ構造に格納されうる要素数とするとき、$#w# \ge \log #n#$であるということだけだ。これは控えめな仮定である。なぜならこれが成り立たないとひとつのワードではデータ構造の要素数を数えることすらできないためである。
 
 領域はワード単位で測るので、データ構造で使う領域の広さとはメモリの使用するワード数のことである。我々のデータ構造はみなジェネリック型#T#の値を格納し、#T#型の要素は1ワードのメモリで表現できると仮定する。
+\javaonly{（実際に、Javaでは#T#型のオブジェクトの参照を格納しており、この参照は1ワードのメモリを占める。）}
 
+\javaonly{#w#ビットのワードRAMモデルは、$#w#=32$とすると、（32ビット）Java仮想マシン（JVM）と非常に近い。}
+\cpponly{#w#ビットのワードRAMモデルは、$#w#=32$または$#w#=64$とすると、現代のデスクトップコンピュータ環境と非常に近い。}
 この本に載っているデータ構造は、実装できないような特殊なトリックを使ってはいない。
 
 \section{正しさ、時間複雑性、空間複雑性}
@@ -518,7 +521,7 @@ RAMはランダムアクセスマシン(Random Access Machine)の頭字語であ
 
 十分な現金を持っていれば120000ドルの一括払いで家を買うこともできる。こうするとこの家を購入代金を10年で償却した月額費用は以下のようになる。
 \[
-   \$120\,000 / 120\text{ months} = \$1\,000\text{ per month} \enspace .
+   \$120\,000 / 120\text{ヶ月} = \$1\,000\text{月あたり}
 \]
 
 これはローンの場合に支払う月額1200ドルよりだいぶ少ない。
@@ -531,20 +534,66 @@ RAMはランダムアクセスマシン(Random Access Machine)の頭字語であ
 この例から、最悪でなく償却あるいは期待実行時間を選ぶことがある理由もわかるだろう。償却・期待実行時間は最悪実行時間よりも小さいことが多い。償却・期待実行時間を使うことにすれば、はるかに単純なデータ構造採用できる場合がよくあるのだ。
 
 \section{コードサンプル}
-% YJはRubyは分からない
-XXX: Rubyの話を書くことになると思うので、見直す必要があるように思う。
+\pcodeonly{
+この本のコードサンプルは擬似コードで書いた。
+\index{pseudocode}%
+ここ40年のどの一般的なプログラミング言語の経験を持つ人も理解しやすいコードを書いたつもりである。
+この本におけるコードがどんなものかは、配列#a#の平均値を計算する次の擬似コードを見てみるとわかるだろう。
+\pcodeimport{ods/Algorithms.average(a)}
+このコードでは、変数への代入を表す記法は$\gets$である。
+% WARNING: graphic typesetting of assignment operator
+配列#a#の大きさを#len(a)#と書き、配列の添え字は0からはじまることにする。
+このとき、#range(len(a))#は#a#の正しい添え字の集まりである。
+コードを短くし、また読みやすくするために、部分配列代入を使うことがある。
+次のふたつの関数は同じことをしている。
+\pcodeimport{ods/Algorithms.left_shift_a(a).left_shift_b(a)}
+続くコードは配列のすべての要素を0にするものである。
+\pcodeimport{ods/Algorithms.zero(a)}
+このようなコードの実行時間を解析するときは#a[0:len(a)] = 1#や、#a[1:len(a)] = a[0:len(a)-1]#のような文は、定数時間では実行できないことに気をつけなければならない。
+これらの実行時間は$O(#len(a)#)$である。
 
-この本のコードサンプルはRubyで書いた。
-しかし、Rubyに親しみのない人も読めるようシンプルに書いたつもりだ。
+変数の代入においても同様の簡略記法を使う
+#x,y=0,1#は、#x#を0に#y#を1にする。
+また#x,y = y,x#は変数#x#と#y#の値を入れ替える。
+\index{swap}
+
+この本の擬似コードには、親しみがないかもしれない記法も小数だが使われている。
+数学における（ふつうの）割り算の演算子を$/$と書く。
+整数の除算を使う必要のある場面も多く、これを$#//#$演算子で表す。
+$#a//b# = \lfloor a/b\rfloor$は、$a/b$の整数部分である。
+そのため例えば、$3/2=1.5$だが、$#3//2# = 1$である。
+\index{integer division}%
+\index{div operator}%
+整数除算における余りを計算する$\bmod$演算子を使うこともあるが、これはその際になってから定義することにする。
+\index{mod operator}%
+\index{div operator}%
+ビット単位の演算子を使うこともある。
+具体的には、左シフト（#<<#）、右シフト（#>>#）、ビット単位の論理積（#&#）、そしてビット単位の排他的論理和（#^#）である。
+\index{left shift}%
+\index{#<<#|see {left shift}}%
+\index{right shift}%
+\index{#>>#|see {right shift}}%
+\index{bitwise and}%
+\index{#&#|see {bitwise and}}%
+\index{#^#|see {bitwise exclusive-or}}%
+
+この本の擬似コードはPythonのコードから機械的に翻訳したものである。
+元となったコードは本のウェブサイトからダウンロードできる。
+\footnote{ \url{http://opendatastructures.org}}である。もし擬似コードにおいて曖昧な点があれば、対応するPythonのコードを参照することができる。もしPythonが読めなければ、JavaとC++で書かれたコードもある。擬似コードの意味がわからず、PythonもC++もJavaも読めないなら、まだこの本を読むのは早いかもしれない。}
+
+\notpcode{
+この本のコードサンプルは\langで書いた。
+しかし、\langに親しみのない人も読めるようシンプルに書いたつもりだ。
 例えば#public#や#private#は出てこない。オブジェクト指向を前面に押し出すこともない。
 
 B、C、C++、C\#、Objective-C、D、Java、JavaScriptなどをALGOL系の言語書いたことのある人は本書のコードを見て意味がわかるだろう。
-完全な実装に興味のある読者はこの本に付属のRubyソースコードを見てほしい。
+完全な実装に興味のある読者はこの本に付属の\langソースコードを見てほしい。
 
-この本は数学的な実行時間の解析と、対象のアルゴリズムを実装したRubyのコードとを共に含む。そのためソースコードと数式で同じ変数が出てくる。
+この本は数学的な実行時間の解析と、対象のアルゴリズムを実装した\langのコードとを共に含む。そのためソースコードと数式で同じ変数が出てくる。
 このような変数は同じ書式で書く。
 一番よく出てくるのは変数#n#\index{n@#n#}である。
 #n#は常にデータ構造に格納されている要素の個数を表すものとする。
+}
 
 \section{データ構造の一覧}
 
@@ -553,14 +602,13 @@ B、C、C++、C\#、Objective-C、D、Java、JavaScriptなどをALGOL系の言�
 \index{dependencies}%
 破線の矢印は弱い依存関係を示している。これは章のごく小さいが依存や、一部の結果のみに依存することを示す。
 
-TODO: 表の翻訳
 \begin{table}
 \vspace{56pt}
 \begin{center}
 \resizebox{.98\textwidth}{!}{
 \begin{threeparttable}
 \begin{tabular}{|l|l|l|l|} \hline
-\multicolumn{4}{|c|}{#List# implementations} \\ \hline
+\multicolumn{4}{|c|}{#List#の実装} \\ \hline
  & #get(i)#/#set(i,x)# & #add(i,x)#/#remove(i)# & \\ \hline
 #ArrayStack# & $O(1)$ & $O(1+#n#-#i#)$\tnote{A} & \sref{arraystack} \\
 #ArrayDeque# & $O(1)$ & $O(1+\min\{#i#,#n#-#i#\})$\tnote{A} & \sref{arraydeque} \\
@@ -570,18 +618,18 @@ TODO: 表の翻訳
 #SEList# & $O(1+\min\{#i#,#n#-#i#\}/#b#)$ & $O(#b#+\min\{#i#,#n#-#i#\}/#b#)$\tnote{A}  & \sref{selist} \\
 #SkiplistList# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E}  & \sref{skiplistlist} \\ \hline
 \multicolumn{4}{c}{} \\[2ex] \hline
-\multicolumn{4}{|c|}{#USet# implementations} \\ \hline
+\multicolumn{4}{|c|}{#USet#の実装} \\ \hline
  & #find(x)# & #add(x)#/#remove(x)# & \\ \hline
 #ChainedHashTable# & $O(1)$\tnote{E} & $O(1)$\tnote{A,E} & \sref{hashtable} \\ 
 #LinearHashTable# & $O(1)$\tnote{E} & $O(1)$\tnote{A,E} & \sref{linearhashtable} \\ \hline
 \end{tabular}
 \begin{tablenotes}
-\item[A]{Denotes an \emph{amortized} running time.}
-\item[E]{Denotes an \emph{expected} running time.}
+\item[A]{\emph{償却}実行時間を表す。}
+\item[E]{\emph{期待}実行時間を表す。}
 \end{tablenotes}
 \end{threeparttable}}
 \end{center}
-\caption[Summary of List and USet implementations.]{Summary of #List# and #USet# implementations.}
+\caption{#List#・#USet#の実装の要約}
 \tablabel{summary-i}
 \end{table}
 
@@ -589,7 +637,7 @@ TODO: 表の翻訳
 \begin{center}
 \begin{threeparttable}
 \begin{tabular}{|l|l|l|l|} \hline
-\multicolumn{4}{|c|}{#SSet# implementations} \\ \hline
+\multicolumn{4}{|c|}{#SSet#の実装} \\ \hline
  & #find(x)# & #add(x)#/#remove(x)# & \\ \hline
 #SkiplistSSet# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E} & \sref{skiplistset} \\ 
 #Treap# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E} & \sref{treap} \\ 
@@ -607,13 +655,13 @@ TODO: 表の翻訳
 #MeldableHeap# & $O(1)$ & $O(\log #n#)$\tnote{E} & \sref{meldableheap} \\ \hline
 \end{tabular}
 \begin{tablenotes}
-\item[I]{This structure can only store #w#-bit integer data.}
-\javaonly{\item[X]{This denotes the running time in the external-memory model; see \chapref{btree}.}}
+\item[I]{このデータ構造は#w#ビット整数のみを格納できる}
+\javaonly{\item[X]{これは外部メモリモデルでの実行時間である。\chapref{btree}を参照せよ。}}
 \end{tablenotes}
 %\renewcommand{\thefootnote}{\arabic{footnote}}
 \end{threeparttable}
 \end{center}
-\caption[Summary of SSet and priority Queue implementations.]{Summary of #SSet# and priority #Queue# implementations.}
+\caption{#SSet#・優先度付き#Queue#の実装の要約}
 \tablabel{summary-ii}
 \end{table}
 
@@ -621,7 +669,7 @@ TODO: 表の翻訳
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/dependencies}
   \end{center}
-  \caption{The dependencies between chapters in this book.}
+  \caption{この本の内容の依存関係}
   \figlabel{dependencies}
 \end{figure}
 
@@ -629,7 +677,8 @@ TODO: 表の翻訳
 
 \secref{interface}で説明した#List#・#USet#・#SSet#インターフェースは、 Java Collections Framework\cite{oracle_collections}の影響を受けている。
 \index{Java Collections Framework}%
-これらはJava Collections Frameworkの#List#・#Set#・#Map#・#SortedSet#・#SortedMap#をシンプルにしたのである。
+これらはJava Collections Frameworkの#List#・#Set#・#Map#・#SortedSet#・#SortedMap#をシンプルにしたものである。
+\javaonly{付属のソースコードは#USet#・#SSet#の実装を#Set#・#Map#・#SortedSet#・#SortedMap#の実装にするためのラッパークラスを含んでいる。}
 
 この章で扱った漸近記法・対数・階乗・スターリングの近似・確率論の基礎などは、Leyman, Leighton, and Meyer\cite{llm11}の素晴らしい（そしてフリーの）本が扱っている。
 分かりやすい微積分の教科書としては、無料で手に入るThompson\cite{t14}の古典的な教科書がある。この本では指数や対数の形式的な定義が書かれている。
@@ -637,11 +686,12 @@ TODO: 表の翻訳
 基礎的な確率論については、特にコンピュータ・サイエンスに関連するものとしてRoss\cite{r01}の教科書がおすすめである。
 漸近記法や確率論などを含むGraham, Knuth, and Patashnik\cite{gkp94}の教科書も参考になるだろう。
 
+\javaonly{Javaプログラミング力を磨きたい読者のためには、オンラインのJavaのチュートリアル~\cite{oracle_tutorials}がある。}
+
 \begin{exc}
 練習問題は読者が問題に対する正しいデータ構造を選ぶ練習をするためのものだ。
 利用可能な実装やインターフェースがあれば、それを使って解いてみてほしい。
-
-XXX: Rubyの場合の話を書く
+（JavaならばJava Collections Frameworkが、C++ならばStandard Template Libraryがある。）
 
 以下の問題はテキストの入力を一行ずつ読み、各行で適切なデータ構造の操作を実行することで解いてほしい。ただしファイルが百万行であっても数秒以内に処理できる程度に効率的な実装でなければならないものとする。
 
@@ -680,7 +730,7 @@ XXX: Rubyの場合の話を書く
 
 \begin{exc}
   \index{Dyck word}%
-  \emph{Dyck word}とは+1, -1からなる列で、先頭から任意の#k#番目の値までの部分列（プレフィックス）の和がいずれも非負であるものである。% XXX: 曖昧でなく書けるか? % 明示的に書いてみた。例もあるので分かると思う。
+  \emph{Dyck word}とは+1, -1からなる列で、先頭から任意の#k#番目の値までの部分列（プレフィックス）の和がいずれも非負であるものである。
   例えば、$+1,-1,+1,-1$はDyck wordだが、$+1,-1,-1,+1$は$+1-1-1<0$なのでDyck wordではない。
   Dyck wordと#Stack#の#push(x)#・#pop()#操作の関係を説明せよ。
 \end{exc}
