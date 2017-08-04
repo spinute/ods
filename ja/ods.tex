@@ -77,6 +77,12 @@
 }
 
 \usepackage[sf,small,raggedright]{titlesec} % formatting titles
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+\makeatother
+
 \titlespacing*{\section}{0pt}{24pt}{14pt}
 \titlespacing*{\subsection}{0pt}{14pt}{14pt}
 \usepackage{relsize,fancyvrb}  % formatting pseudocode
