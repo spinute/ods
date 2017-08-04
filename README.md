@@ -1,8 +1,10 @@
 ## Open Data Structures 日本語訳プロジェクト
 
-[Open Data Structures](<http://opendatastructures.org/>)というプロジェクトをご存知だろうか。
+[Open Data Structures](http://opendatastructures.org/)というプロジェクトをご存知だろうか。
 これは[Pat Morin](http://cglab.ca/~morin/)氏が立ち上げたプロジェクトで、
 大学のコンピュータサイエンス系の学部ならほぼ皆が最初に学ぶデータ構造に関する教科書をフリーで公開するものである。
+
+PDFファイルはプロジェクトのウェブサイト<https://sites.google.com/view/open-data-structures-ja/home>にて随時更新しながら配布している。（なお、現在翻訳は一通り終わっているものの、査読・校正・校閲の途中である。）
 
 ### なぜ翻訳をするのか
 まず、本を英語から日本語に翻訳する意味はあるのだろうか？
