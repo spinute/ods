@@ -420,21 +420,19 @@ $r!$を$(r/e)^r$に置き換える部分である。
 \index{tabulation hashing}%
 #LinearHashTable#の解析では強い仮定を置いていた。
 すなわち、任意の相異なる要素$\{#x#_1,\ldots,#x#_#n#\}$についてそのハッシュ値$#hash#($x$_1),\ldots,#hash#(#x#_#n#)$が独立に一様な確率で$\{0,\ldots,#t.length#-1\}$内を分布するという仮定である。
-これを実現するひとつのやり方は大きさ$2^{#w#}$の巨大な配列#tab#を準備し、すべてのエントリを互いに独立な#w#-bitの乱数で初期化することだ。
+これを実現するひとつのやり方は大きさ$2^{#w#}$の巨大な配列#tab#を準備し、すべてのエントリを互いに独立な#w#-bitの整数乱数で初期化することだ。
 このとき、#hash(x)#は#tab[x.hashCode()]#から#d#ビットを整数として取り出せばよい。
 \codeimport{ods/LinearHashTable.idealHash(x)}
 あいにく大きさ$2^{#w#}$の配列はメモリ使用量の観点から現実的でない。
 \emph{Tabulation Hashing}では#w#ビットの整数の代わりに$#w#/#r#$個の$#r#$ビット整数で妥協する。
 こうすれば大きさ$2^{#r#}$の配列$#w#/#r#$個で済むのである。
 これらの配列に入っている整数はいずれも互いに独立な#w#ビットの乱数である。
--bit integers.  To obtain the value
-of 
 #hash(x)#を計算するために、#x.hashCode()#を$#w#/#r#$個の#r#ビット整数に分け、それぞれを配列の添え字として使う。
 その後各配列の値をビット単位の排他的論理和を計算し、この結果を#hash(x)#とする。
 次のコードは$#w#=32, #r#=4$の場合のものである。
 \codeimport{ods/LinearHashTable.hash(x)}
 この場合、#tab#は4つの列と$2^{32/4}=256$の行からなる二次元配列である。
-XXX: これ必要?
+XXX: これ必要? % 「これ」とはhexadecimal numberのこと？python版だと特に説明なく0x表示になるようなので必要かと
 \pcodeonly{
 Quantities like #0xff#, used above, are \emph{hexadecimal numbers}
 \index{hexadecimal numbers}%
@@ -455,8 +453,8 @@ code like #h >> 8 & 0xff# extracts bits with index 8 through 15 of #h#.}
 XXX: ハッシュ値とHash Codeは区別したほうがよいか?
 
 \index{hash code}%
-前節のハッシュテーブルではデータに対応する#w#ビットの整数を使っていた。
-しかしキーが整数ないことはよくある。
+前節のハッシュテーブルではデータに対して#w#ビットの整数を対応させていた。
+しかしキーが整数でないことはよくある。
 例えば文字列・オブジェクト・配列や他の複合データ型である。
 こういうデータにもハッシュテーブルを使うにはこれらの型から#w#ビットのハッシュ値を計算すればよい。
 このハッシュ値が満たすべき性質は次のものだ。
@@ -476,8 +474,8 @@ XXX: ハッシュ値とHash Codeは区別したほうがよいか?
 \index{hash code!for primitive data}%
 #char#・#byte#・#int#・#float#などの小さいプリミティブな型のハッシュ値は簡単に計算できる。
 これらの方はバイナリ表現があり、これは#w#ビット以下である。
-XXX: Rubyの整数の話をするか?
-or fewer bits. \javaonly{(For example, in Java, #byte# is an 8-bit
+XXX: Rubyの整数の話をするか?　% YJ: Ruby独自の話はガンガンしていったほうが面白い本になるかと思います。輸出もしたいならなおさら。
+\javaonly{(For example, in Java, #byte# is an 8-bit
 type and #float# is a 32-bit type.)}\cpponly{(For example, in C++ #char#
 is typically an 8-bit type and #float# is a 32-bit type.)}
 このビット列を$\{0,\ldots,2^#w#-1\}$の範囲の整数であると解釈すればよい。
@@ -499,7 +497,6 @@ is typically an 8-bit type and #float# is a 32-bit type.)}
 これは思うほど簡単でない。
 いい感じのやり方はたくさん思いつく（例えばビット単位の排他的論理和を計算する）が、そのうちの多くはうまくいかない。
 （\ref{exc:hash-hack-first}から\ref{exc:hash-hack-last}を参照せよ。）
-
 しかし$2#w#$ビットの算術精度があれば単純でロバストな方法がある。
 $P_0,\ldots,P_{r-1}$からなる複合オブジェクトがあり、それぞれのハッシュ値は$#x#_0,\ldots,#x#_{r-1}$であるとする。
 このとき互いに独立な#w#ビットの乱数$#z#_0,\ldots,#z#_{r-1}$と、$2#w#$ビットのランダムな奇数#z#から、複合オブジェクトのハッシュ値を計算できる。
@@ -510,14 +507,13 @@ $P_0,\ldots,P_{r-1}$からなる複合オブジェクトがあり、それぞれ
 \]
 このハッシュ値の計算過程は最後に#z#をかけ、$2^{#w#}$で割っていることに注目してほしい。
 これは$2#w#$ビットの中間結果に\secref{multihash}で紹介した乗算ハッシュ法を使って#w#ビットの最終結果を得ている。
-#x0#・#x1#・#x2#の3つの要素からなる複合オブジェクトの場合の例を示す。
+#x0#・#x1#・#x2#の3つの構成要素からなる複合オブジェクトの場合の例を示す。 %  YJ 複合オブジェクトの各fieldを構成要素と訳した
 \javaimport{junk/Point3D.x0.hashCode()}
 \cppimport{ods/Point3D.hashCode()}
 \pcodeimport{ods/Point3d.hashCode()}
 実装が単純なだけでなく、次の定理はこの方法が良い性質を持つことを示す。
 
 \begin{thm}\thmlabel{multihash}
-Let 
 $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots,2^{#w#}-1\}$の要素である#w#ビットの整数からなる列とする。
 さらに、少なくとも一箇所の添え字$i\in\{0,\ldots,r-1\}$で$#x#_i \neq #y#_i$が成り立つと仮定する。
 このとき、次が成り立つ。
@@ -539,7 +535,7 @@ $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots
   \begin{equation}  \eqlabel{bighash-x}
       #z#_i(#x#_i-#y#_i) \bmod 2^{2#w#} = t
   \end{equation}
-  ここでtは次のものである。
+  ここで$t$は次のものである。
   \[
      t = \left(\sum_{j=0}^{i-1} #z#_j(#y#_j-#x#_j) + \sum_{j=i+1}^{r-1} #z#_j(#y#_j-#x#_j)\right) \bmod 2^{2#w#}
   \]
@@ -548,7 +544,7 @@ $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots
   \begin{equation}
       #z#_i(#x#_i-#y#_i) = t \eqlabel{bighash-xx} \enspace ,
   \end{equation}
-  これは$#z#_i$・$(#x#_i-#y#_i)$はいずれも$2^{#w#}-1$以下なので、これらの積は$2^{2#w#}-2^{#w#+1}+1 < 2^{2#w#}-1$以下であるためである。
+  これは$#z#_i$と$(#x#_i-#y#_i)$はいずれも$2^{#w#}-1$以下なので、これらの積は$2^{2#w#}-2^{#w#+1}+1 < 2^{2#w#}-1$以下であるためである。
   仮定より$#x#_i-#y#_i\neq 0$なので、\myeqref{bighash-xx}は$#z#_i$について高々ひとつの解を持つ。
   $#z#_i$と$t$は互いに独立（$#z#_0,\ldots,#z#_{r-1}$は互いに独立である）なので、$h'(#x#_0,\ldots,#x#_{r-1})=h'(#y#_0,\ldots,#y#_{r-1})$を満たす$#z#_i$を選ぶ確率は$1/2^{#w#}$以下である。
 
@@ -576,11 +572,11 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
 \subsection{配列と文字列のハッシュ値}
 \seclabel{polyhash}
 
-前小節の手法はオブジェクトが固定数の部分からなるときにはうまくいく。
+前小節の手法はオブジェクトが固定数の構成要素からなるときにはうまくいく。
 しかし、可変長のオブジェクトをうまく扱えない。
-なぜなら#w#ビットの乱数$#z#_i$を部分の数だけ使う必要があるためである。
+なぜなら#w#ビットの乱数$#z#_i$を構成要素の数だけ使う必要があるためである。
 
-必要なだけ$#z#_i$を生成するためには擬似乱数列を使えるが、$#z#_i$は互いに独立ではなく、擬似乱数がハッシュ関数に対して悪影響を及ぼさないことを証明するのは難しい。
+必要なだけ$#z#_i$を生成するためには擬似乱数列を使えるが、その場合$#z#_i$は互いに独立ではなく、擬似乱数がハッシュ関数に対して悪影響を及ぼさないことを証明するのは難しい。
 例えば\thmref{multihash}の証明における$t$と$#z#_i$の独立性は成り立たなくなる。
 
 \index{prime field}%
@@ -590,6 +586,7 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
 
 \begin{thm}\thmlabel{prime-polynomial}
  XXX: non-trivial polynomial の正確な定義は?
+ % TODO XXX: YJ この定理正しいか？ xi in {0,1,2,..,p-1}ではなく xi in {1,2,..,p-1}？ 非自明にすべてを吸収されている気がする。要確認
 
  $#p#$を素数、$f(#z#) = #x#_0#z#^0 + #x#_1#z#^1 + \cdots + #x#_{r-1}#z#^{r-1}$を$#x#_i\in\{0,\ldots,#p#-1\}$を係数とする非自明な多項式とする。
  このとき、等式$f(#z#)\bmod #p# = 0$は$#z#\in\{0,\ldots,p-1\}$の範囲に高々$r-1$個の解を持つ。
