@@ -585,10 +585,10 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
 次の定理は素数体上の多項式が普通の多項式と似た振る舞いをすることを主張する。
 
 \begin{thm}\thmlabel{prime-polynomial}
- XXX: non-trivial polynomial の正確な定義は?
- % TODO XXX: YJ この定理正しいか？ xi in {0,1,2,..,p-1}ではなく xi in {1,2,..,p-1}？ 非自明にすべてを吸収されている気がする。要確認
+% XXX: non-trivial polynomial の正確な定義は?
+% リンク証明によると非自明はf(x)=0でないこと。 http://eiche.theoinf.tu-ilmenau.de/fingerprint/ueber_polynome_modulo-englisch.pdf
 
- $#p#$を素数、$f(#z#) = #x#_0#z#^0 + #x#_1#z#^1 + \cdots + #x#_{r-1}#z#^{r-1}$を$#x#_i\in\{0,\ldots,#p#-1\}$を係数とする非自明な多項式とする。
+ $#p#$を素数、$f(#z#) = #x#_0#z#^0 + #x#_1#z#^1 + \cdots + #x#_{r-1}#z#^{r-1}$を$#x#_i\in\{0,\ldots,#p#-1\}$を係数とする非自明($x_0=x_1=...=x__{r-1}=0$でない)な多項式とする。
  このとき、等式$f(#z#)\bmod #p# = 0$は$#z#\in\{0,\ldots,p-1\}$の範囲に高々$r-1$個の解を持つ。
 \end{thm}
 
@@ -624,14 +624,13 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
        (#x#_0-#y#_0)#z#^0+\cdots+(#x#_{r-1}-#y#_{r-1})#z#^{r-1} 
     \right)\bmod #p# = 0.
   \end{equation}
-  Since 
   $#x#_#i#\neq #y#_#i#$なので、この多項式は非自明である。
   よって\thmref{prime-polynomial}より#z#についての解は高々$r-1$個である。
   以上より、#z#を選んでこの解のうちの一つを引く確率は$(r-1)/#p#$以下である。
 \end{proof}
 
 このハッシュ関数はふたつの入力列の長さが異なる場合にも対応できる。
-この場合、一方が他方の接頭語になっていても構わない。
+この場合、一方の入力列が他方の入力列を含んでいても構わない。
 この関数は入力が無限列であってもそのまま問題なく処理できるのだ。
 \[
   #x#_0,\ldots,#x#_{r-1}, #p#-1,0,0,\ldots \enspace .
@@ -662,7 +661,7 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 \cppimport{ods/GeomVector.hashCode()}
 \pcodeimport{ods/GeomVector.hashCode()}
 
-このコードは実装上の都合で衝突確率をやや損なっている。
+このコードは実装上の都合で衝突確率がやや大きくなっている。
 特に#x[i].hashCode()#を31ビットに縮めるために\secref{multihash}で$#d#=31$とした乗算ハッシュ法を使っている。
 これは素数$#p#=2^{32}-5$で剰余を取った足し算や掛け算を、符号なし63ビット整数で実行するためである。
 
@@ -716,14 +715,13 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 \secref{tabulation}で説明したTabulation hashingは
 CarterとWegmanの研究\cite{cw79}によるものだが、この手法を線形探索法（と他のいくつかのハッシュテーブルの実装）に適用した場合の解析はP\v{a}tra\c{s}cuとThorupの研究成果である。\cite{pt12}.
 
-The idea of 
 \emph{乗算ハッシュ法}のアイデアは非常に古くからあり、
 \index{multiplicative hashing}%
 \index{hashing!multiplicative}%
-おそらくこれはハッシュ法の民俗学の一部である。\cite[Section~6.4]{k97v3}
+おそらくこれはハッシュ法の伝承といってもよいだろう。\cite[Section~6.4]{k97v3}
 しかし、\secref{multihash}で説明した乗数#z#をランダムな奇数から選ぶアイデアとその解析はDietzfelbingerらの研究成果である。\cite{dhkp97}
 この乗算ハッシュ法は最もシンプルなもののうちの一つだが、衝突確率が$2/2^{#d#}$、つまり$2^{#w#}$から$2^{#d#}$への全ての関数からランダムに選出した場合（理想的な場合）とくらべて衝突確率が二倍になってしまう。
-XXX: multiply-addの訳語
+XXX: multiply-addの訳語 % YJ random generatorの文脈だとlinear congruential generatorが線形合同法と訳されるけどどうでしょ。あるいは乗算ハッシュと統一して、乗算合同ハッシュ法とか。　https://ja.wikipedia.org/wiki/%E7%B7%9A%E5%BD%A2%E5%90%88%E5%90%8C%E6%B3%95
 \emph{multiply-add ハッシュ法}は次の関数を使う方法だ。
 \index{hashing!multiply-add}%
 \index{multiply-add hashing}%
@@ -743,10 +741,7 @@ Multiply-addハッシュ法の衝突確率は$1/2^{#d#}$である。\cite{d96}
 \]
 ここで$r$は偶数であり、$#a#_0,\ldots,#a#_{r-1}$はいずれも$\{0,\ldots,2^{#w#}\}$からランダムに選出される。
 
-. This yields a 
 この$2#w#$ビットのハッシュ値が衝突する確率は
--bit hash code that has
-collision probability 
 $1/2^{#w#}$である。
 これを乗算ハッシュ法（かMultiply-add）を使って#w#ビットに縮めることができる。
 これは$r/2$回の$2#w#$ビット乗算だけで実現でき、これは高速である。
@@ -754,7 +749,6 @@ $1/2^{#w#}$である。
 （$\bmod$の計算は#w#または$2#w#$ビットの足し算、掛け算では暗に実行される。）
 
 
-The method from 
 \secref{polyhash}で説明した素数体を使った可変長配列のハッシュ法はDietzfelbinger \etal \cite{dgmp92}による。
 この方法は$\bmod$を使うが、これは時間のかかる機械語命令であり、結果この方法は速くない。
 剰余の法として$2^{#w#}-1$を使う工夫がある。
@@ -778,7 +772,7 @@ The method from
 \end{exc}
 
 \begin{exc}
-  \lemref{universal-hashing}で得た上界$2/2^{#d#}$はある意味で最適であることを示せ。
+  \lemref{universal-hashing}で得た上界$2/2^{#d#}$はある意味で最適であることを示せ。 % TODO YJ 元の問題文は"$x=2^{#w#-#d#-2}$かつ$#y#=3#x#$のとき"の証明をすれば最適であることの証明になると言っているがこれは間違いでは。なので文を２つに分けるのはよいと思う。が、"ある意味"とはどういう意味？
   $x=2^{#w#-#d#-2}$かつ$#y#=3#x#$のとき、$\Pr\{#hash(x)#=#hash(y)#\}=2/2^{#d#}$であることを示せ。
   （ヒントとしては、$#zx#$と$#z#3#x#$の二進表記を考え、$#z#3#x# = #z#x#+2#z#x#$であることを利用せよ。）
 \end{exc}
@@ -831,9 +825,9 @@ The method from
 \end{exc}
 
 \begin{exc}
-標準ライブラリやこの本の#HashTable#・#LinearHashTable#の実装について、#find(x)#が定数時間でなくなるデータをテーブルに挿入するプログラムを書け。
+標準ライブラリやこの本の#HashTable#・#LinearHashTable#を参考によく使われるハッシュテーブルの実装を見つけ、整数#x#に対して#find(x)#が線形時間で実行できるプログラムを実装せよ。
 つまり、テーブルの中の同じ位置に対応付けられる#n#個の整数の集まりを見つけよ。
 
-実装によって、単にコードを見れば十分だったり、あるいは試しに挿入・検索をしてみてその時間を測ってみたりする必要があるだろう。（これはウェブサーバーへのDoS攻撃に使われることがある。）\cite{cw03}
+実装によって、単にコードを見れば十分だったり、あるいは試しに挿入・検索をしてみてその時間を測ってみたりする必要があるだろう。これはウェブサーバーへのDoS (denial of service)攻撃に使われることがある。\cite{cw03}
 \index{algorithmic complexity attack}%
 \end{exc}
