@@ -1,8 +1,8 @@
 \chapter{配列を使ったリスト}
 \chaplabel{arrays}
+XXX: backing array の上手い訳語はあるか
 
 この章では、\emph{backing array}と呼ばれる、配列にデータを格納することによって#List#・#Queue#インターフェースを実装する方法について解説する。
-\emph{backing array}.
 \index{backing array}%
 次の表は、この章で説明するデータ構造の操作時間を要約したものだ。
 
@@ -42,6 +42,20 @@
 より正確に言うと、空のデータ構造からはじめて、#add(i,x)#・#remove(i)#を#m#回実行するときの、backing arrayの拡大・縮小のための合計コストは$O(m)$である。
 個々の操作のコストは大きいが、#m#個の操作にわたる償却コストを考えれば、ひとつの操作あたりのコストは$O(1)$なのだ。
 
+\cpponly{
+この章、およびこの本を通じて、配列の要素数を保持すると便利である。
+C++のふつうの配列の要素数は要素数を保持していないため、要素数を保持する配列クラス#array#を定義する。
+このクラスは標準的なC++の配列#a#と整数#length#によって、直接的に実装できる。}
+\cppimport{ods/array.a.length}
+\cpponly{
+#array#の大きさは作成時に指定する。
+}
+\cppimport{ods/array.array(len)}
+\cpponly{配列の要素は添え字によって指定できる。}
+\cppimport{ods/array.operator[]}
+\cpponly{また、ある配列を他の配列に割り当てる操作は、ポインタの操作により定数時間で実行できる。}
+\cppimport{ods/array.operator=}
+
 \section{ArrayStack：配列を使った高速なスタック操作}
 \seclabel{arraystack}
 
@@ -73,10 +87,7 @@
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arraystack}
   \end{center}
-  \caption[Adding to an ArrayStack]{
-  #add(i,x)#・#remove(i)#を#ArrayStack#に実行する。
-  矢印は要素のコピーを表す。
-  #resize()#を呼ぶ操作にはアスタリスクを付した。}
+  \caption{#ArrayStack#に対する#add(i,x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。#resize()#を呼ぶ操作にはアスタリスクを付した。}
   \figlabel{arraystack}
 \end{figure}
 
@@ -113,7 +124,6 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]#は書き換え
   空の#ArrayStack#が作られたあと、$m\ge 1$個の#add(i, x)#・#remove(i)#からなる操作の列が順に実行されるとき、この間に呼ばれる#resize()#の合計実行時間は#O(m)#である。
 \end{lem}
 
-%XXX: ここまで完了
 \begin{proof}
 #resize()#が呼ばれるとき、その前の#resize()#呼び出しから#add#・#remove#が実行された回数は$#n#/2-1$以下である。
 $i$回目の#resize()#呼び出しの際の#n#を$#n#_i$とする。
@@ -150,7 +160,7 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
       R & \ge #a.length#/2 - 1 - #a.length#/3 \\
         & = #a.length#/6 - 1 \\
         & = (#a.length#/3)/2 - 1 \\
-        & \ge #n#_i/2 -1\enspace .
+        & \ge #n#_i/2 -1
   \end{align*}
 
 いずれの場合でも、$(i-1)$から$i$回目の#resize()#の間に#add(i,x)#か#remove(i)#が呼ばれる回数の合計は$#n#_i/2-1$以上である。
@@ -177,7 +187,6 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
 \section{#FastArrayStack#：最適化されたArrayStack}
 
 #ArrayStack#が主にやっていることは、データの（#add(i,x)#と#remove(i)#のための）シフトと（#resize()#のための）コピーである。
-
 素朴な実装では#for#ループを使うだろう。
 しかしデータのコピーや移動用の効率的な機能があるプログラミング環境も多いだろう。
 C言語には#memcpy(d,s,n)#・#memmove(d,s,n)#関数がある。
@@ -210,7 +219,7 @@ FIFOキューの実装に#ArrayStack#はあまり向いていない。
 配列を使ったキューの効率的な実装は、もし無限の配列#a#があれば簡単だろう。
 次に削除する要素を追跡するインデックス#j#と、キューの要素数#n#を記録しておけばよい。
 そうすればキューの要素は以下の場所に入っている。
-\[ #a[j]#,#a[j+1]#,\ldots,#a[j+n-1]# \enspace \]
+\[ #a[j]#,#a[j+1]#,\ldots,#a[j+n-1]# \]
 まず#i#, #j#を0に初期化する。
 要素を追加するときは、#a[j+n]#に要素を入れて、#n#をひとつ増やす。
 要素を削除するときは、#a[j]#から要素を取り出し、#j#をひとつ増やし、#n#をひとつ減らす。
@@ -222,12 +231,12 @@ FIFOキューの実装に#ArrayStack#はあまり向いていない。
 例えば10:00に5時間を足すと3:00になる。
 形式的に書けば次のようになる。
 \[
-    10 + 5 = 15 \equiv 3 \pmod{12} \enspace
+    10 + 5 = 15 \equiv 3 \pmod{12}
 \]
 数式の後半は「12を法として15と3は合同である」と読む。
 $\bmod$は次のように二項演算と考えてもよい。
 \[
-   15 \bmod 12 = 3 \enspace .
+   15 \bmod 12 = 3
 \]
 
 より一般的には
@@ -259,9 +268,7 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arrayqueue}
   \end{center}
-  \caption[Adding and removing from an ArrayQueue]{A sequence of #add(x)# and #remove(i)# operations on an
-  #ArrayQueue#.  Arrows denote elements being copied.  Operations that
-  result in a call to #resize()# are marked with an asterisk.}
+  \caption{#ArrayQueue#に対する#add(x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。#resize()#の発生する呼び出しにはアスタリスクを付した。}
   \figlabel{arrayqueue}
 \end{figure}
 
@@ -316,8 +323,7 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arraydeque}
   \end{center}
-  \caption[Adding and removing from an ArrayDeque]{A sequence of #add(i,x)# and #remove(i)# operations on an
-  #ArrayDeque#.  Arrows denote elements being copied.}
+  \caption{#ArrayDeque#に対する#add(i, x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。}
   \figlabel{arraydeque}
 \end{figure}
 
@@ -379,15 +385,12 @@ $#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/dualarraydeque}
   \end{center}
-  \caption[Adding and removing in a DualArrayDeque]{A sequence of #add(i,x)# and #remove(i)# operations on a
-  #DualArrayDeque#.  Arrows denote elements being copied.  Operations that
-  result in a rebalancing by #balance()# are marked with an asterisk.}
+  \caption{#DualArrayDeque#に対する#add(i,x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。#balance()#の発生する呼び出しにはアスタリスクを付した。}
   \figlabel{dualarraydeque}
 \end{figure}
 
 \codeimport{ods/DualArrayDeque.add(i,x)}
 
-%XXX: ここまで
 #add(i,x)#はふたつの#ArrayStack# #front#・#back#のバランスを調整するために#balance()#を呼び出す。
 #balance()#の実装は後で説明するが、$#size()#<2$であるときを除いて#front.size()#と#back.size()#は三倍以上離れないことを#balance()#は保証することを知っておけば十分である。
 具体的には$3\cdot#front.size()# \ge #back.size()#$と$3\cdot#back.size()# \ge #front.size()#$であることを保証する。
@@ -413,12 +416,12 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
 しかし$#i#\ge #n#/4$かつ$#n#-#i#>#n#/4$なのでいずれ場合も実行時間は$O(#n#)=O(#i#)=O(#n#-#i#)$である。
 以上をまとめると次のようになる。
 \[
-     \mbox{Running time of } #add(i,x)# \le 
+     \mbox{Running time of } #add(i,x)# \le
           \left\{\begin{array}{ll}
             O(1+ #i#) & \mbox{if $#i#< #n#/4$} \\
             O(#n#) & \mbox{if $#n#/4 \le #i# < 3#n#/4$} \\
             O(1+#n#-#i#) & \mbox{if $#i# \ge 3#n#/4$}
-          \end{array}\right.
+          \end{array}\right
 \]
 ゆえに#add(i,x)#の実行時間は#balance()#の呼び出しのことを無視すれば$O(1+\min\{#i#, #n#-#i#\})$である。
 
@@ -448,17 +451,16 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
   \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計時間が$O(m)$であることを示すには十分である。
 
   ここでは
-  \emph{ポテンシャル法}.
+  \emph{ポテンシャル法}
   \index{potential}%
   \index{potential method}%
   として知られる手法を解析に用いる。
   #DualArrayDeque#の\emph{ポテンシャル}$\Phi$を#front#と#back#の要素数の差と定義する。
-  \[  \Phi = |#front.size()# - #back.size()#| \enspace . \]
+  \[  \Phi = |#front.size()# - #back.size()#| \enspace \]
   このポテンシャルの興味深い性質は、バランス調整を行わない#add(i,x)#・#remove(i)#の呼び出しはポテンシャルを1増やすことだ。
 
-  
   次の式が成り立つことから、#balance()#が要素を動かした直後にはポテンシャル$\Phi_0$は1以下であることがわかるだろう。
-  \[ \Phi_0 = \left|\lfloor#n#/2\rfloor-\lceil#n#/2\rceil\right|\le 1  \enspace .\]
+  \[ \Phi_0 = \left|\lfloor#n#/2\rfloor-\lceil#n#/2\rceil\right|\le 1  \enspace\]
 
   要素を動かす#balance()#の直前には$3#front.size()# < #back.size()#$であったと仮定して一般性を失わない。
   次の式が成り立つ。
@@ -488,18 +490,10 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
   \end{itemize}
-  空の#DualArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
-  Furthermore, beginning with an empty #DualArrayDeque#, any sequence of $m$
-  #add(i,x)# and #remove(i)# operations results in a total of $O(m)$
-  time spent during all calls to #resize()# and #balance()#.
-\end{thm}
-  \begin{itemize}
-    \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
-    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
-  \end{itemize}
   空の#DualArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#・#balance()#にかかる時間の合計は$O(m)$である。
+\end{thm}
 
-\section{2.6 RootishArrayStack：空間効率に優れた配列スタック}
+\section{RootishArrayStack：空間効率に優れた配列スタック}
 \seclabel{rootisharraystack}
 
 \index{RootishArrayStack@#RootishArrayStack#}%
@@ -528,8 +522,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/rootisharraystack}
   \end{center}
-  \caption[Adding and removing in a RootishArrayStack]{A sequence of #add(i,x)# and #remove(i)# operations on a
-  #RootishArrayStack#.  Arrows denote elements being copied. }
+  \caption{#RootishArrayStack#に対する#add(i,x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。}
   \figlabel{rootisharraystack}
 \end{figure}
 
@@ -539,9 +532,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/gauss}
   \end{center}
-  \caption{The number of white squares is $1+2+3+\cdots+#r#$.  The number of
-  shaded squares is the same.  Together the white and shaded squares make a
-  rectangle consisting of $#r#(#r#+1)$ squares.}
+  \caption{白い正方形の数は合わせて$1+2+3+\cdots+#r#$である。斜線を引いた正方形の数も同じである。白い正方形と斜線を引いた正方形を合わせてできる、正方形全体は、$#r#(#r#+1)$個の正方形からなる。}
   \figlabel{gauss}
 \end{figure}
 
@@ -561,11 +552,11 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
 一方で、$0,\ldots,b$番目のブロックに入っている要素数の合計は$(#b#+1)(#b#+2)/2$である。
 よって、#b#は次の式を満たす最小の整数である。
 \[
-    (#b#+1)(#b#+2)/2 \ge #i#+1 \enspace .
+    (#b#+1)(#b#+2)/2 \ge #i#+1 \enspace
 \]
 この式は次のように変形できる。
 \[
-    #b#^2 + 3#b# - 2#i# \ge  0 \enspace .
+    #b#^2 + 3#b# - 2#i# \ge  0 \enspace
 \]
 対応する2次方程式$#b#^2 + 3#b# - 2#i# =  0$はふたつの解$#b#=(-3 + \sqrt{9+8#i#}) / 2$と$#b#=(-3 - \sqrt{9+8#i#}) / 2$を持つ。
 ふたつめの解は常に負の値なので捨ててよい。
@@ -574,7 +565,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
 しかし元の不等式に戻ると$#b# \ge (-3 + \sqrt{9+8i}) / 2$を満たす最小の#b#が欲しかったのであった。
 これは次のように書ける。
 \[
-   #b# = \left\lceil(-3 + \sqrt{9+8i}) / 2\right\rceil \enspace .
+   #b# = \left\lceil(-3 + \sqrt{9+8i}) / 2\right\rceil \enspace
 \]
 
 \codeimport{ods/RootishArrayStack.i2b(i)}
@@ -673,7 +664,6 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 \end{thm}
 
 \subsection{Computing Square Roots}
-XXX: Pseudo-code editionでは無い節だが、Ruby editionでは書くか?
 
 \section{ディスカッションと練習問題}
 
@@ -685,6 +675,7 @@ XXX: Pseudo-code editionでは無い節だが、Ruby editionでは書くか?
 彼らは他の洗練されたブロックサイズの選び方も示しており、これは#i2b(i)#の中で冪根の計算をせずに済むものだ。
 このやり方では#i#番目の要素を含むブロックは$\lfloor\log (#i#+1)\rfloor$番目のもので、これは単に$#i#+1$の二進表現における最高位の桁である。
 この計算をするための命令を提供するコンピュータ・アーキテクチャもある。
+\javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
 #RootishArrayStack#に関連するデータ構造として、Goodrich and Kloss \cite{gk99}の二段階の\emph{階層ベクトル}がある。
 \index{tiered-vector}%
@@ -732,12 +723,14 @@ XXX: Pseudo-code editionでは無い節だが、Ruby editionでは書くか?
   ただし#ArrayDeque#や#DualArrayDeque#に対しての#rotate(r)#の実行時間は$O(1+\min\{#r#,#n#-#r#\})$でなければならないとする。
 \end{exc}
 
+\notpcode{
 \begin{exc}
 % TODO: YJ I guess memcpy is not possible in Ruby?
 %   この問は\lang\ 版からは除外されている。
   #ArrayDeque#を実装せよ。
   ただし、#add(i,x)#・#remove(i)#・#resize()#におけるシフト処理は高速な#System.arraycopy(s,i,d,j,n)#を利用して実現すること。
 \end{exc}
+}
 
 \begin{exc}
   #%#演算を用いずに#ArrayDeque#を実装せよ。（この演算に多くの時間がかかる環境があるのだ。）

@@ -43,7 +43,7 @@
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/sllist}
   \end{center}
-  \caption[A sequence of Queue and Stack operations on an SLList]{A sequence of #Queue# (#add(x)# and #remove()#) and #Stack# (#push(x)# and #pop()#) operations on an #SLList#.}
+  \caption{#SLList#における、#Queue#操作（#add(x)#・#remove()#）と、#Stack#操作（#push(x)#・#pop()#）}
   \figlabel{sllist}
 \end{figure}
 
@@ -120,7 +120,7 @@
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/dllist2}
   \end{center}
-  \caption[A DLList]{A #DLList# containing a,b,c,d,e.}
+  \caption{a,b,c,d,eからなる#DLList#}
   \figlabel{dllist}
 \end{figure}
 
@@ -152,8 +152,7 @@
    \begin{center}
       \includegraphics[scale=0.90909]{figs/dllist-addbefore}
    \end{center}
-   \caption[Adding to a DLList]{Adding the node #u# before the node #w#
-      in a #DLList#.}
+   \caption{#DLList#において、#u#をノード#w#の直前に挿入する。}
    \figlabel{dllist-addbefore}
 \end{figure}
 
@@ -196,6 +195,14 @@
 そのときは興味のあるノードは定数時間で見つかるのだが、要素を追加したり削除したりするために、配列内の要素をシフトする必要があり、その結果として各処理は非定数時間であった。
 
 このことから連結リストは何か別の方法でノードの参照が得られるアプリケーションに適している。
+\javaonly{
+Java Collections Frameworkにおける#LinkedHashSet#はこの例である。
+このデータ構造では、集合の要素は双方向連結リストに格納され、双方向連結リストのノードはハッシュテーブルに格納されている。
+（ハッシュテーブルについては、\chapref{hashing}で説明する。）
+#LinkedHashSet#から要素を削除するときは、ハッシュテーブルから対象となるノードをを定数時間で見つけ、リストからもそのノードは削除される。（これも定数時間で実行できる。）
+\cpponly{
+例えば、連結リストのノードを#USet#に格納することができる。
+そうすると、要素#x#を連結リストから削除するとき、#USet#から要素を効率良く見つけられる。そのため、リストから定数時間で削除できる。}
 
 \section{#SEList#：空間効率のよい連結リスト}
 \seclabel{selist}
@@ -223,8 +230,8 @@
 #BDeque#の重要な特徴は先頭・末尾の要素を追加・削除する操作を定数時間で実行できることだ。
 これは要素を他のブロックから移動するのに役立つ。
 
-\javaimport{ods/SEList.BDeque} 
-\cppimport{ods/SEList.BDeque} 
+\javaimport{ods/SEList.BDeque}
+\cppimport{ods/SEList.BDeque}
 
 \notpcode{
 #SEList#はブロックの双方向連結リストである。
@@ -233,10 +240,10 @@
 \cppimport{ods/SEList.Node}
 \javaimport{ods/SEList.n.dummy}
 \cppimport{ods/SEList.n.dummy}
-XXX: rubyimport
 
 \pcodeonly{
-An #SEList# is just a doubly-linked list of blocks. In addition to #next# and #prev# pointers, each node #u# in an #SEList# contains a #BDeque#, #u.d#.
+#SEList#はブロックの双方向連結リストである。
+ポインタ#next#・#prev#に加えて、#SEList#のノード#u#は#BDeque#である#u.d#を含む。
 }
 
 \subsection{必要なメモリ量}
@@ -314,7 +321,7 @@ $#u#_0,#u#_1,#u#_2,\ldots$を#x#を入れられるスペースを求めて探索
       \includegraphics[width=\ScaleIfNeeded]{figs/selist-add-c}\\
     \end{tabular}
   \end{center}
-  \caption[SEList add]{The three cases that occur during the addition of an item #x# in the interior of an #SEList#.  (This #SEList# has block size $#b#=3$.)}
+  \caption{#SEList#において、要素#x#を追加する際に起きる3つの場合。（この#SEList#ではブロックの大きさ#b#は3である。）}
   \figlabel{selist-add}
 \end{figure}
 
@@ -362,7 +369,7 @@ $#u#_0,#u#_1,#u#_2,\ldots$を順に$#u#_0$のブロックの要素数を$#b#-1$�
       \includegraphics[scale=0.90909]{figs/selist-remove-c}\\
     \end{tabular}
   \end{center}
-  \caption[SEList remove]{The three cases that occur during the removal of an item #x# in the interior of an #SEList#.  (This #SEList# has block size $#b#=3$.)}
+  \caption{#SEList#において、要素#x#を削除する際に起きる3つの場合。（この#SEList#ではブロックの大きさ#b#は3である。）}
   \figlabel{selist-remove}
 \end{figure}
 
@@ -565,10 +572,8 @@ XOR-listのもっと踏み込んだ議論はSinhaの雑誌記事\cite{s04}を参
   \index{merge-sort}%
   この問題は#DLList#を整列するマージソートというアルゴリズムを実装してみるものだ。
   マージソートは\secref{merge-sort}扱う。
-  \javaonly{In your implementation, perform comparisons between elements
-  using the #compareTo(x)# method so that the resulting implementation can
-  sort any #DLList# containing elements that implement the #Comparable#
-  interface.}
+  \javaonly{
+  要素の比較を#compareTo(x)#メソッドで行えば、#Comparable#インターフェースの実装である要素からなる任意の#DLList#を整列する際に実装を使いまわせる。}
   \begin{enumerate}
     \item #DLList#の#takeFirst(l2)#操作を実装せよ。
 	この操作は#l2#の先頭ノードを取り出しレシーバに追加するものだ。
