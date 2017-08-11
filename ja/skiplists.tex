@@ -26,12 +26,11 @@ $L_{r-1}$の各要素についてコインを投げ、表が出たら$L_r$はこ
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist}
   \end{center}
-  \caption{A skiplist containing seven elements.}
+  \caption{7つの要素を含むskiplistの例}
   \figlabel{skiplist}
 \end{figure}
 
 スキップリストの要素#x#について、#x#の\emph{高さ}を
-For an element, #x#, in a skiplist, we call the \emph{height}
 \index{height!of a skiplist}%
 #x#を含むリスト$L_r$の添え字#r#のうち最大のものと定義する。
 例えば#x#が$L_0$だけに含まれているなら#x#の高さは$0$である。
@@ -60,11 +59,11 @@ $L_h$の番兵#w#から$L_0$のノード#u#への探索経路を見つける。
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-searchpath}
   \end{center}
-  \caption{The search path for the node containing $4$ in a skiplist.}
+  \caption{あるskiplistにおける、$4$を含むノードの探索経路}
   \figlabel{skiplist-searchpath}
 \end{figure}
 
-次の補題はsecref{skiplist-analysis}で証明するが、探索経路が非常に短いことを主張する。
+次の補題は\secref{skiplist-analysis}で証明するが、探索経路が非常に短いことを主張する。
 
 \begin{lem}\lemlabel{skiplist-searchpath}
 $L_0$の任意のノード#u#への探索経路の長さの期待値は$2\log #n# + O(1) = O(\log #n#)$以下である。
@@ -118,8 +117,7 @@ $#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-add}
   \end{center}
-  \caption[Adding to a skiplist]{Adding the node containing $3.5$ to a skiplist.  The nodes stored in #stack#
-  are highlighted.}
+  \caption{値$3.5$を含むノードをskiplistに追加する。#stack#に格納されるノードを強調している。}
   \figlabel{skiplist-add}
 \end{figure}
 
@@ -132,11 +130,11 @@ $#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-remove}
   \end{center}
-  \caption{Removing the node containing $3$ from a skiplist.}
+  \caption{値$3$を含むノードをskiplistから削除する}
   \figlabel{skiplist-remove}
 \end{figure}
 
-\subsection{Summary}
+\subsection{要約}
 
 次の定理はスキップリストを使った整列集合の性能をまとめたものだ。
 
@@ -165,7 +163,7 @@ $L_{#r#} (#r#>0)$の辺#e#の辺の長さを、$L_{#r#-1}$において#e#の下�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-lengths}
   \end{center}
-  \caption{The lengths of the edges in a skiplist.}
+  \caption{skiplistにおける辺の長さ}
   \figlabel{skiplist-lengths}
 \end{figure}
 
@@ -193,7 +191,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-addix}
   \end{center}
-  \caption[Adding to a SkiplistList]{Adding an element to a #SkiplistList#.}
+  \caption{#SkiplistList#への要素の追加}
   \figlabel{skiplist-addix}
 \end{figure}
 
@@ -209,8 +207,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   \begin{center}
     \includegraphics[scale=0.90909]{figs/skiplist-lengths-splice}
   \end{center}
-  \caption[Adding to a SkiplistList]{Updating the lengths of edges while splicing a node 
-   #w# into a skiplist.}
+  \caption{ノード#w#をskiplistに追加するときの、辺の長さの更新}
   \figlabel{skiplist-lengths-splice}
 \end{figure}
 
@@ -229,12 +226,12 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/skiplist-removei}
   \end{center}
-  \caption[Removing an element from a SkiplistList]{Removing an element from a #SkiplistList#.}
+  \caption{#SkiplistList#から要素を削除する。}
   \figlabel{skiplist-removei}
 \end{figure}
 \codeimport{ods/SkiplistList.remove(i)}
 
-\subsection{Summary}
+\subsection{要約}
 
 次の定理は#SkiplistList#の性能をまとめたものだ。
 
@@ -261,7 +258,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   \[ I_{i} = \left\{\begin{array}{ll}
      0 & \mbox{コイントスが$i$回よりも少ないとき} \\
      1 & \mbox{コイントスが$i$回以上のとき}
-     \end{array}\right.
+     \end{array}\right
   \]
   $I_i=1$なのは最初の$i-1$回の結果がいずれも裏であることと同値である。
   よって$\E[I_i]=\Pr\{I_i=1\}=1/2^{i-1}$である。
@@ -272,7 +269,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
      & =  \sum_{i=1}^\infty \E\left[I_i\right] \\
      & =  \sum_{i=1}^\infty 1/2^{i-1} \\
      & =  1 + 1/2 + 1/4 + 1/8 + \cdots \\
-     & =  2 \enspace .   \qedhere
+     & =  2 \enspace \qedhere
   \end{align*}
 \end{proof}
 
@@ -287,7 +284,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   よって$L_{#r#}$のノード数の期待値は$#n#/2^{#r#}$である。
   \footnote{指示変数と期待値の線形性からこの結果を得る方法は\secref{randomization}を参照せよ。}
   以上よりすべてのリストに含まれるノードの総数の期待値が求まる。
-  \[ \sum_{#r#=0}^\infty #n#/2^{#r#} = #n#(1+1/2+1/4+1/8+\cdots) = 2#n# \enspace . \qedhere \]
+  \[ \sum_{#r#=0}^\infty #n#/2^{#r#} = #n#(1+1/2+1/4+1/8+\cdots) = 2#n# \enspace \qedhere \]
 \end{proof}
 
 \begin{lem}\lemlabel{skiplist-height}
@@ -299,11 +296,11 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   \[ I_{#r#} = \left\{\begin{array}{ll}
      0 & \mbox{$L_{#r#}$が空のとき} \\
      1 & \mbox{$L_{#r#}$が空でないとき}
-     \end{array}\right.
+     \end{array}\right
   \]
   スキップリストの高さ#h#は次のように計算できる。
   \[
-       #h# = \sum_{r=1}^\infty I_{#r#} \enspace .
+       #h# = \sum_{r=1}^\infty I_{#r#}
   \]
   $I_{#r#}$はリスト$L_{#r#}$の長さ$|L_{#r#}|$を越えないことに注意する。
   \[
@@ -319,7 +316,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
                  + \sum_{r=\lfloor\log #n#\rfloor+1}^{\infty} #n#/2^{#r#} \\
         &\le \log #n#
                  + \sum_{#r#=0}^\infty 1/2^{#r#} \\
-        &= \log #n# + 2 \enspace . \qedhere
+        &= \log #n# + 2 \enspace \qedhere
   \end{align*}
 \end{proof}
 
@@ -378,7 +375,7 @@ $S$をスキップリストにおけるノード#u#の探索経路の長差と�
          &\le \E[#h#] + \sum_{#r#=0}^{\lfloor\log #n#\rfloor} 1
               + \sum_{#r#=0}^{\infty} 1/2^{#r#} \\
          &\le \E[#h#] + \log #n# + 3 \\
-         &\le 2\log #n# + 5  \enspace . \qedhere
+         &\le 2\log #n# + 5  \enspace \qedhere
   \end{align*}
 \end{proof}
 
@@ -393,11 +390,11 @@ $#n#$要素を含むスキップリストの大きさの期待値は$O(#n#)$で�
 
 スキップリストを提案したのはPugh \cite{p91}であり、多くの拡張や応用も提案されている\cite{p89}。
 その後さらに多くの研究が行われている。
-スキップリストの#i#番目の要素を見つける探索経路の長さの期待値や分散はより正確に求められている。 \cite{kp94,kmp95,pmp92}.
+スキップリストの#i#番目の要素を見つける探索経路の長さの期待値や分散はより正確に求められている。 \cite{kp94,kmp95,pmp92}
 決定的な(ランダム性を用いない)変種や\cite{mps92}偏りのある変種\cite{bbg02,esss01}、適応的な変種\cite{bdl08}も開発されている。
 スキップリストは様々な言語やフレームワークで書かれ、またオープンソースのデータベースシステムで使われている。\cite{skipdb,redis}
-スキップリストの変種がオペレーティング・システムHP-UXにおけるカーネルのプロセス制御の構造として使われている。\cite{hpux}.
-
+スキップリストの変種がオペレーティング・システムHP-UXにおけるカーネルのプロセス制御の構造として使われている。\cite{hpux}
+\javaonly{SkiplistsはJava 1.6 APIの一部として含まれている。 \cite{oracle_jdk6}}
 
 \begin{exc}
 \figref{skiplist}のスキップリストにおける2.5と5.5の探索経路を説明せよ。
