@@ -31,7 +31,7 @@
    \begin{center}
      \includegraphics[width=\ScaleIfNeeded]{figs/chainedhashtable}
    \end{center}
-   \caption[A ChainedHashTable]{An example of a #ChainedHashTable# with $#n#=14$ and $#t.length#=16$.  In this example $#hash(x)#=6$}
+   \caption{$#n#=14, #t.length#=16$である#ChainedHashTable#の例。この例では$#hash(x)#=6$である。}
    \figlabel{chainedhashtable}
 \end{figure}
 \index{hash value}%
@@ -70,7 +70,7 @@ $#n#/#t.length# \le 1$
 すなわち、リスト#t[hash(x)]#の長さは#n#になってしまう。
 次の小節ではよいハッシュ関数について説明する。
 
-\subsection{Multiplicative Hashing}
+\subsection{乗算ハッシュ法}
 \seclabel{multihash}
 
 \index{hashing!multiplicative}%
@@ -129,7 +129,7 @@ $\ddiv$は割り算の商を求める演算子である。
     \[ I_{#y#} = \left\{\begin{array}{ll}
        1 & \mbox{if $#hash(x)#=#hash(y)#$} \\
        0 & \mbox{otherwise}
-       \end{array}\right.
+       \end{array}\right
     \]
   ここで、\lemref{universal-hashing}より、$\E[I_{#y#}] \le 2/2^{#d#}=2/#t.length#$である。
   リスト#t[hash(x)]#の長さの期待値は次のように求まる。
@@ -139,7 +139,7 @@ $\ddiv$は割り算の商を求める演算子である。
     &\le& #n#_{#x#} + \sum_{#y#\in S} 2/#t.length# \\
     &\le& #n#_{#x#} + \sum_{#y#\in S} 2/#n# \\
     &\le& #n#_{#x#} + (#n#-#n#_{#x#})2/#n# \\
-    &\le& #n#_{#x#} + 2 \enspace ,
+    &\le& #n#_{#x#} + 2
   \end{eqnarray*}
 \end{proof}
 
@@ -189,8 +189,7 @@ $\ddiv$は割り算の商を求める演算子である。
   \]
   積$(#z#-#z#')q$の末尾に連続して並ぶ0の個数は#w#未満である。
   \[
-   (#z#-#z#')q = (\star,\cdots,\star,1,\underbrace{0,\ldots,0}_{<#w#})_2 
-    \enspace .
+   (#z#-#z#')q = (\star,\cdots,\star,1,\underbrace{0,\ldots,0}_{<#w#})_2
   \]
   以上より、$(#z#-#z#')q$は\myeqref{factors}を満たさず、矛盾する。
   背理法により\lemref{hashing-mapping}が満たされる。
@@ -205,15 +204,14 @@ $\ddiv$は割り算の商を求める演算子である。
 この条件の必要条件は、$#z#(#x#-#y#)\bmod 2^{#w#}$の上位#d#ビットがすべて0である、またはすべて1であることである。
 これは、$#zx#\bmod 2^{#w#} > #zy#\bmod 2^{#w#}$ならば次の条件である。
   \begin{equation}
-      #z#(#x#-#y#)\bmod 2^{#w#} = 
-      (\underbrace{0,\ldots,0}_{#d#},\underbrace{\star,\ldots,\star}_{#w#-#d#})_2 
+      #z#(#x#-#y#)\bmod 2^{#w#} =
+      (\underbrace{0,\ldots,0}_{#d#},\underbrace{\star,\ldots,\star}_{#w#-#d#})_2
       \eqlabel{all-zeros}
   \end{equation}
 一方、$#zx#\bmod 2^{#w#} < #zy#\bmod 2^{#w#}$ならば次の条件である。
   \begin{equation}
-      #z#(#x#-#y#)\bmod 2^{#w#} = 
-      (\underbrace{1,\ldots,1}_{#d#},\underbrace{\star,\ldots,\star}_{#w#-#d#})_2 
-       \enspace .
+      #z#(#x#-#y#)\bmod 2^{#w#} =
+      (\underbrace{1,\ldots,1}_{#d#},\underbrace{\star,\ldots,\star}_{#w#-#d#})_2
       \eqlabel{all-ones}
   \end{equation}
 よって、$#z#(#x#-#y#)\bmod 2^{#w#}$が\myeqref{all-zeros}か\myeqref{all-ones}のどちらかであることを示せばよい。
@@ -403,7 +401,7 @@ $r!$を$(r/e)^r$に置き換える部分である。
 まとめると、#resize()#のコストを無視すれば、#LinearHashTable#の操作の期待実行時間はいずれも$O(1)$である。
 リサイズのコストを考える場合は、\secref{arraystack}で#ArrayStack#の償却解析を行ったのと同様である。
 
-\subsection{Summary}
+\subsection{要約}
 
 次の定理は#LinearHashTable#の性能をまとめたものだ。
 
@@ -423,6 +421,8 @@ $r!$を$(r/e)^r$に置き換える部分である。
 これを実現するひとつのやり方は大きさ$2^{#w#}$の巨大な配列#tab#を準備し、すべてのエントリを互いに独立な#w#-bitの整数乱数で初期化することだ。
 このとき、#hash(x)#は#tab[x.hashCode()]#から#d#ビットを整数として取り出せばよい。
 \codeimport{ods/LinearHashTable.idealHash(x)}
+\pcodeonly{ここで、#>>#は\emph{右シフト}演算子である。そのため、#x.hashCode() >> w-d#は#x#の#w#ビットのハッシュ値の、上位#d#ビットを抽出する。}
+
 あいにく大きさ$2^{#w#}$の配列はメモリ使用量の観点から現実的でない。
 \emph{Tabulation Hashing}では#w#ビットの整数の代わりに$#w#/#r#$個の$#r#$ビット整数で妥協する。
 こうすれば大きさ$2^{#r#}$の配列$#w#/#r#$個で済むのである。
@@ -432,14 +432,13 @@ $r!$を$(r/e)^r$に置き換える部分である。
 次のコードは$#w#=32, #r#=4$の場合のものである。
 \codeimport{ods/LinearHashTable.hash(x)}
 この場合、#tab#は4つの列と$2^{32/4}=256$の行からなる二次元配列である。
-XXX: これ必要? % 「これ」とはhexadecimal numberのこと？python版だと特に説明なく0x表示になるようなので必要かと
 \pcodeonly{
-Quantities like #0xff#, used above, are \emph{hexadecimal numbers}
+上の#0xff#は\emph{16進数}である。
 \index{hexadecimal numbers}%
-whose digits have 16 possible values 0--9, which have their usual
-meaning and a--f, which denote 10--15.  The number $#0xff#=15\cdot 16 + 15 = 255$.
-The #&# symbol is the \emph{bitwise and} operator, so
-code like #h >> 8 & 0xff# extracts bits with index 8 through 15 of #h#.}
+16進数の各桁は16種類の値（0から9に加えて、それぞれ10から15を表すa, b, c, d, e, f）のうちのいずれかである。
+例えば、$#0xff#=15\cdot 16 + 15 = 255$である。
+#&#は\emph{ビット単位論理積}演算子である。
+そのため、#h >> 8 & 0xff#は#h#のビットのうち、添字が8から15であるものを抽出する。}
 
 任意の#x#について#hash(x)#は$\{0,\ldots,2^{#d#}-1\}$の値をを一様な確率で取ることを簡単に確認できる。
 少し計算すればハッシュ値のペアが互いに独立であることも確認できる。
@@ -469,12 +468,11 @@ XXX: ハッシュ値とHash Codeは区別したほうがよいか?
 二つ目の性質は、オブジェクトを整数に変換する際のロスを小さくするものだ。
 これは相異なるふたつの要素はハッシュテーブルの違う場所に入ることが多いことを保証する。
 
-\subsection{Hash Codes for Primitive Data Types}
+\subsection{プリミティブな型のハッシュ値}
 
 \index{hash code!for primitive data}%
 #char#・#byte#・#int#・#float#などの小さいプリミティブな型のハッシュ値は簡単に計算できる。
 これらの方はバイナリ表現があり、これは#w#ビット以下である。
-XXX: Rubyの整数の話をするか?　% YJ: Ruby独自の話はガンガンしていったほうが面白い本になるかと思います。輸出もしたいならなおさら。
 \javaonly{(For example, in Java, #byte# is an 8-bit
 type and #float# is a 32-bit type.)}\cpponly{(For example, in C++ #char#
 is typically an 8-bit type and #float# is a 32-bit type.)}
@@ -503,7 +501,7 @@ $P_0,\ldots,P_{r-1}$からなる複合オブジェクトがあり、それぞれ
 \[
    h(#x#_0,\ldots,#x#_{r-1}) =
    \left(\left(#z#\sum_{i=0}^{r-1} #z#_i #x#_i\right)\bmod 2^{2#w#}\right)
-   \ddiv 2^{#w#} \enspace .
+   \ddiv 2^{#w#}
 \]
 このハッシュ値の計算過程は最後に#z#をかけ、$2^{#w#}$で割っていることに注目してほしい。
 これは$2#w#$ビットの中間結果に\secref{multihash}で紹介した乗算ハッシュ法を使って#w#ビットの最終結果を得ている。
@@ -518,17 +516,17 @@ $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots
 さらに、少なくとも一箇所の添え字$i\in\{0,\ldots,r-1\}$で$#x#_i \neq #y#_i$が成り立つと仮定する。
 このとき、次が成り立つ。
 \[
-   \Pr\{ h(#x#_0,\ldots,#x#_{r-1}) =  h(#y#_0,\ldots,#y#_{r-1}) \} 
-        \le 3/2^{#w#} \enspace .  
-\] 
+   \Pr\{ h(#x#_0,\ldots,#x#_{r-1}) =  h(#y#_0,\ldots,#y#_{r-1}) \}
+        \le 3/2^{#w#}
+\]
 \end{thm}
 
 \begin{proof}
 最後の乗算ハッシュ法については後半に考える。
 次の関数を定義する。
   \[
-    h'(#x#_0,\ldots,#x#_{r-1}) =  
-       \left(\sum_{j=0}^{r-1} #z#_j #x#_j\right)\bmod 2^{2#w#} \enspace .
+    h'(#x#_0,\ldots,#x#_{r-1}) =
+       \left(\sum_{j=0}^{r-1} #z#_j #x#_j\right)\bmod 2^{2#w#}
   \]
   $h'(#x#_0,\ldots,#x#_{r-1}) =  h'(#y#_0,\ldots,#y#_{r-1})$であるとする。
   これは次のように書き直せる。
@@ -542,7 +540,7 @@ $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots
   $#x#_i> #y#_i$と仮定しても一般性を失わない。
   すると\myeqref{bighash-x}は次のようになる。
   \begin{equation}
-      #z#_i(#x#_i-#y#_i) = t \eqlabel{bighash-xx} \enspace ,
+      #z#_i(#x#_i-#y#_i) = t \eqlabel{bighash-xx}
   \end{equation}
   これは$#z#_i$と$(#x#_i-#y#_i)$はいずれも$2^{#w#}-1$以下なので、これらの積は$2^{2#w#}-2^{#w#+1}+1 < 2^{2#w#}-1$以下であるためである。
   仮定より$#x#_i-#y#_i\neq 0$なので、\myeqref{bighash-xx}は$#z#_i$について高々ひとつの解を持つ。
@@ -594,8 +592,8 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
 
 \thmref{prime-polynomial}より、$#z#\in\{0,\ldots,#p#-1\}$を使えば、$#x#_i\in \{0,\ldots,#p#-2\}$である整数の列$#x#_0,\ldots,#x#_{r-1}$のハッシュ値を計算できる。
 \[
-   h(#x#_0,\ldots,#x#_{r-1}) 
-    = \left(#x#_0#z#^0+\cdots+#x#_{r-1}#z#^{r-1}+(#p#-1)#z#^r \right)\bmod #p# \enspace .
+   h(#x#_0,\ldots,#x#_{r-1})
+    = \left(#x#_0#z#^0+\cdots+#x#_{r-1}#z#^{r-1}+(#p#-1)#z#^r \right)\bmod #p#
 \]
 
 最後に追加されたの項$(#p#-1)#z#^r$に注意する。
@@ -612,17 +610,17 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
   $i\in\{0,\ldots,r-1\}$のうち少なくともひとつ$#x#_i \neq #y#_i$が成り立つと仮定する。
   このとき、次の式が成り立つ。
   \[
-     \Pr\{ h(#x#_0,\ldots,#x#_{r-1}) =  h(#y#_0,\ldots,#y#_{r-1}) \} 
-          \le (r-1)/#p# \} \enspace .  
-  \] 
+     \Pr\{ h(#x#_0,\ldots,#x#_{r-1}) =  h(#y#_0,\ldots,#y#_{r-1}) \}
+          \le (r-1)/#p# \}
+  \]
 \end{thm}
 
 \begin{proof}
   等式$h(#x#_0,\ldots,#x#_{r-1}) =  h(#y#_0,\ldots,#y#_{r-1})$は次のように変形できる。
   \begin{equation}  \eqlabel{strhash-eqlen}
     \left(
-       (#x#_0-#y#_0)#z#^0+\cdots+(#x#_{r-1}-#y#_{r-1})#z#^{r-1} 
-    \right)\bmod #p# = 0.
+       (#x#_0-#y#_0)#z#^0+\cdots+(#x#_{r-1}-#y#_{r-1})#z#^{r-1}
+    \right)\bmod #p# = 0
   \end{equation}
   $#x#_#i#\neq #y#_#i#$なので、この多項式は非自明である。
   よって\thmref{prime-polynomial}より#z#についての解は高々$r-1$個である。
@@ -633,7 +631,7 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 この場合、一方の入力列が他方の入力列を含んでいても構わない。
 この関数は入力が無限列であってもそのまま問題なく処理できるのだ。
 \[
-  #x#_0,\ldots,#x#_{r-1}, #p#-1,0,0,\ldots \enspace .
+  #x#_0,\ldots,#x#_{r-1}, #p#-1,0,0,\ldots
 \]
 長さ$r, r' (r > r')$のふたつの入力があるとき、ふたつの列は添え字$i=r$で異なる。
 このとき\myeqref{strhash-eqlen}は次のようになる。
@@ -709,11 +707,11 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 \index{hash table!cuckoo}%
 
 この章で紹介したハッシュ関数は任意のデータセットに対してうまく動作することが証明できる既知の手法の中でおそらく最も実用的なものである。
-別のよい方法として、CarterとWegmanによる先駆け的な研究成果であった\emph{ユニバーサルハッシュ法}を使ったものがある。いくつかのことなるシナリオのためのハッシュ関数が提案されている。\cite{cw79}.
+別のよい方法として、CarterとWegmanによる先駆け的な研究成果であった\emph{ユニバーサルハッシュ法}を使ったものがある。いくつかのことなるシナリオのためのハッシュ関数が提案されている。\cite{cw79}
 \index{universal hashing}%
 \index{hashing!universal}%
 \secref{tabulation}で説明したTabulation hashingは
-CarterとWegmanの研究\cite{cw79}によるものだが、この手法を線形探索法（と他のいくつかのハッシュテーブルの実装）に適用した場合の解析はP\v{a}tra\c{s}cuとThorupの研究成果である。\cite{pt12}.
+CarterとWegmanの研究\cite{cw79}によるものだが、この手法を線形探索法（と他のいくつかのハッシュテーブルの実装）に適用した場合の解析はP\v{a}tra\c{s}cuとThorupの研究成果である。\cite{pt12}
 
 \emph{乗算ハッシュ法}のアイデアは非常に古くからあり、
 \index{multiplicative hashing}%
@@ -752,7 +750,7 @@ $1/2^{#w#}$である。
 \secref{polyhash}で説明した素数体を使った可変長配列のハッシュ法はDietzfelbinger \etal \cite{dgmp92}による。
 この方法は$\bmod$を使うが、これは時間のかかる機械語命令であり、結果この方法は速くない。
 剰余の法として$2^{#w#}-1$を使う工夫がある。
-こうすると$\bmod$を加算とビット単位のand演算に置き換えられる。\cite[Section~3.6]{k97v2}.
+こうすると$\bmod$を加算とビット単位のand演算に置き換えられる。\cite[Section~3.6]{k97v2}
 他の方法としては固定長の高速なハッシュ法を使って長さ$c>1$のブロックに対してハッシュ値を計算し、その結果の$\lceil r/c\rceil$個のハッシュ値の配列に素数体を使った方法でハッシュ値を求めるものがある。
 
 \begin{exc}
@@ -815,7 +813,7 @@ $1/2^{#w#}$である。
   ある正の数#w#について、$p=2^{#w#}-1$であるとする。
   正の数$x$について次の式が成り立つ理由を説明せよ。
   \[
-      (x\bmod 2^{#w#}) + (x\ddiv 2^{#w#}) \equiv x \bmod (2^{#w#}-1) \enspace .
+      (x\bmod 2^{#w#}) + (x\ddiv 2^{#w#}) \equiv x \bmod (2^{#w#}-1)
   \]
   （これは$x \bmod (2^{#w#}-1)$を計算するための方法として、
   \[
