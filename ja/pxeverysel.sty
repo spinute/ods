@@ -1,0 +1,118 @@
+% pxeverysel.sty
+
+%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pxeverysel}
+
+%% preparations
+\def\pxys@pkgname{pxeverysel}
+\def\pxys@warn{\PackageWarningNoLine\pxys@pkgname}
+
+%% load it
+\RequirePackage{everysel}
+
+%--------------------------------------- helpers
+
+%% unique tokens
+\def\pxys@mark{\pxys@mark@}
+\def\pxys@fin{\pxys@fin@}
+
+%% \pxys@patch@cmd\CMD{<pre>}{<post>}{<new>}
+\@onlypreamble\pxys@patch@cmd
+\def\pxys@patch@cmd#1#2#3#4{%
+  \def\pxys@next##1#2##2#3##3\pxys@mark##4\pxys@fin{%
+    \ifx\pxys@mark##4\pxys@mark
+      \let\pxys@fragment\relax
+    \else
+      \def\pxys@fragment{##2}%
+      \def#1{##1#4##3}%
+    \fi}%
+  \expandafter\pxys@next#1\pxys@mark#2#3\pxys@mark\pxys@fin}
+
+%% \pxys@append@to\CSa\CSb
+\@onlypreamble\pxys@append@to
+\def\pxys@append@to#1#2{%
+  \expandafter\g@addto@macro\expandafter#1\expandafter{#2}}
+
+%% \pxys@term
+\let\pxys@term\relax
+
+%---------------------------------------
+
+%% variables
+\let\pxys@self@hook\@empty
+\let\pxys@everysel@hook\@empty
+\@onlypreamble\pxys@selectfont
+\let\pxys@selectfont\relax
+\@onlypreamble\pxys@org@selectfont
+\let\pxys@org@selectfont\relax
+\@onlypreamble\pxys@new@selectfont
+\let\pxys@new@selectfont\relax
+
+%% \@EverySelectfont@Init redefined
+\@onlypreamble\pxys@EverySelectfont@Init
+\let\pxys@EverySelectfont@Init\@EverySelectfont@Init
+\def\@EverySelectfont@Init{%
+  \pxys@preproc
+  \pxys@EverySelectfont@Init
+  \pxys@postproc}
+
+%% \pxys@preproc
+\@onlypreamble\pxys@preproc
+\def\pxys@preproc{%
+  % prepare
+  \expandafter\let\expandafter\pxys@selectfont
+      \csname selectfont \endcsname
+  \let\pxys@org@selectfont\pxys@selectfont
+  % extract "pre-\size@update" insertion
+  \pxys@append@to\pxys@selectfont\pxys@term
+  \pxys@patch@cmd\pxys@selectfont
+    {\font@name\enc@update}{\size@update\pxys@term}%
+    {\font@name\pxys@self@hook\pxys@everysel@hook
+     \size@update\enc@update}%
+  \ifx\pxys@fragment\relax
+    \let\pxys@selectfont\pxys@org@selectfont
+    % extract "pre-\enc@update" insertion
+    \pxys@patch@cmd\pxys@selectfont
+      {\pickup@font\font@name}{\size@update\enc@update}%
+      {\pickup@font\font@name\pxys@self@hook\pxys@everysel@hook
+       \size@update\enc@update}%
+    \ifx\pxys@fragment\relax % failure
+      \let\pxys@selectfont\relax
+    \else
+      \pxys@append@to\pxys@self@hook\pxys@fragment
+    \fi
+  \else
+    \pxys@append@to\pxys@self@hook\pxys@fragment
+  \fi
+  \let\pxys@new@selectfont\pxys@selectfont
+  % prepare for everysel routine
+  \let\CheckCommand\@gobble}
+
+%% \pxys@postproc
+\@onlypreamble\pxys@postproc
+\def\pxys@postproc{%
+  \let\CheckCommand\pxys@CheckCommand
+  \let\pxys@CheckCommand\@undefined
+  \expandafter\let\expandafter\pxys@selectfont
+      \csname selectfont \endcsname
+  % extract the code insertion by everysel
+  \pxys@patch@cmd\pxys@selectfont
+    {\pickup@font\font@name}{\size@update\enc@update}{}%
+  \ifx\pxys@fragment\relax % failure
+    \let\pxys@new@selectfont\relax
+  \else % success
+    \pxys@append@to\pxys@everysel@hook\pxys@fragment
+  \fi
+  % commit hte change
+  \ifx\pxys@new@selectfont\relax % failure
+    \let\pxys@selectfont\pxys@org@selectfont % revert
+    \pxys@warn{Failed in patching \string\selectfont}%
+  \else % success
+    \let\pxys@selectfont\pxys@new@selectfont
+  \fi
+  \expandafter\let\csname selectfont \endcsname\pxys@selectfont}
+
+%--------------------------------------- done
+\endinput
+%% EOF

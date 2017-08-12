@@ -68,7 +68,8 @@
 \hyphenation{Meld-able-Heap}
 \hyphenation{Java-Script}
 
-\usepackage{everysel}
+%\usepackage{everysel}
+\usepackage{pxeverysel}
 \EverySelectfont{%
 %\fontdimen2\font=0.4em% interword space
 %\fontdimen3\font=0.2em% interword stretch
@@ -76,6 +77,9 @@
 %\fontdimen7\font=0.1em% extra space
 \hyphenchar\font=`\-% to allow hyphenation
 }
+
+\let\emph\relax % there's no \RedeclareTextFontCommand
+\DeclareTextFontCommand{\emph}{\bf}
 
 \usepackage[sf,small,raggedright]{titlesec} % formatting titles
 \usepackage{etoolbox}
@@ -88,6 +92,9 @@
 \titlespacing*{\subsection}{0pt}{14pt}{14pt}
 \usepackage{relsize,fancyvrb}  % formatting pseudocode
 \usepackage{ods} % Personalization and commands
+
+%\renewcommand*{\thechapter}{\arabic{chapter}~章}
+\titleformat*{\chapter}{\large\bfseries}
 
 % These command are expanded by scripts, otherwise they should be ignored
 \newcommand{\javaimport}[1]{}
@@ -188,7 +195,7 @@
 \DeclareMathOperator{\bdiv}{div}
 
 % Title page content
-\title{Open Data Structures (in \lang)}
+\title{Open Data Structures (in \lang) 日本語版}
 \author{Pat Morin}
 \date{%
 Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
@@ -200,7 +207,13 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 % Draft mode only - mark overfull hboxes
 % \overfullrule=5pt
 
+% For Japanese YJ
+%\titleformat{\chapter}[display]
+%  {\huge\headingfont}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+
 \begin{document}
+
 
 %%\AddToShipoutPicture*{\BackgroundPic}
 \htmlonly{\newcommand{\thetitlepage}{
@@ -263,6 +276,7 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \fancyhead[RO,LE]{\small\rightmarksection}
 
 %% Include all the chapters one at a time
+
 \include{intro-lang}
 \include{arrays-lang}
 \include{linkedlists-lang}
