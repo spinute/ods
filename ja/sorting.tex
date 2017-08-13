@@ -26,12 +26,11 @@
 この節では3つの整列アルゴリズム、マージソート・クイックソート・ヒープソートを紹介する。
 いずれも配列#a#を入力すると、 $O(#n#\log #n#)$の（期待）実行時間で#a#の要素を昇順に整列する。
 どれも\emph{比較に基づく}アルゴリズムである。
-\javaonly{Their second argument, #c#, is a #Comparator#
+\javaonly{第二引数#c#は#Comparator#である。
 \index{Comparator@#Comparator#}%
-that implements
-the #compare(a,b)#
+これは#compare(a,b)#メソッドを実装するオブジェクトである。
 \index{compare@#compare(a,b)#}%
-method.}
+}
 整列するデータの型はなんでもよい。
 ただ、データの比較のための#compare(a,b)#メソッドを持っていなければならない。
 \secref{sset}でも説明したが、#compare(a,b)#は、$#a#<#b#$なら負の値を、$#a#>#b#$なら正の値を、$#a#=#b#$ならゼロを返す。
@@ -54,7 +53,7 @@ method.}
     \includegraphics[width=\ScaleIfNeeded]{figs/mergesort}
   \end{center}
 %XXX: mergeSort(a, c) only for cpp edition?
-  \caption[Merge sort]{The execution of #mergeSort(a,c)#}
+  \caption{#mergeSort(a,c)#を実行する様子}
   \figlabel{merge-sort}
 \end{figure}
 
@@ -76,7 +75,6 @@ method.}
 この4つの部分問題は8つの大きさ$#n#/8$の問題になる。
 このようなことを繰り返す。
 最終的には$#n#/2$個の大きさ2の部分問題が、#n#個の大きさ1の問題に変換される。
-each of size one.  For each subproblem of size 
 $#n#/2^{i}$の部分問題について、これを併合し、データをコピーするのにかかる時間は$O(#n#/2^i)$である。
 $2^i$個の大きさ$#n#/2^i$の問題があるので、
 大きさ$2^i$の問題のために必要な時間の合計は次のようになる。（これはまだ再帰的には数えていないことに注意する。）
@@ -91,7 +89,7 @@ $2^i$個の大きさ$#n#/2^i$の問題があるので、
 \begin{figure}
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/mergesort-recursion}
-    \caption{The merge-sort recursion tree.}
+    \caption{マージソートの再帰木}
     \figlabel{mergesort-recursion}
   \end{center}
 \end{figure}
@@ -122,11 +120,11 @@ $#n#$が奇数のときはもう少し複雑である。
 この場合ふたつの簡単に確認できる不等式を使う。
 任意の$x\ge 1$について次の式が成り立つ。
 \begin{equation}
-  \log(x+1) \le \log(x) + 1 \enspace , \eqlabel{log-ineq-a}
+  \log(x+1) \le \log(x) + 1 \enspace \eqlabel{log-ineq-a}
 \end{equation}
 また、任意の$x\ge 1/2$について次の式が成り立つ。
 \begin{equation}
-  \log(x+1/2) + \log(x-1/2) \le 2\log(x) \enspace , \eqlabel{log-ineq-b}
+  \log(x+1/2) + \log(x-1/2) \le 2\log(x) \enspace \eqlabel{log-ineq-b}
 \end{equation}
 不等式\myeqref{log-ineq-a}は$\log(x)+1 = \log(2x)$が成り立つことによる。
 不等式\myeqref{log-ineq-b}は$\log$が凹関数であるであることによる。
@@ -143,7 +141,7 @@ $#n#$が奇数のときはもう少し複雑である。
   &\le #n#-1 + #n#\log(#n#/2) + 1/2 \\
   &< #n# + #n#\log(#n#/2) \\
   &= #n# + #n#(\log#n#-1) \\
-  &= #n#\log#n# \enspace . \qedhere
+  &= #n#\log#n# \enspace \qedhere
 \end{align*}
 \end{proof}
 
@@ -165,15 +163,16 @@ $#n#$が奇数のときはもう少し複雑である。
 \begin{figure}
   \begin{center}
     \includegraphics[scale=0.90909]{figs/quicksort}
-    \caption[Quicksort]{An example execution of \javaonly{#quickSort(a,0,14,c)#}\cpponly{#quickSort(a,0,14)#}\pcodeonly{#quickSort(a,0,14)#}}
+    \caption[Quicksort]{\javaonly{#quickSort(a,0,14,c)#}\cpponly{#quickSort(a,0,14)#}\pcodeonly{#quickSort(a,0,14)#}の実行例}
     \figlabel{quicksort}
   \end{center}
 \end{figure}
-XXX: in-place
-すべての処理は配列の部分的なコピーを取るのではなくその場で実行され、#quickSort(a,i,n,c)#は$#a[i]#,\ldots,#a[i+n-1]#$を整列する。
+XXX: in-placeの訳語
+
+すべての処理は配列の部分的なコピーを取るのではなくin-placeで実行され、#quickSort(a,i,n,c)#は$#a[i]#,\ldots,#a[i+n-1]#$を整列する。
 最初にこのメソッドを#quickSort(a,0,a.length,c)#と呼び出す。
 
-クイックソートアルゴリズムの肝は、その場で分割を行うことである。
+クイックソートアルゴリズムの肝は、in-placeで分割を行うことである。
 このアルゴリズムは余分な領域を使わず#a#の要素を入れ替え、次のような添え字#p#と#q#を計算する。
 \[
    #a[i]# \begin{cases}
@@ -231,14 +230,14 @@ $T$を#n#個の相異なる要素をクイックソートで整列するとき�
 \seclabel{heapsort}
 
 \index{heap-sort}%
-XXX: in-place
-\emph{ヒープソート}も処理をその場で行う整列アルゴリズムである。
+XXX: in-placeの訳語
+
+\emph{ヒープソート}もin-placeで処理を行う整列アルゴリズムである。
 ヒープソートは\secref{binaryheap}で説明した二分ヒープを使う。
 #BinaryHeap#はひとつの配列を使ってヒープを表現していたことを思い出そう。
 ヒープソートは入力の配列をヒープに変換し、その後最小値を取り出すことを繰り返す。
 
 具体的には、#n#個の要素を配列#a#に格納する。
-More specifically, a heap stores #n# elements in an array, #a#, at array locations
 各要素は$#a[0]#,\ldots,#a[n-1]#$に入っており、最小値は根、すなわち#a[0]#である。
 ヒープソートは次の操作を繰り返す。
 #a#を#BinaryHeap#に変換した後、#a[0]#と#a[n-1]#を入れ替え、#n#を1減らし、#trickleDown(0)#を呼んで$#a[0]#,\ldots,#a[n-2]#$を再度ヒープにする。
@@ -251,11 +250,7 @@ $#n#=0$となってこの処理が終了すると、#a#の要素は降順に並�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/heapsort}
   \end{center}
-  \caption[Heap sort]{A snapshot of the execution of #heapSort(a,c)#.
-      The shaded part of the
-      array is already sorted.  The unshaded part is a #BinaryHeap#.
-      During the next iteration, element $5$ will be placed into array
-      location $8$.}
+  \caption{#heapSort(a,c)#の実行中のある瞬間の様子。色の付いている部分は既に整列済みの配列である。色の付いていない部分は#BinaryHeap#になっている。次の繰り返しでは、要素$5$が配列の位置$8$に移される。}
   \figlabel{heapsort}
 \end{figure}
 
@@ -281,7 +276,7 @@ $#n#/2$個の要素のためにはなにもする必要がなく、$#n#/4$個の
     \sum_{i=1}^{\log#n#} O((i-1)#n#/2^{i})
     \le \sum_{i=1}^{\infty} O(i#n#/2^{i})
     = O(#n#)\sum_{i=1}^{\infty} i/2^{i}
-    =  O(2#n#) = O(#n#) \enspace .
+    =  O(2#n#) = O(#n#)
 \]
 最後から二番目の等号は、期待値の定義より、$\sum_{i=1}^{\infty} i/2^{i}$とコインを投げる（表が出る回も含む）回数が等しいことと、\lemref{coin-tosses}から成り立つ。
 
@@ -346,7 +341,7 @@ $#a[u.i]#<#a[u.j]#$ならアルゴリズムは左の部分木に進み、そう�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/comparison-tree}
   \end{center}
-  \caption[A comparison tree]{A comparison tree for sorting an array $#a[0]#,#a[1]#,#a[2]#$ of length #n=3#.}
+  \caption{長さ#n=3#の配列$#a[0]#,#a[1]#,#a[2]#$を整列するときの比較木}
   \figlabel{comparison-tree}
 \end{figure}
 
@@ -366,8 +361,7 @@ $#a[u.i]#<#a[u.j]#$ならアルゴリズムは左の部分木に進み、そう�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/comparison-tree-b}
   \end{center}
-  \caption{A comparison tree that does not correctly sort every input
-  permutation.}
+  \caption{正しく整列できない入力が存在する比較木}
   \figlabel{comparison-tree-2}
 \end{figure}
 
@@ -388,6 +382,7 @@ $#a[u.i]#<#a[u.j]#$ならアルゴリズムは左の部分木に進み、そう�
 これを示すには、ランダムなアルゴリズムについて違った視点から考えてみればよい。
 
 XXX: decision treeの訳語
+
 以下の議論では決定木は次の意味で「散らかっていない」と仮定する。
 どのような入力配列#a#によっても到達できないノードは削除される。
 このとき木にはちょうど$#n#!$個だけの葉が含まれる。
@@ -442,7 +437,7 @@ $0,\ldots,#k#-1$の範囲の要素#n#個からなる入力の配列#a#がある�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/countingsort}
   \end{center}
-  \caption{The operation of counting sort on an array of length $#n#=20$ that stores integers $0,\ldots,#k#-1=9$.}
+  \caption{$0,\ldots,#k#-1=9$のいずれかを格納する、長さ$#n#=20$である配列に対する、計数ソートの操作}
   \figlabel{countingsort}
 \end{figure}
 
@@ -488,8 +483,7 @@ $0,\ldots,#k#-1$の範囲の要素#n#個からなる入力の配列#a#がある�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/radixsort}
   \end{center}
-  \caption{Using radixsort to sort $#w#=8$-bit integers by using 4 passes
-   of counting sort on $#d#=2$-bit integers.}
+  \caption{基数ソートにより$#w#=8$ビットの整数を整列する。$#d#=2$ビットの整数を計数ソートによって整列する処理を4回行う。}
   \figlabel{radixsort}
 \end{figure}
 
@@ -515,17 +509,16 @@ $0,\ldots,#k#-1$の範囲の要素#n#個からなる入力の配列#a#がある�
 Knuth \cite{k97v3}によればマージソートはvon~Neumann (1945)が考案したものだという。
 クイックソートはHoare \cite{h61}が考案した。
 はじめにヒープソートを考案したのは
-The original heap-sort algorithm is due to 
 Williams \cite{w64}だが、本節で説明した$O(#n#)$の時間でボトムアップにヒープを構築する方法はFloyd \cite{f64}によるものである。
 比較に基づくソートの下界は言い継がれてきたものである。
 次の表は比較に基づくアルゴリズムの性能をまとめたものだ。
 
 \begin{center}
   \begin{tabular}{|l|r@{}l@{ }l|l|} \hline
-      & \multicolumn{3}{c|}{comparisons} & in-place  \\ \hline
-    Merge-sort & $#n#\log #n#$ & &  worst-case & No  \\
-    Quicksort & $1.38#n#\log #n#$ & ${}+ O(#n#)$ & expected & Yes \\
-    Heap-sort & $2#n#\log #n#$ & ${}+ O(#n#)$ & worst-case & Yes \\ \hline
+      & \multicolumn{3}{c|}{時間計算量} & in-place  \\ \hline
+    マージソート & $#n#\log #n#$ & &  最悪実行時間 & No  \\
+    クイックソート & $1.38#n#\log #n#$ & ${}+ O(#n#)$ & 期待実行時間 & Yes \\
+    ヒープソート & $2#n#\log #n#$ & ${}+ O(#n#)$ & 最悪実行時間 & Yes \\ \hline
   \end{tabular}
 \end{center}
 
@@ -553,7 +546,7 @@ Williams \cite{w64}だが、本節で説明した$O(#n#)$の時間でボトム�
 同様に基数ソートは同じ範囲の整数を$O(#n#(\log_{#n#}(b-a))$の時間で整列できる。
 また、いずれのアルゴリズムも、IEEE754形式の浮動小数点数を整列するのにも使える。
 これはIEEEの形式では数の大きさに符号が付いた二進整数表現だと見なして比較ができるように設計されているからである。
-\cite{ieee754}.
+\cite{ieee754}
 
 \begin{exc}
 $1,7,4,6,2,8,3,5$からなる配列を入力とする、マージソートとヒープソートの実行の様子を描け。
