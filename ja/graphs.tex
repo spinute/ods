@@ -41,9 +41,7 @@ $v_j$は$v_i$から\emph{到達可能}であるという。
   \begin{center}
     \includegraphics[scale=0.90909]{figs/graph}
   \end{center}
-  \caption{A graph with twelve vertices.  Vertices are drawn as numbered
-    circles and edges are drawn as pointed curves pointing from source
-    to target.}
+  \caption{12個の頂点からなるグラフ。頂点は番号付きの円で、辺はsourceからtargetに向かう矢印で描く。}
   \figlabel{graph}
 \end{figure}
 
@@ -89,8 +87,8 @@ $v_j$は$v_i$から\emph{到達可能}であるという。
 行列のエントリ#a[i][j]#は次のように定義される。
 \[  #a[i][j]#=
     \begin{cases}
-      #true# & \text{if $#(i,j)#\in E$} \\
-      #false# & \text{otherwise}
+      #true# & \text{$#(i,j)#\in E$のとき} \\
+      #false# & \text{そうでないとき}
     \end{cases}
 \]
 \figref{graph}のグラフの隣接行列を\figref{graph-adj}に示した。
@@ -118,7 +116,7 @@ $v_j$は$v_i$から\emph{到達可能}であるという。
       11&0&0&0&0&0&0&0&1&0&0&1 &0\\
     \end{tabular}
   \end{center}
-  \caption{A graph and its adjacency matrix.}
+  \caption{グラフとその隣接行列}
   \figlabel{graph-adj}
 \end{figure}
 
@@ -188,7 +186,7 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
          & & & & &4&  &  & &  &  & \\
     \end{tabular}
   \end{center}
-  \caption{A graph and its adjacency lists}
+  \caption{グラフとその隣接リスト}
   \figlabel{graph-adjlist}
 \end{figure}
 
@@ -280,10 +278,7 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/graph-bfs}
   \end{center}
-  \caption[Breadth-first-search]{An example of breadth-first-search starting at node 0. Nodes are
-  labelled with the order in which they are added to #q#.  Edges that
-  result in nodes being added to #q# are drawn in black, other edges
-  are drawn in grey.}
+  \caption{ノード0から始まる幅優先探索の例。ノードにはこの探索において#q#に追加される順番が付されている。ノードが#q#に追加されるときに辿られる辺を黒、それ以外の辺を灰色に描いている。}
   \figlabel{graph-bfs}
 \end{figure}
 
@@ -332,15 +327,12 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/graph-dfs}
   \end{center}
-  \caption[Depth-first-search]{An example of depth-first-search starting at node 0. Nodes are
-  labelled with the order in which they are processed.  Edges that
-  result in a recursive call are drawn in black, other edges
-  are drawn in #grey#.}
+  \caption{ノード0から始まる深さ優先探索の例。ノードにはこの探索において#q#に追加される順番が付されている。再帰的呼び出しになる辺を黒、それ以外の辺を灰色に描いている。}
   \figlabel{graph-dfs}
 \end{figure}
 
 深さ優先探索のことを考えるのには再帰は便利なのだが、実装する際にはこれは最善の方法ではない。
-XXX: stack overflow
+XXX: stack overflow の訳語
 上のコードは、stackのoverflowによって大きなグラフの探索に失敗してしまうことがある。
 別の実装方法として、再帰を明示的なスタック#s#に置き換えることが考えられる。
 次の実装はこれを行ったものである。
@@ -377,10 +369,7 @@ XXX: black にしなくていいのか?
   \begin{center}
     \includegraphics[scale=0.90909]{figs/dfs-cycle}
   \end{center}
-  \caption[Cycle detection]{The depth-first-search algorithm can be used to detect cycles
-  in $G$. The node #j# is coloured #grey# while #i# is still #grey#.  This
-  implies that there is a path, $P$, from #i# to #j# in the depth-first-search
-  tree, and the edge #(j,i)# implies that $P$ is also a cycle.}
+  \caption{深さ優先探索アルゴリズムにより、グラフ$G$の循環を検出できる。ノード#i#が灰色であるとき、ノード#j#も灰色である。そのため、深さ優先探索木において#i#から#j#への経路$P$が存在する。また、辺#(j,i)#が存在するとき、$P$は循環である。}
   \figlabel{dfs-cycle}
 \end{figure}
 
@@ -398,7 +387,7 @@ $#m#_#r#$をこのような頂点から出る辺の個数とする。
 幅優先探索はMoore \cite{m59}とLee \cite{l61}によって独立に考案されたようである。
 それぞれは迷路の探索と回路における経路に関する文脈で発見された。
 
-グラフの隣接リスト表現は（より一般的であった）隣接行列表現の代替としてHopcroft and Tarjan \cite{ht73}が提案した。
+グラフの隣接リスト表現は（より一般的であった）隣接行列表現の代替としてHopcroftとTarjan \cite{ht73}が提案した。
 隣接リスト表現は、深さ優先探索の他にも、Hopcroft-Tarjanの平面性テストのアルゴリズムにおいて重要な役割を果たす。
 \index{planarity testing}%
 これはグラフを辺が交差しないように平面に描けるかどうかを$O(#n#)$の時間で調べるアルゴリズムである。\cite{ht74}.
@@ -413,7 +402,7 @@ $#m#_#r#$をこのような頂点から出る辺の個数とする。
 
 \begin{figure}
   \centering{\includegraphics[scale=0.90909]{figs/graph-example2}}
-  \caption{An example graph.}
+  \caption{例題用のグラフ}
   \figlabel{graph-example2}
 \end{figure}
 
@@ -480,6 +469,7 @@ $#m#_#r#$をこのような頂点から出る辺の個数とする。
   \index{universal sink}%
   \index{celebrity|see{universal sink}}%
   XXX: universal sinkの訳語
+
   グラフ$G$の\emph{universal sink}とは、$#n#-1$個の辺の行き先になっており、かつそこから辺が出ていない頂点である。
   \footnote{universal sink #v#を\emph{celebrity}と言うこともある。部屋の中のみなが#v#のことを知っているが、#v#は部屋の中の他の人が誰だか全く知らないのである。}
   #AdjacencyMatrix#で表現されるグラフ$G$がuniversal sinkを持つかどうかを判定するアルゴリズムを設計・実装せよ。
