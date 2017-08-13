@@ -29,7 +29,7 @@ XXX: backing array の上手い訳語はあるか
   そのため#get(i)#・#set(i,x)#はいずれも定数時間で実行される。
 
   \item 配列は動的ではない。リストの真ん中付近に要素を追加・削除するためには、隙間を作ったり埋めたりするために多くの要素が移動することになる。
-  #add(i,x)#・#remove(i)#操作の実行時間が#n#・#i#に依存するのはこのためだ。
+  #add(i,x)#・#remove(i)#操作の実行時間が#n#と#i#に依存するのはこのためだ。
 
   \item 配列は伸び縮みしない。
   backing arrayのサイズより多くの要素をデータ構造に入れるには、新しい配列を割当て、古い配列の要素をそちらにコピーする必要がある。
@@ -61,11 +61,11 @@ C++のふつうの配列の要素数は要素数を保持していないため�
 
 \index{ArrayStack@#ArrayStack#}%
 
-#ArrayStack#は\emph{backing array}#a#を使ったリストインターフェースの実装だ。
+#ArrayStack#は\emph{backing array}(配列#a#と呼ぶことにする)を使ったリストインターフェースの実装だ。
 リストの#i#番目の要素を#a[i]#とする。
-ほとんどの場合#a#は実際に必要な値よりも大きい。
+ほとんどの場合、配列#a#は実際に必要な要素数よりも多くの要素を格納できる。
 そのため整数#n#によって実際に#a#に入っている要素数を表す。
-つまり、リストの要素は#a[0]#,\ldots,#a[n-1]#に格納される。
+つまり、リストの要素は#a[0]#,\ldots,#a[n-1]#に格納されている。
 また、関係$#a.length# \ge #n#$が常に成り立つ。
 
 \codeimport{ods/ArrayStack.a.n.size()}
@@ -92,7 +92,7 @@ C++のふつうの配列の要素数は要素数を保持していないため�
 \end{figure}
 
 \codeimport{ods/ArrayStack.add(i,x)}
-#resize()#が呼ばれるかもしれないが、このコストを無視すれば#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり、この操作のコストは（resizeのことを無視すれば）$O(#n#-#i#)$である。
+#resize()#が呼ばれた場合のコストを無視すれば、#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり、この操作のコストは（resizeのことを無視すれば）$O(#n#-#i#)$である。
 
 #remove(i)#の実装も似ている。
 $#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]#は書き換えられる））、#n#の値をひとつ小さくする。
@@ -101,7 +101,7 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]#は書き換え
 
 \codeimport{ods/ArrayStack.remove(i)}
 #resize()#が呼ばれるかもしれないが、このコストを無視すれば#remove(i)#のコストはシフトする要素数に比例し、$O(#n#-#i#)$である。
-
+% TODO サンプルコードが a[n-1]（最終要素）を NULL に書き換えておらず、a[n-2]とa[n-1]がダブっている！どうコードを書き換えるべき？
 \subsection{拡張と収縮}
 
 #resize()#の実装は単純だ。
@@ -116,16 +116,17 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]#は書き換え
 
 前節からの実行時間分析は#resize()#のコストを無視していた。
 この節では\emph{償却解析}として知られる方法でこれを解決する。 % TODO: YJ check the translation of other textbooks if 償却 is the word used widely
+% caprice to YJ Wikipediaに「償却解析 (Amortized analysis)」って項目あるからいいのでは？
 この手法は個々の#add(i, x)#・#remove(i)#における#resize()#のコストを求めるわけではない。
 代わりに、#add(i, x)#・#remove(i)#からなる#m#個の操作の列の間に呼ばれる#resize()#の計算コストの合計を考える。
 
-次の補題を示す。
+次の補題を示す。 % TALK lem も lemma 2.1. から「補題 2.1.」にしたほうがよい？
 \begin{lem}\lemlabel{arraystack-amortized}
   空の#ArrayStack#が作られたあと、$m\ge 1$個の#add(i, x)#・#remove(i)#からなる操作の列が順に実行されるとき、この間に呼ばれる#resize()#の合計実行時間は#O(m)#である。
 \end{lem}
 
 \begin{proof}
-#resize()#が呼ばれるとき、その前の#resize()#呼び出しから#add#・#remove#が実行された回数は$#n#/2-1$以下である。
+#resize()#が呼ばれるとき、その前の#resize()#呼び出しから#add#・#remove#が実行された回数は$#n#/2-1$回以下である。
 $i$回目の#resize()#呼び出しの際の#n#を$#n#_i$とする。
 $r$を#resize()#の呼び出し回数とする。
 このとき、#add(i,x)#と#remove(i)#の合計呼び出し回数は次の関係を満たす。
@@ -143,7 +144,7 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
 \sum_{i=1}^{r} O(#n#_i) \le O(m+r) = O(m)  \enspace
 \]
 
-あとは$(i-1)$から$i$回目の#resize()#の間に#add(i,x)#か#remove(i)#が呼ばれる回数が$#n#_i/2$以下であることを示す。
+あとは$(i-1)$から$i$回目の#resize()#の間に#add(i,x)#か#remove(i)#が呼ばれる回数が$#n#_i/2 - 1$回以上であることを示す。 % XXX 原文は at least ni/2 だったのだが、 これ文脈からして at least ni/2 - 1 では？
 
 2つの場合が考えられる。
 ひとつは#resize()#が#add(i,x)#に呼ばれる場合で、これはbacking arrayが一杯になるとき、つまり$#a.length# = #n#=#n#_i$が成り立つときだ。
@@ -151,8 +152,16 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
 しかし#a#の要素数は今では$#n#_i=#a.length#$なのだから、前の#resize()#から$#n#_i/2$回以上は#add(i,x)#が呼ばれたことがわかる。
 
 もうひとつ考えられるのは、#resize()#が#remove(i)#に呼ばれる場合で、このとき$#a.length# \ge 3#n#=3#n#_i$である。
-前の#resize()#の直後では#a#の要素数は$#a.length/2#-1$以下であった。
+ひとつ前の（つまり、i-1回目の）#resize()#の直後では#a#の要素数は$#a.length/2#-1$以下であった。
+% XXX この a.length/2-1 以下ってどうして言えるのか？
+% 本書中の resize() は、縮小する場合のサイズについて言及していない
+% そのため、
+% a.length = 16 から a.length = 32     に i-1 回目の resize
+% a.length = 32 から a.length = 32 /3  に i   回目の resize
+% をした際に a.length がいくつになるのか不明でこの議論は成り立ってないと思う
+%
 \footnote{この数式における${}-1$は、特別なケース$#n#=0$かつ$#a.length# = 1$を考慮したものだ。}
+% いや、 n = 0 かつ a.length = 1 で a.length/2 - 1 を計算したら0未満になるでしょ、何言ってんの
 今#a#には$#n#_i\le#a.length#/3$個の要素が入っている。
 よって、直前の#resize()#以降に実行された#remove(i)#の回数の下界は次のように計算できる。
 
@@ -175,12 +184,12 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
   #resize()#のコストを無視すると、#ArrayStack#における各操作の実行時間は、
   \begin{itemize}
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
-    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+#n#-#i#)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(#n#-#i#)$である。
   \end{itemize}
   空の#ArrayStack#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
-#ArrayStack#は#Stack#を実装する効率的な方法である。
+#ArrayStack#というデータ構造は#Stack#インターフェースを実装する効率的な方法である。
 特に#push(x)#は#add(n,x)#、#pop()#は#remove(n-1)#のようにそれぞれ実装できる。
 またいずれの操作も償却実行時間$O(1)$である。
 
