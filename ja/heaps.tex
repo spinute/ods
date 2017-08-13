@@ -1,16 +1,16 @@
 \chapter{ヒープ}
 \chaplabel{heaps}
 この章では優先度付きキューという役に立つデータ構造のふたつの実装を説明する。
-いずれも特殊な二分木であり、\emph{ヒープ}（乱雑に積まれたもの）と呼ばれている。
+いずれも特殊な二分木であり、\emph{ヒープ}（雑多に積まれた山）と呼ばれている。
 \index{heap}%
 \index{binary heap}%
 \index{heap!binary}%
 これは二分探索木が高度に構造化されながら積み上げられていたのとは対照的である。
 
 ひとつめのヒープの実装は配列を使って完全二分木をシミュレートする。
-この効率的な実装はヒープソート（\secref{heapsort}参照）という名の、最速の整列アルゴリズムのうちのひとつの基礎になっている。
-ふたつめの実装はより柔軟である。
-これはある優先度付きキューの要素を別の優先度付きキューに取り込む#meld(h)#操作を提供する。
+この効率的な実装はヒープソート（\secref{heapsort}参照）という名の、最速の整列アルゴリズムのうちのひとつを実装するのに使える。
+ふたつめに紹介する実装は、より柔軟な二分木である。
+この実装では、ある優先度付きキューの要素を、別の優先度付きキューに取り込む#meld(h)#操作を行うことができる。
 
 \section{#BinaryHeap#：暗黙の二分木}
 \seclabel{binaryheap}
@@ -28,7 +28,7 @@
   \begin{center}
     \includegraphics[scale=0.90909]{figs/eytzinger}
   \end{center}
-  \caption{Eytzinger's method represents a complete binary tree as an array.}
+  \caption{Eytzinger法により、配列を使って完全二分木を表現する。}
   \figlabel{eytzinger}
 \end{figure}
 
@@ -65,7 +65,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-3} \\
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-4} \\
   \end{center}
-  \caption[Adding to a BinaryHeap]{Adding the value 6 to a #BinaryHeap#.}
+  \caption{#BinaryHeap#に値6を追加する。}
   \figlabel{heap-insert}
 \end{figure}
 
@@ -87,7 +87,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-3} \\
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-4} \\
   \end{center}
-  \caption[Removing from a BinaryHeap]{Removing the minimum value, 4, from a #BinaryHeap#.}
+  \caption{#BinaryHeap#から最小の値4を削除する。}
   \figlabel{heap-remove}
 \end{figure}
 
@@ -102,7 +102,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
 言い換えると、次の式が成り立つ。
 \[
   #n# \ge 2^h
-\]  
+\]
 両辺の対数を取ると、次の式が成り立つ。
 \[
    h \le \log #n#
@@ -144,8 +144,7 @@ XXX: melbadleは定訳がある?
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/meldable-merge}}
-  \caption[Merging in a MeldableHeap]{Merging #h1# and #h2# is done by merging #h2# with one of
-  #h1.left# or #h1.right#.}
+  \caption{#h1#と#h2#を併合するために、#h1.left#または#h1.right#のいずれかに#h2#を併合する。}
   \figlabel{meldable-merge}
 \end{figure}
 
@@ -210,12 +209,12 @@ $\log$は凹関数なので、$\E[W]$は$#n#_1=#n#_2=(#n#-1)/2$で最大値を�
     & = 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1) \\
    & \le  1 + \log ((#n#-1)/2+1) \\
    & =  1 + \log ((#n#+1)/2) \\
-   & =  \log (#n#+1)  \enspace . \qedhere
+   & =  \log (#n#+1)  \enspace \qedhere
 \end{align*}
 \end{proof}
 
 余談だが、情報理論について知っている読者は\lemref{tree-random-walk}の証明をエントロピーの用語で言い換えることができるだろう。
-\begin{proof}[Information Theoretic Proof of \lemref{tree-random-walk}]
+\begin{proof}[\lemref{tree-random-walk}の情報理論的な証明]
 $d_i$を$i$番目の外部ノードとする。
 #n#個のノードを持つ二分木は#n+1#個の外部ノードを持つことを思い出すこと。
 ランダムウォークが$i$番目の外部ノードにたどり着く確率は$p_i=1/2^{d_i}$である。
