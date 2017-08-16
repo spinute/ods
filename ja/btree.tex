@@ -70,9 +70,7 @@ XXX: 著者の環境の話?
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/em}}
-  \caption[The external memory model]{In the external memory model,
-  accessing an individual item, #x#, in the external memory requires
-  reading the entire block containing #x# into RAM.}
+  \caption{外部メモリモデルでは、外部メモリに含まれる要素#x#にアクセスするためには#x#を含むブロックをまるごとRAMに読み込む必要がある。}
   \figlabel{em}
 \end{figure}
 
@@ -83,10 +81,10 @@ XXX: 著者の環境の話?
 例えば比較的小さい値$B=32$であっても、すべての$#n#\le 2^{160}$について$B\ge \log_B #n#$が成り立つ。
 十進法では、$B\ge \log_B #n#$が以下の範囲で成り立つ。
 \[
-#n# \le 1\,461\,501\,637\,330\,902\,918\,203\,684\,832\,716\,283\,019\,655\,932\,542\,976 \enspace 
-. \]
+#n# \le 1\,461\,501\,637\,330\,902\,918\,203\,684\,832\,716\,283\,019\,655\,932\,542\,976
+\]
 
-\section{Block Store}
+\section{BlockStore}
 \index{block store}%
 \index{BlockStore@#BlockStore#}%
 様々なデバイスが外部メモリの概念には含まれる。
@@ -118,7 +116,6 @@ XXX: 著者の環境の話?
 （$B$木において$B=2$とした特殊可すると2-4木になる。）
 
 \index{B-tree@$B$-tree}%
-For any integer 
 任意の整数$B\ge 2$について\emph{$B$木}とは木であって、すべての葉は同じ深さにあり、すべての根でない内部ノードの子の数が$B$以上$2B$以下なものである。
 ノード#u#の子は配列#u.children#に格納される。
 ただし、子の数の条件は根では緩和され、2以上$2B$以下である。
@@ -153,7 +150,7 @@ $B=2$である$B$の例を\figref{btree}に示す。
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/btree-1}}
-  \caption{A $B$-tree with $B=2$.}
+  \caption{$B=2$である$B$木}
   \figlabel{btree}
 \end{figure}
 
@@ -185,8 +182,7 @@ XXX: インデックス?添え字?
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/btree-2}}
-  \caption[Searching in a $B$-tree]{A successful search (for the value 4)
-    and an unsuccessful search (for the value 16.5) in a $B$-tree. Shaded nodes show where the value of #z# is updated during the searches.}
+  \caption{$B$木における成功する探索（4を探す）と、失敗する探索（16.5を探す）の様子。色を付けたノードは探索の途中に値を更新されるものである。}
   \figlabel{btree-find}
 \end{figure}
 より具体的には、ノード#u#にいるとき、まずは#x#が#u.keys#に格納されているかどうかを確認する。
@@ -202,7 +198,7 @@ XXX: インデックス?添え字?
 そうでないときは、$#a[i]#>#x#$または$#a[i]#=#null#$を満たす最小の添え字#i#を返す。
 \begin{figure}
   \centering{\includegraphics[scale=0.90909]{figs/findit}}
-  \caption[The findIt(a,x) method]{The execution of #findIt(a,27)#.}
+  \caption{#findIt(a,27)#を実行する様子}
   \figlabel{findit}
 \end{figure}
 \codeimport{ods/BTree.findIt(a,x)}
@@ -249,9 +245,7 @@ $B$木ではこれはノードの\emph{分割}によって行われる。
      \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
      \includegraphics[width=\ScaleIfNeeded]{figs/btree-split-2} \\
    \end{tabular}}
-   \caption[Splitting a $B$-tree node]{Splitting the node #u# in a
-     $B$-tree ($B=3$). Notice that the key $#u.keys#[2]=\mathrm{m}$
-     passes from #u# to its parent.}
+   \caption{$B=3$である$B$木における、ノード#u#の分割。キー$#u.keys#[2]=\mathrm{m}$は#u#からその親に移る。}
    \figlabel{btree-split}
 \end{figure}
 
@@ -271,8 +265,7 @@ XXX: at a high level? なにが?
      \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
      \includegraphics[width=\ScaleIfNeeded]{figs/btree-add-3}
    \end{tabular}}
-   \caption[Adding to a $B$-tree]{The #add(x)# operation in a
-      #BTree#. Adding the value 21 results in two nodes being split.}
+   \caption{#BTree#における#add(x)#の様子。値21を追加すると、ふたつのノードが分割される。}
    \figlabel{btree-add}
 \end{figure}
 
@@ -305,7 +298,7 @@ XXX: at a high level? なにが?
   \item[上向きに進む段階]
   再帰の上向きに進む段階では、#x#を追加した後、合わせて最大$O(\log_B #n#)$回の分割を行う。
   各分割は3つのノードだけに影響するので、この段階の実行時間は外部メモリモデルでは$O(\log_B #n#)$である。
-  しかし、各分割は$B$個のキーと子をノードからノードに移すので、ワードRAAMモデルでは、この実行時間は$O(B\log #n#)$である。
+  しかし、各分割は$B$個のキーと子をノードからノードに移すので、ワードRAMモデルでは、この実行時間は$O(B\log #n#)$である。
   \end{description}
 
 $B$の値はかなり大きく、$\log #n#$よりもだいぶ大きいことを思い出そう。
@@ -334,8 +327,7 @@ $#x#'$を削除すると、#u#の持つキーの数は$B-1$未満になるかも
      \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
      \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-full-4} \\[2ex]
    \end{tabular}}
-   \caption[Removing from a $B$-tree]{Removing the value 4 from a $B$-tree
-     results in one merge and one borrowing operation.}
+   \caption{この$B$木から値4を削除すると、併合・借用が一回ずつ発生する。}
    \figlabel{btree-remove-full}
 \end{figure}
 
@@ -359,9 +351,7 @@ $#x#'$を削除すると、#u#の持つキーの数は$B-1$未満になるかも
      \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
      \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-2}
    \end{tabular}}
-   \caption[The remove operation in a $B$-tree] {The #remove(x)# operation
-      in a #BTree#. To remove the value $#x#=10$ we replace it with the
-      the value $#x'#=11$ and remove 11 from the leaf that contains it.}
+   \caption{#BTree#において#remove(x)#を実行する様子。値$#x#=10$を削除するとき、その値を$#x'#=11$にし、値11を含む葉を削除する。}
    \figlabel{btree-remove}
 \end{figure}
 
@@ -402,8 +392,7 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
        \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
        \includegraphics[width=\ScaleIfNeeded]{figs/btree-borrow-2} \\
      \end{tabular}}
-    \caption[Borrowing in a $B$-tree]{If #v# has more than $B-1$ keys,
-       then #w# can borrow keys from #v#.}
+    \caption{#v#が$B-1$個より多くのキーを持つ時、#w#は#v#からキーを借りることができる。}
     \figlabel{btree-borrow}
   \end{figure}
 
@@ -422,8 +411,7 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
        \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
        \includegraphics[width=\ScaleIfNeeded]{figs/btree-merge-2} \\
      \end{tabular}}
-     \caption[Merging in a $B$-tree]{Merging two siblings #v# and #w#
-     in a $B$-tree ($B=3$).}
+     \caption{$B=3$である$B$木の兄弟#v#・#w#を併合する。}
      \figlabel{btree-merge}
   \end{figure}
 \end{description}
@@ -501,7 +489,6 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
   もし#remove(x)# において借用がないなら、これはあるノードでキーを削除して終了したためであり、このノードは操作の前には$B$個以上のキーを持っていたことになる。
   最悪の場合には、このノードがちょうど$B$個のキーを持っており、そのため操作の後では$B-1$個のキーを持ち、クレジットを1作って与えなければならない。
 
-XXX: ちょっと迷子
   いずれの場合にも、つまり削除が借用で終わっても、そうでなくても、クレジット不変条件を保ち、併合と借用のコストを支払うためには、高々3のクレジットを#remove(x)#の間に作る必要がある。
   以上より定理が示された。
 \end{proof}
@@ -509,7 +496,6 @@ XXX: ちょっと迷子
 \lemref{btree-split}の目的は、ワードRAMモデルにおいて、#add(x)#・#remove(x)#からなる$m$個の操作の列を順に実行するとき、分割・併合・借用にかかる時間は合わせて$O(Bm)$であることを示すことであった。
 つまり、これらの操作の償却コストは$O(B)$であり、ワードRAMモデルにおける#add(x)#・#remove(x)#の償却コストは$O(B+\log #n#)$である。
 この結果を次のふたつの定理にまとめる。
-This is summarized by the following pair of theorems:
 
 \begin{thm}[外部メモリモデルにおける$B$木]
 #BTree#は#SSet#インターフェースを実装する。
@@ -639,6 +625,6 @@ $B$木を修正し、ノードの持つ子の数が$B$以上$3B$以下（その�
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/bplustree}}
-  \caption{A $B^+$-tree is a $B$-tree on top of a doubly-linked list of blocks.}
+  \caption{$B^+$木は、ブロックの双方向連結リストの上に$B$木が乗ったデータ構造である。}
   \figlabel{bplustree}
 \end{figure}

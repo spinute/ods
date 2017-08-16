@@ -35,8 +35,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-1}
   \end{center}
-  \caption{The integers stored in a binary trie are encoded as
-    root-to-leaf paths.}
+  \caption{二分トライでは、整数を根から葉への経路として符号化する。}
   \figlabel{binarytrie-ex}
 \end{figure}
 
@@ -57,8 +56,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-2}
   \end{center}
-  \caption[A BinaryTrie]{A #BinaryTrie# with #jump# pointers shown as curved dashed
-  edges.}
+  \caption{二分トライにおける#jump#ポインタを破線で表す。}
   \figlabel{binarytrie-ex2}
 \end{figure}
 
@@ -80,7 +78,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-3}
   \end{center}
-  \caption[Search paths in a BinaryTrie]{The paths followed by #find(5)# and #find(8)#.}
+  \caption{#find(5)#および#find(8)#が辿る経路}
   \figlabel{binarytrie-find}
 \end{figure}
 #find(x)#の実行時間において支配的なのは、根から葉への経路を辿る処理であり、この時間は$O(#w#)$である。
@@ -98,8 +96,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-add}
   \end{center}
-  \caption[Adding to a BinaryTrie]{Adding the values 2 and 15 to the #BinaryTrie# in
-  \figref{binarytrie-ex2}.}
+  \caption{\figref{binarytrie-ex2}の#BinaryTrie#に、値2、値15を追加する。}
   \figlabel{binarytrie-add}
 \end{figure}
 \codeimport{ods/BinaryTrie.add(x)}
@@ -120,8 +117,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/binarytrie-remove}
   \end{center}
-  \caption[Removing from a BinaryTrie]{Removing the value 9 from the #BinaryTrie# in
-  \figref{binarytrie-ex2}.}
+  \caption{\figref{binarytrie-ex2}の#BinaryTrie#から値9を削除する。}
   \figlabel{binarytrie-remove}
 \end{figure}
 \codeimport{ods/BinaryTrie.remove(x)}
@@ -162,8 +158,7 @@ XXX: doubly-logarithmicはlog(log(x))のことだろうか（なんと訳そう�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/xfast-path}
   \end{center}
-  \caption{Since there is no node labelled $111\star$, the search path
-    for 14 (1110) ends at the node labelled $11{\star\star}$ .}
+  \caption{ラベル$111\star$を持つノードは存在しないので、14 (1110)の探索経路はラベル$11{\star\star}$を持つノードで終了する。}
   \figlabel{xfast-path}
 \end{figure}
 
@@ -218,7 +213,6 @@ $#h-l#\le 1$になればこの処理を終了する。
 #XFastTrie#は#BinaryTrie#と比べて問い合わせの応答時間は指数的に速くなった。
 しかし、#add(x)#・#remove(x)#の実行時間は依然としてさほど速くない。
 さらに、
-operations are still not terribly fast.  Furthermore, the space usage,
 領域使用量は$O(#n#\cdot#w#)$であり、この本で紹介した他の#SSet#の実装の$O(#n#)$と比べて大きい。
 このふたつの問題は関連している。
 #n#回の#add(x)#によって大きさ$#n#\cdot#w#$の構造を作るなら、#add(x)#の一回あたりの実行時間・領域使用量は少なくとも#w#程度のオーダーになる。
@@ -247,8 +241,7 @@ Treapは#SSet#の操作を対数時間でサポートするので、それぞの
   \begin{center}
     \includegraphics[scale=0.90909]{figs/yfast}
   \end{center}
-  \caption[A YFastTrie]{A #YFastTrie# containing the values 0, 1, 3, 4,
-  6, 8, 9, 10, 11, and 13.}
+  \caption{0, 1, 3, 4, 6, 8, 9, 10, 11, 13を含む#YFastTrie#}
   \figlabel{yfast}
 \end{figure}
 
@@ -280,9 +273,7 @@ Treapは#SSet#の操作を対数時間でサポートするので、それぞの
   \begin{center}
     \includegraphics[scale=0.90909]{figs/yfast-add}
   \end{center}
-  \caption[Adding to a YFastTrie]{Adding the values 2 and 6 to a #YFastTrie#. The coin toss
-    for 6 came up heads, so 6 was added to #xft# and the treap containing
-    $4,5,6,8,9$ was split.}
+  \caption{#YFastTrie#に値2、値6を追加する。6を追加する時のコイン投げで表が出たので、6は#xft#に追加され、$4,5,6,8,9$を含むTreapは分割される。}
   \figlabel{yfast-add}
 \end{figure}
 #x#を#t#に追加するのにかかる時間は$O(\log #w#)$である。
@@ -304,7 +295,7 @@ Treapは#SSet#の操作を対数時間でサポートするので、それぞの
   \begin{center}
     \includegraphics[scale=0.90909]{figs/yfast-remove}
   \end{center}
-  \caption[Removing from a YFastTrie]{Removing the values 1 and 9 from a #YFastTrie# in \figref{yfast-add}.}
+  \caption{\figref{yfast-add}の#YFastTrie#から値1、値9を削除する。}
   \figlabel{yfast-remove}
 \end{figure}
 #xft#からノード#u#を見つけるのに必要な時間の期待値は$O(\log#w#)$である。
@@ -336,15 +327,13 @@ Treap #t#は#x#以上の要素を含む。
 これは、先の段落と同じコイン投げ試行において、最後の試行を数えない場合なので、$\E[k]\le#w#-1$である。
 
 まとめると、$#n#_#x#=j+k$より、
-\[  \E[#n#_#x#] = \E[j+k] = \E[j] + \E[k] \le 2#w#-1 \enspace .  \qedhere \]
+\[  \E[#n#_#x#] = \E[j+k] = \E[j] + \E[k] \le 2#w#-1 \qedhere \]
 \end{proof}
 \begin{figure}
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/yfast-sample}
   \end{center}
-  \caption[The query time in a YFastTrie]{The number of elements in
-  the treap #t# containing #x# is determined by two coin tossing
-  experiments.}
+  \caption{#x#を含むtreap #t#の要素数は二回のコイン投げにより決まる。}
   \figlabel{yfast-sample}
 \end{figure}
 %Surprisingly, the bound in \lemref{yfast-subtreesize} is tight.  (If this
@@ -374,17 +363,17 @@ Treap #t#は#x#以上の要素を含む。
 
 \section{ディスカッションと練習問題}
 #add(x)#・#remove(x)#・#find(x)#の実行時間がいずれも$O(\log#w#)$であるデータ構造としてはじめて提案されたのは、van~Emde~Boasによるもので、
-\emph{van~Emde~Boas}
+\emph{van~Emde~Boas木}
 \index{van Emde Boas tree}%
-(or \emph{stratified})
+（または\emph{stratified木}）
 \index{stratified tree}%
-\emph{木}という名で知られている。\cite{e77}
+という名で知られている。\cite{e77}
 オリジナルのvan~Emde~Boas木の大きさは$2^{#w#}$で、このために大きな整数についてこのデータ構造は非実用的であった。
 
 #XFastTrie#・#YFastTrie#はWillard \cite{w83}によって提案された。
 #XFastTrie#とvan~Emde~Boasには密接な関係がある。
 例えば、
-#XFastTrie#におけるハッシュテーブルはvan~Emde~Boas treeの配列を置き換えたものである。
+#XFastTrie#におけるハッシュテーブルはvan~Emde~Boas木の配列を置き換えたものである。
 つまり、ハッシュテーブル#t[i]#に要素を格納する代わりに、van~Emde~Boasでは長さ$2^{#i#}$の配列に要素を格納する。
 
 他の整数を格納するためのデータ構造としては、FredmanとWillardのfusion treeがある。\cite{fw93}
