@@ -44,7 +44,8 @@
 右の木が得られる追加操作の列は$21,964,800$種類ある。
 一方で、左の木が得られる追加操作の列は上のものだけである。
 
-上の例から、定性的には、$0,\ldots,14$をランダムに並び替え、その要素を順に二分探索木に入れていくと、（\figref{rbs-lvc}の右のもののような）とてもバランスの良い木ができることが多く、（\figref{rbs-lvc}の左のもののような）非常にバランスの悪い木ができることは滅多にないとわかる。
+% YJ: Anecdotal evidenceは信頼性の低い、事例を元にした証拠という意味。定性的というのは必ずしも信頼性の低さを意味するものではないと思う(定性的だが信頼性の高い証拠も考えられる)。対応する日本語はあまりないがこの場合一番近い日常語は直感的とかだと思う。
+上の例から、直感的には、$0,\ldots,14$をランダムに並び替え、その要素を順に二分探索木に入れていくと、（\figref{rbs-lvc}の右のもののような）とてもバランスの良い木ができることが多く、（\figref{rbs-lvc}の左のもののような）非常にバランスの悪い木ができることはあまりないと分かる。
 
 このことを形式的に述べるために、ランダム二分探索木を考える。
 次の手順で大きさ#n#の\emph{ランダム二分探索木}が得られる。
@@ -100,7 +101,7 @@ $#x#\in\{0,\ldots,#n#-1\}$は、単にサイズ#n#の順序付き集合におけ
 \lemref{rbs}は次の小節で証明する。
 ここでは\lemref{rbs}のふたつの項目の意味を考える。
 ひとつめは、サイズ#n#の木から要素を探索するとき、探索経路の長さの期待値は$2\ln n + O(1)$以下であると主張する。
-ふたつめは、木に含まれない要素を探す場合についても、同じことを主張する。
+ふたつめは、木に含まれない要素を探す場合の探索経路の長さの期待値について主張する。 % YJ removed ambiguousity
 これらを比べると、木に含まれない要素を探すより、含まれる要素を探す方が、少しだけ早いことがわかる。
 
 
@@ -122,8 +123,7 @@ $j\neq i$ならば$j$を含むノード$#u#_j$は$i$を含むノード$#u#_i$よ
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/rbst-records}
   \end{center}
-  \caption{The value $i<#x#$ is on the search path for #x# if and only
-   if $i$ is the first element among $\{i,i+1,\ldots,\lfloor#x#\rfloor\}$ added to the tree.}
+  \caption{値$i<#x#$が#x#の探索経路中にあることの必要十分条件は$i$が$\{i,i+1,\ldots,\lfloor#x#\rfloor\}$のうち最初に木に加えられた要素であることである。}
   \figlabel{rbst-records}
 \end{figure}
 
@@ -187,8 +187,10 @@ $I_i$を指示確率変数とする。
 \thmref{rbs}における期待値は、ランダム二分探索木を作るための置換のランダム性に基づく。つまり、#x#をランダムに選ぶことには依存しておらず、任意の#x#についてこれは成り立つ。
 
 % XXX: Randomized Binary Search Tree は random binary search treeをどう訳し分けるか
+% YJ: ランダム化二分探索木？動的ランダム二分探索木？
+% 原著はこのsecではTreapをRandomized binary search treeの一つとして紹介しているのにかかわらずexerciseのところではMartinezによる変種こそをrandomized binary search treeと呼んで２つを対比している。
 %\section{#Treap#: A Randomized Binary Search Tree}
-\section{#Treap#}
+\section{#Treap#: 動的ランダム二分探索木}
 \seclabel{treap}
 
 \index{Treap@#Treap#}%
@@ -359,7 +361,7 @@ $I_i$を指示確率変数とする。
 \[
     2\ln #n# +O(1) \approx 1.386\log #n#  + O(1)
 \]
-よって#Treap#における探索経路の方が短く、各操作も#Skiplist#よりも#Treap#の方がかなり早いと解釈できるだろう。
+よって#Treap#における探索経路の方が短く、各操作も#Skiplist#よりも#Treap#の方がかなり速いと解釈できるだろう。
 \chapref{skiplists}の\excref{skiplist-opt}で示したように、偏ったコイントスを使って、#Skiplist#における探索経路の長さの期待値を次のように減らせる。
 \bf{XXX: SkiplistSSetの誤植?}
 \[
@@ -398,10 +400,9 @@ min-wise independent性とは次の性質である。
 \index{tabulation hashing}%
 \index{hashing!tabulation}%
 
-#Treap#の他の変種であって、優先度を各ノードに蓄えないものとして、randomized binary search treeがある。
+#Treap#の他の変種であって、優先度を各ノードに蓄えないものとして、Mart\'\i nezとRoura \cite{mr98}による動的ランダム二分探索木がある。
 \index{randomized binary search tree}%
 \index{binary search tree!randomized}%
-これはMart\'\i nezとRoura \cite{mr98}が提案した。
 任意のノード#u#は#u#を根とする部分木の大きさ#u.size#を保持する。
 #add(x)#・#remove(x)#いずれのアルゴリズムもランダム化されている。
 #x#を#u#を根とする部分木に追加するアルゴリズムは次のものである。
@@ -411,7 +412,7 @@ min-wise independent性とは次の性質である。
 \end{enumerate}
 ひとつめの場合は#Treap#における#add(x)#において#x#のノードがランダムな優先度として#size(u)#個のいずれの値よりも小さい値を取る場合に対応しており、この事象の発生確率をそのままアルゴリズムに使っている。
 
-#x#をrandomized binary search treeから削除するやり方は#Treap#における削除と似ている。
+#x#を動的ランダム二分探索木から削除するやり方は#Treap#における削除と似ている。
 #x#を含むノード#u#を見つけ、これが葉に到達するまで繰り返し深さを増やしながら回転し、そこで木から切り離す。
 各ステップにおける回転が右か左かをランダムに決める。
 \begin{enumerate}
@@ -424,9 +425,9 @@ min-wise independent性とは次の性質である。
 \end{enumerate}
 ここでも#Treap#において#u#で左右の回転を行う確率と同じであることを簡単に確認できる。
 
-#Treap#と比べてrandomized binary search treeには短所がある。
+#Treap#と比べてこの動的ランダム二分探索木には短所がある。
 要素の追加・削除の際にたくさんランダムな選択をする必要があり、また部分木の大きさを保持しなければならないのである。
-randomized binary search treeの長所は、部分木の大きさを他の目的、例えばランクを$O(\log #n#)$の期待実行時間で計算するのにも使えることである。（\excref{treap-get}を参照せよ。）
+この動的ランダム二分探索木の長所は、部分木の大きさを他の目的、例えばランクを$O(\log #n#)$の期待実行時間で計算するのにも使えることである。（\excref{treap-get}を参照せよ。）
 一方、#Treap#の優先度には木のバランスを保つ以外の用途はない。
 
 \begin{exc}
