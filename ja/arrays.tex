@@ -114,9 +114,9 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]#は書き換え
 大きさ$2#n#$の配列#b#を割当て、#n#要素をコピーする。
 これは$O(#n#)$の時間がかかる。
 
-前節からの実行時間分析は#resize()#のコストを無視していた。
-この節では\emph{償却解析}として知られる方法でこれを解決する。 % TODO: YJ check the translation of other textbooks if 償却 is the word used widely
-% caprice to YJ Wikipediaに「償却解析 (Amortized analysis)」って項目あるからいいのでは？
+前節からの実行時間分析は#resize()#のコストをしていた。
+この節では\emph{償却解析}として知られる方法でこれを解決する。
+
 この手法は個々の#add(i, x)#・#remove(i)#における#resize()#のコストを求めるわけではない。
 代わりに、#add(i, x)#・#remove(i)#からなる#m#個の操作の列の間に呼ばれる#resize()#の計算コストの合計を考える。
 
@@ -126,7 +126,7 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左にひとつシフトし（#a[i]#は書き換え
 \end{lem}
 
 \begin{proof}
-#resize()#が呼ばれるとき、その前の#resize()#呼び出しから#add#・#remove#が実行された回数は$#n#/2-1$回以下である。
+#resize()#が呼ばれるとき、その前の#resize()#呼び出しから#add#・#remove#が実行された回数は$#n#/2-1$回以上である。
 $i$回目の#resize()#呼び出しの際の#n#を$#n#_i$とする。
 $r$を#resize()#の呼び出し回数とする。
 このとき、#add(i,x)#と#remove(i)#の合計呼び出し回数は次の関係を満たす。
