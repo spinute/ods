@@ -61,7 +61,7 @@ C++のふつうの配列の要素数は要素数を保持していないため�
 
 \index{ArrayStack@#ArrayStack#}%
 
-#ArrayStack#は\emph{backing array}(配列#a#と呼ぶことにする)を使ったリストインターフェースの実装だ。
+#ArrayStack#は\emph{backing array}（配列#a#と呼ぶことにする）を使ったリストインターフェースの実装だ。
 リストの#i#番目の要素を#a[i]#とする。
 ほとんどの場合、配列#a#は実際に必要な要素数よりも多くの要素を格納できる。
 そのため整数#n#によって実際に#a#に入っている要素数を表す。
@@ -152,16 +152,9 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
 しかし#a#の要素数は今では$#n#_i=#a.length#$なのだから、前の#resize()#から$#n#_i/2$回以上は#add(i,x)#が呼ばれたことがわかる。
 
 もうひとつ考えられるのは、#resize()#が#remove(i)#に呼ばれる場合で、このとき$#a.length# \ge 3#n#=3#n#_i$である。
-ひとつ前の（つまり、i-1回目の）#resize()#の直後では#a#の要素数は$#a.length/2#-1$以下であった。
-% XXX この a.length/2-1 以下ってどうして言えるのか？
-% 本書中の resize() は、縮小する場合のサイズについて言及していない
-% そのため、
-% a.length = 16 から a.length = 32     に i-1 回目の resize
-% a.length = 32 から a.length = 32 /3  に i   回目の resize
-% をした際に a.length がいくつになるのか不明でこの議論は成り立ってないと思う
+ひとつ前の（つまり、i-1回目の）#resize()#の直後では#a#の要素数は$#a.length/2#-1$以上であった。
 %
 \footnote{この数式における${}-1$は、特別なケース$#n#=0$かつ$#a.length# = 1$を考慮したものだ。}
-% いや、 n = 0 かつ a.length = 1 で a.length/2 - 1 を計算したら0未満になるでしょ、何言ってんの
 今#a#には$#n#_i\le#a.length#/3$個の要素が入っている。
 よって、直前の#resize()#以降に実行された#remove(i)#の回数の下界は次のように計算できる。
 
@@ -184,7 +177,8 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
   #resize()#のコストを無視すると、#ArrayStack#における各操作の実行時間は、
   \begin{itemize}
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
-    \item #add(i,x)#・#remove(i)#の実行時間は$O(#n#-#i#)$である。
+    \item #add(i,x)#・#remove(i)#の実行時間は$O(1+#n#-#i#)$である。
+    \footnote{#n#=#i#=0のときであってもビッグオー記法で書けるように、1が足されていることに注意。}
   \end{itemize}
   空の#ArrayStack#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このときすべての#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
@@ -194,11 +188,14 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
 またいずれの操作も償却実行時間$O(1)$である。
 
 \section{#FastArrayStack#：最適化されたArrayStack}
-
+% TALK ここでは 「add(i, x)とremove(i)」のように「と（並立助詞）」を使っている一方で、
+% これ以前は「add(i, x)・remove(i)」のように黒丸で並立している。「と」のほうが紛らわしさがないのでは？
+% （・は乗算に見えなくもない）
 #ArrayStack#が主にやっていることは、データの（#add(i,x)#と#remove(i)#のための）シフトと（#resize()#のための）コピーである。
 素朴な実装では#for#ループを使うだろう。
-しかしデータのコピーや移動用の効率的な機能があるプログラミング環境も多いだろう。
-C言語には#memcpy(d,s,n)#・#memmove(d,s,n)#関数がある。
+しかしデータのシフトやコピー用の効率的な機能があるプログラミング環境も多いだろう。
+C言語には#memmove(d,s,n)#と#memcpy(d,s,n)#関数がある。
+\footnote{#memmove(d,s,n)#はdestination（移動先）にsource（移動元）からnバイト分だけコピーする関数である。#memcpy(d,s,n)#と異なり、バイト領域がオーバーラップしていてもよい。}
 C++言語には#std::copy(a0,a1,b)#アルゴリズムがある。
 Javaには#System.arraycopy(s,i,d,j,n)#メソッドがある。
 \index{memcpy@#memcpy(d,s,n)#}%
@@ -229,7 +226,7 @@ FIFOキューの実装に#ArrayStack#はあまり向いていない。
 次に削除する要素を追跡するインデックス#j#と、キューの要素数#n#を記録しておけばよい。
 そうすればキューの要素は以下の場所に入っている。
 \[ #a[j]#,#a[j+1]#,\ldots,#a[j+n-1]# \]
-まず#i#, #j#を0に初期化する。
+まず#j#, #n#を0に初期化する。
 要素を追加するときは、#a[j+n]#に要素を入れて、#n#をひとつ増やす。
 要素を削除するときは、#a[j]#から要素を取り出し、#j#をひとつ増やし、#n#をひとつ減らす。
 
@@ -249,7 +246,7 @@ $\bmod$は次のように二項演算と考えてもよい。
 \]
 
 より一般的には
-整数$a$と正整数$m$について、ある整数kが存在し$a = r + km$をみたす$\{0, \ldots, m-1 \} $の一意な要素を$a \bmod m $と書く。
+整数$a$と正整数$m$について、ある整数kが存在し$a = r + km$をみたす整数 #r# $\in \{0, \ldots, m-1 \} $を$a \bmod m $と書く。
 雑に言うと$ r $とは$ a $を$ m $で割った余りである。
 CやC++、Ruby、Javaなど多くのプログラミング言語ではmod演算子は\%で表される。 % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
 
@@ -277,7 +274,7 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arrayqueue}
   \end{center}
-  \caption{#ArrayQueue#に対する#add(x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。#resize()#の発生する呼び出しにはアスタリスクを付した。}
+  \caption{#ArrayQueue#に対する#add(x)#・#remove()#の実行例。矢印は要素のコピーを表す。#resize()#の発生する呼び出しにはアスタリスクを付した。}
   \figlabel{arrayqueue}
 \end{figure}
 
@@ -295,7 +292,7 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 にコピーし、$#j#=0$とする。
 
 \codeimport{ods/ArrayQueue.resize()}
-
+% FIXME このコード、max(1, n*2)となってて他と揃ってないから、max(2*n,1)としたい
 \subsection{要約}
 
 次の定理は#ArrayQueue#の性能を整理するものだ。
