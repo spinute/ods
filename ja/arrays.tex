@@ -301,9 +301,9 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 \seclabel{arraydeque}
 
 \index{ArrayDeque@#ArrayDeque#}%
-前節の#ArrayQueue#は、一方の端からは追加が他方の端から削除が効率的にできる列を表現するデータ構造だった。#ArrayDeque#は両方の端で効率的な追加と削除ができるデータ構造である。
+前節の#ArrayQueue#は、一方の端からは追加が、他方の端からは削除が効率的にできる列を表現するデータ構造だった。#ArrayDeque#は両端で効率的な追加と削除ができるデータ構造である。
 #ArrayQueue#を表現するために使った循環配列をここでもまた使って#List#インタフェースを実装する。
-
+\footnote{訳注：第一章で言及されたように、#ArrayDeque#は#List#インターフェースを実装するデータ構造である。#ArrayDeque#という名称は、#Deque#インターフェイスの全ての操作をO(1)で実装しているという事実を強調するために用いられている。}
 \codeimport{ods/ArrayDeque.a.j.n}
 
 #ArrayDeque#における#get(i)#と#set(i,x)#の実装は難しくない。
@@ -314,11 +314,11 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 #add(i,x)#の実装はもう少し興味深い。
 まず、#a#が一杯かどうかを確認し、必要に応じて#resize()#を呼ぶ。
 ここで、#i#が小さいとき（0に近いとき）と大きいとき（#n#に近いとき）に、特に効率的に操作したいのだということを覚えておいてほしい。
-つづいて、$#i#<#n#/2$かどうかを確認する。
+続いて、$#i#<#n#/2$かどうかを確認する。
 もしそうなら、$#a[0]#,\ldots,#a[i-1]#$をそれぞれひとつずつ左にずらす。
 そうでないなら、$#a[i]#,\ldots,#a[n-1]#$をそれぞれひとつずつ右にずらす。
 #add(i,x)#と#remove(x)#の説明として\figref{arraydeque}を見てほしい。
-
+% TODO YJ 以下の図、コメント部分の端が切れてる
 \begin{figure}
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arraydeque}
@@ -346,6 +346,7 @@ $#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか�
   \begin{itemize}
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
+  \footnote{訳注：これらの結果から、#ArrayDeque#が確かに#Deque#インターフェースの全ての操作をO(1)で実現していることを確認できる。つまり、両端に対する#add(i,x)#・#remove(i)#の実行時間は、O(1)で済む。}
   \end{itemize}
   空の#ArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#にかかる時間の合計は$O(m)$である。
 
