@@ -1,5 +1,7 @@
 *.class
 *.eps
+*.ipe
+*.png
 *.aux
 *.jar
 latex/ods.pdf
