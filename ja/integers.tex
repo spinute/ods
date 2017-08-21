@@ -26,7 +26,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさは$#n#\le 2^{#w#}$であり�
 \section{#BinaryTrie#：デジタル探索木}
 \seclabel{binarytrie}
 
-\index{BinaryTrie@#BinaryTrie#}%
+\ejindex{BinaryTrie@#BinaryTrie#}{にぶんとらい@二分トライ}%
 #BinaryTrie#は#w#ビットの整数の集まりを二分木で符号化したものである。
 この木の任意の葉の深さは#w#であって、各整数は根から葉への経路として符号化される。
 整数#x#への経路は深さ#i#において、もし上から#i#番目のビットが0なら左、1なら右に向かう。
@@ -132,7 +132,7 @@ XXX: doubly-logarithmicはlog(log(x))のことだろうか（なんと訳そう�
 \section{#XFastTrie#：Doubly-Logarithmic時間で検索を行う}
 \seclabel{xfast}
 
-\index{XFastTrie@#XFastTrie#}%
+\ejindex{XFastTrie@#XFastTrie#}{XFastトライ}%
 #BinaryTrie#の性能はパッとしないものであった。
 要素数#n#は最大で$2^{#w#}$であり、$\log #n#\le #w#$が成り立つ。
 つまりこの本で説明して比較に基づく#SSet#の実装はいずれも、少なくとも#BinaryTrie#と同じ程度効率的であり、またそれらには整数しか格納できないという制限はなかった。
@@ -143,7 +143,7 @@ XXX: doubly-logarithmicはlog(log(x))のことだろうか（なんと訳そう�
 #BinaryTrie#における#find(x)#は、#x#の探索経路を辿り、進みたい方向の子を持たないノード#u#を見つければ、ほぼ完了であった。
 あとは、#u.jump#を利用して葉#v#にジャンプし、#v#か葉のリストにおける#v#の直前のノードのどちらかを返すだけであった。
 トライのある深さにおける二分探索でノード#u#を見つけることで、#XFastTrie#はこの探索処理を高速に行う。
-\index{binary search}%
+\ejindex{binary search}{にぶんたんさく@二分探索}%
 
 二分探索を行うためには探しているノード#u#が、ある深さ#i#より上にあるのか、#i#またはその下にあるのかを判定する必要がある。
 これは#x#の二進表現における上位#i#ビットを見ればわかる。
@@ -217,7 +217,7 @@ $#h-l#\le 1$になればこの処理を終了する。
 このふたつの問題は関連している。
 #n#回の#add(x)#によって大きさ$#n#\cdot#w#$の構造を作るなら、#add(x)#の一回あたりの実行時間・領域使用量は少なくとも#w#程度のオーダーになる。
 
-\index{YFastTrie@#YFastTrie#}%
+\ejindex{YFastTrie@#YFastTrie#}{YFastトライ}%
 次に紹介する#YFastTrie#は#XFastTrie#の実行時間と領域使用量を共に改善する。
 #YFastTrie#は#XFastTrie# #xft#を使うが、#xft#には$O(#n#/#w#)$個の値しか格納しない。
 こうすると#xft#の領域使用量は$O(#n#)$になる。
@@ -227,7 +227,7 @@ $#h-l#\le 1$になればこの処理を終了する。
 きっと疑問を感じるだろう。
 #xft#には#n#/#w#個だけの要素を格納するなら、残りの$#n#(1-1/#w#)$個の要素はどこに行くのだろう。
 これらの要素は\emph{二次構造}である#Treap#(\secref{treap})を拡張したデータ構造に格納する。
-\index{secondary structure}%
+\ejindex{secondary structure}{にじこうぞう@二次構造}%
 二次構造は約#n#/#w#個あり、平均的にはそれぞれ$O(#w#)$個の要素を格納する。
 Treapは#SSet#の操作を対数時間でサポートするので、それぞの操作の実行時間は期待通り$O(\log #w#)$である。
 
@@ -364,9 +364,9 @@ Treap #t#は#x#以上の要素を含む。
 \section{ディスカッションと練習問題}
 #add(x)#・#remove(x)#・#find(x)#の実行時間がいずれも$O(\log#w#)$であるデータ構造としてはじめて提案されたのは、van~Emde~Boasによるもので、
 \emph{van~Emde~Boas木}
-\index{van Emde Boas tree}%
+\ejindex{van Emde Boas tree}{van Emde Boasぎ@van Emde Boas木}%
 （または\emph{stratified木}）
-\index{stratified tree}%
+\ejindex{stratified tree}{stratifiedき@stratified木}%
 という名で知られている。\cite{e77}
 オリジナルのvan~Emde~Boas木の大きさは$2^{#w#}$で、このために大きな整数についてこのデータ構造は非実用的であった。
 
@@ -377,7 +377,7 @@ Treap #t#は#x#以上の要素を含む。
 つまり、ハッシュテーブル#t[i]#に要素を格納する代わりに、van~Emde~Boasでは長さ$2^{#i#}$の配列に要素を格納する。
 
 他の整数を格納するためのデータ構造としては、FredmanとWillardのfusion treeがある。\cite{fw93}
-\index{fusion tree}%
+\ejindex{fusion tree}{fusionぎ@fusion木}%
 このデータ構造は#n#個の#w#ビット整数を$O(#n#)$の領域に格納でき、#find(x)#を$O((\log #n#)/(\log #w#))$の時間で実行できる。
 $\log #w# > \sqrt{\log #n#}$ならばfusion treeを、$\log #w# \le \sqrt{\log #n#}$なら#YFastTrie#を使えば、領域使用量$O(#n#)$であり、#find(x)#にかかる時間は$O(\sqrt{\log #n#})$であるデータ構造が得られる。
 近年のP\v{a}tra\c{s}cu and Thorup \cite{pt07}が示した下界によると、$O(#n#)$だけの領域を使うデータ構造としてはすくなくともほぼ最適である。
