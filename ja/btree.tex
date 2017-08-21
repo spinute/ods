@@ -6,9 +6,9 @@
 大きすぎてどんなコンピュータのメモリにも収まりきらないデータの集まりが存在するのである。
 このような場合、ハードディスク・SSD・ネットワーク越しのサーバーなどの外部ストレージにデータを蓄えざるを得ない。
 
-\index{external storage}%
-\index{external memory}%
-\index{hard disk}%
+\ejindex{external storage}{がいぶすとれーじ@外部ストレージ}%
+\ejindex{external memory}{がいぶめもり@外部メモリ}%
+\ejindex{hard disk}{ハードディスク}%
 \index{solid-state drive}%
 外部ストレージへのデータアクセスは非常に遅い。
 この本を書くのに使っているコンピュータでは、ハードディスクへの平均アクセス時間は19ms、SSDの場合は0.3msである。
@@ -45,7 +45,7 @@ RAMへのランダムアクセスはHDDやSSDへのランダムアクセスと�
 しかしアクセスにかかる時間だけを考えれば十分というわけではない。
 HHDやSSDのバイトにアクセスするときには、実際は
 \emph{ブロック}単位での読み出しが行われる。
-\index{block}%
+\ejindex{block}{ブロック}%
 XXX: 著者の環境の話?
 コンピュータに接続されるドライブは大きさ4096のブロックを持つ。
 1バイトの読み出しをする度にドライブは4096バイトを返してくる。
@@ -57,11 +57,11 @@ XXX: 著者の環境の話?
 % rw   256  4096  4096        504   3000581885952   /dev/sdb1  HDD
 
 これが\emph{外部メモリモデル}の背後にあるアイデアである。
-\index{external memory model}%
+\ejindex{external memory model}{がいぶめもりもでる@外部メモリモデル}%
 \figref{em}にはこれを図示した。
 このモデルではコンピュータはすべてのデータが保存されている大きな外部メモリにアクセスできる。
 このメモリは\emph{ブロック}に分割されており、
-\index{block}%
+\ejindex{block}{ブロック}%
 それぞれのブロックは$B$ワードからなる。
 このコンピュータは有限の内部メモリも利用でき、ここで計算を実行できる。
 内部メモリと外部メモリの間でブロックを転送するのには一定の時間がかかる。
@@ -115,7 +115,7 @@ XXX: 著者の環境の話?
 それ以外にも$B$木は\secref{twofour}で説明した2-4木の自然な一般化だと考えることもできる。
 （$B$木において$B=2$とした特殊可すると2-4木になる。）
 
-\index{B-tree@$B$-tree}%
+\ejindex{B-tree@$B$-tree}{Bぎ@B木}%
 任意の整数$B\ge 2$について\emph{$B$木}とは木であって、すべての葉は同じ深さにあり、すべての根でない内部ノードの子の数が$B$以上$2B$以下なものである。
 ノード#u#の子は配列#u.children#に格納される。
 ただし、子の数の条件は根では緩和され、2以上$2B$以下である。
@@ -203,7 +203,7 @@ XXX: インデックス?添え字?
 \end{figure}
 \codeimport{ods/BTree.findIt(a,x)}
 #findIt(a,x)#は二分探索を使う。
-\index{binary search}%
+\ejindex{binary search}{にぶんたんさく@二分探索}%
 これは各ステップで探索空間を半分に減らすことで、$O(\log(#a.length#))$の時間で処理を終える。
 ここでは$#a.length#=2B$なので#findIt(a,x)#の実行時間は$O(\log B)$である。
 
@@ -224,7 +224,7 @@ $B$木と\secref{binarysearchtree}で説明した#BinarySearchTree#との重要�
 
 他のバランスされた探索木と同様に、#add(x)#の際にある種のバランスの調整が必要になる。
 $B$木ではこれはノードの\emph{分割}によって行われる。
-\index{split}%
+\ejindex{split}{ぶんかつ@分割}%
 \figref{btree-split}を続く内容の参考にしてほしい。
 分割はふたつの再帰レベルに渡って起きるが、$2B$個のキーを含み$2B+1$個の子を持つノード#u#の操作であると考えると理解しやすいだろう。
 新たなノード#w#を作り、このノードは$#u.children#[B],\ldots,#u.children#[2B]$を引き受ける。
@@ -313,7 +313,7 @@ $B$の値はかなり大きく、$\log #n#$よりもだいぶ大きいことを�
 ここでは結局、うまくキーを入れ替えて、ある葉#u#から値$#x#'$を削除したい。
 $#x#'$を削除すると、#u#の持つキーの数は$B-1$未満になるかもしれない。
 この状態を\emph{アンダーフロー}と呼ぶことにする。
-\index{underflow}%
+\ejindex{underflow}{アンダフロー}%
 
 \begin{figure}
    \centering{\begin{tabular}{@{}l@{}}
@@ -376,7 +376,7 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
 
 \begin{description}
   \item[借りてくる]
-  \index{borrow}%
+  \ejindex{borrow}{しゃくよう@借用}%
   #w#の兄弟#v#が$B-1$個よりも多くのキーを持っているなら、#w#はキーを（あとは可能なら子も）#v#から借りる。
   より具体的には#v#が#size(v)#個のキーを持つなら、#v#と#w#とが持っているキーの個数の合計は次のようになる。
   \[
@@ -397,7 +397,7 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
   \end{figure}
 
   \item[併合する]
-  \index{merge}%
+  \ejindex{merge}{へいごう@併合}%
   #v#が$B-1$個だけしかキーを持っていないとき、#v#にはキーを渡す余裕が無いので、もっと思い切ったことをする必要がある。
   そのために、\figref{btree-merge}に示したように#v#と#w#とを\emph{併合}する。
   併合は分割の逆の操作である。
@@ -441,7 +441,7 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
    $B=2$の特別な場合について、\secref{redblack-summary}で既に証明の概要を示している。
    XXX: credit scheme
    この補題はここではクレジット法で証明する。
-   \index{credit scheme}%
+   \ejindex{credit scheme}{よきんほう@預金法}%
   \begin{enumerate}
     \item 分割・併合・借用の際にクレジット2を支払う。
     \item #add(x)#または#remove(x)#の際には、最大3のクレジットが得られる。
@@ -450,7 +450,7 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
   ~\ref{fig:btree-split}、\ref{fig:btree-borrow}、\ref{fig:btree-merge}ではクレジットは \cent\ で表した。
 
   クレジットの値を追うために、証明では次の\emph{クレジット不変条件}を保つ。
-  \index{credit invariant}%
+  \ejindex{credit invariant}{くれじっとふへんじょうけん@クレジット不変条件}%
   $B-1$個のキーを持つ任意の根でないノードはクレジットを1だけ持つ。
   $2B-1$個のキーを持つノードはクレジットを3だけ持つ。
   $B$以上$2B-2$以下のキーを持つノードはクレジットを持たない。
@@ -512,9 +512,9 @@ $#i#=0$の場合も同様に処理できるので、詳細は付属のソース�
 
 外部メモリモデルを提案したのはAggarwalとVitter\cite{av88}である。
 このモデルは\emph{I/Oモデル}
-\index{I/O model}%
+\ejindex{I/O model}{I/Oモデル}%
 や\emph{ディスクアクセスモデル}と呼ばれることもある。
-\index{disk access model}%
+\ejindex{disk access model}{ディスクアクセスモデル}%
 
 内部メモリを使った探索における二分探索木を、外部メモリの場合に拡張したものが$B$木である。
 $B$木はMcCreight \cite{bm70}が1970年に提案した。
@@ -523,11 +523,11 @@ $B$木はMcCreight \cite{bm70}が1970年に提案した。
 
 二分探索木と同様に、$B$木には多くの種類がある。
 例えば、$B^+$木、
-\index{B+-tree@$B^+$-tree}%
+\ejindex{B+-tree@$B^+$-tree}{B+ぎ@$B^+$木}%
 $B^*$木、
-\index{B*-tree@$B^*$-tree}%
+\ejindex{B*-tree@$B^*$-tree}{B*ぎ@$B^*$木}%
 counted $B$木などである。
-\index{conted $B$-tree}%
+\index{counted $B$-tree}%
 $B$木は本当にいたるところで使われていて、多くのファイルシステムにおける基本的なデータ構造である。
 例えば、
 AppleのHFS+、
@@ -542,7 +542,7 @@ Graefeの近年のサーベイ\cite{g10}では200ページ以上にわたって�
 
 $B$は#SSet#インターフェースを実装する。
 もし#USet#インターフェースだけが必要なときには、外部メモリハッシュ法を$B$木の代わりに使うこともできるだろう。
-\index{external memory hashing}%
+\ejindex{external memory hashing}{がいぶめもりはっしゅほう@外部メモリハッシュ法}%
 外部メモリハッシュ法も広く研究されている。
 例えばJensenとPaghの論文\cite{jp08}を見てほしい。
 この手法では、外部メモリモデルにおいて$O(1)$の期待実行時間で#USet#の操作を実行できる。
