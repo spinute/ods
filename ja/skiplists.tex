@@ -13,7 +13,7 @@
 
 \section{基本的な構造}
 
-\index{skiplist}%
+\ejindex{skiplist}{スキップリスト}%
 イメージとしてはスキップリストは単方向連結リストが並んだもの$L_0,\ldots,L_h$である。
 リスト$L_r$は$L_{r-1}$の部分集合を含む。
 まず#n#個の要素を含む入力$L_0$がある。
@@ -31,7 +31,7 @@ $L_{r-1}$の各要素についてコインを投げ、表が出たら$L_r$はこ
 \end{figure}
 
 スキップリストの要素#x#について、#x#の\emph{高さ}を
-\index{height!of a skiplist}%
+\ejindex{height!of a skiplist}{たかさ@高さ!スキップリスト}%
 #x#を含むリスト$L_r$の添え字#r#のうち最大のものと定義する。
 例えば#x#が$L_0$だけに含まれているなら#x#の高さは$0$である。
 少し考えると#x#は次の試行と関連していることがわかるだろう。
@@ -41,10 +41,10 @@ $L_{r-1}$の各要素についてコインを投げ、表が出たら$L_r$はこ
 スキップリストの\emph{高さ}とは、最も高いノードの高さである。
 
 すべてのリストの先頭は特別で、\emph{番兵}と呼ばれる。
-\index{sentinel node}%
+\ejindex{sentinel node}{ばんぺい@番兵}%
 これはリストのダミーノードのようなものだ。
 スキップリストの重要な性質は、\emph{探索経路}と呼ばれる
-\index{search path!in a skiplist}%
+\ejindex{search path!in a skiplist}{たんさくけいろ@探索経路!スキップリスト}%
 $L_h$の番兵から$L_0$の各ノードまでの短いパスが存在することだ。
 ノード#u#へのパスの作り方は簡単だ。（\figref{skiplist-searchpath}を参照のこと。）
 左上の端（$L_h$の番兵）からスタートし、#u#を通り過ぎない限り右に進む。
@@ -248,7 +248,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
 いくつかの証明は次に述べるコイントスについての考察を利用する。
 
 \begin{lem}\lemlabel{coin-tosses}
-  \index{coin toss}%
+  \ejindex{coin toss}{こいんなげ@コイン投げ}%
   $T$を表裏が等しい確率で出るコインを投げて、表が出るまでに要するコイントスの回数とする。（表が出た回も含めて数えることに注意する。）このとき、$\E[T]=2$である。
 \end{lem}
 
@@ -446,8 +446,8 @@ $L_{i-1}$から$L_i$に要素を上げるかどうかを決めるとき、コイ
 \end{exc}
 
 \begin{exc}
-  \index{finger}%
-  \index{finger search!in a skiplist}%
+  \ejindex{finger}{ゆび@指}%
+  \ejindex{finger search!in a skiplist}{フィンガーサーチ!スキップリスト}%
 XXX: 日本語汚い
 
 スキップリストの\emph{指}とは探索経路において下に向かうノードを保存した配列である。 （\pageref{pg:skiplist-add}のコードで#add(x)#における変数#stack#は\emph{指}である。\figref{skiplist-add}において影になっているノードは指を表している。）
@@ -498,8 +498,8 @@ $L_0$において#b#と指が指す値との間にある値の数を$r$とする
 \end{exc}
 
 \begin{exc}
-  \index{skiplist!versus binary search tree}%
-  \index{binary search tree!versus skiplist}%
+  \ejindex{skiplist!versus binary search tree}{スキップリスト!にぶんたんさくぎとのひかく@二分探索木との比較}%
+  \ejindex{binary search tree!versus skiplist}{にぶんたんさくぎ@二分探索木!すきっぷりすととのひかく@スキップリストとの比較}%
   （この練習問題は\secref{binarysearchtree}で二分探索木について学んでから取り組むべきだ。）
   スキップリストを二分探索木と比較せよ。
   \begin{enumerate}
