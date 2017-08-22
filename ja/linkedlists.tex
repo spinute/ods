@@ -1,7 +1,7 @@
 \chapter{連結リスト}
 \chaplabel{linkedlists}
 
-\index{linked list}%
+\ejindex{linked list}{れんけつりすと@連結リスト}%
 この章でも#List#インターフェースの実装を扱うが、次は配列ではなくポインタを使ったデータ構造の話をする。
 この章のデータ構造は、リストの要素を含むノードから構成される。
 ノード間は参照（ポインタ）によって繋げられ、列を作る。
@@ -22,8 +22,8 @@
 \seclabel{sllist}
 
 \index{SLList@#SLList#}%
-\index{linked list!singly-}%
-\index{singly-linked list}%
+\ejindex{linked list!singly-}{れんけつりすと@連結リスト!たんほうこう@単方向}%
+\ejindex{singly-linked list}{たんほうこうれんけつりすと@単方向連結リスト}%
 
 #SLList#（singly-linked list、単方向連結リスト）は#Node#の列である。
 各ノード#u#はデータ#u.x#と参照#u.next#を保持している。
@@ -96,8 +96,8 @@
 \seclabel{dllist}
 
 \index{DLList@#DLList#}%
-\index{doubly-linked list}%
-\index{linked list!doubly-}%
+\ejindex{doubly-linked list}{そうほうこうれんけつりすと@双方向連結リスト}%
+\ejindex{linked list!doubly-}{れんけつりすと@連結リスト!そうほうこう@双方向}%
 
 #DLList#（doubly-linked list、双方向連結リスト）は#SLList#によく似ている。
 違いがあるのは、#DLList#ではノード#u#が直後のノード#u.next#への参照と直前のノード#u.prev#への参照の両方を持っている点だ。
@@ -109,7 +109,7 @@
 例えば#SLList#の最後のノードを削除したり、空の#SLList#にノードを追加するときは#head#・#tail#を適切に更新するため特別な処理が必要であった。
 #DLList#ではこういう特別な場合というのがかなり増える。
 #DLList#におけるこれら全ての特別な場合を綺麗に扱う最善の方法はおそらくダミーノードを使うことだろう。
-\index{dummy node}%
+\ejindex{dummy node}{ダミーノード}%
 ダミーノードはデータを含まない空のノードで、これを置くことで特別なノードが生じなくなるのだ。 %ただ場所だけを占める。
 %こうするとノードを特別扱いする必要がなくなるのだ。
 すべてのノードには#next#と#prev#がある。
@@ -208,7 +208,7 @@ Java Collections Frameworkにおける#LinkedHashSet#はこの例である。
 \seclabel{selist}
 
 \index{SEList@#SEList#}%
-\index{linked list!space-efficient}%
+\ejindex{linked list!space-efficient}{れんけつりすと@連結リスト!くうかんこうりつのよい@空間効率の良い}%
 連結リストの欠点はそのメモリ使用量である。（リストの真ん中に近い要素へのアクセスに時間がかかるのも欠点だが。）
 #DLList#のノードはみな前後合わせてふたつの参照を持つ。
 #Node#のフィールドのうちふたつはリストを維持するために占められ、残りのひとつだけがデータを入れるのに使われるのである。
@@ -222,8 +222,8 @@ Java Collections Frameworkにおける#LinkedHashSet#はこの例である。
 後で詳しく説明するが、個々のブロックには#Deque#の操作を実行できると便利だ。
 このために#BDeque# (bounded deque)というデータ構造を使うことにする。
 \index{BDeque@#BDeque#}%
-\index{bounded deque}%
-\index{deque!bounded}%
+\ejindex{bounded deque}{せいげんつきDeque@制限付きDeque}%
+\ejindex{deque!bounded}{Deque!せいげんつき@制限付き}%
 これは\secref{arraydeque}で説明した#ArrayDeque#みたいなものだ。
 #BDeque#は#ArrayDeque#と少しだけ違う。
 新しい#BDeque#を作るときに用意する配列#a#の大きさは#b+1#であり、その後拡大も縮小もされない。
@@ -415,7 +415,7 @@ $#u#_0,#u#_1,#u#_2,\ldots$を順に$#u#_0$のブロックの要素数を$#b#-1$�
 
 \begin{proof}
   ここでは償却解析のためのポテンシャル法を使う。
-  \index{potential method}%
+  \ejindex{potential method}{ぽてんしゃるほう@ポテンシャル法}%
   ノード#u#のブロックの要素数が#b#でないとき、#u#は\emph{不安定}であるという。
   （すなわち、#u#は末尾のノードか、要素数が$#b#-1$または$#b#+1$である。）
   ブロックの要素数がちょうど#b#であるノードは\emph{安定}であるという。
@@ -471,11 +471,11 @@ $#u#_0,#u#_1,#u#_2,\ldots$を順に$#u#_0$のブロックの要素数を$#b#-1$�
 例えばKnuthの\cite[Sections~2.2.3--2.2.5]{k97v1}で議論されている。
 #SEList#もデータ構造の有名な練習問題である。
 #SEList#は\emph{unrolled linked list}\cite{sra94}と呼ばれることもある。
-\index{unrolled linked list|seealso{#SEList#}}%
-\index{linked list!unrolled|seealso{#SEList#}}%
+\ejindex{unrolled linked list|seealso{#SEList#}}{アンロールされた連結リスト|seealso{#SEList#}}%
+\ejindex{linked list!unrolled|seealso{#SEList#}}{れんけつりすと@連結リスト!アンロールされた|seealso{#SEList#}}%
 
 双方向連結リストの領域使用量を減らすための別の手法としてXOR-listsと呼ばれるものもある。
-\index{XOR-list}%
+\ejindex{XOR-list}{XORリスト}%
 XOR-listでは各ノード#u#はひとつだけのポインタ#u.nextprev#を持つ。 % TODO: pointerの値のXORをとったものはポインタと呼んでいいのか？
 このポインタは#u.prev#と#u.next#のXORを取ったものである。
 リストは、#dummy#を指すポインタと#dummy.next#を指すポインタの二つを持つ必要がある。
@@ -531,7 +531,7 @@ XOR-listのもっと踏み込んだ議論はSinhaの雑誌記事\cite{s04}を参
 \begin{exc}
   #DLList#の操作#isPalindrome()#を実装せよ。
   これはリストが\emph{回文}であるときtrueを返す。
-  \index{palindrome}%
+  \ejindex{palindrome}{かいぶん@回文}%
   すなわち、$i\in\{0,\ldots,#n#-1\}$のいずれの場合も#i#番目の要素が$#n#-i-1$番目の要素と等しいかどうかを確認するものである。
   実行時間は$O(#n#)$である必要がある。
 \end{exc}
@@ -569,7 +569,7 @@ XOR-listのもっと踏み込んだ議論はSinhaの雑誌記事\cite{s04}を参
 \end{exc}
 
 \begin{exc}\exclabel{dllist-sort}
-  \index{merge-sort}%
+  \ejindex{merge-sort}{マージソート}%
   この問題は#DLList#を整列するマージソートというアルゴリズムを実装してみるものだ。
   マージソートは\secref{merge-sort}扱う。
   \javaonly{
