@@ -61,7 +61,7 @@ C++のふつうの配列の要素数は要素数を保持していないため�
 
 \index{ArrayStack@#ArrayStack#}%
 
-#ArrayStack#は\emph{backing array}（配列#a#と呼ぶことにする）を使ったリストインターフェースの実装だ。
+#ArrayStack#は\emph{backing array}（配列#a#と呼ぶことにする）を使った#List#インターフェースの実装だ。
 リストの#i#番目の要素を#a[i]#とする。
 ほとんどの場合、配列#a#は実際に必要な要素数よりも多くの要素を格納できる。
 そのため整数#n#によって実際に#a#に入っている要素数を表す。
@@ -398,39 +398,46 @@ $#a[0]#,\ldots,#a[i-1]#$をそれぞれ右にひとつずつシフトするか�
 
 \codeimport{ods/DualArrayDeque.add(i,x)}
 
-#add(i,x)#はふたつの#ArrayStack# #front#・#back#のバランスを調整するために#balance()#を呼び出す。
-#balance()#の実装は後で説明するが、$#size()#<2$であるときを除いて#front.size()#と#back.size()#は三倍以上離れないことを#balance()#は保証することを知っておけば十分である。
+#add(i,x)#は#front#と#back#のバランスを調整するために#balance()#を呼び出す。
+#balance()#の実装は後で説明するが、$#size()#<2$であるときを除いて#front.size()#と#back.size()#が三倍以上離れないことを#balance()#は保証することを知っておけば十分である。
 具体的には$3\cdot#front.size()# \ge #back.size()#$と$3\cdot#back.size()# \ge #front.size()#$であることを保証する。
 
-つづいて#add(i,x)#のうち#balance()#のコストを無視したコストを求める。
+つづいて#add(i,x)#のうち#balance()#のコストを無視した実行時間を求める。
 $#i#<#front.size()#$のとき#add(i,x)#は$#front.add(front.size()-i-1,x)#$で実装できる。
 #front#は#ArrayStack#なのでこのコストは次のようになる。
 \begin{equation}
-  O(#front.size()#-(#front.size()#-#i#-1)+1) = O(#i#+1) \enspace
+  O(#front.size()#-(#front.size()#-#i#-1)+1) = O(1+#i#) \enspace
   \eqlabel{das-front}
 \end{equation}
 一方
 $#i#\ge#front.size()#$のとき#add(i,x)#は$#back.add(i-front.size(),x)#$で実装できる。
 このコストは次のようになる。
 \begin{equation}
-  O(#back.size()#-(#i#-#front.size()#)+1) = O(#n#-#i#+1) \enspace
+  O(#back.size()#-(#i#-#front.size()#)+1) = O(1+#n#-#i#) \enspace
   \eqlabel{das-back}
 \end{equation}
 
 $#i#<#n#/4$のときはひとつめのケース\myeqref{das-front}に該当する。
 $#i#\ge 3#n#/4$のときはふたつめのケース\myeqref{das-back}に該当する。
+\footnote{訳注：たとえばi=0かつn=0の場合は\myeqref{das-back}に該当する。}
 $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するかわからない。
-しかし$#i#\ge #n#/4$かつ$#n#-#i#>#n#/4$なのでいずれ場合も実行時間は$O(#n#)=O(#i#)=O(#n#-#i#)$である。
+しかし$#i#\ge #n#/4$かつ$#n#-#i#>#n#/4$なので、いずれの場合も実行時間は$O(#n#)=O(#i#)=O(#n#-#i#)$である。
+% TALK O(n)=O(i)=O(n-i) って O(n)=O(i+1)=O(n-i+1)と書いたほうがわかり易くないか？
+% せっかく (2.1)がfrontの場合、(2.2)がbackの場合と言っているのだから、
+% 変に１を抜くより参照を明確にしたほうが読みやすいと思うのだが
 以上をまとめると次のようになる。
+% TODO caprice から YJ これ「実行時間」に直したいけど数式に日本語入れるとバグるんだっけ？保留
 \[
      \mbox{Running time of } #add(i,x)# \le
           \left\{\begin{array}{ll}
-            O(1+ #i#) & \mbox{if $#i#< #n#/4$} \\
+            O(1+#i#) & \mbox{if $#i#< #n#/4$} \\
             O(#n#) & \mbox{if $#n#/4 \le #i# < 3#n#/4$} \\
             O(1+#n#-#i#) & \mbox{if $#i# \ge 3#n#/4$}
           \end{array}\right . % YJ: 数式の最後の点はlatexのコンパイルのためのものなので必要
 \]
-ゆえに#add(i,x)#の実行時間は#balance()#の呼び出しのことを無視すれば$O(1+\min\{#i#, #n#-#i#\})$である。
+ゆえに#add(i,x)#の実行時間は#balance()#のコストを無視すれば$O(1+\min\{#i#, #n#-#i#\})$である。
+
+#remove(i)#の実行時間と解析は同様のため、省略する。
 
 \codeimport{ods/DualArrayDeque.remove(i)}
 
@@ -489,15 +496,15 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
 
 \subsection{要約}
 
-次の定理は#DualArrayDeque#の性質をまとめるものだ。
+次の定理は#DualArrayDeque#の性質をまとめたものだ。
 \begin{thm}\thmlabel{dualarraydeque}
   #DualArrayDeque#は#List#インターフェースを実装する。
-  #resize()#・#balance()#のコストを無視すると、#DualArrayDeque#における各操作の実行時間は、
+  #resize()#と#balance()#のコストを無視すると、#DualArrayDeque#における各操作の実行時間は、
   \begin{itemize}
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
   \end{itemize}
-  空の#DualArrayDeque#から任意の$m$個の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#・#balance()#にかかる時間の合計は$O(m)$である。
+  また、空の#DualArrayDeque#から任意の$m$個の#add(i,x)#と#remove(i)#からなる操作の列を実行したとき、#resize()#と#balance()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
 \section{RootishArrayStack：空間効率に優れた配列スタック}
