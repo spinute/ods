@@ -4,13 +4,13 @@
 
 ハッシュテーブルは大きな集合$U=\{0,\ldots,2^{#w#}-1\}$の要素#n#個（#n#は小さい整数）を格納するための効率的な方法だ。 % TODO: YJ ここでnは小さい整数とはUのrangeと比較して小さい数という意味だと思うので明示したほうが良い？
 \emph{ハッシュテーブル}という言葉が指すデータ構造はたくさんある。
-\index{hash table}%
+\ejindex{hash table}{ハッシュテーブル}%
 この章の前半ではハッシュテーブルの一般的な実装ふたつを紹介する。
 これはチェイン、または線形探索を使うものだ。
 
 ハッシュテーブルは整数でないデータを格納することもよくある。
 この場合\emph{ハッシュ値}というデータに対応する値を使う。
-\index{hash code}%
+\ejindex{hash code}{はっしゅち@ハッシュ値}%
 この章の後半ではハッシュ値の生成方法について説明する。
 
 この章で扱う手法にはある範囲からランダムに生成した整数を利用する。
@@ -21,8 +21,8 @@
 \seclabel{hashtable}
 
 \index{ChainedHashTable@#ChainedHashTable#}%
-\index{chaining}%
-\index{hashing with chaining}%
+\ejindex{chaining}{ちぇいんほう@チェイン法}%
+\ejindex{hashing with chaining}{ちぇいんほうによるはっしんぐ@チェイン法によるハッシング}%
 #ChainedHashTable#とは\emph{チェイン法}を使ってデータをリストの配列#t#に保存するデータ構造である。
 整数#n#はすべてのリストにおける要素数の合計である。（\figref{chainedhashtable}を参照せよ。）
 \codeimport{ods/ChainedHashTable.t.n}
@@ -34,7 +34,7 @@
    \caption{$#n#=14, #t.length#=16$である#ChainedHashTable#の例。この例では$#hash(x)#=6$である。}
    \figlabel{chainedhashtable}
 \end{figure}
-\index{hash value}%
+\ejindex{hash value}{はっしゅち@ハッシュ値}%
 \index{hash(x)@#hash(x)#}%
 データ#x#の\emph{ハッシュ値}#hash(x)#とは$\{0,\ldots,#t.length#-1\}$の中のある値である。
 ハッシュ値が#i#であるデータはリスト#t[i]#に入れられる。
@@ -73,8 +73,8 @@ $#n#/#t.length# \le 1$
 \subsection{乗算ハッシュ法}
 \seclabel{multihash}
 
-\index{hashing!multiplicative}%
-\index{multiplicative hashing}%
+\ejindex{hashing!multiplicative}{はっしゅほう@ハッシュ法!じょうさん@乗算}%
+\ejindex{multiplicative hashing}{じょうさんはっしゅほう@乗算ハッシュ法}%
 乗算ハッシュ法は剰余算術（\secref{arrayqueue}で説明した）と整数の割り算からハッシュ値を計算する効率的な方法である。
 $\ddiv$は割り算の商を求める演算子である。
 形式的には任意の整数$a\ge 0$と$b\ge 1$について、$a\ddiv b = \lfloor a/b\rfloor$と定義される。
@@ -254,10 +254,10 @@ $\ddiv$は割り算の商を求める演算子である。
 #ChainedHashTable#はリストの配列を使うデータ構造であった。
 #i#番目のリストは$#hash(x)#=#i#$である#x#を全て格納していた。
 これに対して\emph{オープンアドレス法}と呼ばれる方法は配列#t#に直接要素を収めるものである。
-\index{open addressing}%
+\ejindex{open addressing}{おーぷんあどれすほう@オープンアドレス法}%
 このやり方はこの節で説明する#LinearHashTable#が採用しているものだ。
 文献によっては\emph{線形探索法によるオープンアドレス}と呼ばれることもある。
-\index{linear probing}%
+\ejindex{linear probing}{せんけいたんさくほう@線形探索法}%
 
 #LinearHashTable#の背後にあるアイデアは#i=hash(x)#である要素#x#を理想的には#t[i]#に入れたい、というものだ。
 もしこれが（他の要素が既にそこに入っていて）ムリなら、$#t#[(#i#+1)\bmod#t.length#]$に要素を入れてみる。
@@ -324,7 +324,7 @@ $#i#=#hash(x)#$として、#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\
 もうひとつの仮定として、#t#の添字はすべて#t.length#で剰余を取っているとする。
 つまり単に#t[i]#と書いても$#t#[#i#\bmod#t.length#]$のことである。
 
-\index{連続}%
+\ejindex{run}{れんぞく@連続}%
 %XXX: runの訳語 % YJ 連続かなあ。technical termとして本文中で他に連続は使われていない。
 \emph{#i#から始まる長さ$k$の連続 (run)}が発生するとはテーブルのエントリ$#t[i]#, #t[i+1]#,\ldots,#t#[#i#+k-1]$がいずれも#null#でなく、$#t#[#i#-1]=#t#[#i#+k]=#null#$であることをいう。
 #t#の#null#でない要素の数は#q#で、#add(x)#は常に$#q#\le#t.length#/2$であることを保証する。
@@ -434,7 +434,7 @@ $r!$を$(r/e)^r$に置き換える部分である。
 この場合、#tab#は4つの列と$2^{32/4}=256$の行からなる二次元配列である。
 \pcodeonly{
 上の#0xff#は\emph{16進数}である。
-\index{hexadecimal numbers}%
+\ejindex{hexadecimal numbers}{16しんすう@16進数}%
 16進数の各桁は16種類の値（0から9に加えて、それぞれ10から15を表すa, b, c, d, e, f）のうちのいずれかである。
 例えば、$#0xff#=15\cdot 16 + 15 = 255$である。
 #&#は\emph{ビット単位論理積}演算子である。
@@ -451,7 +451,7 @@ $r!$を$(r/e)^r$に置き換える部分である。
 \section{ハッシュ値}
 XXX: ハッシュ値とHash Codeは区別したほうがよいか?
 
-\index{hash code}%
+\ejindex{hash code}{はっしゅち@ハッシュ値}%
 前節のハッシュテーブルではデータに対して#w#ビットの整数を対応させていた。
 しかしキーが整数でないことはよくある。
 例えば文字列・オブジェクト・配列や他の複合データ型である。
@@ -470,7 +470,7 @@ XXX: ハッシュ値とHash Codeは区別したほうがよいか?
 
 \subsection{プリミティブな型のハッシュ値}
 
-\index{hash code!for primitive data}%
+\ejindex{hash code!for primitive data}{はっしゅち@ハッシュ値!ぷりみてぃぶがた@プリミティブ型}%
 #char#・#byte#・#int#・#float#などの小さいプリミティブな型のハッシュ値は簡単に計算できる。
 これらの方はバイナリ表現があり、これは#w#ビット以下である。
 \javaonly{(For example, in Java, #byte# is an 8-bit
@@ -490,7 +490,7 @@ is typically an 8-bit type and #float# is a 32-bit type.)}
 \subsection{複合オブジェクトのハッシュ値}
 \seclabel{stringhash}
 
-\index{hash code!for compound objects}%
+\ejindex{hash code!for compound objects}{はっしゅち@ハッシュ値!ふくごうおぶじぇくと@複合オブジェクト}%
 複合オブジェクトのハッシュ値は、その構成要素のハッシュ値を組み合わせて計算する。
 これは思うほど簡単でない。
 いい感じのやり方はたくさん思いつく（例えばビット単位の排他的論理和を計算する）が、そのうちの多くはうまくいかない。
@@ -565,8 +565,8 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
 \end{proof}
 
 
-\index{hash code!for strings}%
-\index{hash code!for arrays}%
+\ejindex{hash code!for strings}{はっしゅち@ハッシュ値!もじれつ@文字列}%
+\ejindex{hash code!for arrays}{はっしゅち@ハッシュ値!はいれつ@配列}%
 \subsection{配列と文字列のハッシュ値}
 \seclabel{polyhash}
 
@@ -577,7 +577,7 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
 必要なだけ$#z#_i$を生成するためには擬似乱数列を使えるが、その場合$#z#_i$は互いに独立ではなく、擬似乱数がハッシュ関数に対して悪影響を及ぼさないことを証明するのは難しい。
 例えば\thmref{multihash}の証明における$t$と$#z#_i$の独立性は成り立たなくなる。
 
-\index{prime field}%
+\ejindex{prime field}{そすうたい@素数体}%
 ここでは素数体上の多項式を使ったハッシュ法を使う。
 これは正規多項式の値を計算し、素数#p#による剰余を取るものだ。
 次の定理は素数体上の多項式が普通の多項式と似た振る舞いをすることを主張する。
@@ -672,57 +672,57 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 \section{ディスカッションと練習問題}
 
 ハッシュテーブルとハッシュ値は広大で活発な研究分野であり、この章ではほんのさわりを説明しただけである。
-ハッシュ方のオンライン参考文献一覧は\cite{hashing}\index{Bibliography on Hashing}2000近いエントリを含む。
+ハッシュ方のオンライン参考文献一覧は\cite{hashing}\ejindex{Bibliography on Hashing}{はっしゅほうのさんこうぶんけん@ハッシュ法の参考文献}2000近いエントリを含む。
 
 ハッシュテーブルには他にも様々な実装がある。
 
-\secref{hashtable}で説明したものはチェイン法\emph{hashing with chaining}である。\index{hashing with chaining}%
+\secref{hashtable}で説明したものはチェイン法\emph{hashing with chaining}である。\ejindex{hashing with chaining}{ちぇいんほうによるはっしゅほう@チェイン法によるハッシュ法}%
 （各配列のエントリは要素のチェイン（#List#）である。）
 チェイン法によるハッシュテーブルはIBMにてH. P. Luhnが1953年1月に出した内部報告書で提案された。この報告書は連結リストの最古の文献のうちの一つでもあると思われる。
 
-\index{open addressing}%
+\ejindex{open addressing}{おーぷんあどれすほう@オープンアドレス法}%
 別の方法として、\emph{オープンアドレス法}がある。
 これは全てのデータを配列に直接格納するものだ。
 \secref{linearhashtable}で説明した#LinearHashTable#はこのやり方のうちのひとつである。
 このアイデアもまた別のIBMのグループによって独立に1950年代に提案された。
-オープンアドレス法は\emph{衝突の解消}のことを考えなければならない。
-\index{collision resolution}%
+オープンアドレス法は\emph{衝突の解決}のことを考えなければならない。
+\ejindex{collision resolution}{しょうとつのかいけつ@衝突の解決}%
 衝突とはふたつの値が配列の同じ位置に割当てられることだ。
 このための方法にはいくつか種類がある。
 それぞれ異なる性能保証があり、またこの章で説明したものよりも精巧なハッシュ関数を用いるものもある。
 
 また別のハッシュテーブルの実装に関する話題としては、\emph{完全ハッシュ法}と呼ばれるものがある。
-\index{perfect hashing}%
+\ejindex{perfect hashing}{かんぜんはっしゅほう@完全ハッシュ法}%
 これは#find(x)#の実行時間が最悪の場合でも$O(1)$になるハッシュ法だ。
 データセットが静的な場合にはこれはデータセットに対する\emph{完全ハッシュ関数}を見つけることで実現できる。
-\index{perfect hash function}%
-\index{hash function!perfect}%
+\ejindex{perfect hash function}{かんぜんはっしゅかんすう@完全ハッシュ関数}%
+\ejindex{hash function!perfect}{はっしゅかんすう@ハッシュ関数!かんぜん@完全}%
 これはすべてのデータを別々の配列内の位置に対応させるハッシュ関数である。
 データが動的な場合には完全ハッシュ法として\emph{FKS二段階ハッシュテーブル}
-\index{two-level hash table}%
-\index{hash table!two-level}%
+\ejindex{two-level hash table}{にだんかいはっしゅてーぶる@二段階ハッシュテーブル}%
+\ejindex{hash table!two-level}{ハッシュテーブル!にだんかい@二段階}%
 \cite{fks84,dkkmrt94}
 や\emph{cuckoo hashing} \cite{pr04}などが知られている。
-\index{cuckoo hashing}%
-\index{hash table!cuckoo}%
+\ejindex{cuckoo hashing}{かっこうはっしゅほう@カッコウハッシュ法}%
+\ejindex{hash table!cuckoo}{ハッシュテーブル!カッコウ}%
 
 この章で紹介したハッシュ関数は任意のデータセットに対してうまく動作することが証明できる既知の手法の中でおそらく最も実用的なものである。
 別のよい方法として、CarterとWegmanによる先駆け的な研究成果であった\emph{ユニバーサルハッシュ法}を使ったものがある。いくつかのことなるシナリオのためのハッシュ関数が提案されている。\cite{cw79}
-\index{universal hashing}%
-\index{hashing!universal}%
+\ejindex{universal hashing}{ゆにばーさるはっしゅほう@ユニバーサルハッシュ法}%
+\ejindex{hashing!universal}{はっしゅほう@ハッシュ法!ユニバーサル}%
 \secref{tabulation}で説明したTabulation hashingは
 CarterとWegmanの研究\cite{cw79}によるものだが、この手法を線形探索法（と他のいくつかのハッシュテーブルの実装）に適用した場合の解析はP\v{a}tra\c{s}cuとThorupの研究成果である。\cite{pt12}
 
 \emph{乗算ハッシュ法}のアイデアは非常に古くからあり、
-\index{multiplicative hashing}%
-\index{hashing!multiplicative}%
+\ejindex{multiplicative hashing}{じょうさんはっしゅほう@乗算ハッシュ法}%
+\ejindex{hashing!multiplicative}{はっしゅほう@ハッシュ法!じょうさん@乗算}%
 おそらくこれはハッシュ法の伝承といってもよいだろう。\cite[Section~6.4]{k97v3}
 しかし、\secref{multihash}で説明した乗数#z#をランダムな奇数から選ぶアイデアとその解析はDietzfelbingerらの研究成果である。\cite{dhkp97}
 この乗算ハッシュ法は最もシンプルなもののうちの一つだが、衝突確率が$2/2^{#d#}$、つまり$2^{#w#}$から$2^{#d#}$への全ての関数からランダムに選出した場合（理想的な場合）とくらべて衝突確率が二倍になってしまう。
 XXX: multiply-addの訳語 % YJ random generatorの文脈だとlinear congruential generatorが線形合同法と訳されるけどどうでしょ。あるいは乗算ハッシュと統一して、乗算合同ハッシュ法とか。　https://ja.wikipedia.org/wiki/%E7%B7%9A%E5%BD%A2%E5%90%88%E5%90%8C%E6%B3%95
 \emph{multiply-add ハッシュ法}は次の関数を使う方法だ。
-\index{hashing!multiply-add}%
-\index{multiply-add hashing}%
+\ejindex{hashing!multiply-add}{はっしゅほう@ハッシュ法!multiply-add}%
+\ejindex{multiply-add hashing}{multiply-addはっしゅほう@multiply-addハッシュ法}%
 \[
    h(#x#) = ((#z##x# + b) \bmod 2^{#2w#}) \ddiv 2^{#2w#-#d#}
 \]
