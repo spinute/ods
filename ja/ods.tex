@@ -3,11 +3,16 @@
 %\usepackage[whole]{bxcjkjatype}
 %\documentclass[pdflatex,a5paper,10pt]{bxjsbook}
 \documentclass[platex,dvipdfmx,a5paper,10pt]{bxjsbook}
-\usepackage{makeidx}
 \usepackage{framed}
 \setlength{\FrameSep}{0mm}
- 
+
+% For Japanese index
+\usepackage{imakeidx}
 \makeindex
+\makeindex[name=ja, title={日本語牽引}]
+\newcommand{\ejindex}[2]{\index{#1}\index[ja]{#2}}
+
+%\makeindex
 %\usepackage{showidx}
 % mark overful hboxes
 %\overfullrule=5mm
@@ -307,6 +312,7 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \cleardoublepage
 \addcontentsline{toc}{chapter}{Index}
 \printindex
+\printindex[ja]
 
 \end{document}
 

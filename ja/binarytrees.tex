@@ -3,28 +3,28 @@
 
 この章では、コンピュータサイエンスで現れる最も基本的な構造のうちのひとつ、二分木を紹介する。
 この構造を\emph{木}と呼ぶのは、図示したときに（森に生えてる）木に似ているためである。
-\index{tree}%
-\index{tree!binary}%
-\index{binary tree}%
+\ejindex{tree}{き@木}%
+\ejindex{tree!binary}{き@木!にぶん@二分}%
+\ejindex{binary tree}{にぶんぎ@二分木}%
 二分木には複数の定義がある。
 数学的には、\emph{二分木}とは連結な有限無向グラフであって、サイクルを持たず、すべての頂点の次数が3以下のものである。
 
 コンピュータサイエンスにおける応用では、二分木はふつう\emph{根を持つ}。
-\index{tree!rooted}%
-\index{rooted tree}%
+\ejindex{tree!rooted}{き@木!ねつき@根付き}%
+\ejindex{rooted tree}{ねつきぎ@根付き木}%
 木の\emph{根}と呼ばれる特殊なノード#r#があり、このノードの次数は2以下である。
 %次数2以下のノードのうち、特別なもの#r#を、木の\emph{根}と呼ぶ。
 ノード$#u#(\neq #r#)$から#r#に向かう経路における二番目のノードを#u#の\emph{親}という。
-\index{parent}%
+\ejindex{parent}{おや@親}%
 #u#に隣接する親以外のノードを#u#の\emph{子}という。
 特に\emph{順序付けられている}二分木に興味があることが多いので、
-\index{ordered tree}%
-\index{tree!ordered}%
+\ejindex{ordered tree}{じゅんじょづけられたき@順序付けられた木}%
+\ejindex{tree!ordered}{き@木!じゅんじょづけられた@順序付けられた}%
 子を\emph{左の子}・\emph{右の子}と呼び分けることにする。
-\index{left child}%
-\index{child!left}%
-\index{right child}%
-\index{child!right}%
+\ejindex{left child}{ひだりのこ@左の子}%
+\ejindex{child!left}{こ@子!ひだり@左}%
+\ejindex{right child}{みぎのこ@右の子}%
+\ejindex{child!right}{こ@子!みぎ@右}%
 
 二分木を図示するとき、ふつう根から下に向かって描く。
 根が一番上に描かれる。また、ノード#u#の左右の子は、#u#の左下・右下にそれぞれ描かれる。
@@ -55,19 +55,18 @@
 % XXX: 別に二分木専用の用語ではないような気が...?　% YJ 木に訂正しましょう
 木（および二分木）は重要なので、その性質を記述するための専用の語彙が使われている。
 木におけるノード#u#の\emph{深さ}とは、
-\index{depth}%
+\ejindex{depth}{ふかさ@深さ}%
 #u#から根までの経路の長さである。
 ノード#w#が#u#から#r#への経路に含まれるとき、#w#を#u#の\emph{祖先}という。
-\index{ancestor}%
+\ejindex{ancestor}{そせん@祖先}%
 一方、このとき#u#を#w#の\emph{子孫}という。
-\index{descendant}%
+\ejindex{descendant}{しそん@子孫}%
 木におけるノード#u#の\emph{部分木}とは、#u#を根とし、#u#のすべての子孫を含む木である。
 ノード#u#の\emph{高さ}とは、#u#から#u#の子孫への経路の長さの最大値である。
-\index{height!in a tree}
+\ejindex{height!in a tree}{たかさ@高さ!き@木}
 木の\emph{高さ}とはその根の高さである。
-\index{height!of a tree}%
 ノード#u#が子を持たないなら、#u#は\emph{葉}である。
-\index{leaf}%
+\ejindex{leaf}{は@葉}%
 
 \emph{外部ノード}という概念を考えると便利なことがある。
 左の子を持たないノードは左の子として外部ノードを持ち、右の子を持たないノードは右の子として外部ノードを持つとする。（\figref{binary-tree}.bを参照せよ。）
@@ -93,7 +92,7 @@
 
 \subsection{再帰的なアルゴリズム}
 
-\index{recursive algorithm}%
+\ejindex{recursive algorithm}{さいきあるごりずむ@再帰アルゴリズム}%
 再帰アルゴリズムを使うと二分木に関する計算が簡単になる。
 例えば#u#を根とする二分木のサイズ（ノードの数）は、#u#の子を根とする部分木のサイズを再帰的に計算し、足し合わせ、その結果に1加えると求まる。
 
@@ -106,9 +105,9 @@
 \subsection{二分木の走査}
 \seclabel{bintree:traversal}
 
-\index{traversal!of a binary tree}%
-\index{tree traversal}%
-\index{binary-tree traversal}%
+\ejindex{traversal!of a binary tree}{そうさ@走査!にぶんぎ@二分木}%
+\ejindex{tree traversal}{きのそうさ@木の走査}%
+\ejindex{binary-tree traversal}{にぶんぎのそうさ@二分木の走査}%
 先の小節で説明したふたつのアルゴリズムは二分木のすべてのノードを訪問するために再帰を使った。
 いずれのアルゴリズムも二分木のノードを次のコードと同じ順番で訪問していた。
 % NOTE: （C++では？）部分表現の評価順序は未規定で、訪問順は必ずしもこうなるわけではないのではないか % TODO: YJ C, C++の部分評価順序は規定されていないのでこれは正しくない。著者に言うべきか。
@@ -147,8 +146,8 @@
 この場合にも再帰を使わない実装は可能だが、#List#か#Stack#を使って、今訪問しているノードから根までの経路を記録しておく必要がある。
 
 ここまで説明したものとは別の走査方法として、\emph{幅優先}な走査がある。
-\index{breadth-first traversal}%
-\index{traversal!breadth-first}%
+\ejindex{breadth-first traversal}{はばゆうせんそうさ@幅優先走査}%
+\ejindex{traversal!breadth-first}{そうさ@走査!はばゆうせん@幅優先}%
 幅優先に走査する場合、根から下に向かって深さごとに、同じ深さのノードは左から右の順に、すべてのノードを訪問する。
 （\figref{bintree-bfs}を参照せよ。）
 これは英語の文章の読み方と似ている。（訳注：横書きなら、日本語でも同様である。）
@@ -169,11 +168,11 @@
 \seclabel{binarysearchtree}
 
 \index{BinarySearchTree@#BinarySearchTree#}%
-\index{binary search tree}%
-\index{binary tree!search}%
+\ejindex{binary search tree}{にぶんたんさくぎ@二分探索木}%
+\ejindex{binary tree!search}{にぶんぎ@二分木!たんさく@探索}%
 #BinarySearchTree#（二分探索木）はノード#u#がある全順序な集合の要素であるデータ#u.x#を持つ二分木である。
 二分探索木の各ノードとそのデータは次の\emph{二分探索木の性質}を満たす。 % TODO: YJ これはpropertyなのかdefinitionなのか
-\index{binary search tree property}%
+\ejindex{binary search tree property}{にぶんたんさくぎのせいしつ@2分探索木の性質}%
 ノード#u#について、#u.left#を根とする部分木に含まれるデータはすべて#u.x#より小さく、#u.right#を根とする部分木に含まれるデータはすべて#u.x#より大きい。
 #BinarySearchTree#の例を\figref{bst}に示す。
 
@@ -189,7 +188,7 @@
 
 \subsection{探索}
 
-\index{search path!in a binary search tree}%
+\ejindex{search path!in a binary search tree}{たんさくけいろ@探索経路!にぶんたんさくぎ@二分探索木}%
 二分探索木の性質は有用だ。
 この性質を利用して、二分探索木から値#x#を高速に見つけられる。
 具体的には、まず根#r#から#x#を探し始める。
@@ -316,11 +315,11 @@
 
 二分木は血縁関係のモデルとして数千年に渡って使われている。
 二分木は家系図を自然にモデルすることができる。
-\index{family tree}%
+\ejindex{family tree}{かけいず@家系図}%
 \index{pedigree family tree}%
 ある家系図の書き方では、根をある人、左右の子ノードをその人の両親とする。
 数世紀前からは生物学における系統樹にも二分木は使われている。
-\index{species tree}
+\ejindex{species tree}{けいとうじゅ@系統樹}
 ここでは葉は現存の種を表し、内部ノードは\emph{分化}が起きたことを表す。
 分化とは一つの種から、二つの別々の種が派生することである。
 
@@ -370,20 +369,20 @@
 
 \begin{exc}
 二分木が\emph{サイズでバランスされている}とは、
-  \index{size-balanced}%
-  \index{binary search tree!size-balanced}%
+  \ejindex{size-balanced}{サイズでバランスされた}%
+  \ejindex{binary search tree!size-balanced}{にぶんたんさくぎ@二分探索木!サイズでバランスされた}%
 任意のノード#u#について、#u.left#を根とする部分木のサイズと、#u.right#を根とする部分木のサイズとの差が1以下であることをいう。
 二分木がこの意味でバランスされているか判定する再帰的なメソッド#isBalanced()#を書け。
 なお、このメソッドの実行時間は$O(#n#)$でなければならない。
 （色々な形状の大きい木でテストしてみること。$O(#n#)$より多く時間を使う実装は簡単である。）
 \end{exc}
 
-\index{traversal!pre-order}%
-\index{traversal!post-order}%
-\index{traversal!in-order}%
-\index{pre-order traversal}%
-\index{post-order traversal}%
-\index{in-order traversal}%
+\ejindex{traversal!pre-order}{そうさ@走査!いきがけじゅん@行きがけ順}%
+\ejindex{traversal!post-order}{そうさ@走査!とおりがけじゅん@通りがけ順}%
+\ejindex{traversal!in-order}{そうさ@走査!かえりがけじゅん@帰りがけ順}%
+\ejindex{pre-order traversal}{いきがけじゅんでのそうさ@行きがけ順での走査}%
+\ejindex{post-order traversal}{とおりがけじゅんでのそうさ@通りがけ順での走査}%
+\ejindex{in-order traversal}{かえりじゅんでのそうさ@帰りがけ順での走査}%
 \emph{行きがけ順}とは、二分木の訪問順であって、ノード#u#をそのいずれの子よりも先に訪問するものである。
 \emph{通りがけ順}とは、二分木の訪問順であって、ノード#u#を左の部分木に含まれる子よりも後かつ右の部分木に含まれる子よりも先に訪問するものである。
 \emph{帰りがけ順}とは、二分木の訪問順であって、ノード#u#を#u#を根とする部分木に含まれるいずれの子よりも後に訪問するものである。
@@ -401,12 +400,12 @@
 \end{figure}
 
 \begin{exc}
-  \index{number!pre-order}%
-  \index{number!post-order}%
-  \index{number!in-order}%
-  \index{pre-order number}%
-  \index{post-order number}%
-  \index{in-order number}%
+  \ejindex{number!pre-order}{ばんごう@番号!いきがけじゅん@行きがけ順}%
+  \ejindex{number!post-order}{ばんごう@番号!とおりがけじゅん@通りがけ順}%
+  \ejindex{number!in-order}{ばんごう@番号!かえりがけじゅん@帰りがけ順}%
+  \ejindex{pre-order number}{いきがけじゅんばんごう@行きがけ順番号}%
+  \ejindex{post-order number}{とおりじゅんばんごう@通りがけ順番号}%
+  \ejindex{in-order number}{かえりじゅんばんごう@帰りがけ順番号}%
 #BinarySearchTree#のサブクラスとしてノードのフィールドに行きがけ番号・通りがけ番号・帰りがけ番号を持つものを作れ。 % TODO YJ フィールドはどこかで定義されていたか？
 これらの値を適切に割り当てる再帰的な関数#preOrderNumber()#・#inOrderNumber()#・#postOrderNumber()#を書け。
 なお、いずれの実行時間も$O(#n#)$でなければならない。

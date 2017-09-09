@@ -2,7 +2,8 @@
 \chaplabel{redblack}
 
 \index{binary search tree!red-black}%
-\index{red-black tree}%
+% XXX: あかくろぎ？あかぐろき？あかぐろぎ？ Wikipediaではあかくろぎだし、自分もそうだと思っています spinute
+\ejindex{red-black tree}{あかくろぎ@赤黒木}%
 この章では赤黒木という、要素数に対して木の高さを対数程度に抑える二分木を紹介する。
 赤黒木は最も広く使われるデータ構造のうちのひとつである。
 例えば、多くのライブラリの実装における基本的なデータ構造であり、JavaのコレクションフレームワークやC++の標準テンプレートライブラリ（のいくつかの実装）に使われている。
@@ -70,7 +71,7 @@ Scapegoat treeには高さの保証があるものの、#add(x)#・#remove(x)#�
 このとき高さの制約は保つが、次数の制約が成り立たなくなるかもしれない。
 つまり、#u#を追加する直前に#w#の4つの子を持っていたなら、#w#の子の数は今では5となる。
 この場合、 #w#を\emph{分割}し、2つの子を持つノード#w#と、3つの子を持つノード#w#'とする。
-\index{split}%
+\ejindex{split}{ぶんかつ@分割}%
 このとき#w#'には親がいないので、#w#の親を#w'#の親とする。
 この処理は再帰的に行われる。
 つまり、先の処理の結果として#w#の親が持つ子の数が多くなりすぎるかもしれず、その場合にはまた分割を行う。
@@ -120,7 +121,7 @@ Scapegoat treeには高さの保証があるものの、#add(x)#・#remove(x)#�
 すると#w#の子の数は2、#w'#の子の数は2か3になり、処理を終えられる。
 
 一方、#w'#の子の数が2なら、#w#と#w'#を\emph{併合}し、子を3つ持つ一つのノード#w#とする。
-\index{merge}%
+\ejindex{merge}{へいごう@併合}%
 続いて#w'#を#w'#の親から取り除く。
 この処理はノード#u#かその兄弟#u'#が3つ以上子を持つような#u#を見つけるか、根に到達すると終了する。
 後者の場合、根はひとつの子だけを持つので、根は削除して、その子を新たな根とする。
@@ -132,22 +133,22 @@ Scapegoat treeには高さの保証があるものの、#add(x)#・#remove(x)#�
 \seclabel{redblacktree}
 
 赤黒木は各ノード#u#が\emph{赤}か\emph{黒}の\emph{色}を持つ二分探索木である。
-\index{colour}%
+\ejindex{colour}{いろ@色}%
 赤は$0$で、黒は$1$で表現される。
-\index{red node}%
-\index{black node}%
+\ejindex{red node}{あかいのーど@赤いノード}%
+\ejindex{black node}{くろいのーど@黒いノード}%
 \javaimport{ods/RedBlackTree.red.black.Node<T>}
 \cppimport{ods/RedBlackTree.RedBlackNode.red.black}
 
 赤黒木を操作する前後では次のふたつの性質が満たされる。
 いずれも赤・黒の色と、0・1の数値を使って定義される。
 \begin{prp}[黒い高さの制約]
-  \index{black-height property}%
+  \ejindex{black-height property}{くろいたかさのせいやく@黒い高さの制約}%
   「黒い高さ」が一様：葉から根への経路はいずれも、同じ数だけ黒いノードを含む。
 \end{prp}
 
 \begin{prp}[赤い辺の制約]
-  \index{no-red-edge property}%
+  \ejindex{no-red-edge property}{あかいへんのせいやく@赤い辺の制約}%
   赤い辺が無い：赤いノード同士は隣接しない。
   （根でない任意のノード#u#について、$#u.colour# + #u.parent.colour# \ge 1$が成り立つ。）
 \end{prp}
@@ -238,8 +239,9 @@ $T'$の内部ノードはみな2-4個の子を持つ。
 \subsection{Left-Leaning 赤黒木}
 XXX: left-learning に定訳はあるか?
 
-\index{red-black tree}%
-\index{left-leaning red-black tree}%
+% XXX: あかくろぎ？あかぐろき？あかぐろぎ？ Wikipediaではあかくろぎだし、自分もそうだと思っています spinute
+\ejindex{red-black tree}{あかくろぎ@赤黒木}%
+\ejindex{left-leaning red-black tree}{left-learning あかくろぎ@left-learning 赤黒木}%
 赤黒木の定義の仕方は複数ある。
 #add(x)#・#remove(x)#を実行しながら、赤い辺の制約・黒い高さの制約を保てる、いくつかのデータ構造があるのだ。
 異なる構造では、異なるやり方でこれを実現する。
@@ -247,7 +249,7 @@ XXX: left-learning に定訳はあるか?
 \index{RedBlackTree@#RedBlackTree#}%
 これは赤黒木の一種であって、ある追加の性質を満たすものである。
 \begin{prp}[left-leaning性]\prplabel{left-leaning}\prplabel{redblack-last}
-  \index{left-leaning property}%
+  \ejindex{left-leaning property}{left-learning せい@left-learning 性}%
   任意のノード#u#について、#u.left#が黒ならば#u.right#も黒である。
 \end{prp}
 例えば\figref{redblack-example}のleft-leaning性を満たしていない。
@@ -445,7 +447,7 @@ Case~1はCase~3に続き、その場合も処理は終了する。
 特に2-4木における分割・併合・子を借りる処理に必要な時間が$O(m)$であることを示せれば、これから\thmref{redblack-amortized}を導けるだろう。
 
 2-4木に関するこの定理の証明は、ポテンシャル法を使った償却解析による。
-\index{potential method}%
+\ejindex{potential method}{ぽてんしゃるほう@ポテンシャル法}%
 \footnote{ポテンシャル法の他の例としては、\lemref{dualarraydeque-amortized}・\lemref{selist-amortized}の証明を参照せよ。}
 2-4木の内部ノード#u#のポテンシャルを次のように定義する。
 \[
@@ -488,10 +490,10 @@ Sedgewick \cite{s08}は二種類のleft-learning赤黒木を提案している�
 こうすると、プログラムが短くエレガントになる。
 
 関連するより古いデータ構造としては\emph{AVL木} \cite{avl62}がある。
-\index{AVL tree}%
+\ejindex{AVL tree}{AVLぎ@AVL木}%
 AVL木は次の\emph{height-balanced}性を満たす木である。
-\index{height-balanced}%
-\index{binary search tree!height balanced}%
+\ejindex{height-balanced}{たかさでばらんすされた@高さでバランスされた}%
+\ejindex{binary search tree!height balanced}{にぶんたんさくぎ@二分探索木!たかさでばらんすされた@高さでバランスされた}%
 任意のノード$u$について、#u.left#を根とする部分木の高さと、#u.right#を根とする部分木の高さとの差は、高々1である。
 $F(h)$を高さ$h$である木のうち、葉が最も少ないものの葉の数とするとき、$F(h)$は次のフィボナッチの漸化式を満たす。
 \[
