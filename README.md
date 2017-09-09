@@ -34,3 +34,7 @@ PDFファイルはプロジェクトのウェブサイト<https://sites.google.c
 少なくとも自分の持っている二冊は翻訳の質も良かった。（[Algorithm Design](http://www.cs.princeton.edu/~wayne/kleinberg-tardos/)と[Introduction to Algorithms](https://mitpress.mit.edu/books/introduction-algorithms)）
 ただし、文量は大判1000ページ程度、価格は10000円程度と、気軽なものではない。
 こういった専門家向けの入門書や、あるいはより専門的な書籍への橋渡しであるこの教科書を、日本語で・フリーでアクセスできるようにするのがこの翻訳の目的である。
+
+### ライセンス・著作権
+原著（および翻訳書）のライセンスはCC-BY 2.5(https://creativecommons.org/licenses/by/2.5/) です。
+また翻訳・クラウドファンディングについては事前に原著者にメールで連絡し、許可を頂いています。
