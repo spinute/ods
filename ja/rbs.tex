@@ -141,7 +141,7 @@ $\{0,\ldots,#n#\}$のランダムな置換を考えるとき、そのうち$\{i,
 
 この考察により、調和数の簡単な計算で\lemref{rbs}を証明できる。
 
-\begin{proof}[Proof of \lemref{rbs}]
+\begin{proof}[\lemref{rbs}の証明]
 $I_i$を指示確率変数とする。
 この値は、$i$が探索経路に現れるときは1、そうでないときは0である。
 このとき探索経路の長さを次のように計算できる。
@@ -200,7 +200,7 @@ $I_i$を指示確率変数とする。
 これは\lemref{rbs}を利用して#SSet#インターフェースを実装する。
 \footnote{#Treap#の名はこのデータ構造は二分木 \textbf{tr}ee(\secref{binarysearchtree})であると同時にヒープ h\textbf{eap}(\chapref{heaps}) でもあることによる。}
 
-#Treap#のノードは値#x#を持つ点で#BinarySearchTree#に似ているが、それに加えて一意な数である\emph{優先度}#p#を持つ。
+#Treap#のノードは値#x#を持つ点で#BinarySearchTree#に似ているが、それに加えて値#x#に対して一意な\emph{優先度}#p#を持つ。
 この#p#はランダムに割当てられる。
 \javaimport{ods/Treap.Node<T>}
 \cppimport{ods/Treap.TreapNode}
@@ -224,7 +224,7 @@ $I_i$を指示確率変数とする。
 ヒープ性から最小の優先度を持つノードが#Treap#の根#r#であることがわかる。
 二分探索木性から#r.x#より小さなキーを持つノードは#r.left#を根とする部分木に含まれ、#r.x#より大さなキーを持つノードは#r.right#を根とする部分木に含まれることがわかる。
 
-#Treap#の優先度の重要な特徴は、一意であり、かつランダムに割当てられることである。
+#Treap#の優先度の重要な特徴は、値#x#に対して一意であり、かつランダムに割当てられることである。
 このことから#Treap#のふたつ等価な解釈の仕方がある。
 先ほどに定義したように、#Treap#はヒープ性と二分探索木性を満たす。
 この代わりに、#Treap#を優先度の昇順にノードが追加される#BinarySearchTree#だと考えることもできる。
@@ -363,7 +363,7 @@ $I_i$を指示確率変数とする。
 \]
 よって#Treap#における探索経路の方が短く、各操作も#Skiplist#よりも#Treap#の方がかなり速いと解釈できるだろう。
 \chapref{skiplists}の\excref{skiplist-opt}で示したように、偏ったコイントスを使って、#Skiplist#における探索経路の長さの期待値を次のように減らせる。
-\bf{XXX: SkiplistSSetの誤植?}
+%\bf{XXX: SkiplistSSetの誤植?} % 導入では実装+インターフェイスの名前であるSkiplistSSetを使い、実装の違いによる計算量の議論に移るところで実装の名前であるSkiplistにしていると思う。
 \[
      e\ln #n# + O(1) \approx 1.884\log #n# + O(1)
 \]
