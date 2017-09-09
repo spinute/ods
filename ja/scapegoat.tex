@@ -9,7 +9,7 @@
 #ScapegoatTree#は\emph{部分的な再構築}によってバランスを保つ。
 \ejindex{partial rebuilding}{ぶぶんてきなさいこうちく@部分的な再構築}%
 \ejindex{binary search tree!partial rebuilding}{にぶんたんさくぎ@二分探索木!ぶぶんてきなさいこうちく@部分的な再構築}%
-部分再構築の間に、ある部分木全体が分解され完全にバランスされた部分木として再構築される。
+部分再構築によって、部分木全体が分解され完全にバランスされた部分木として再構築される。
 ノード#u#を根とする部分木を完全にバランスされた木に再構築するやり方はたくさんある。
 もっとも単純なやり方のひとつは#u#の部分木を辿りすべてのノードを配列#a#に集め、#a#から再帰的にバランスされた木を構築するものだ。
 $#m#=#a.length#/2$とするとき、#a[m]#を新たな部分木の根とし、$#a#[0],\ldots,#a#[#m#-1]$は左の部分木に、$#a#[#m#+1],\ldots,#a#[#a.length#-1]$は右の部分木にそれぞれ再帰的に格納される。
@@ -22,13 +22,13 @@ $#m#=#a.length#/2$とするとき、#a[m]#を新たな部分木の根とし、$#
 \seclabel{scapegoattree}
 
 \index{ScapegoatTree@#ScapegoatTree#}%
-#ScapegoatTree#とは、#BinarySearchTree#であり、ノード数#n#に加えてノード数の上界を保持する#q#を持つ。
+#ScapegoatTree#とは、#BinarySearchTree#であり、ノード数#n#に加えてノード数の上界となる値#q#を保持する。
 \codeimport{ods/ScapegoatTree.q}
 #n#と#q#は常に次の式を満たす。
 \[
       #q#/2 \le  #n# \le #q#
 \]
-加えて#ScapegoatTree#の高さは対数程度である。
+加えて#ScapegoatTree#の高さはノードの数に対して対数程度であるという性質を持つ。
 すなわちscapegoat treeの高さは常に次の値以下である。
 \begin{equation}
      \log_{3/2} #q# \le \log_{3/2} 2#n# < \log_{3/2} #n# + 2
@@ -45,7 +45,7 @@ $#m#=#a.length#/2$とするとき、#a[m]#を新たな部分木の根とし、$#
   \figlabel{scapegoat-example}
 \end{figure}
 
-#ScapegoatTree#における#find(x)#の実装は#BinarySearchTree#の場合の標準的なものを使う。（\secref{binarysearchtree}を参照せよ。）
+#ScapegoatTree#における#find(x)#の実装は#BinarySearchTree#の標準的なものを使う。（\secref{binarysearchtree}を参照せよ。）
 実行時間は木の高さに比例し、\myeqref{scapegoat-height}よりこれは$O(\log #n#)$である。
 
 #add(x)#の実装では、まず#n#と#q#をひとつずつ増やし、#x#を二分探索木に追加するふつうのアルゴリズムを使う。
@@ -172,9 +172,11 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
 
 \begin{proof}
 XXX: credit schemeの訳語は? accounting method（AlgoIntroでは出納法）のことだろうか?
+% TODO: YJ accounting methodのことっぽい。検索してみるとおしゃれにcreditという言い方をするものがいくつか出てきた。 https://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf
+% 出納法に訳します。
 
-\emph{credit scheme}を使って示す。
-\index{credit scheme}%
+\emph{出納法}を使って示す。
+\ejindex{credit scheme}{出納法}%
 各ノードは預金を持っていると考える。
 預金が$c$だけあれば再構築のための支払いができる。
 預金の合計は$O(m\log m)$で、#rebuild(u)#は#u#に蓄えられている預金を使って支払われる。
