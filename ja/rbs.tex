@@ -49,14 +49,14 @@
 
 このことを形式的に述べるために、ランダム二分探索木を考える。
 次の手順で大きさ#n#の\emph{ランダム二分探索木}が得られる。
-\index{random binary search tree}%
-\index{binary search tree!random}%
+\ejindex{random binary search tree}{らんだむにぶんたんさくぎ@ランダム二分探索木}%
+\ejindex{binary search tree!random}{にぶんたんさくぎ@二分探索木!ランダム}%
 
 $0,\ldots,#n#-1$のランダムな置換をひとつ選ぶ。
 これを$#x#_0,\ldots,#x#_{#n#-1}$とし、順に#BinarySearchTree#に追加する。
 ここで、\emph{ランダムな置換}
-\index{permutation!random}%
-\index{random permutation}%
+\ejindex{permutation!random}{ちかん@置換!ランダム}%
+\ejindex{random permutation}{らんだむなちかん@ランダムな置換}%
 とは、$#n#!$個ある$0,\ldots,#n#-1$の並び替えから、いずれも等しい確率$1/#n#!$でひとつ選出したものをいう。
 
 値$0,\ldots,#n#-1$を、順序の定義された集合の要素#n#個組みと置き換えても、ランダム二分探索木の性質には影響しないことに注意する。
@@ -64,7 +64,7 @@ $#x#\in\{0,\ldots,#n#-1\}$は、単にサイズ#n#の順序付き集合におけ
 
 ランダム二分探索木の主要な性質を説明する前に、少し脱線してランダムな構造を考えるときによく出てくる数の話をしよう。
 非負整数を$k$とするとき、$k$番目の\emph{調和数}$H_k$は次のように定義される。
-\index{harmonic number}%
+\ejindex{harmonic number}{ちょうわすう@調和数}%
 \index{H@$H_k$ (harmonic number)}%
 \[
   H_k = 1 + 1/2 + 1/3 + \cdots + 1/k
@@ -207,7 +207,7 @@ $I_i$を指示確率変数とする。
 #Treap#のノードは、二分探索木の性質に加えて、\emph{ヒープ性}も満たす。
 \begin{itemize}
 \item （ヒープ性）根でない任意のノード#u#について$#u.parent.p# < #u.p#$が成り立つ。
-      \index{heap property}%
+      \ejindex{heap property}{ひーぷせい@ヒープ性}%
 \end{itemize}
 言い換えると、どのノードの優先度も、そのふたつの子いずれの優先度よりも小さい。
 \figref{treap}にこの例を示した。
@@ -261,11 +261,11 @@ $I_i$を指示確率変数とする。
 このためにヒープ性を保つための回転操作が必要である。
 \figref{rotations}を参照せよ。
 二分探索木の\emph{回転}とは
-\index{rotation}%
+\ejindex{rotation}{かいてん@回転}%
 ノード#w#とその親#u#について、二分探索木性を保ちながら#w#を#u#の親にする操作である。
 回転には\emph{右回転}と\emph{左回転}の二種類があって、それぞれ#w#が#u#の右の子であるか、左の子であるかに対応する。
-\index{left rotation}%
-\index{right rotation}%
+\ejindex{left rotation}{ひだりかいてん@左回転}%
+\ejindex{right rotation}{みぎかいてん@右回転}%
 
 \begin{figure}
   \begin{center}
@@ -388,7 +388,7 @@ Devroye\cite{d88}が\lemref{rbs}とそれに関連した成果を証明した。
 #Treap#における空間効率の最適化として、各ノードに明示的に優先度#p#を蓄えずに済ませる方法がある。
 代わりに、#u#の優先度として#u#のメモリアドレスのハッシュ値を用いる。
 多くのハッシュ関数が実用的には上手く動作するが、\lemref{rbs}の証明の正しさを保つためには、\emph{min-wise independent性}を満たす関数族からランダムに選出した関数を使う必要がある。
-\index{min-wise independence}%
+\ejindex{min-wise independence}{min-wise independenceせい@min-wise independence性}%
 min-wise independent性とは次の性質である。
 相異なる任意の値$x_1,\ldots,x_k$について、それぞれのハッシュ値$h(x_1),\ldots,h(x_k)$は高い確率で相異なる値を取る。
 すなわち、ある定数$c$が存在して、任意の$i\in\{1,\ldots,k\}$について次の式が成り立つ。
@@ -397,12 +397,12 @@ min-wise independent性とは次の性質である。
 \]
 この性質を持つハッシュ関数で、実装が簡単、かつ高速なものとして
 \emph{tabulation hashing}がある。（\secref{tabulation}を参照せよ。）
-\index{tabulation hashing}%
-\index{hashing!tabulation}%
+\ejindex{tabulation hashing}{tabulation hashing}%
+\ejindex{hashing!tabulation}{はっしゅほう@ハッシュ法!tabulation}%
 
 #Treap#の他の変種であって、優先度を各ノードに蓄えないものとして、Mart\'\i nezとRoura \cite{mr98}による動的ランダム二分探索木がある。
-\index{randomized binary search tree}%
-\index{binary search tree!randomized}%
+\ejindex{randomized binary search tree}{どうてきらんだむにぶんたんさくぎ@動的ランダム二分探索木}%
+\ejindex{binary search tree!randomized}{にぶんたんさくぎ@二分探索木!どうてきらんだむ@動的ランダム}%
 任意のノード#u#は#u#を根とする部分木の大きさ#u.size#を保持する。
 #add(x)#・#remove(x)#いずれのアルゴリズムもランダム化されている。
 #x#を#u#を根とする部分木に追加するアルゴリズムは次のものである。
@@ -472,8 +472,8 @@ min-wise independent性とは次の性質である。
 \end{exc}
 
 \begin{exc}
-  \index{finger}%
-  \index{finger search!in a treap}%
+  \ejindex{finger}{ゆび@指}%
+  \ejindex{finger search!in a treap}{ゆびたんさく@指探索!treap}%
   この問題では#Treap#において、与えられたポインタの近くにあるノードを効率的に見つける方法を明らかにする。
   \begin{enumerate}
     \item 各ノードが自身を根とする部分木における最大値・最小値を保持する#Treap#を設計・実装せよ。
