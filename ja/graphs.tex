@@ -135,7 +135,7 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
 
 \begin{thm}
 #AdjacencyMatrix#は#Graph#インターフェースを実装する。
-#AdjacencyMatrix#は以下に述べるコストで各操作をサポートする。
+#AdjacencyMatrix#は以下のように各操作をサポートする。
 \begin{itemize}
   \item #addEdge(i,j)#・#removeEdge(i,j)#・#hasEdge(i,j)#を定数時間で実行できる。
   \item #inEdges(i)#・#outEdges(i)#を時間$O(#n#)$で実行できる。
@@ -213,7 +213,7 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
 \pcodeimport{ods/AdjacencyLists.outEdges(i)}
 \javaimport{ods/AdjacencyLists.outEdges(i)}
 \cppimport{ods/AdjacencyLists.outEdges(i,edges)}
-\javaonly{これは定数時間で実行できる}
+\javaonly{これは定数時間で実行できる。}
 \cpponly{これにかかる時間は$O(\deg(#i#))$である。}
 
 #inEdges(i)#はもう少しタイヘンだ。
@@ -228,7 +228,7 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
 
 \begin{thm}
 #AdjacencyLists#は#Graph#インターフェースを実装する。
-#AdjacencyLists#は次の操作をサポートする。
+#AdjacencyLists#は以下のように各操作をサポートする。
 \begin{itemize}
   \item #addEdge(i,j)#は定数時間で実行できる。
   \item #removeEdge(i,j)#・#hasEdge(i,j)#にかかる時間は$O(\deg(#i#))$である。
@@ -244,11 +244,11 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
 \begin{itemize}
   \item #adj#の要素を格納するにはどんなデータ構造を使うのがいいだろう。
   配列ベースのもの、ポインタベースのもの、あるいはハッシュテーブルだろうか。
-  \item 任意の#i#について$#(j,i)#\in E$を満たす#j#のリストであ 二次隣接リスト#inadj#があるべきだろうか。
-  これは#inEdges(i)#の実行時間を劇的に改善するが、辺を追加・削除する際の仕事をを少し増やす。
+  \item 任意の#i#について$#(j,i)#\in E$を満たす#j#のリストである二次隣接リスト#inadj#があるべきだろうか。
+  これは#inEdges(i)#の実行時間を劇的に改善するが、辺を追加・削除する際の仕事を少し増やす。
   \item #adj[i]#における辺#(i,j)#は対応する#inadj[j]#のエントリへの参照を持つべきだろうか。
   \item 辺は一級オブジェクトであるべきだろうか。
-  このとき#adj#はは頂点のリストではなく、辺のリストを持つことになる。
+  このとき#adj#は頂点のリストではなく、辺のリストを持つことになる。
 \end{itemize}
 これらの選択肢の大部分は、実装の複雑さと性能とのトレードオフをふまえて考えることになる。
 
