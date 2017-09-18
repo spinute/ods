@@ -109,7 +109,7 @@
 例えば#SLList#の最後のノードを削除したり、空の#SLList#にノードを追加するときは#head#・#tail#を適切に更新するため特別な処理が必要であった。
 #DLList#ではこういう特別な場合というのがかなり増える。
 #DLList#におけるこれら全ての特別な場合を綺麗に扱う最善の方法はおそらくダミーノードを使うことだろう。
-\ejindex{dummy node}{ダミーノード}%
+\ejindex{dummy node}{だみーのーど@ダミーノード}%
 ダミーノードはデータを含まない空のノードで、これを置くことで特別なノードが生じなくなるのだ。 %ただ場所だけを占める。
 %こうするとノードを特別扱いする必要がなくなるのだ。
 すべてのノードには#next#と#prev#がある。
@@ -471,8 +471,8 @@ $#u#_0,#u#_1,#u#_2,\ldots$を順に$#u#_0$のブロックの要素数を$#b#-1$�
 例えばKnuthの\cite[Sections~2.2.3--2.2.5]{k97v1}で議論されている。
 #SEList#もデータ構造の有名な練習問題である。
 #SEList#は\emph{unrolled linked list}\cite{sra94}と呼ばれることもある。
-\ejindex{unrolled linked list|seealso{#SEList#}}{アンロールされた連結リスト|seealso{#SEList#}}%
-\ejindex{linked list!unrolled|seealso{#SEList#}}{れんけつりすと@連結リスト!アンロールされた|seealso{#SEList#}}%
+\ejindex{unrolled linked list|seealso{#SEList#}}{あんろーるされたれんけつりすと@アンロールされた連結リスト|seealso{#SEList#}}%
+\ejindex{linked list!unrolled|seealso{#SEList#}}{れんけつりすと@連結リスト!あんろーるされた@アンロールされた|seealso{#SEList#}}%
 
 双方向連結リストの領域使用量を減らすための別の手法としてXOR-listsと呼ばれるものもある。
 \ejindex{XOR-list}{XORリスト}%
@@ -569,7 +569,7 @@ XOR-listのもっと踏み込んだ議論はSinhaの雑誌記事\cite{s04}を参
 \end{exc}
 
 \begin{exc}\exclabel{dllist-sort}
-  \ejindex{merge-sort}{マージソート}%
+  \ejindex{merge-sort}{まーじそーと@マージソート}%
   この問題は#DLList#を整列するマージソートというアルゴリズムを実装してみるものだ。
   マージソートは\secref{merge-sort}扱う。
   \javaonly{
