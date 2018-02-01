@@ -70,6 +70,13 @@
 \fancyhead[CE]{\small\nouppercase{\leftmark}} % chapter title, left center
 %\fancyhead[CO]{\small\nouppercase{\rightmark}} % section title, right center
 
+% make Japanese\emph{} bold and red
+% this bolding only works with \textgt (text gothic), not with \textmc (text mincho)
+% This gothic bold font looks ugly but useful for proofreading which part is emphasized
+%\usepackage[bold]{otf}
+\usepackage{color}
+\renewcommand{\emph}[1]{\textcolor{cyan}{\textgt{#1}}}
+
 % Remove flooding warnings of
 % "Package Fancyhdr Warning: \headheight is too small (12.0pt)" warnings
 \setlength{\headheight}{14pt}
