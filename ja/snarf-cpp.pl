@@ -161,7 +161,7 @@ MAIN: {
       my $args=$2;
       (my $class) = $line =~ /ods\/(\w+)\./;
       print("\n\n ");
-      print("\\begin{codequote}\\setcodefont\\Codefontsize\n");
+      print("\\begin{codequote}{$class}\\setcodefont\\Codefontsize\n");
       print("\\begin{Verbatim}[gobble=1,tabsize=2");
       print(',commandchars=\\\\@\\$');
       print(",label=\\texttt{$class}");

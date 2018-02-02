@@ -37,6 +37,7 @@ images:
 	cd images ; make
 
 ods-java.pdf : ods-java.tex $(javs) $(styles) images figs
+	cp ../latex/figs/*.pdf figs/
 	uplatex $(LFLAGS) ods-java
 	pbibtex ods-java
 	uplatex  $(LFLAGS) ods-java
@@ -50,6 +51,7 @@ ods-java.tex : ods.tex Makefile
 	sed -i 's/%HEADCOMMAND/\\newcommand{\\cpponly}[1]{}\\newcommand{\\javaonly}[1]{#1}\\newcommand{\\pcodeonly}[1]{}\\newcommand{\\notpcode}[1]{#1}\\newcommand{\\lang}{Java}/' ods-java.tex
 
 ods-cpp.pdf : ods-cpp.tex $(cpps) $(styles) images figs
+	cp ../latex/figs/*.pdf figs/
 	uplatex $(LFLAGS) ods-cpp
 	pbibtex ods-cpp
 	uplatex $(LFLAGS) ods-cpp

@@ -26,12 +26,14 @@
 %    }%
 %  \normalsize \item[]}{\end{list}}
 
-\newenvironment{codequote}{%%
+\newenvironment{codequote}[1]{%%
   \vspace{.25\baselineskip}
   \begin{tcolorbox}[enhanced, sharp corners=downhill,
                     breakable, enhanced jigsaw, boxrule=1pt,
                     colback=black!5!white,
                     colframe=black!50!white,
+                    adjusted title=#1, halign title=flush right, 
+                    fonttitle=\ttfamily\footnotesize, 
                     ]
   %\interlinepenalty9999
   \begin{list}{}{%
