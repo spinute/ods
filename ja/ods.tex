@@ -2,15 +2,15 @@
 %\documentclass[10pt]{book}
 %\usepackage[whole]{bxcjkjatype}
 %\documentclass[pdflatex,a5paper,10pt]{bxjsbook}
-\documentclass[platex,dvipdfmx,a5paper,10pt]{bxjsbook}
-\usepackage{framed}
-\setlength{\FrameSep}{0mm}
+\documentclass[uplatex,dvipdfmx,a5,9pt]{lnbook}
+%\usepackage{framed}
+%\setlength{\FrameSep}{0mm}
 
 % For Japanese index
-\usepackage{imakeidx}
-\makeindex
-\makeindex[name=ja, title={日本語牽引}]
-\newcommand{\ejindex}[2]{\index{#1}\index[ja]{#2}}
+%\usepackage{imakeidx}
+%\makeindex
+%\makeindex[name=ja, title={日本語牽引}]
+%\newcommand{\ejindex}[2]{\index{#1}\index[ja]{#2}}
 
 %\makeindex
 %\usepackage{showidx}
@@ -31,14 +31,14 @@
 \usepackage{amsopn}
 \usepackage{amsmath}
 \usepackage{amsthm}
-\usepackage{url}
-\usepackage[dvipdfmx]{graphicx}
+%\usepackage{url}
+%\usepackage[dvipdfmx]{graphicx}
 \usepackage{datetime}
 \usepackage{amsfonts}
-\usepackage{graphicx}
+%\usepackage{graphicx}
 \usepackage{threeparttable}
 \usepackage{wasysym}
-\usepackage{emptypage}
+%\usepackage{emptypage}
 \usepackage{titling}
 %\usepackage{calc}
 
@@ -86,20 +86,21 @@
 \let\emph\relax % there's no \RedeclareTextFontCommand
 \DeclareTextFontCommand{\emph}{\bf}
 
-\usepackage[sf,small,raggedright]{titlesec} % formatting titles
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
-\patchcmd{\ttlh@hang}{\noindent}{}{}{}
-\makeatother
+%\usepackage[sf,small,raggedright]{titlesec} % formatting titles
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+%\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+%\makeatother
 
-\titlespacing*{\section}{0pt}{24pt}{14pt}
-\titlespacing*{\subsection}{0pt}{14pt}{14pt}
-\usepackage{relsize,fancyvrb}  % formatting pseudocode
-\usepackage{ods} % Personalization and commands
+%\titlespacing*{\section}{0pt}{24pt}{14pt}
+%\titlespacing*{\subsection}{0pt}{14pt}{14pt}
+%\usepackage{relsize,fancyvrb}  % formatting pseudocode
+%\usepackage{ods} % Personalization and commands
+\usepackage{ods-ja}
 
 %\renewcommand*{\thechapter}{\arabic{chapter}~章}
-\titleformat*{\chapter}{\large\bfseries}
+%\titleformat*{\chapter}{\large\bfseries}
 
 % These command are expanded by scripts, otherwise they should be ignored
 \newcommand{\javaimport}[1]{}
@@ -112,8 +113,8 @@
   \newcommand{\HeightScaleIfNeeded}{\textheight}
   \newcommand{\QuarterHeightScaleIfNeeded}{.25\textheight}
   \newcommand{\FifthHeightScaleIfNeeded}{.2\textheight}
-  \newcommand{\fancyhead}[2][zzz]{}
-  \newcommand{\fancyfoot}[2][zzz]{}
+%  \newcommand{\fancyhead}[2][zzz]{}
+%  \newcommand{\fancyfoot}[2][zzz]{}
 }
 
 % Referencing commands 
@@ -187,7 +188,6 @@
 
 \renewcommand\proofname{\bf 証明}
 
-
 \usepackage{ods-colors}
 
 \usepackage{tikz,gnuplot-lua-tikz}
@@ -211,7 +211,7 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \htmlonly{\\ \includegraphics[scale=0.90909,scale=0.5]{images/cc-by}}}
 %Version 0.0 pre $\alpha$: \today}
 
-\pagenumbering{roman}
+%\pagenumbering{roman}
 
 % Draft mode only - mark overfull hboxes
 % \overfullrule=5pt
@@ -220,6 +220,9 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 %\titleformat{\chapter}[display]
 %  {\huge\headingfont}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
 
+\pagestyle{bookheadings}
+\AtBeginShipoutFirst{\special{pdf:tounicode UTF8-UTF16}}
+\AtBeginDocument{\special{papersize=148truemm,210truemm}}%
 
 \begin{document}
 
@@ -244,7 +247,7 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 %}
 
 % Use 14pt between lines
-\setlength{\baselineskip}{14pt}
+%\setlength{\baselineskip}{14pt}
 
 
 %\begin{titlepage}
@@ -265,14 +268,14 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \tableofcontents
 \cleardoublepage
 
-\fancyhead[RO,LE]{} % disable section numbers, for now
-\pagestyle{fancy}
+%\fancyhead[RO,LE]{} % disable section numbers, for now
+%\pagestyle{fancy}
 \include{ack-ja}
 \include{ack}
 \thispagestyle{empty}
 \cleardoublepage
 
-\fancyhead[CE]{\small Why This Book?} % chapter title, left center
+%\fancyhead[CE]{\small Why This Book?} % chapter title, left center
 \include{why}
 \cleardoublepage
 
@@ -281,9 +284,9 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
   \cleardoublepage
 }
 
-\fancyhead[CE]{\small\nouppercase{\leftmark}} % chapter title, left center
-\fancyhead[CO]{\small\rightmarktitle} % section title, right center
-\fancyhead[RO,LE]{\small\rightmarksection}
+%\fancyhead[CE]{\small\nouppercase{\leftmark}} % chapter title, left center
+%\fancyhead[CO]{\small\rightmarktitle} % section title, right center
+%\fancyhead[RO,LE]{\small\rightmarksection}
 
 %% Include all the chapters one at a time
 
@@ -303,11 +306,11 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \include{btree-lang}
 
 %% Turn off section numbers for remainder of document
-\fancyhead[RO]{} % section number on the outside
-\fancyhead[LE]{} % section number on the outside
+%\fancyhead[RO]{} % section number on the outside
+%\fancyhead[LE]{} % section number on the outside
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
 \renewcommand{\sectionmark}[1]{\markright{#1}} 
-\fancyhead[CO]{\small\nouppercase\rightmark}
+%\fancyhead[CO]{\small\nouppercase\rightmark}
 
 \cleardoublepage
 \addcontentsline{toc}{chapter}{Bibliography}

@@ -1,0 +1,59 @@
+\usepackage{makecell}
+
+\renewcommand\theadalign{cc}
+\renewcommand\theadgape{\Gape[3pt]}
+\renewcommand\cellgape{\Gape[3pt]}
+\renewcommand\theadfont{\cellcolor[gray]{0.9}}
+
+%%%%% 表
+\newlength{\basetablewidth}
+\setlength{\basetablewidth}{1em}
+\setlength{\extrarowheight}{5pt}%
+\setlength{\tabcolsep}{2pt}%
+
+\def\ftable[#1]{%
+  \@float{table}[#1]
+    \tablecolstyle%
+    \centering\leavevmode\kern1em}
+\renewenvironment{table}[1][H]{%
+  \ftable[#1]}{%
+  \end@float}
+\newcommand{\tablecolstyle}{%
+  \renewcommand{\baselinestretch}{.75}%
+  \tablefontspeck}
+\newcommand{\TCH}[1]{{\cellcolor{10gray}#1}}
+\def\toprule{\hline\hline}
+\def\colrule{\hline}
+\def\botrule{\toprule}
+
+\newenvironment{mytable}[2][!]{%
+  \begingroup\leavevmode\kern-1em\sffamily\ifx#1!\small\else#1\fi%
+  \setlength{\LTleft}{2em}%
+  \setlength{\LTpre}{-.5\baselineskip}%
+  \setlength{\extrarowheight}{3pt}%
+  \begin{longtable}{#2}
+    }{%
+  \end{longtable}%
+  \endgroup}
+\newcommand{\tableheadstyle}{%
+  \renewcommand{\baselinestretch}{.8}%
+  \sffamily\small\noindent\inhibitglue}
+\newcolumntype{C}{c}
+\newcolumntype{0}{c}
+\newcommand{\PBS}[1]{\narrowbaselines\let\temp=\\#1\let\\=\temp}
+\newcolumntype{M}[1]{>{\PBS\centering\hspace{0pt}}m{#1}}
+%\newcolumntype{L}[1]{>{\PBS\raggedright\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\PBS\raggedleft\hspace{0pt}}m{#1}}
+
+\def\@cline#1-#2\@nil{%
+  \noalign{\vskip-\arrayrulewidth}
+  \omit
+  \@multicnt#1%
+  \advance\@multispan\m@ne
+  \ifnum\@multicnt=\@ne\@firstofone{&\omit}\fi
+  \@multicnt#2%
+  \advance\@multicnt-#1%
+  \advance\@multispan\@ne
+  {\CT@arc@\leaders\hrule\@height\arrayrulewidth\hfill}%
+  \cr}
+

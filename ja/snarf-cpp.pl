@@ -160,10 +160,11 @@ MAIN: {
       print("%$line");
       my $args=$2;
       (my $class) = $line =~ /ods\/(\w+)\./;
-      print('\ \vspace{.5ex}');
-      print("\\begin{Verbatim}[gobble=1,tabsize=2,frame=single");
+      print("\n\n ");
+      print("\\begin{codequote}\\setcodefont\\Codefontsize\n");
+      print("\\begin{Verbatim}[gobble=1,tabsize=2");
       print(',commandchars=\\\\@\\$');
-      print(",label=\\texttt{$class},labelposition=topline");
+      print(",label=\\texttt{$class}");
       print("]\n"); 
       $output = 0;
       snarfit($args, 0);
@@ -171,7 +172,7 @@ MAIN: {
         print("NO OUTPUT PRINTED ( args=$args )\n");
         print(STDERR "NO OUTPUT PRINTED ( args=$args )\n");
       }
-      print("\\end{Verbatim}\n");
+      print("\\end{Verbatim}\n\\end{codequote}\n");
     } else {
       print($line);
     }

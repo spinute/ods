@@ -1,0 +1,61 @@
+%% Simple page style with thumb indices
+%% usage:
+%% \usepackage{thumbindex}
+%% \pagestyle{thumbindex}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thumbindex}
+
+% derived from jsbook \ps@headings
+\def\ps@thumbindex{%
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@empty
+  \def\@evenhead{%
+    \if@mparswitch \hss \fi
+    \underline{\hbox to \fullwidth{\autoxspacing
+        \textbf{\thepage}\hfil\leftmark}}%
+    \if@mparswitch\else \hss \fi}%
+  \def\@oddhead{%
+    \underline{%
+      \hbox to \fullwidth{%
+        \autoxspacing
+        {\if@twoside\rightmark\else\leftmark\fi}\hfil\textbf{\thepage}%
+      }%
+    }\hss
+    % draw thumb index
+    \if@mainmatter
+      \@drawthumbindex{\c@chapter}
+    \fi
+    % end draw thumb index
+  }%
+  \let\@mkboth\markboth
+  \def\chaptermark##1{\markboth{%
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter
+        \@chapapp\thechapter\@chappos\hskip1zw
+      \fi
+    \fi
+    ##1}{}}%
+  \def\sectionmark##1{\markright{%
+    \ifnum \c@secnumdepth >\z@ \thesection \hskip1zw\fi
+    ##1}}}%
+
+% draw thumb index
+% usage: \@drawthumbindex{COUNTER}
+\newcount\c@thumb@y
+\newcommand{\@drawthumbindex}[1]{%
+  \setlength\unitlength{1truemm}%
+  \begin{picture}(0,0)%
+    \c@thumb@y=-15\relax
+    \multiply\c@thumb@y by #1\relax
+    \advance\c@thumb@y by -100\relax
+    \put(7,\c@thumb@y){%
+      \makebox(0,0)[tl]{%
+          \begin{tikzpicture}
+            \node[rectangle, fill=Orange,rounded corners=5pt](A)
+              {\vbox to15mm{\mbox{}\vfill\hbox to20mm{\hskip2mm\large\textcolor{white}{\yasagoth{\@Roman\c@part}}}\vfill}};
+          \end{tikzpicture}%
+      }%
+    }%
+  \end{picture}%
+}

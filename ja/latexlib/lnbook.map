@@ -1,0 +1,92 @@
+
+% TEXT, 90JIS
+uphminl-h	UniJIS-UTF16-H	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminl-v	UniJIS-UTF16-V	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminr-h	UniJIS-UTF16-H	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminr-v	UniJIS-UTF16-V	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminb-h	UniJIS-UTF16-H	HiraMinPro-W6.otf
+uphminb-v	UniJIS-UTF16-V	A-OTF-FutoMinA101Pro-Bold.otf %!PS FutoMinA101Pro-Bold
+uphgothr-h	UniJIS-UTF16-H	A-OTF-GothicBBBPro-Medium.otf %!PS GothicBBBPro-Medium
+uphgothr-v	UniJIS-UTF16-V	A-OTF-GothicBBBPro-Medium.otf %!PS GothicBBBPro-Medium
+uphgothb-h	UniJIS-UTF16-H	HiraKakuPro-W6.otf
+uphgothb-v	UniJIS-UTF16-V	A-OTF-FutoGoB101Pro-Bold.otf %!PS FutoGoB101Pro-Bold
+uphgotheb-h	UniJIS-UTF16-H	HiraKakuStd-W8.otf
+uphgotheb-v	UniJIS-UTF16-V	A-OTF-MidashiGoPro-MB31.otf %!PS MidashiGoPro-MB31
+uphmgothr-h	UniJIS-UTF16-H	A-OTF-Jun101Pro-Light.otf %!PS Jun101Pro-Light
+uphmgothr-v	UniJIS-UTF16-V	A-OTF-Jun101Pro-Light.otf %!PS Jun101Pro-Light
+
+% TEXT, JIS04
+uphminln-h	UniJIS2004-UTF16-H	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminln-v	UniJIS2004-UTF16-V	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminrn-h	UniJIS2004-UTF16-H	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminrn-v	UniJIS2004-UTF16-V	A-OTF-RyuminPro-Light.otf %!PS RyuminPro-Light
+uphminbn-h	UniJIS2004-UTF16-H	HiraMinPro-W6.otf
+uphminbn-v	UniJIS2004-UTF16-V	A-OTF-FutoMinA101Pro-Bold.otf %!PS FutoMinA101Pro-Bold
+uphgothrn-h	UniJIS2004-UTF16-H	A-OTF-GothicBBBPro-Medium.otf %!PS GothicBBBPro-Medium
+uphgothrn-v	UniJIS2004-UTF16-V	A-OTF-GothicBBBPro-Medium.otf %!PS GothicBBBPro-Medium
+uphgothbn-h	UniJIS2004-UTF16-H	HiraKakuPro-W6.otf
+uphgothbn-v	UniJIS2004-UTF16-V	A-OTF-FutoGoB101Pro-Bold.otf %!PS FutoGoB101Pro-Bold
+uphgothebn-h	UniJIS2004-UTF16-H	HiraKakuStd-W8.otf
+uphgothebn-v	UniJIS2004-UTF16-V	A-OTF-MidashiGoPro-MB31.otf %!PS MidashiGoPro-MB31
+uphmgothrn-h	UniJIS2004-UTF16-H	A-OTF-Jun101Pro-Light.otf %!PS Jun101Pro-Light
+uphmgothrn-v	UniJIS2004-UTF16-V	A-OTF-Jun101Pro-Light.otf %!PS Jun101Pro-Light
+
+% hiraprop
+hiramin-w3-h Identity-H HiraMinPro-W3.otf
+hiramin-w6-h Identity-H HiraMinPro-W6.otf
+hirakaku-w3-h Identity-H HiraKakuPro-W3.otf
+hirakaku-w6-h Identity-H HiraKakuPro-W6.otf
+hiramaru-w4-h Identity-H HiraMaruPro-W4.otf
+hiramin-w3-v Identity-V HiraMinPro-W3.otf
+hiramin-w6-v Identity-V HiraMinPro-W6.otf
+hirakaku-w3-v Identity-V HiraKakuPro-W3.otf
+hirakaku-w6-v Identity-V HiraKakuPro-W6.otf
+hiramaru-w4-v Identity-V HiraMaruPro-W4.otf
+
+% CID
+otf-cjml-h      Identity-H      HiraMinProN-W3.otf
+otf-cjml-v      Identity-V      HiraMinProN-W3.otf
+otf-cjmr-h      Identity-H      HiraMinProN-W3.otf
+otf-cjmr-v      Identity-V      HiraMinProN-W3.otf
+otf-cjmb-h      Identity-H      HiraMinProN-W6.otf
+otf-cjmb-v      Identity-V      HiraMinProN-W6.otf
+otf-cjgr-h      Identity-H      HiraKakuProN-W3.otf
+otf-cjgr-v      Identity-V      HiraKakuProN-W3.otf
+otf-cjgb-h      Identity-H      HiraKakuProN-W6.otf
+otf-cjgb-v      Identity-V      HiraKakuProN-W6.otf
+otf-cjge-h      Identity-H      HiraKakuStdN-W8.otf
+otf-cjge-v      Identity-V      HiraKakuStdN-W8.otf
+otf-cjmgr-h     Identity-H      HiraMaruProN-W4.otf
+otf-cjmgr-v     Identity-V      HiraMaruProN-W4.otf
+
+% Unicode 90JIS
+otf-ujml-h      UniJIS-UTF16-H  HiraMinProN-W3.otf
+otf-ujml-v      UniJIS-UTF16-V  HiraMinProN-W3.otf
+otf-ujmr-h      UniJIS-UTF16-H  HiraMinProN-W3.otf
+otf-ujmr-v      UniJIS-UTF16-V  HiraMinProN-W3.otf
+otf-ujmb-h      UniJIS-UTF16-H  HiraMinProN-W6.otf
+otf-ujmb-v      UniJIS-UTF16-V  HiraMinProN-W6.otf
+otf-ujgr-h      UniJIS-UTF16-H  HiraKakuProN-W3.otf
+otf-ujgr-v      UniJIS-UTF16-V  HiraKakuProN-W3.otf
+otf-ujgb-h      UniJIS-UTF16-H  HiraKakuProN-W6.otf
+otf-ujgb-v      UniJIS-UTF16-V  HiraKakuProN-W6.otf
+otf-ujge-h      UniJIS-UTF16-H  HiraKakuStdN-W8.otf
+otf-ujge-v      UniJIS-UTF16-V  HiraKakuStdN-W8.otf
+otf-ujmgr-h     UniJIS-UTF16-H  HiraMaruProN-W4.otf
+otf-ujmgr-v     UniJIS-UTF16-V  HiraMaruProN-W4.otf
+
+% Unicode JIS04
+otf-ujmln-h     UniJIS2004-UTF16-H      HiraMinProN-W3.otf
+otf-ujmln-v     UniJIS2004-UTF16-V      HiraMinProN-W3.otf
+otf-ujmrn-h     UniJIS2004-UTF16-H      HiraMinProN-W3.otf
+otf-ujmrn-v     UniJIS2004-UTF16-V      HiraMinProN-W3.otf
+otf-ujmbn-h     UniJIS2004-UTF16-H      HiraMinProN-W6.otf
+otf-ujmbn-v     UniJIS2004-UTF16-V      HiraMinProN-W6.otf
+otf-ujgrn-h     UniJIS2004-UTF16-H      HiraKakuProN-W3.otf
+otf-ujgrn-v     UniJIS2004-UTF16-V      HiraKakuProN-W3.otf
+otf-ujgbn-h     UniJIS2004-UTF16-H      HiraKakuProN-W6.otf
+otf-ujgbn-v     UniJIS2004-UTF16-V      HiraKakuProN-W6.otf
+otf-ujgen-h     UniJIS2004-UTF16-H      HiraKakuStdN-W8.otf
+otf-ujgen-v     UniJIS2004-UTF16-V      HiraKakuStdN-W8.otf
+otf-ujmgrn-h    UniJIS2004-UTF16-H      HiraMaruProN-W4.otf
+otf-ujmgrn-v    UniJIS2004-UTF16-V      HiraMaruProN-W4.otf

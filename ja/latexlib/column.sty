@@ -1,0 +1,33 @@
+\newenvironment{column}[1]%
+ {\vspace{.75\baselineskip}
+  \begin{tcolorbox}[enhanced, title={\sffamily\bfseries\normalsize #1}, 
+                    coltitle=white,colback=black!10!white,
+                    boxed title style={size=small,colback=black!50!white,colframe=black!0!white},
+                    breakable, enhanced jigsaw, boxrule=0pt,
+                    before upper={\parindent1em},
+                    ]
+  \interlinepenalty9999
+  \small\sffamily\vskip.5\baselineskip\let\footnote\mfootnote}
+ {\end{tcolorbox}\medskip}
+
+\renewenvironment{quote}%
+ {\vspace{.75\baselineskip}
+  \begin{tcolorbox}[enhanced, title={\sffamily\bfseries\small NOTE}, 
+                    attach boxed title to top left={yshift=-\tcboxedtitleheight/2},
+                    coltitle=white,colback=black!0!white,
+                    boxed title style={size=small,colback=black!60!white,outer arc=1mm},
+                    breakable, enhanced jigsaw, boxrule=0pt, sharp corners, 
+                    borderline north={1pt}{0pt}{black!0!white},
+                    borderline south={1pt}{0pt}{black!0!white}]
+  \interlinepenalty9999
+  \small\sffamily\vskip.5\baselineskip\let\footnote\mfootnote}
+ {\end{tcolorbox}}
+
+\newtoks\mftn
+\def\mfootnote#1{%
+  \footnotemark
+  \edef\@tempa{\the\mftn\noexpand\footnotetext[\the\c@footnote]}%
+  \global\mftn\expandafter{\@tempa{#1}}}%
+\def\mfootnoteout{%
+  \the\mftn
+  \global\mftn{}}
