@@ -479,9 +479,7 @@ XXX: ハッシュ値とHash Codeは区別したほうがよいか?
 \ejindex{hash code!for primitive data}{はっしゅち@ハッシュ値!ぷりみてぃぶがた@プリミティブ型}%
 #char#・#byte#・#int#・#float#などの小さいプリミティブな型のハッシュ値は簡単に計算できる。
 これらの方はバイナリ表現があり、これは#w#ビット以下である。
-\javaonly{(For example, in Java, #byte# is an 8-bit
-type and #float# is a 32-bit type.)}\cpponly{(For example, in C++ #char#
-is typically an 8-bit type and #float# is a 32-bit type.)}
+\javaonly{(たとえばJavaでは#byte#は8ビット型であり、#float#は32ビット型である。)}\cpponly{(たとえばC++では#char#はたいてい8ビット型であり、#float#は32ビット型である。)}
 このビット列を$\{0,\ldots,2^#w#-1\}$の範囲の整数であると解釈すればよい。
 そうすれば、ふたつの異なる値は異なるハッシュ値を持つ。
 また、ふたつの同じ値は同じハッシュ値を持つ。
@@ -554,7 +552,7 @@ $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots
 
   最後の処理は乗算ハッシュ法であり、$2#w#$ビットの中間結果$h'(#x#_0,\ldots,#x#_{r-1})$を#w#ビットの最終結果$h(#x#_0,\ldots,#x#_{r-1})$に縮める。
   \thmref{multihash}より、$h'(#x#_0,\ldots,#x#_{r-1})\neq h'(#y#_0,\ldots,#y#_{r-1})$ならば$\Pr\{h(#x#_0,\ldots,#x#_{r-1}) = h(#y#_0,\ldots,#y#_{r-1})\} \le 2/2^{#w#}$である。
-
+  % TALK なぜここで証明中の定理を使っている？？定理の仮定を使うということ？？？
   以上より、次の式が成り立つ。
   \begin{align*}
     & \Pr\left\{\begin{array}{l}
@@ -562,14 +560,13 @@ $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$はいずれも、$\{0,\ldots
           \quad = h(#y#_0,\ldots,#y#_{r-1})\end{array}\right\} \\
       &= \Pr\left\{\begin{array}{ll}
             \mbox{$h'(#x#_0,\ldots,#x#_{r-1}) = h'(#y#_0,\ldots,#y#_{r-1})$ or} \\
-            \mbox{$h'(#x#_0,\ldots,#x#_{r-1}) \neq h'(#y#_0,\ldots,#y#_{r-1})$} \\
-                  \mbox{\quad and
-$#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv 2^{#w#}$}
+            \mbox{$[h'(#x#_0,\ldots,#x#_{r-1}) \neq h'(#y#_0,\ldots,#y#_{r-1})$} \\
+                  \mbox{\quad and } \\ \mbox{$#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv 2^{#w#}]$}
           \end{array}\right\} \\
       &\le 1/2^{#w#} + 2/2^{#w#} = 3/2^{#w#} \enspace . \qedhere
   \end{align*}
 \end{proof}
-
+% 上の式、andがどこにかかっているのかを明示するために角括弧 [ ] を追加した
 
 \ejindex{hash code!for strings}{はっしゅち@ハッシュ値!もじれつ@文字列}%
 \ejindex{hash code!for arrays}{はっしゅち@ハッシュ値!はいれつ@配列}%
@@ -602,8 +599,8 @@ $#z#h'(#x#_0,\ldots,#x#_{r-1})\ddiv2^{#w#} = #z# h'(#y#_0,\ldots,#y#_{r-1})\ddiv
     = \left(#x#_0#z#^0+\cdots+#x#_{r-1}#z#^{r-1}+(#p#-1)#z#^r \right)\bmod #p#
 \]
 
-最後に追加されたの項$(#p#-1)#z#^r$に注意する。
-これは$(#p#-1)$を整数列の末尾の要素として$#x#_0,\ldots,#x#_{r}$と考えると便利かもしれない。
+最後に追加された項$(#p#-1)#z#^r$に注意する。
+$(#p#-1)$を整数列の末尾の要素として$#x#_0,\ldots,#x#_{r}$と考えると便利かもしれない。
 この要素は整数列の要素のいずれとも異なる。
 整数列の要素は$\{0,\ldots,#p#-2\}$の要素である。
 $#p#-1$を列の終わりを示すマーカーだと考える。
@@ -612,12 +609,12 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 
 \begin{thm}\thmlabel{stringhash-eqlen}
   pを$#p#>2^{#w#}+1$を満たす素数とする。
-  $\{0,\ldots,2^{#w#}-1\}$の要素である#w#ビットの整数からなる列であるとする。
+  $#x#_0,\ldots,#x#_{r-1}$と$#y#_0,\ldots,#y#_{r-1}$を$\{0,\ldots,2^{#w#}-1\}$の要素である#w#ビットの整数からなる列であるとする。
   $i\in\{0,\ldots,r-1\}$のうち少なくともひとつ$#x#_i \neq #y#_i$が成り立つと仮定する。
   このとき、次の式が成り立つ。
   \[
      \Pr\{ h(#x#_0,\ldots,#x#_{r-1}) =  h(#y#_0,\ldots,#y#_{r-1}) \}
-          \le (r-1)/#p# \}
+          \le (r-1)/#p#
   \]
 \end{thm}
 
