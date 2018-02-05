@@ -195,9 +195,9 @@ $r \leq m$より#resize()#呼び出しのための実行時間の合計は次の
 % （・は乗算に見えなくもない）
 #ArrayStack#が主にやっていることは、データの（#add(i,x)#と#remove(i)#のための）シフトと（#resize()#のための）コピーである。
 素朴な実装では#for#ループを使うだろう。
-しかしデータのシフトやコピー用の効率的な機能があるプログラミング環境も多いだろう。
+しかしデータのシフトやコピーに特化したより効率的な機能が使えるかもしれない。
 C言語には#memmove(d,s,n)#と#memcpy(d,s,n)#関数がある
-\footnote{訳注：#memmove(d,s,n)#はdestination（移動先）にsource（移動元）からnバイトをコピーする関数である。#memcpy(d,s,n)#と違い、バイト領域がオーバーラップしていてもよい。}。
+\footnote{訳注：#memmove(d,s,n)#はdestination（移動先）にsource（移動元）からnバイトをコピーする関数である。#memcpy(d,s,n)#との違いは移動元と移動先の領域が重なっていてもよいことである。}。
 C++言語には#std::copy(a0,a1,b)#アルゴリズムがある。
 Javaには#System.arraycopy(s,i,d,j,n)#メソッドがある。
 \index{memcpy@#memcpy(d,s,n)#}%
@@ -206,11 +206,14 @@ Javaには#System.arraycopy(s,i,d,j,n)#メソッドがある。
 
 \cppimport{ods/FastArrayStack.add(i,x).remove(i).resize()}
 \javaimport{ods/FastArrayStack.add(i,x).remove(i).resize()}
+% XXX: この add もバグっているのではないか。
+% (1) n==a.length でも resize の必要があるのではないか
+% (2) i==1 && n==0 のとき first > last だが大丈夫か?
 
-これらは最適化されており、#for#ループを使うよりかなり速くコピーができる特殊な機械命令を使うかもしれない。
-これらを使っても漸近的な実行時間は減らないのだが、やる価値のある最適化ではある。
+これらの関数は最適化されており、#for#ループを使う場合と比べてかなり高速な機械語の命令を使うかもしれない。
+これらの関数を使っても漸近的な実行時間は小さくならないのだが、試してみる価値のある最適化ではある。
 
-C++やJavaの実装で高速な配列コピーを使って2〜3倍の高速化できたこともある。どのくらい速くなるかは環境によるので是非試してみてほしい。
+C++やJavaの実装でこれらの関数を使って2〜3倍の高速化を実現したこともある。実際どのくらい速くなるのかは環境によるので是非試してみてほしい。
 
 \section{ArrayQueue：配列を使ったキュー}
 \seclabel{arrayqueue}
