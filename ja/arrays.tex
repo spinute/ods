@@ -94,8 +94,7 @@ C++のふつうの配列は要素数を保持していないため、要素数�
 \end{figure}
 
 % XXX: add はバグっているのではないか。
-% (1) n==a.length でも resize の必要があるのではないか
-% (2) n==0 のときは for 文に入ってはいけないのではないか
+% n==a.length でも resize の必要があるのではないか
 \codeimport{ods/ArrayStack.add(i,x)}
 #resize()#のコストを無視すれば、#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり（resizeのことを無視した）この操作の実行時間は$O(#n#-#i#)$である。
 
@@ -220,12 +219,12 @@ C++やJavaの実装でこれらの関数を使って2〜3倍の高速化を実�
 
 \index{ArrayQueue@#ArrayQueue#}%
 この節ではFIFO（先入れ先出し）キューを実装するデータ構造#ArrayQueue#を紹介する。
-(#add(x)#によって)要素が追加されたのと同じ順番で、（#remove()#によって）キューから要素が削除される。
+このデータ構造では（#add(x)#によって）要素は追加されたのと同じ順番で（#remove()#によって）削除される。
 
-FIFOキューの実装に#ArrayStack#はあまり向いていない。
-一方の端から要素を追加し他方から要素を削除することになるので、賢明な選択ではないのだ。
-2つの操作のうち一方はリストの先頭を変更することになる。つまり、$#i#=0$で#add(i,x)#か#remove(i)#を呼びだす。
-このとき、#n#に比例する実行時間がかかってしまう。
+FIFOキューの実装に#ArrayStack#を使うのはよくない。
+一方の端から要素を追加し他方から要素を削除するので、賢明な選択ではないのだ。
+ふたつの操作のいずれかはリストの先頭を変更することになる。すなわち$#i#=0$で#add(i,x)#か#remove(i)#を呼びだす。
+このとき#n#に比例する実行時間がかかってしまうのである。
 
 配列を使ったキューの効率的な実装は、もし無限長の配列#a#があれば簡単だろう。
 次に削除する要素を追跡するインデックス#j#と、キューの要素数#n#を記録しておけばよい。
@@ -235,10 +234,10 @@ FIFOキューの実装に#ArrayStack#はあまり向いていない。
 要素を追加するときは、#a[j+n]#に要素を入れて、#n#をひとつ増やす。
 要素を削除するときは、#a[j]#から要素を取り出し、#j#をひとつ増やし、#n#をひとつ減らす。
 
-もちろんこの方法の問題点は無限長の配列が必要になることだ。
+この方法の明らかな問題点は無限長の配列が必要なことだ。
 #ArrayQueue#は有限長の配列#a#と\emph{剰余算術}で無限長の配列を模倣する。
 \index{modular arithmetic}%
-剰余算術は時間の計算をするときに使っているものだ。
+剰余算術とは例えば時間の計算をするときに使っているものだ。
 例えば10:00に5時間を足すと3:00になる。
 形式的に書けば次のようになる。
 \[
@@ -250,7 +249,6 @@ $\bmod$は次のように二項演算と考えてもよい。
    15 \bmod 12 = 3
 \]
 
-より一般的には
 整数$a$と正整数$m$について、ある整数kが存在し$a = km + r$をみたす整数 #r# $\in \{0, \ldots, m-1 \} $を$a \bmod m $と書く。
 簡単に言うと、$ r $とは$ a $を$ m $で割った余りである。
 CやC++、Ruby、Javaなど多くのプログラミング言語ではmod演算子は\%で表される。 % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
@@ -267,7 +265,7 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 \index{array!circular}%
 配列の添字が$#a.length#-1$を超えると、配列の先頭に戻ってくるのである。
 
-残りの問題は、#ArrayQueue#の要素数が#a#の大きさを超えてはならないことだ。
+残りの問題は#ArrayQueue#の要素数が#a#の大きさを超えてはならないことだ。
 
 \codeimport{ods/ArrayQueue.a.j.n}
 
@@ -284,6 +282,16 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 \end{figure}
 
 \codeimport{ods/ArrayQueue.add(x)}
+% XXX: この add もバグっているのではないか。
+% (1) n==a.length でも resize の必要があるのではないか
+
+To implement #remove()#, we first store #a[j]# so that we can return
+it later.  Next, we decrement #n# and increment #j# (modulo #a.length#)
+by setting $#j#=(#j#+1)\bmod #a.length#$.  Finally, we return the stored
+value of #a[j]#. If necessary, we may call #resize()# to decrease the
+size of #a#.
+
+\codeimport{ods/ArrayQueue.remove()}
 
 最後になるが、#resize()#操作は#ArrayStack#のものとよく似ている。
 大きさ$2#n#$の新しい配列#b#を割当て、
