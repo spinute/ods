@@ -285,11 +285,10 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 % XXX: この add もバグっているのではないか。
 % (1) n==a.length でも resize の必要があるのではないか
 
-To implement #remove()#, we first store #a[j]# so that we can return
-it later.  Next, we decrement #n# and increment #j# (modulo #a.length#)
-by setting $#j#=(#j#+1)\bmod #a.length#$.  Finally, we return the stored
-value of #a[j]#. If necessary, we may call #resize()# to decrease the
-size of #a#.
+#remove()#の実装では、まず#a[j]#をあとで返せるように保存しておく。
+つづいてnを1減らし、jを1増やしi#a.length#で剰余を取る。
+最後に保存しておいた#a[j]#を返す。
+もし必要なら#resize()#を読んで#a#を小さくする。
 
 \codeimport{ods/ArrayQueue.remove()}
 
@@ -312,8 +311,8 @@ size of #a#.
 
 \begin{thm}
   #ArrayQueue#は(FIFO)#Queue#インターフェースの実装である。
-  #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#を$O(1)$の時間で実行できる。
-  さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#に使われる実行時間の合計は$O(m)$である。
+  #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#の実行時間は$O(1)$である。
+  さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
 \section{ArrayDeque：配列を使った高速な双方向キュー}
