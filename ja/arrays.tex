@@ -381,29 +381,29 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 \index{DualArrayDeque@#DualArrayDeque#}%
 
-次は2つの#ArrayStack#を使って#ArrayDeque#に近い性能を示すデータ構造#DualArrayDeque#を紹介する。
-#DualArrayDeque#の漸近的な性能は#ArrayDeque#より優れているわけではないのだが、2つのシンプルなデータ構造を組み合わせてより高度なデータ構造を作る良い例なのでここで学ぶ価値がある。
+次はふたつの#ArrayStack#を使って#ArrayDeque#に近い性能を示すデータ構造#DualArrayDeque#を紹介する。
+#DualArrayDeque#は漸近的な性能が#ArrayDeque#より良いわけではないのだが、ふたつのシンプルなデータ構造を組み合わせてより高度なデータ構造を作る例としてここで紹介する。
 
-#DualArrayDeque#は、2つの#ArrayStack#を使ってリストを表現する。
-#ArrayStack#では終端付近の要素を高速に修正できたことを思い出してほしい。
-#DualArrayDeque#は#front#と#back#という名のふたつの#ArrayStack#を後ろ合わせに配置する。
-そのため両端での高速な操作が可能だ。
+#DualArrayDeque#は、ふたつの#ArrayStack#を使ってリストを表現する。
+#ArrayStack#の終端付近の要素を高速に操作できることを思い出してほしい。
+#DualArrayDeque#は#front#と#back#という名前のふたつの#ArrayStack#を背中合わせに配置する。
+そのため両端が終端になり、両端を高速に操作できる。
 
 \codeimport{ods/DualArrayDeque.front.back}
 
 #DualArrayDeque#は要素数#n#を明示的に保持しない。
-要素数は$#n#=#front.size()# + #back.size()#$によって求めることが出来るからだ。
+要素数は$#n#=#front.size()# + #back.size()#$と求められるからだ。
 ただし#DualArrayDeque#の解析では相変わらず#n#で要素数を表すことにする。
 
 \codeimport{ods/DualArrayDeque.size()}
 
-ひとつめの#ArrayStack#である#front#には$0,\ldots,#front.size()#-1$番目の要素を、逆さまの順番で格納する。
-もうひとつの#ArrayStack#である#back#には$#front.size()#,\ldots,#size()#-1$番目の要素を普通の順番で格納する。
-こうして、#front#か#back#に対する#get(i)#か#set(i,x)#を適切に呼び出すことで、#get(i)#・#set(i,x)#を$O(1)$の実行時間で実現できる。
+ひとつめの#ArrayStack#である#front#には$0,\ldots,#front.size()#-1$番目の要素を、逆順に入れる。
+もうひとつの#ArrayStack#である#back#には$#front.size()#,\ldots,#size()#-1$番目の要素を普通の順番で入れる。
+あとは#front#か#back#に対して#get(i)#か#set(i,x)#を適切に呼べば#get(i)#・#set(i,x)#を$O(1)$の時間で実行できる。
 
 \codeimport{ods/DualArrayDeque.get(i).set(i,x)}
 
-#front#には逆順に要素を蓄えているので、インデックス$#i#<#front.size()#$は#front#の$#front.size()#-#i#-1$番目の要素である。
+#front#には逆順に要素が入っているので、インデックス$#i#<#front.size()#$は#front#の$#front.size()#-#i#-1$番目の要素である。
 
 #DualArrayDeque#における要素の追加・削除は\figref{dualarraydeque}を見てほしい。
 #add(i,x)#は#front#か#back#を必要に応じて操作する。
@@ -418,20 +418,20 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 \codeimport{ods/DualArrayDeque.add(i,x)}
 
-#add(i,x)#は#front#と#back#のバランスを調整するために#balance()#を呼び出す。
-#balance()#の実装は後で説明するが、$#size()#<2$であるときを除いて#front.size()#と#back.size()#が三倍以上離れないことを#balance()#は保証することを知っておけば十分である。
-具体的には$3\cdot#front.size()# \ge #back.size()#$と$3\cdot#back.size()# \ge #front.size()#$であることを保証する。
+#add(i,x)#は#front#と#back#の要素数を均すために#balance()#を呼び出す。
+#balance()#の実装は後述するが、$#size()#<2$でなければ#front.size()#と#back.size()#は三倍よりも離れないようにするとだけ今は知っていればよい。
+具体的には#balance()#は常に$3\cdot#front.size()# \ge #back.size()#$かつ$3\cdot#back.size()# \ge #front.size()#$であることを保証する。
 
 つづいて#add(i,x)#のうち#balance()#のコストを無視した実行時間を求める。
-$#i#<#front.size()#$のとき#add(i,x)#は$#front.add(front.size()-i-1,x)#$で実装できる。
-#front#は#ArrayStack#なのでこのコストは次のようになる。
+$#i#<#front.size()#$のとき#add(i,x)#は$#front.add(front.size()-i,x)#$を実行するだけである。
+#front#は#ArrayStack#なのでこの実行時間は次のようである。
 \begin{equation}
-  O(#front.size()#-(#front.size()#-#i#-1)+1) = O(1+#i#) \enspace
+  % XXX: O記法はf(i)の定義域が有限の場合にも定義されているのか？
+  O(#front.size()#-(#front.size()#-#i#)+1) = O(1+#i#) \enspace
   \eqlabel{das-front}
 \end{equation}
-一方
-$#i#\ge#front.size()#$のとき#add(i,x)#は$#back.add(i-front.size(),x)#$で実装できる。
-このコストは次のようになる。
+一方$#i#\ge#front.size()#$のとき#add(i,x)#は$#back.add(i-front.size(),x)#$を実行するだけである。
+このときの実行時間は次のようである。
 \begin{equation}
   O(#back.size()#-(#i#-#front.size()#)+1) = O(1+#n#-#i#) \enspace
   \eqlabel{das-back}
@@ -440,11 +440,13 @@ $#i#\ge#front.size()#$のとき#add(i,x)#は$#back.add(i-front.size(),x)#$で実
 $#i#<#n#/4$のときはひとつめのケース\myeqref{das-front}に該当する。
 $#i#\ge 3#n#/4$のときはふたつめのケース\myeqref{das-back}に該当する
 \footnote{訳注：たとえばi=0かつn=0の場合は\myeqref{das-back}に該当する。}。
-$#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するかわからない。
-しかし$#i#\ge #n#/4$かつ$#n#-#i#>#n#/4$なので、いずれの場合も実行時間は$O(#n#)=O(#i#)=O(#n#-#i#)$である。
+$#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらを操作するかわからない。
+しかしいずれの場合も高々#n#個の要素をずらして新たな要素を配列に入れるので、実行時間は$O(#n#)$である。
+% しかし$#i#\ge #n#/4$かつ$#n#-#i#>#n#/4$なので、いずれの場合も実行時間は$O(#n#)=O(#i#)=O(#n#-#i#)$である。
 % TALK O(n)=O(i)=O(n-i) って O(n)=O(i+1)=O(n-i+1)と書いたほうがわかり易くないか？
 % せっかく (2.1)がfrontの場合、(2.2)がbackの場合と言っているのだから、
 % 変に１を抜くより参照を明確にしたほうが読みやすいと思うのだが
+%  spinute から caprice: 言いたいことは i>=n/4 and n-i>n/4 ならば O(n) だとすると、直接そういえばいいじゃんと思ったので手を入れました。（あと一変数っぽいO記法と二変数のO記法を等号で繋ぐの怖い）
 以上をまとめると次のようになる。
 % TODO caprice から YJ これ「実行時間」に直したいけど数式に日本語入れるとバグるんだっけ？保留
 \[
@@ -457,46 +459,46 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
 \]
 ゆえに#add(i,x)#の実行時間は#balance()#のコストを無視すれば$O(1+\min\{#i#, #n#-#i#\})$である。
 
-#remove(i)#の実行時間と解析は同様のため、省略する。
+#remove(i)#の実行時間の解析は#add(i,x)#のものと同様なので省略する。
 
 \codeimport{ods/DualArrayDeque.remove(i)}
 
 \subsection{バランスの調整}
 
-最後に#add(i,x)#と#remove(i)#によって実行される#balance()#の説明をする。
-この操作は#front#・#back#のどちらも大きく（または小さく）なりすぎないことを保証するものだ。
+最後に#add(i,x)#と#remove(i)#が実行する#balance()#の説明をする。
+この操作は#front#・#back#の要素数が極端には偏らないよう保つ。
 要素数が2以上のとき、#front#も#back#も$#n#/4$以上の要素を含むようにするのだ。
 そうでないときは要素を動かして、#front#・#back#がそれぞれちょうど$\lfloor#n#/2\rfloor$・$\lceil#n#/2\rceil$個の要素を持つようにする。
 
 \codeimport{ods/DualArrayDeque.balance()}
 
 #balance()#の解析は簡単である。
-#balance()#がバランス調整をするとき$O(#n#)$個の要素を動かすので$O(#n#)$の時間がかかる。
-#balance()#は#add(i,x)#・#remove(i)#で毎回呼ばれるのでこれは一見好ましくない。
-しかし次の補題より、#balance()#のための平均時間は定数であることがわかる。
+#balance()#がバランス調整をするとき$O(#n#)$個の要素を動かすので実行時間は$O(#n#)$である。
+#balance()#は#add(i,x)#・#remove(i)#で毎回呼ばれるのでこれは一見すると好ましくない。
+しかし次の補題より#balance()#の実行時間は平均的には定数であることがわかる。
 
 \begin{lem}\lemlabel{dualarraydeque-amortized}
-  空の#DualArrayDeque#に対して$m\ge 1$個の#add(i,x)#・#remove(i)#からなる操作の列を順に実行する。
-  このとき全ての#balance()#の呼び出しの実行時間の合計は$O(m)$である。
+  空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行する。
+  このとき#resize()#にかかる時間の合計は$O(m)$である。
 \end{lem}
 
 \begin{proof}
-  #balance()#が要素を動かすとき、前に#balance()#が要素を動かしたときから呼ばれた#add(i,x)#・#remove(i)#の合計数は$#n#/2-1$以下であることを示す。
-  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計時間が$O(m)$であることを示すには十分である。
+  前に#balance()#が要素を動かしたときから、次に#balance()#が要素を動かすときまでに#add(i,x)#・#remove(i)#が実行された回数は$#n#/2-1$以上であることを示す。
+  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(m)$であることを示したことになる。
 
   ここでは
   \emph{ポテンシャル法}
   \index{potential}%
   \index{potential method}%
-  として知られる手法を解析に用いる。
+  という技法を使う。
   #DualArrayDeque#の\emph{ポテンシャル}$\Phi$を#front#と#back#の要素数の差と定義する。
   \[  \Phi = |#front.size()# - #back.size()#| \enspace \]
-  このポテンシャルの興味深い性質は、バランス調整を行わない#add(i,x)#・#remove(i)#の呼び出しはポテンシャルを最大でも1しか増やさないことだ。 % TODO caprice もっと自然に訳出したい
+  バランス調整を行わない#add(i,x)#・#remove(i)#の処理では、ポテンシャルは高々1しか増えないことに注目しよう。 % TODO caprice もっと自然に訳出したい
 
-  次の式が成り立つことから、#balance()#が要素を動かした直後にはポテンシャル$\Phi_0$は1以下であることがわかるだろう。
+  次の式が成り立つので、#balance()#が要素を動かした直後のポテンシャル$\Phi_0$は1以下である。
   \[ \Phi_0 = \left|\lfloor#n#/2\rfloor-\lceil#n#/2\rceil\right|\le 1  \enspace\]
 
-  要素を動かす#balance()#の直前には$3#front.size()# < #back.size()#$であったと仮定しても一般性を失わない。
+  #balance()#が要素を動かす直前には$3#front.size()# < #back.size()#$であったと仮定しても一般性を失わない。
   次の式が成り立つ。
   \begin{eqnarray*}
    #n# & = & #front.size()#+#back.size()# \\
@@ -511,7 +513,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
       &>& \frac{2}{3}\times\frac{3}{4}#n# \\
       &=& #n#/2
   \end{eqnarray*}
-  以上より、前に#balance()#によって要素を動かしてから、#add(i,x)#・#remove(i)#が呼ばれた回数は$\Phi_1-\Phi_0 > #n#/2-1$ 以上である。
+  以上より、前に#balance()#が要素を動かしてから、#add(i,x)#・#remove(i)#が呼ばれた回数は$\Phi_1-\Phi_0 > #n#/2-1$以上である。
 \end{proof}
 
 \subsection{要約}
@@ -524,7 +526,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#どちらを操作するか�
     \item #get(i)#・#set(i,x)#の実行時間は$O(1)$である。
     \item #add(i,x)#・#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である。
   \end{itemize}
-  また、空の#DualArrayDeque#から任意の$m$個の#add(i,x)#と#remove(i)#からなる操作の列を実行したとき、#resize()#と#balance()#にかかる時間の合計は$O(m)$である。
+  また、空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行する。このとき#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
 \section{RootishArrayStack：空間効率に優れた配列スタック}
