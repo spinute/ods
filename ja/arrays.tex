@@ -661,8 +661,6 @@ RootishArrayStackが確保している配列の中でデータが入っていな
 \index{wasted space}%
 % 原文は「データ」ではなくa list elementだが、このRootish Array Stackの節の最初で[previous data structures] store their dataと呼んでいるので、データと表記したほうが分かりやすいとcapriceは判断した
 
-% TODO YJ: 空間量の議論の部分が怪しいという話？
-
 #remove(i)#は#RootishArrayStack#が空きのあるブロックを高々2つしか持たないことを保証する。
 よって#n#個の要素を含む#RootishArrayStack#のブロック数を#r#とすれば次の関係が成り立つ。 % 用意 allocate?
 \[
@@ -715,14 +713,13 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 \footnote{訳注：計算モデルとは計算を理論的に調べるための道具である。我々はここまでwビットのワードRAMモデルに基づいて操作の実行時間やデータ構造のメモリ使用量を調べてきた。\secref{model}で言及したように、ワードRAMモデルの基本的な操作は算術演算、比較、ビット単位の論理演算であり、平方根の算出は含まない。すなわち我々は平方根の算出の実行時間をまだ知らない。}
 。平方根の算出は基本的な操作とは一般的にみなされておらず、ワードRAMモデルに含まれていない。
 
-この節では、平方根の算出が効率的に実装できることを示す。特に「長さが$O(\sqrt{#n#})$の２つの配列#sqrttab#と#logtab#を作り、実行時間が$O(\sqrt{#n#})$である前処理」のあとで、どんな整数$#x#\in\{0,\ldots,#n#\}$についても定数時間で$\lfloor\sqrt{#x#}\rfloor$を計算できることを示す。
+この節では、平方根の算出が効率的に実装できることを示す。特に「長さが$O(\sqrt{#n#})$の２つの配列#sqrttab#と#logtab#を作り、実行時間が$O(\sqrt{#n#})$である前処理」のあとで、どんな自然数$#x#\in\{0,\ldots,#n#\}$についても定数時間で$\lfloor\sqrt{#x#}\rfloor$を計算できることを示す。
 % TALK これ、原文は integer (整数)になってるけど負を含まないから自然数のほうが良いか？
 
-次の補題は、自然数#x#の平方根を計算する問題が、関連する値 #x'#の平方根を計算する問題に帰着できることを示している。
+次の補題は#x#の平方根の計算を#x'#の平方根の計算に帰着できることを示すものだ。
 
 \begin{lem}\lemlabel{root}
-   二つの数 $#x#\ge 1$ と $#x'#=#x#-a$ について、$0\le a\le\sqrt{#x#}$だと仮定する。このとき、
-   $\sqrt{x'} \ge \sqrt{#x#}-1$が常に成り立つ。
+   二つの数 $#x#\ge 1$ と $#x'#=#x#-a$ について、$0\le a\le\sqrt{#x#}$だと仮定する。このとき、$\sqrt{x'} \ge \sqrt{#x#}-1$ である。
 \end{lem}
 
 \begin{proof}
@@ -738,41 +735,23 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 \[
  \sqrt{#x#} \ge 1
 \]
-となる。これはどんな $#x#\ge 1$についても常に成り立つ。
+となる。これはどんな $#x#\ge 1$ についても成り立つ。
 \end{proof}
 % caprice これめっちゃ頭いいな　こんなん思いつくんかい
 
-% \begin{lem}\lemlabel{root}
-% Let $#x#\ge 1$ and let $#x'#=#x#-a$, where $0\le a\le\sqrt{#x#}$.  Then
-%    $\sqrt{x'} \ge \sqrt{#x#}-1$.
-% \end{lem}
-
-% \begin{proof}
-% It suffices to show that
-% \[
-% \sqrt{#x#-\sqrt{#x#}} \ge \sqrt{#x#}-1 \enspace .
-% \]
-% Square both sides of this inequality to get
-% \[
-%  #x#-\sqrt{#x#} \ge #x#-2\sqrt{#x#}+1
-% \]
-% and gather terms to get 
-% \[
-%  \sqrt{#x#} \ge 1
-% \]
-% which is clearly true for any $#x#\ge 1$.
-% \end{proof}
-
-あらゆる自然数$#x#\in\{0,\ldots,#n#\}$の平方根を計算する問題を考えるにあたり、まずは一部のxについて考えることから始める。自然数xが$2^{#r#} \le
-#x# < 2^{#r#+1}$を満たす、すなわち$\lfloor\log #x#\rfloor=#r#$を満たす場合を考える。このとき、自然数xは２進数表現を用いて$#r#+1$ビットで表せる
-% TODO caprice この注いらないかもしれない　\footnote{訳注：２進数表現とは、0と1というふたつの数字を用いて整数を表す表記法である。10進法表記の0, 1, 2, 3, 4は、２進法表記では３ビットを用いると000, 001, 010, 011, 100として表記される。コンピュータは0と1の２つの状態を取れる部品を用いて数を表現するため、ある数を2進数表現した際に何ビット必要なのかが重要となる。}
+あらゆる自然数$#x#\in\{0,\ldots,#n#\}$の前に、まずは一部のxの平方根を計算する方法から始めよう。自然数xが$2^{#r#} \le
+#x# < 2^{#r#+1}$を満たす、すなわち$\lfloor\log #x#\rfloor=#r#$である場合を考える。このとき自然数xは２進数$#r#+1$ビットで表せる
+% TODO caprice この注いらないかもしれない
+\footnote{訳注：２進数表記とは0と1というふたつの数字を用いて整数を表す表記法である。10進法表記の0, 1, 2, 3, 4は、２進法表記で３ビットを用いると000, 001, 010, 011, 100と表記される。コンピュータは0と1のふたつの状態を取れる部品を用いて数を表現するため、ある数を２進数表記する際に何ビット必要なのかは重要である。}
 。ここで、$#x'#=#x# - (#x#\bmod 2^{\lfloor r/2\rfloor})$について考えると、この#x'#は\lemref{root}を満たすため$\sqrt{#x#}-\sqrt{#x'#} \le 1$が成り立つ。更に、#x'#の下位$\lfloor #r#/2\rfloor$ビットは0である。すると残りのビット数から考えて、#x'#は
+% XXX: PDFにて、\lemref{root} は補題2.6.4 になっているが、この補題は補題2.3である
 \[
   2^{#r#+1-\lfloor #r#/2\rfloor} \le 4\cdot2^{#r#/2} \le 4\sqrt{#x#}
 \]
 通りの値しか取れない
+% XXX: この辺の訳注はだらだら書きすぎだと思う
 \footnote{訳注：中辺は単に左辺に２をかけて導出し、中辺から右辺にかけては$2^{#r#} \le#x# < 2^{#r#+1}$から導出される$2^{#r#/2} \le \sqrt{#x#}$を用いた。右辺から、#x'#の可能な値の数が$O(\sqrt{#n#})$でバウンドされていると分かる。}
-。これは、可能な#x'#の値に関してそれぞれ$\lfloor\sqrt{#x'#}\rfloor$の値を格納する配列#sqrttab#を利用できることを意味している
+。これは$\lfloor\sqrt{#x'#}\rfloor$の値を入れておく配列#sqrttab#を
 \footnote{訳注：つまり、平方根はプログラム中で何千回も使いまわされる処理でありうるのだから、その処理を高速化できるように、空間計算量を少し犠牲にして中間結果を配列#sqrttab#に入れることで、時間計算量を改善しようという算段である。#x'#の数が高々$2^{#r#+1-\lfloor #r#/2\rfloor}$通り（たとえば一般的なコンピュータにおけるr=32の場合は10万通り程度）しかない、ビッグオー記法で表記すれば$2^{#r#+1-\lfloor #r#/2\rfloor} \le 4\sqrt{#x#}$という結果から$O(\sqrt{#n#})$通りしかないのだから、この工夫は実を結ぶ。}
 。もう少し正確に言えば、配列#sqrttab#の各要素の値は
 \[
@@ -787,92 +766,48 @@ $\lfloor\sqrt{#x#}\rfloor-2$のいずれかの値を取る
 。$(#s#+1)^2 > #x#$となるまで#s#をインクリメントすることで、xの平方根を下に丸めた自然数$\lfloor\sqrt{#x#}\rfloor$の値を特定できる。
 % TALK sqrttab[i] is within 2 of root x ってあるけど、$\lfloor\sqrt{#x#}\rfloor-2$の値を取ったときは微妙に2を超えてないか？今は「およそ２」としたが、どうすべきか？
 
-% TALK 他の場所でも「２進法表現」と訳されているようだが、「２進表記」か「２進記数法」のほうが良いか？
-
 % TALK これ、r=64の場合、sqrttabのサイズが約85億と、果てしなく大きくなってしまわないか？そのことに関して注を入れた方がよいのでは？
-
-Start by restricting the problem a little, and assume that $2^{#r#} \le
-#x# < 2^{#r#+1}$, so that $\lfloor\log #x#\rfloor=#r#$, i.e., #x# is an
-integer having $#r#+1$ bits in its binary representation.  We can take
-$#x'#=#x# - (#x#\bmod 2^{\lfloor r/2\rfloor})$.  Now, #x'# satisfies
-the conditions of \lemref{root}, so $\sqrt{#x#}-\sqrt{#x'#} \le 1$.
-Furthermore, #x'# has all of its lower-order $\lfloor #r#/2\rfloor$ bits
-equal to 0, so there are only
-\[
-  2^{#r#+1-\lfloor #r#/2\rfloor} \le 4\cdot2^{#r#/2} \le 4\sqrt{#x#}
-\]
-possible values of #x'#.  This means that we can use an array, #sqrttab#,
-that stores the value of $\lfloor\sqrt{#x'#}\rfloor$ for each possible
-value of #x'#.  A little more precisely, we have
-\[
-   #sqrttab#[i] 
-    = \left\lfloor
-       \sqrt{i 2^{\lfloor #r#/2\rfloor}}
-      \right\rfloor \enspace .
-\]
-In this way, $#sqrttab#[i]$ is within 2 of $\sqrt{#x#}$ for all
-$#x#\in\{i2^{\lfloor r/2\rfloor},\ldots,(i+1)2^{\lfloor r/2\rfloor}-1\}$.
-Stated another way, the array entry 
-$#s#=#sqrttab#[#x##>>#\lfloor #r#/2\rfloor]$ is either equal to
-$\lfloor\sqrt{#x#}\rfloor$,
-$\lfloor\sqrt{#x#}\rfloor-1$, or
-$\lfloor\sqrt{#x#}\rfloor-2$.  From #s# we can determine the value
-of $\lfloor\sqrt{#x#}\rfloor$ by
-incrementing #s# until 
-$(#s#+1)^2 > #x#$.
-} % notpcode
 
 \javaimport{ods/FastSqrt.sqrt(x,r)}
 \cppimport{ods/FastSqrt.sqrt(x,r)}
-\notpcode{
-Now, this only works for $#x#\in\{2^{#r#},\ldots,2^{#r#+1}-1\}$ and
-#sqrttab# is a special table that only works for a particular value
-of $#r#=\lfloor\log #x#\rfloor$.  To overcome this, we could compute
-$\lfloor\log #n#\rfloor$ different #sqrttab# arrays, one for each possible
-value of $\lfloor\log #x#\rfloor$. The sizes of these tables form an exponential sequence whose largest value is at most $4\sqrt{#n#}$, so the total size of all tables is $O(\sqrt{#n#})$.
 
-However, it turns out that more than one #sqrttab# array is unnecessary;
-we only need one #sqrttab# array for the value $#r#=\lfloor\log
-#n#\rfloor$.  Any value #x# with $\log#x#=#r'#<#r#$ can be \emph{upgraded}
-by multiplying #x# by $2^{#r#-#r'#}$ and using the equation
+\notpcode{
+ここまでは$#x#\in\{2^{#r#},\ldots,2^{#r#+1}-1\}$の場合についてのみ考えてきた。
+また、#sqrttab#は$#r#=\lfloor\log #x#\rfloor$についてのみ使えるものであった。
+これを一般化するには$\lfloor\log #n#\rfloor$個の#sqrttab#を$\lfloor\log #x#\rfloor$の各値に対して準備すればよさそうだ。
+各#sqrttab#の大きさは等比数列で、最大のものの大きさは高々$4\sqrt{#n#}$である。
+そのため、すべての#sqrttab#の大きさを合計すると$O(\sqrt{#n#})$である。
+
+しかし実は#sqrttab#はひとつだけで十分なのである。
+$#r#=\lfloor\log #n#\rfloor$の場合の#sqrttab#だけがあればよいのだ。
+
+$\log#x#=#r'#<#r#$である#x#については$2^{#r#-#r'#}$をかけて\emph{アップグレード}し、次の等式を使えばよい。
 \[
     \sqrt{2^{#r#-#r'#}x} = 2^{(#r#-#r#')/2}\sqrt{#x#} \enspace .
 \]
-The quantity $2^{#r#-#r#'}x$ is in the range
-$\{2^{#r#},\ldots,2^{#r#+1}-1\}$ so we can look up its square root
-in #sqrttab#.  The following code implements this idea to compute
-$\lfloor\sqrt{#x#}\rfloor$ for all non-negative integers #x# in the
-range $\{0,\ldots,2^{30}-1\}$ using an array, #sqrttab#, of size $2^{16}$.
+$2^{#r#-#r#'}x$は$\{2^{#r#},\ldots,2^{#r#+1}-1\}$に含まれるので、上の値は#sqrttab#に入っている。
+% XXX: 2^{30}-1なのはどういう気遣い？
+次のコードは$\{0,\ldots,2^{30}-1\}$の任意の要素#x#について、大きさ$2^{16}$の配列#sqrttab#を使って$\lfloor\sqrt{#x#}\rfloor$を計算するものである。
 } % notpcode
 \javaimport{ods/FastSqrt.sqrt(x)}
 \cppimport{ods/FastSqrt.sqrt(x)}
 \notpcode{
-Something we have taken for granted thus far is the question of how
-to compute
-$#r#'=\lfloor\log#x#\rfloor$.  Again, this is a problem that can be solved
-with an array, #logtab#, of size $2^{#r#/2}$.  In this case, the
-code is particularly simple, since $\lfloor\log #x#\rfloor$ is just the
-index of the most significant 1 bit in the binary representation of #x#.
-This means that, for $#x#>2^{#r#/2}$, we can right-shift the bits of
-#x# by $#r#/2$ positions before using it as an index into #logtab#.
-The following code does this using an array #logtab# of size $2^{16}$ to compute
-$\lfloor\log #x#\rfloor$ for all #x# in the range $\{1,\ldots,2^{32}-1\}$.
+$#r#'=\lfloor\log#x#\rfloor$の計算方法も説明しておく。
+平方根の場合と同様に大きさ$2^{#r#/2}$の配列#logtab#を使う。
+$\lfloor\log #x#\rfloor$は#x#を二進法で表記したとき1である最大の桁の添え字であることさえわかれば、実装は難しくない。
+すなわち$#x#>2^{#r#/2}$のとき#x#を$#r#/2$ビットだけ右にシフトし、#logtab#の添え字とする。
+次のコードは$\{0,\ldots,2^{32}-1\}$の任意の要素#x#について、大きさ$2^{16}$の配列#logtab#を使って$\lfloor\log #x#\rfloor$を計算するものである。
 } % notpcode
 \javaimport{ods/FastSqrt.log(x)}
 \cppimport{ods/FastSqrt.log(x)}
 \notpcode{
-Finally, for completeness, we include the following code that initializes #logtab# and #sqrttab#:
+最後になるが、#logtab#および#sqrttab#を初期化するコードも掲載しておく。
 } % notpcode
 \javaimport{ods/FastSqrt.inittabs()}
 \cppimport{ods/FastSqrt.inittabs()}
 \notpcode{
-To summarize, the computations done by the #i2b(i)# method can be
-implemented in constant time on the word-RAM using $O(\sqrt{n})$ extra
-memory to store the #sqrttab# and #logtab# arrays.  These arrays can be
-rebuilt when #n# increases or decreases by a factor of two, and the cost
-of this rebuilding can be amortized over the number of #add(i,x)# and
-#remove(i)# operations that caused the change in #n# in the same way that
-the cost of #resize()# is analyzed in the #ArrayStack# implementation.
+まとめると、ワードRAMでは$O(\sqrt{n})$だけのメモリを使って配列（#sqrttab#や#logtab#）を作れば、#i2b(i)#で使う各操作は実行時間で実行できる。
+この配列は#n#が二倍または二分の一の大きさになるたび拡大・縮小してもよい。この場合実行時間は#ArrayStack#のときと同様に#add(i,x)#・#remove(i)#の実行回数にわたって償却できる。
 } % notpcode
 
 \section{ディスカッションと練習問題}
