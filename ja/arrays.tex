@@ -812,21 +812,22 @@ $\lfloor\log #x#\rfloor$は#x#を二進法で表記したとき1である最大�
 
 \section{ディスカッションと練習問題}
 
-この章で説明したデータ構造は伝承のようなものだ。
+この章で説明したデータ構造は古くから知られているもので多くの議論がなされてきた。
 30年以上前の実装さえ見つかる。
-例えば、ここで扱った#ArrayStack#・#ArrayQueue#・#ArrayDeque#の実装を簡単に一般化できるスタック・キュー・双方向キューがKnuth \cite[Section~2.2.2]{k97v1}により議論されている。
+例えばKnuth \cite[Section~2.2.2]{k97v1}では、一般化すると#ArrayStack#・#ArrayQueue#・#ArrayDeque#になるスタック・キュー・双方向キューの実装を述べている。
 
-恐らくBrodnik \etal\ \cite{bcdms99}が#RootishArrayStack#を記述し、\secref{rootishspaceusage}で述べたような下界$\sqrt{n}$を示した最初の文献である。
-彼らは他の洗練されたブロックサイズの選び方も示しており、これは#i2b(i)#の中で冪根の計算をせずに済むものだ。
-このやり方では#i#番目の要素を含むブロックは$\lfloor\log (#i#+1)\rfloor$番目のもので、これは単に$#i#+1$の二進表現における最高位の桁である。
-この計算をするための命令を提供するコンピュータ・アーキテクチャもある。
+#RootishArrayStack#を記述し\secref{rootishspaceusage}で述べた下界$\sqrt{n}$を示した最初の文献はおそらくBrodnik \etal\ \cite{bcdms99}である。
+彼らはこの章で説明したものとは別の巧みなブロックサイズの選び方も示しており、このやり方では#i2b(i)#の中で平衡根の計算をせずに済む。
+このやり方では#i#番目の要素を含むブロックは$\lfloor\log (#i#+1)\rfloor$番目のもので、これは$#i#+1$の二進表現における最高位の桁である。
+コンピュータ・アーキテクチャによってはこの計算を行うための命令があり、これは効率的に計算できる。
 \javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
 #RootishArrayStack#に関連するデータ構造として、Goodrich and Kloss \cite{gk99}の二段階の\emph{階層ベクトル}がある。
 \index{tiered-vector}%
-この構造体は#get(i,x)#・#set(i,x)#を定数時間で実行できる。
+このデータ構造では#get(i,x)#・#set(i,x)#の実行時間は定数である。
 #add(i,x)#・#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
-これと同じような実行時間は\excref{rootisharraystack-fast}で扱う#RootishArrayStack#のより練られた実装によっても達成できる。
+% XXX: excrefで参照しているのは問2.9だが、問2.7（おそらく章.節）になっている
+\excref{rootisharraystack-fast}で扱う#RootishArrayStack#をさらに改良した実装ではこれに近い実行時間を達成する。
 
 \begin{exc}
   #List#の#addAll(i,c)#操作は#Collection# #c#の要素をすべてリストの#i#番目の位置に順に挿入する。
