@@ -239,7 +239,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
 
 \begin{thm}\thmlabel{skiplistlist}
   #SkiplistList#は#List#インターフェースを実装する。
-  #SkiplistList#における#get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#の期待実行時間はいずれも$O(\log #n#)$である。
+  #SkiplistList#における#get(i)#・#set(i,x)#・#add(i,x)#・#remove(i)#の実行時間の期待値はいずれも$O(\log #n#)$である。
 \end{thm}
 
 \section{スキップリストの解析}
@@ -255,8 +255,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
 \end{lem}
 
 \begin{proof}
-表が出たらにコイントスをやめるとする。
-次の指示変数を定義する。
+表が出るまでコイントスを繰り返すとき、次の指示変数を定義する。
   \[ I_{i} = \left\{\begin{array}{ll}
      0 & \mbox{コイントスが$i$回よりも少ないとき} \\
      1 & \mbox{コイントスが$i$回以上のとき}
@@ -275,7 +274,7 @@ $L_{#r#}$から下に進むのは$#r#\le #k#$のときで、このとき#w#を$L
   \end{align*}
 \end{proof}
 
-次のふたつの補題からスキップリストの大きさは要素数に対して線形だとわかる。
+次のふたつの補題ではスキップリストにおけるノード数は要素数に概ね比例することを示す。
 
 \begin{lem}\lemlabel{skiplist-size1}
   $#n#$要素からなるスキップリストにおける（番兵を除く）ノード数の期待値は $2#n#$である。
