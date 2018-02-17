@@ -75,6 +75,7 @@ $L_0$のノード#u#について、#u#の探索経路長の期待値は$2\log #n
 #u.next[i]#で$L_{#i#}$における#u#の次のノードを指せばよい。
 こうすると#x#は複数のリストに現れるかもしれないが、ノードとしての実体はひとつだけあれば済む。
 
+% XXX: height は length of next - 1 ではないか
 \javaimport{ods/SkiplistSSet.Node<T>}
 \cppimport{ods/SkiplistSSet.Node}
 
@@ -108,7 +109,7 @@ $#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
 
 #SkiplistSSet#の#add(x)#の実装は、#x#を入れる場所を見つけ、高さ#k#を#pickHeight()#で決め、#x#を$L_0$,\ldots,$L_{#k#}$に継ぎ合せる。
 これを実現する最も簡単な方法は、リスト$L_{#r#}$からリスト$L_{#r#-1}$に下がるノードを記録する配列#stack#を使うことだ。
-より正確にいうと、#stack[r]#にはパスにおいて$L_{#r#}$から$L_{#r#-1}$に下がるノードが記録されている。
+より正確にいうと、#stack[r]#には探索経路において$L_{#r#}$から$L_{#r#-1}$に下がるノードが記録されている。
 #x#を挿入する時に修正する必要のあるノードはちょうど$#stack[0]#,\ldots,#stack[k]#$である。
 次のコードはこの#add(x)#アルゴリズムの実装である。
 \label{pg:skiplist-add}
@@ -122,8 +123,8 @@ $#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
   \figlabel{skiplist-add}
 \end{figure}
 
-要素#x#を削除するのも同様に行える。ただし#stack#で探索経路を覚えておく必要はない。
-削除は探索経路を辿りながら行うことが出来る。
+要素#x#の削除も同様に行える。ただし#stack#を使って探索経路を記録する必要はない。
+削除は探索経路を辿りながら行える。
 #x#を探す途中にノード#u#から下に向かうとき、$#u.next.x#=#x#$なら#u#を繋ぎ替える。
 \codeimport{ods/SkiplistSSet.remove(x)}
 
@@ -141,7 +142,7 @@ $#x#>#u.next[r].x#$なら$L_{#r#}$の中で右に進む。
 
 \begin{thm}\thmlabel{skiplist}
 #SkiplistSSet#は#SSet#インターフェースの実装である。
-#SkiplistSSet#は操作#add(x)#・#remove(x)#・#find(x)#を持ち、いずれの期待実行時間も$O(\log #n#)$である。
+#SkiplistSSet#における#add(x)#・#remove(x)#・#find(x)#の実行時間の期待値はいずれも$O(\log #n#)$である。
 \end{thm}
 
 \section{#SkiplistList#：効率的なランダムアクセス#List#}
