@@ -121,7 +121,7 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左に1つシフトし、#n#の値を1つ小さく�
 大きさ$2#n#$の配列#b#を割り当て、#n#個の要素をコピーする。
 これには$O(#n#)$の時間がかかる。
 
-前節の実行時間分析では#resize()#のコストを無視していた。この節では\emph{償却解析}と呼ばれる手法でこれを解決する。
+前節の実行時間分析では#resize()#のコストを無視していた。この節では\emph{償却解析 (amortized analysis)}と呼ばれる手法でこれを解決する。
 この手法は、個々の#add(i, x)#および#remove(i)#における#resize()#のコストを求めるわけではない。
 代わりに、#add(i, x)#と#remove(i)#からなる#m#個の一連の操作の間に呼ばれる#resize()#の実行時間の合計を考える。特に、次の補題を示す。
 % 以上の部分はpdfにしたときに別段落に分けられていたので、原文に沿って一段落にまとめた
@@ -301,7 +301,6 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 にコピーし、$#j#=0$とする。
 
 \codeimport{ods/ArrayQueue.resize()}
-% FIXME このコード、max(1, n*2)となってて他と揃ってないから、max(2*n,1)としたい
 \subsection{要約}
 
 次の定理は#ArrayQueue#の性能を整理するものだ。
@@ -484,7 +483,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらを操作する�
   \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(m)$であることを示したことになる。
 
   ここでは
-  \emph{ポテンシャル法}
+  \emph{ポテンシャル法 (potential method)}
   \index{potential}%
   \index{potential method}%
   という技法を使う。
@@ -819,7 +818,7 @@ $\lfloor\log #x#\rfloor$は#x#を二進法で表記したとき1である最大�
 コンピュータ・アーキテクチャによってはこの計算を行うための命令があり、これは効率的に計算できる。
 \javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
-#RootishArrayStack#に関連するデータ構造として、Goodrich and Kloss \cite{gk99}の二段階の\emph{階層ベクトル}がある。
+#RootishArrayStack#に関連するデータ構造として、Goodrich and Kloss \cite{gk99}の二段階の\emph{階層ベクトル (tiered-vector)}がある。
 \index{tiered-vector}%
 このデータ構造では#get(i,x)#・#set(i,x)#の実行時間は定数である。
 #add(i,x)#・#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
