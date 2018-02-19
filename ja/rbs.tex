@@ -48,13 +48,13 @@
 上の例から、$0,\ldots,14$をランダムな順番で二分探索木に追加すると、多くの場合は（\figref{rbs-lvc}の右のもののような）バランスのよい木になり、（\figref{rbs-lvc}の左のもののような）極めて偏った木になるのは稀だと言えそうだ。
 
 ランダム二分探索木を考えるとこの直感を形式的に説明できる。
-まずは大きさ#n#の\emph{ランダム二分探索木}の作り方を述べる。
+まずは大きさ#n#の\emph{ランダム二分探索木 (random binary search tree)}の作り方を述べる。
 \ejindex{random binary search tree}{らんだむにぶんたんさくぎ@ランダム二分探索木}%
 \ejindex{binary search tree!random}{にぶんたんさくぎ@二分探索木!ランダム}%
 
 $0,\ldots,#n#-1$のランダムな置換を1つ選ぶ。
 これを$#x#_0,\ldots,#x#_{#n#-1}$とし、順に#BinarySearchTree#に追加する。
-ここで、\emph{ランダムな置換}
+ここで、\emph{ランダムな置換 (random permutation)}
 \ejindex{permutation!random}{ちかん@置換!らんだむ@ランダム}%
 \ejindex{random permutation}{らんだむなちかん@ランダムな置換}%
 とは、$0,\ldots,#n#-1$の並べ方$#n#!$通りから、いずれも等しい確率$1/#n#!$で1つを選出したものである。
@@ -63,7 +63,7 @@ $0,\ldots,#n#-1$を別の#n#個の値に変えてもランダム二分探索木�
 $#x#\in\{0,\ldots,#n#-1\}$は#n#個の順序が定義された集合における#x#番めの要素を表しているにすぎない。
 
 ランダム二分探索木の性質を説明する前に少し脱線して、ランダムな構造を解析する際にしばしば現れる数の話をしよう。
-$k$を非負整数とすると、$k$番めの\emph{調和数}$H_k$は次のように定義される。
+$k$を非負整数とすると、$k$番めの\emph{調和数 (harmonic number)}$H_k$は次のように定義される。
 \ejindex{harmonic number}{ちょうわすう@調和数}%
 \index{H@$H_k$ (harmonic number)}%
 \[
@@ -198,11 +198,11 @@ $I_i$を指示確率変数とする。
 これは\lemref{rbs}を利用して#SSet#インターフェースを実装する。
 \footnote{#Treap#の名はこのデータ構造は二分木 \textbf{tr}ee(\secref{binarysearchtree})であると同時にヒープ h\textbf{eap}(\chapref{heaps}) でもあることによる。}
 
-#Treap#のノードは値#x#を持つ点で#BinarySearchTree#に似ているが、それに加えて値#x#に対して一意な\emph{優先度}#p#を持つ。
+#Treap#のノードは値#x#を持つ点で#BinarySearchTree#に似ているが、それに加えて値#x#に対して一意な\emph{優先度 (priority)}#p#を持つ。
 この#p#はランダムに割当てられる。
 \javaimport{ods/Treap.Node<T>}
 \cppimport{ods/Treap.TreapNode}
-#Treap#のノードは、二分探索木の性質に加えて、\emph{ヒープ性}も満たす。
+#Treap#のノードは、二分探索木の性質に加えて、\emph{ヒープ性 (heap property)}も満たす。
 \begin{itemize}
 \item （ヒープ性）根でない任意のノード#u#について$#u.parent.p# < #u.p#$が成り立つ。
       \ejindex{heap property}{ひーぷせい@ヒープ性}%
@@ -258,10 +258,10 @@ $I_i$を指示確率変数とする。
 しかし本当に有用なのは#add(x)#・#delete(x)#操作を実装できることである。
 このためにヒープ性を保つための回転操作が必要である。
 \figref{rotations}を参照せよ。
-二分探索木の\emph{回転}とは
+二分探索木の\emph{回転 (rotation)}とは
 \ejindex{rotation}{かいてん@回転}%
 ノード#w#とその親#u#について、二分探索木性を保ちながら#w#を#u#の親にする操作である。
-回転には\emph{右回転}と\emph{左回転}の二種類があって、それぞれ#w#が#u#の右の子であるか、左の子であるかに対応する。
+回転には\emph{右回転 (right rotation)}と\emph{左回転 (left rotation)}の二種類があって、それぞれ#w#が#u#の右の子であるか、左の子であるかに対応する。
 \ejindex{left rotation}{ひだりかいてん@左回転}%
 \ejindex{right rotation}{みぎかいてん@右回転}%
 
