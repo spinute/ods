@@ -106,7 +106,7 @@ Google\index{Google}について考えてみよう。Googleでは85億ものWeb�
 FIFOキューとLIFOキュー（スタック）を一般化した#Deque#というインターフェースもある。#Deque#は双方向キューと呼ばれ、先頭と末尾をもった要素の列を表しており、先頭または末尾に要素を追加できる。#Deque#における操作には、#addFirst(x)#、#removeFirst()#、#addLast(x)#、 #removeLast()#というわかりやすい名前がついている。#addFirst()#および#removeFirst()#だけを使ってスタックを実装できることは覚えておくとよいだろう。一方、#addLast(x)#および#removeFirst()#だけを使えばFIFOキューを実装できる。 % back = 末尾?
 
 \subsection{#List#インターフェース：線形シーケンス}
-
+\seclabel{listintro}
 この本には#Queue#（FIFOキュー）や#Stack#（LIFOキュー）、#Deque#といったインターフェースの話はあまり出てこない。なぜなら、これらのインターフェースは#List#インターフェースとしてまとめられるからだ。\figref{list}に#List#\ejindex{List@#List#}{りすと@リスト}インタフェースを示す。#List#インタフェースは、値の列$#x#_0,\ldots,#x#_{#n#-1}$と、その列に対する以下のような操作からなる。
 
 \begin{enumerate}
