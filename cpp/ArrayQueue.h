@@ -39,7 +39,7 @@ ArrayQueue<T>::~ArrayQueue() {
 
 template<class T>
 void ArrayQueue<T>::resize() {
-	array<T> b(max(1, 2*n));
+	array<T> b(max(2*n, 1));
 	for (int k = 0; k < n; k++)
 		b[k] = a[(j+k)%a.length];
 	a = b;
