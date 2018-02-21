@@ -800,61 +800,61 @@ $\lfloor\log #x#\rfloor$が#x#を2進表記したときに1となる最大の桁
 
 \section{ディスカッションと練習問題}
 
-この章で説明したデータ構造は古くから知られているもので多くの議論がなされてきた。
+この章で説明したデータ構造の大半は古くから知られているもので、多くの議論がなされてきた。
 30年以上前の実装さえ見つかる。
-例えばKnuth \cite[Section~2.2.2]{k97v1}では、一般化すると#ArrayStack#・#ArrayQueue#・#ArrayDeque#になるスタック・キュー・双方向キューの実装を述べている。
+例えば、Knuthによる\cite[Section~2.2.2]{k97v1}で述べられているスタック、キュー、双方向キューの実装は、一般化すればここで説明した#ArrayStack#、#ArrayQueue#、#ArrayDeque#になる。
 
-#RootishArrayStack#を記述し\secref{rootishspaceusage}で述べた下界$\sqrt{n}$を示した最初の文献はおそらくBrodnik \etal\ \cite{bcdms99}である。
-彼らはこの章で説明したものとは別の巧みなブロックサイズの選び方も示しており、このやり方では#i2b(i)#の中で平衡根の計算をせずに済む。
-このやり方では#i#番目の要素を含むブロックは$\lfloor\log (#i#+1)\rfloor$番目のもので、これは$#i#+1$の二進表現における最高位の桁である。
-コンピュータ・アーキテクチャによってはこの計算を行うための命令があり、これは効率的に計算できる。
+#RootishArrayStack#について記述し、\secref{rootishspaceusage}で述べた下界$\sqrt{n}$を示した最初の文献は、おそらくBrodnikらによる\cite{bcdms99}である。
+彼らは、この章で説明した方法とは異なる巧妙なブロックサイズの選び方も示しており、このやり方では#i2b(i)#の中で平方根の計算をせずに済む。
+彼らのやり方では、#i#を含むブロックのインデックスが$\lfloor\log (#i#+1)\rfloor$番めとなり、このインデックスは$#i#+1$を2進表記したときの最高位の桁である。
+これはコンピュータアーキテクチャによっては専用の命令があり、効率的に計算できる。
 \javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
-#RootishArrayStack#に関連するデータ構造として、Goodrich and Kloss \cite{gk99}の二段階の\emph{階層ベクトル (tiered-vector)}がある。
+#RootishArrayStack#に関連するデータ構造として、GoodrichとKlossによる\cite{gk99}で示された2段階の\emph{階層ベクトル (tiered-vector)}というものがある。
 \index{tiered-vector}%
-このデータ構造では#get(i,x)#・#set(i,x)#の実行時間は定数である。
-#add(i,x)#・#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
+このデータ構造では、#get(i,x)#および#set(i,x)#の実行時間は定数である。
+#add(i,x)#および#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
 % XXX: excrefで参照しているのは問2.9だが、問2.7（おそらく章.節）になっている
-\excref{rootisharraystack-fast}で扱う#RootishArrayStack#をさらに改良した実装ではこれに近い実行時間を達成する。
+\excref{rootisharraystack-fast}では、#RootishArrayStack#をさらに改良し、これに近い実行時間を達成する。
 
 \begin{exc}
-  #List#の#addAll(i,c)#操作は#Collection# #c#の要素をすべてリストの#i#番目の位置に順に挿入する。
-  （#add(i,x)#は$#c#=\{#x#\}$とした特殊な場合である。）
-  この章で説明したデータ構造において
-  #addAll(i,c)#を#add(i,x)#繰り返し実行して実装するのはなぜ効率がよくないのかを説明せよ。
-  またより効率的な実装を考え、実装せよ。
+  #List#の#addAll(i,c)#操作は、#Collection c#の要素をすべてリストの#i#番めの位置に順に挿入する
+  （#add(i,x)#は$#c#=\{#x#\}$とした特殊な場合である）。
+  この章で説明したデータ構造において、
+  #add(i,x)#を繰り返し実行して#addAll(i,c)#を実装すると効率がよくない理由を説明せよ。
+  また、より効率的な実装を考えて実装せよ。
 \end{exc}
 
 \begin{exc}
-  \emph{#RandomQueue#}を設計・実装せよ。
+  \emph{#RandomQueue#}を設計、実装せよ。
   \index{RandomQueue@#RandomQueue#}%
-  これは#Queue#インターフェースの実装で、#remove()#操作はそのときキューに入っている要素から一様な確率でひとつ選んで取り出すものである。
-  （#RandomQueue#はカバンに要素を入れておき、中を見ずに適当に要素を取り出すようなものだと考えればよい。）
+  #RandomQueue#は#Queue#インターフェースの実装であり、その#remove()#では、そのときにキューに入っている要素から一様な確率で1つを選んで取り出す
+  （カバンに要素を入れておき、中を見ずに適当に要素を取り出すようなものだと考えればよい）。
 
-  ただし#RandomQueue#における#add(x)#・#remove()#の償却実行時間は定数でなければならないとする。
+  ただし、#RandomQueue#における#add(x)#および#remove()#の償却実行時間は定数でなければならないとする。
 \end{exc}
 
 \begin{exc}
-  #Treque# (triple-ended queue)を設計・実装せよ。
+  #Treque#（triple-ended queue）を設計、実装せよ。
   \index{Treque@#Treque#}%
-  #Treque#は#List#の実装であって、
-  #get(i)#・#set(i,x)#は定数時間で実行でき、
-  #add(i,x)#・#remove(i)#の実行時間は次のように表せるものだ。
+  #Treque#は#List#の実装であり、
+  #get(i)#と#set(i,x)#は定数時間で実行できる。
+  #Treque#の#add(i,x)#および#remove(i)#の実行時間は次のように表せる。
   \[
      O(1+\min\{#i#, #n#-#i#, |#n#/2-#i#|\}) \enspace
   \]
-  つまり、両端あるいは中央に近い位置の修正が高速なデータ構造である。
+  つまり、#Treque#は、両端あるいは中央に近い位置の修正が高速なデータ構造である。
 \end{exc}
 
 \begin{exc}
-  #rotate(a,r)#操作を実装せよ。
-  配列#a#を「回転」する、すなわち$#i#\in\{0,\ldots,#a.length#\}$のすべてについて#a[i]#を$#a#[(#i#+#r#)\bmod #a.length#]$に動かすものだ。
+  配列#a#を「回転」する#rotate(a,r)#を実装せよ。
+  すなわち、すべての$#i#\in\{0,\ldots,#a.length#\}$について、#a[i]#を$#a#[(#i#+#r#)\bmod #a.length#]$に動かす操作を実装せよ。
 \end{exc}
 
 \begin{exc}
-  #List#の回転操作#rotate(r)#を実装せよ。
-  これはリストの#i#番目の要素を$(#i#+#r#)\bmod #n#$番目に移す。
-  ただし#ArrayDeque#や#DualArrayDeque#に対しての#rotate(r)#の実行時間は$O(1+\min\{#r#,#n#-#r#\})$でなければならないとする。
+  #List#を回転する#rotate(r)#を実装せよ。
+  すなわち、リストの#i#番めの要素を$(#i#+#r#)\bmod #n#$番めに移す操作を実装せよ。
+  ただし、#ArrayDeque#や#DualArrayDeque#に対する#rotate(r)#の実行時間は$O(1+\min\{#r#,#n#-#r#\})$でなければならないとする。
 \end{exc}
 
 \notpcode{
@@ -862,47 +862,47 @@ $\lfloor\log #x#\rfloor$が#x#を2進表記したときに1となる最大の桁
 % TODO: YJ I guess memcpy is not possible in Ruby?
 %   この問は\lang\ 版からは除外されている。
   #ArrayDeque#を実装せよ。
-  ただし、#add(i,x)#・#remove(i)#・#resize()#におけるシフト処理は高速な#System.arraycopy(s,i,d,j,n)#を利用して実現すること。
+  ただし、#add(i,x)#、#remove(i)#、#resize()#におけるシフト処理では高速な#System.arraycopy(s,i,d,j,n)#を利用すること。
 \end{exc}
 }
 
 \begin{exc}
-  #%#演算を用いずに#ArrayDeque#を実装せよ。（この演算に多くの時間がかかる環境があるのだ。）
+  #%#演算を用いずに#ArrayDeque#を実装せよ（この演算に時間がかかる環境もある）。
   #a.length#が2の冪なら次の式が成り立つことを利用してよい。
   \[  #k%a.length#=#k&(a.length-1)# \enspace
   \]
-  なお#&#はビット単位のand演算オペレータである。
+  なお、#&#はビット単位のand演算オペレータである。
 \end{exc}
 
 \begin{exc}
   剰余演算を一切使わない#ArrayDeque#の実装を考えよ。
   すべてのデータは配列内の連続した領域に順番に並んでいることを利用してよい。
-  データがこの配列の先頭・末尾の外にはみ出たときは、#rebuild()#操作を実行する。
-  全ての操作の償却実行時間は#ArrayDeque#と同じになるように注意すること。
+  データがこの配列の先頭もしくは末尾の外にはみ出したときは、#rebuild()#操作を実行する。
+  すべての操作の償却実行時間は#ArrayDeque#と同じになるように注意すること。
 
   \noindent ヒント：#rebuild()#の実装方法がポイントだ。
-  データがどちらの端からもハミ出ない状態に$#n#/2$回以下の操作で辿りつかなければならない。
+  $#n#/2$回以下の操作で、データがどちらの端からもはみ出さない状態にたどりつかなければならない。
 
-  実装したプログラムの性能を元の#ArrayDeque#と比較せよ。
+  実装したプログラムの性能を、もとの#ArrayDeque#と比較せよ。
   実装を（#System.arraycopy(a,i,b,i,n)#を使って）最適化し、#ArrayDeque#の性能を上回るかどうか確認せよ。
 \end{exc}
 
 \begin{exc}
-  #RootishArrayStack#を修正し、無駄な領域量は$O(\sqrt{#n#})$だが、#add(i,x)#・#remove(i,x)#の実行時間が$O(1+\min\{#i#,#n#-#i#\})$であるデータ構造を設計・実装せよ。
+  #RootishArrayStack#を修正し、無駄な領域の量は$O(\sqrt{#n#})$だが#add(i,x)#および#remove(i,x)#の実行時間が$O(1+\min\{#i#,#n#-#i#\})$であるデータ構造を設計、実装せよ。
 \end{exc}
 
 \begin{exc}\exclabel{rootisharraystack-fast}
-  #RootishArrayStack#を修正し、無駄な領域量は$O(\sqrt{#n#})$だが、#add(i,x)#・#remove(i,x)#の実行時間が$O(1+\min\{\sqrt{#n#},#n#-#i#\})$であるデータ構造を設計・実装せよ。（\secref{selist}が参考になるだろう。）
+  #RootishArrayStack#を修正し、無駄な領域の量は$O(\sqrt{#n#})$だが#add(i,x)#および#remove(i,x)#の実行時間が$O(1+\min\{\sqrt{#n#},#n#-#i#\})$であるデータ構造を設計、実装せよ（\secref{selist}が参考になるだろう）。
 \end{exc}
 
 \begin{exc}
-  #RootishArrayStack#を修正し、無駄な領域量は$O(\sqrt{#n#})$だが、#add(i,x)#・#remove(i,x)#の実行時間が$O(1+\min\{#i#,\sqrt{#n#},#n#-#i#\})$であるデータ構造を設計・実装せよ。（\secref{selist}が参考になるだろう。）
+  #RootishArrayStack#を修正し、無駄な領域の量は$O(\sqrt{#n#})$だが#add(i,x)#および#remove(i,x)#の実行時間が$O(1+\min\{#i#,\sqrt{#n#},#n#-#i#\})$であるデータ構造を設計、実装せよ（\secref{selist}が参考になるだろう）。
 \end{exc}
 
 \begin{exc}
-  #CubishArrayStack#を設計・実装せよ。
+  #CubishArrayStack#を設計、実装せよ。
   \index{CubishArrayStack@#CubishArrayStack#}%
-  #CubishArrayStack#は#List#インターフェースを実装する三段階のデータ構造であって、無駄な領域量が$O(#n#^{2/3})$であるものだ。
-  #get(i)#・#set(i,x)#は定数時間で実行できる。
-  #add(i,x)#・#remove(i)#の償却実行時間は$O(#n#^{1/3})$である。
+  #CubishArrayStack#は#List#インターフェースを実装する三段階のデータ構造であり、無駄な領域の量が$O(#n#^{2/3})$である。
+  #CubishArrayStack#では、#get(i)#および#set(i,x)#が定数時間で実行できる。
+  #add(i,x)#および#remove(i)#の償却実行時間は$O(#n#^{1/3})$である。
 \end{exc}
