@@ -27,9 +27,10 @@ $#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そし�
 \seclabel{scapegoattree}
 
 \index{ScapegoatTree@#ScapegoatTree#}%
-#ScapegoatTree#とは、#BinarySearchTree#であり、ノード数#n#に加えてノード数の上界となる値#q#を保持する。
+#ScapegoatTree#は二分探索木である。
+ノード数#n#に加えてノード数の上界#q#とを保持する。
 \codeimport{ods/ScapegoatTree.q}
-#n#と#q#は常に次の式を満たす。
+#n#と#q#は常に次の関係を満たす。
 \[
       #q#/2 \le  #n# \le #q#
 \]
@@ -39,7 +40,7 @@ $#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そし�
      \log_{3/2} #q# \le \log_{3/2} 2#n# < \log_{3/2} #n# + 2
      \eqlabel{scapegoat-height}
 \end{equation}
-この制約を満たしても、#ScapegoatTree#は意外と偏った見た目になりうる。
+この制約を満たしていても、#ScapegoatTree#は意外と偏った見た目になりうる。
 例えば\figref{scapegoat-example}は$#q#=#n#=10$であり、高さ$5<\log_{3/2}10 \approx 5.679$の木である。
 
 \begin{figure}
@@ -50,20 +51,19 @@ $#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そし�
   \figlabel{scapegoat-example}
 \end{figure}
 
-#ScapegoatTree#における#find(x)#の実装は#BinarySearchTree#の標準のアルゴリズムを使う。（\secref{binarysearchtree}を参照せよ。）
+#ScapegoatTree#における#find(x)#の実装は#BinarySearchTree#のアルゴリズムをそのまま使う。（\secref{binarysearchtree}を参照せよ。）
 実行時間は木の高さに比例し、\myeqref{scapegoat-height}よりこれは$O(\log #n#)$である。
 
-#add(x)#の実装では、まず#n#と#q#をひとつずつ増やし、#x#を二分探索木に追加する標準のアルゴリズムを使う。
+#add(x)#の実装でも、まず#n#と#q#をひとつずつ増やし、#x#を#BinarySearchTree#に追加するアルゴリズムをそのまま使う。
 すなわち、#x#を探し、新たな葉#u#を追加し、$#u.x#=#x#$とする。 % YJ u.x=x: フィールドの名前と引数の名前が同じなのは初学者を混乱させてしまわないだろうか。訳者注を加える？
-このとき、運良く#u#の深さが$\log_{3/2}#q#$以下なら、これ以上なにもしなくてよい。
+このとき、#u#の深さが運良く既に$\log_{3/2}#q#$以下なら、これ以上なにもしなくてよい。
 
-$#depth(u)# > \log_{3/2} #q#$であることもある。
-この場合、高さを減らす必要がある。
-これはそんなに大変ではない。
-今、ノード#u#だけが、木の中で深さが$\log_{3/2} #q#$を超えているノードである。
-#u#を修正するために、木を上に向かって辿りながら\emph{scapegoat}であるノード#w#を探す。
+$#depth(u)# > \log_{3/2} #q#$になっていることもあり、この場合には高さを減らなければならない。
+これはさほど難しくない。
+このとき、深さが$\log_{3/2} #q#$を超えているノードは今加えた#u#だけである。
+修正するために、木を上に向かって辿りながら\emph{scapegoat}であるノード#w#を探す。
 #w#は非常にバランスの悪いノードである。
-ここでバランスは次の式で判断される。
+ここではバランスの悪さを次の式で判定する。
 \begin{equation}
    \frac{#size(w.child)#}{#size(w)#} > \frac{2}{3}
    \eqlabel{scapegoat}
@@ -71,9 +71,9 @@ $#depth(u)# > \log_{3/2} #q#$であることもある。
 #w.child#は#w#の子であって、根から#u#に至る経路上にあるものである。
 scapegoatが存在することを示すのは難しくない。
 今はこれを事実として認めることにする。
-scapegoat #w#が見つかれば#w#を根とする部分木を完全に取り壊し、完全二分木として再構築すればよい。
-\myeqref{scapegoat}より、#u#を加える前から#w#の部分木は完全二分木ではない。
-よって、#w#を再構築するときにその高さは1以上減り、#ScapegoatTree#の高さは再度$\log_{3/2}#q#$以上になる。
+scapegoatである#w#が見つかれば、#w#を根とする部分木を完全二分木に再構築すればよい。
+\myeqref{scapegoat}より、#u#を加える前には#w#の部分木は完全二分木ではない。
+よって、再構築後の木の高さは1以上減り、#ScapegoatTree#の高さは再び$\log_{3/2}#q#$以上になる。
 
 \codeimport{ods/ScapegoatTree.add(x)}
 
