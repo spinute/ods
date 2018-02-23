@@ -9,11 +9,12 @@
 #ScapegoatTree#は\emph{部分的な再構築 (partial rebuilding)}によってバランスを保つ。
 \ejindex{partial rebuilding}{ぶぶんてきなさいこうちく@部分的な再構築}%
 \ejindex{binary search tree!partial rebuilding}{にぶんたんさくぎ@二分探索木!ぶぶんてきなさいこうちく@部分的な再構築}%
-部分的な再構築とは部分木を一度分解し、完全二分木\footnote{訳注：10章で現れるが、完全二分木とは任意の葉の高さの差が高々1である木のことである。}として再構築するプロセスである。
+部分的な再構築とは部分木を一度分解し、非常にバランスのよい二分木として再構築するプロセスである。
+ここで、非常にバランスのよい二分木とは、サイズでバランスされている（問6.6）完全二分木のことである。また、完全二分木（10章）とは任意の葉の高さの差が高々1である木のことである。
 % YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木は全てのノードについてバランスされている木である、と定義して使うか？
-%% spinute: perfectly balanced は、size balanced ではなく、complete のことではなかろうか（以下で紹介している構成方法だと、size-balanced かつ complete な木になる）
-ノード#u#を根とする部分木を完全二分木に再構築するやり方はたくさんある。
-もっとも単純なやり方のひとつは#u#の部分木を辿りすべてのノードを配列#a#に集め、#a#から再帰的に完全二分木を構築するやり方だ。
+%% spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
+ノード#u#を根とする部分木を非常にバランスのよい二分木に再構築するやり方はたくさんある。
+もっとも単純なやり方のひとつは#u#の部分木を辿りすべてのノードを配列#a#に集め、#a#から再帰的に非常にバランスのよい二分木を構築するやり方だ。
 % m = floor(a.length/2)?
 %% spinute: そうだと思います。整数の除算が整数になる言語のつもりなのでは
 $#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そして$#a#[0],\ldots,#a#[#m#-1]$は左の部分木に、$#a#[#m#+1],\ldots,#a#[#a.length#-1]$は右の部分木にそれぞれ再帰的に配置する。
@@ -71,8 +72,8 @@ $#depth(u)# > \log_{3/2} #q#$になっていることもあり、この場合に
 #w.child#は#w#の子であって、根から#u#に至る経路上にあるものである。
 scapegoatが存在することを示すのは難しくない。
 今はこれを事実として認めることにする。
-scapegoatである#w#が見つかれば、#w#を根とする部分木を完全二分木に再構築すればよい。
-\myeqref{scapegoat}より、#u#を加える前には#w#の部分木は完全二分木ではない。
+scapegoatである#w#が見つかれば、#w#を根とする部分木を非常にバランスのよい二分木に再構築すればよい。
+\myeqref{scapegoat}より、#u#を加える前には#w#の部分木は非常にバランスのよい二分木ではない。
 よって、再構築後の木の高さは1以上減り、#ScapegoatTree#の高さは再び$\log_{3/2}#q#$以上になる。
 
 \codeimport{ods/ScapegoatTree.add(x)}
@@ -93,14 +94,14 @@ scapegoatを見つけ、部分木を再構築するコストは、次小節で�
 #x#を探し、#BinarySearchTree#におけるアルゴリズムを使ってそれを削除する。
 （これは木の高さを増やすことはない。）
 そして#n#をひとつ小さくし、#q#はそのままにしておく。
-最後に$#q# > 2#n#$かどうかを確認し、もしそうなら\emph{木全体を再構築}し、完全二分木にして、$#q#=#n#$とする。
+最後に$#q# > 2#n#$かどうかを確認し、もしそうなら\emph{木全体を再構築}し、非常にバランスのよい二分木にして、$#q#=#n#$とする。
 \codeimport{ods/ScapegoatTree.remove(x)}
 ここでも、再構築のコストを無視すれば、#remove(x)#の実行時間は木の高さに比例し、$O(\log #n#)$である。
 
 \subsection{正しさの証明と実行時間の解析}
 
 ここでは#ScapegoatTree#の各操作の正しさと償却実行時間の解析とを行う。
-まずは正しさを示すために、#add(x)#操作において\myeqref{scapegoat-height}が成り立たなくなったなら常にscapegoatを見つけられることを示す。
+まずは正しさを示すために、#add(x)#操作において\myeqref{scapegoat-height}が成り立たないならscapegoatが見つかることを示す。
 
 \begin{lem}
   #u#を#ScapegoatTree#における深さ$d>\log_{3/2} #q#$のあるノードとする。 % YJ: ここは高さではなく深さなので、hではなくdを使うべきでは？コードはdを使っている。
@@ -124,7 +125,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般に次の式が成り立
 \[
 #size(u#_i#)#\le\left(\frac{2}{3}\right)^i#n#
 \]
-ここで$#size(u)#\ge 1$より次の式が成り立つことを示す。
+ここで$#size(u)#\ge 1$より、
 \[
     1 \le #size(u)# \le \left(\frac{2}{3}\right)^d#n#
    < \left(\frac{2}{3}\right)^{\log_{3/2} #q#}#n#
@@ -132,7 +133,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般に次の式が成り立
    = \left(\frac{1}{#n#}\right) #n#
    = 1  \qedhere
 \]
-しかしこれは成り立たず、矛盾が導かれた。
+こうして矛盾が導かれた。
 \end{proof}
 
 続いてまだ説明していない部分の実行時間の解析を行う。
@@ -143,11 +144,12 @@ scapegoatノードを探す際の#size(u)#・#rebuild(w)#のコストを改正�
 \end{lem}
 
 \begin{proof}
-scapegoatノード#w#を見つけたあと、そこから再構築を行うコストは$O(#size(w)#)$である。 % コスト?
+scapegoatノード#w#を見つけた後、#w#を根とする部分木の再構築を行う際の実行時間は$O(#size(w)#)$である。
 scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで$#u#_0,\ldots,#u#_k$に順に実行する。
 しかし、 $#u#_k$はこの列における最初のscapegoatノードなので、任意の$i\in\{0,\ldots,k-2\}$について次の式が成り立つ。
 \[
-  #size(u#_{i}#)# < \frac{2}{3}#size(u#_{i+1}#)#
+  % XXX ここ、原著 < になっているけど、(8.2) の逆なので \le ではないでしょうか
+  #size(u#_{i}#)# \le \frac{2}{3}#size(u#_{i+1}#)#
 \]
 よって、すべての#size(u)#呼び出しのコストの合計は次のようになる。
 \begin{eqnarray*}
@@ -166,7 +168,7 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
   \right)\right) \\
 &=& O(#size(u#_k#)#) = O(#size(w)#)
 \end{eqnarray*}
-最後の行は減少幾何数列の和を計算している。
+最後の行は等比数列の和を計算している。
 \end{proof}
 
 最後に、$m$個の操作を順に実行する時の#rebuild(u)#の合計コストの上界を示す。
@@ -176,18 +178,19 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
 \end{lem}
 
 \begin{proof}
-XXX: credit schemeの訳語は? accounting method（AlgoIntroでは出納法）のことだろうか?
-% TODO: YJ accounting methodのことっぽい。検索してみるとおしゃれにcreditという言い方をするものがいくつか出てきた。 https://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf
+% XXX: credit schemeの訳語は? accounting method（AlgoIntroでは出納法）のことだろうか?
+% YJ accounting methodのことっぽい。検索してみるとおしゃれにcreditという言い方をするものがいくつか出てきた。 https://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf
 % 出納法に訳します。
 % eindexもcredit schemeよりもaccounting methodの方がよいような気がする
 
-\emph{出納法 (credit scheme)}を使って示す。
+\emph{出納法（credit scheme）}を使って示す。
 \ejindex{credit scheme}{すいとうほう@出納法}%
+\ejindex{accounting scheme}{すいとうほう@出納法}%
 各ノードは預金を持っていると考える。
 預金が$c$だけあれば再構築のための支払いができる。
 預金の合計は$O(m\log m)$で、#rebuild(u)#は#u#に蓄えられている預金を使って支払われる。
 
-挿入・削除の際に挿入・削除されるノード#u#への経路上にある各ノードの預金を1だけ増やす。
+ノード#u#を挿入・削除の際に、根から#u#への経路上にある各ノードの預金を1だけ増やす。
 こうして一回の操作で増える預金の合計は最大$\log_{3/2}#q#\le \log_{3/2}m$である。
 削除の際には多めに預金を蓄えることになる。
 こうして最大$O(m\log m)$だけの預金を行う。
@@ -198,33 +201,31 @@ XXX: credit schemeの訳語は? accounting method（AlgoIntroでは出納法）�
 \[
 \frac{#size(u.left)#}{#size(u)#} > \frac{2}{3}
 \]
-次の事実を仮定すると、
-  \[
-    #size(u)# = 1 + #size(u.left)# + #size(u.right)#
-  \]
-  次の式が成り立つ。
-  \[
-    \frac{1}{2}#size(u.left)# > #size(u.right)#
-  \]
+次の事実を仮定使うと、
+\[
+  #size(u)# = 1 + #size(u.left)# + #size(u.right)#
+\]
+次の式が成り立つ。
+\[
+  \frac{1}{2}#size(u.left)# > #size(u.right)#
+\]
 このとき、さらに次の式が成り立つ。
-  \[
-    #size(u.left)# - #size(u.right)# > \frac{1}{2}#size(u.left)# >
-    \frac{1}{3}#size(u)#
-  \]
+\[
+  #size(u.left)# - #size(u.right)# > \frac{1}{2}#size(u.left)# >
+  \frac{1}{3}#size(u)#
+\]
 #u#を含む部分木が直前に再構築されたとき（もし、#u#を含む部分木が一度も再構築されていなければ、#u#が挿入されたとき）、次の式が成り立つ。
-  \[
-    #size(u.left)# - #size(u.right)# \le 1
-  \]
+\[
+  #size(u.left)# - #size(u.right)# \le 1
+\]
 よって、#u.left#・#u.right#に影響を与えた#add(x)#・#remove(x)#の数の合計は次の値以上である。
-  \[
-    \frac{1}{3}#size(u)# - 1
-  \]
+\[
+  \frac{1}{3}#size(u)# - 1
+\]
 #u#には少なくともこれだけの預金が蓄えられており、#rebuild(u)#に必要な$O(#size(u)#)$だけの支払いには十分である。
 
 削除において#rebuild(u)#が呼ばれるとき、$#q# > 2#n#$である。
 この場合、$#q#-#n#> #n#$だけ余分に預金が蓄えられており、根の再構築に必要な$O(#n#)$だけの支払いには十分である。
-
-以上で示された。
 \end{proof}
 
 \subsection{要約}
@@ -300,7 +301,7 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
 
 \begin{exc}
   この章の最初に説明した#rebuild(u)#を、再構築する部分木に含まれるノードを蓄える配列を使わずに再実装せよ。
-  代わりに、まずは再帰を使ってこれらのノードを連結リストにし、この連結リストを完全二分木に変換せよ。
+  代わりに、まずは再帰を使ってこれらのノードを連結リストにし、この連結リストを非常にバランスのよい二分木に変換せよ。
   （いずれのステップにも華麗な再帰による実装がある。）
 \end{exc}
 
@@ -317,7 +318,7 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
   #CountdownTree#を設計・実装せよ。
   このデータ構造では各ノード#u#は\emph{タイマー} #u.t#を持っている。
   #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、いずれかの操作が#u#の部分木に影響を与えるとき、#u.t#をひとつ小さくする点で異なる。
-  $#u.t#=0$のとき、#u#を根とする部分木は完全二分木に再構築される。
+  $#u.t#=0$のとき、#u#を根とする部分木は非常にバランスのよい二分木に再構築される。
   ノード#u#が再構築に関わるとき（#u#が再構築されるか、#u#の祖先のうちのひとつが再構築されるとき）#u.t#は$#size(u)#/3$にリセットされる。
 
   そして、#CountdownTree#の償却実行時間は$O(\log#n#)$であることを示せ。
@@ -330,7 +331,7 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
   このデータ構造ではすべてのノード#u#は#u#を根とする部分着の大きさを#u.size#として保持する。
   #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、
   いずれかの操作が#u#の部分木に影響を与えるとき、#u#は確率$1/#u.size#$で\emph{爆発}する。
-  #u#が爆発すると、#u#を根とする部分木は完全二分木に再構築される。
+  #u#が爆発すると、#u#を根とする部分木は非常にバランスのよい二分木に再構築される。
 
   そして、#DynamiteTree#の償却実行時間は$O(\log#n#)$であることを示せ。
 \end{exc}
