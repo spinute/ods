@@ -246,25 +246,26 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
 と呼ばれていた。
 これはこのデータ構造は高さが小さいならどのような形状も取れることによる。
 
-#ScapegoatTree#の実装で実験してみると、この本で紹介した他の#SSet#の実装と比べてかなり遅いことがわかる。
+#ScapegoatTree#を実装し、実験してみると、この本で紹介した他の#SSet#の実装と比べてかなり遅いことがわかる。
 高さの上界は
 \[
    \log_{3/2}#q# \approx 1.709\log #n# + O(1)
 \]
-であり、これは#Skiplist#の探索経路の長さの期待値よりも良く、#Treap#とも遠くないため、この結果は意外かもしれない。
-最適化として、部分木のサイズを各ノードが保持したり、既に計算した部分木のサイズを再利用したりできる。
+である。
+これは#Skiplist#の探索経路の長さの期待値よりも小さく、#Treap#ともほぼ同じなので、#ScapegoatTree#が遅いのは意外かもしれない。
+#ScapegoatTree#の最適化として、各ノードに部分木の大きさを保持したり、既に計算した部分木のサイズを再利用したりできる。
 （\ref{exc:scapegoat-quicksize}と\ref{exc:scapegoat-explicitsize}を参照せよ。）
-これらの最適化をしても依然として#add(x)#・#delete(x)#からなる操作の列を#ScapegoatTree#で実行したとき、他の#SSet#の実装より遅いことがあるだろう。
+これらの最適化をしても、依然として#add(x)#や#delete(x)#を繰り返し実行すると、#ScapegoatTree#は他の#SSet#の実装より遅いことがあるだろう。
 
-この本で扱った他の#SSet#の実装と異なり#ScapegoatTree#は再構築自体に多くの時間を消費するため、このような性能差が現れる。
-この本で紹介した他の#SSet#の実装では、#n#個の操作の間に$O(#n#)$程度のデータ構造の変形をすればよかった。
-一方、\excref{scapegoat-nlogn}から#n#個の操作の列を#ScapegoatTree#に実行するとき、$#n#\log #n#$のオーダーの時間を#rebuild(u)#に費やすことがわかる。
-これは再構築をすべて#rebuild(u)#で行っていることの帰結である。 \cite{d90}.
+この本で紹介した他の#SSet#の実装と比べて、#ScapegoatTree#は再構築にかかる時間が長いため、性能が芳しくないのである。
+この本で紹介した他の#SSet#の実装では、#n#個の操作の間にデータ構造の再構築に費やす時間は$O(#n#)$であった。
+一方、\excref{scapegoat-nlogn}より、#ScapegoatTree#では#n#個の操作を実行する間に$#n#\log #n#$のオーダーの時間を#rebuild(u)#に費やす。
+これはデータ構造の再構築をすべて#rebuild(u)#で行っていることに起因する。 \cite{d90}.
 
-性能は劣るものの、#ScapegoatTree#を使うのが正しい選択となる場合がある。
-これは、各ノードに追加のデータがあり、それを回転操作においては定数時間で更新できないが、#rebuild(u)#操作の際に更新できる場合である。
-この場合#ScapegoatTree#や部分的な再構築を行う他のデータ構造が有効である。
-このような応用の例を\excref{list-order-maintenance}で取り上げている。
+性能は劣るものの、#ScapegoatTree#が正しい選択となることもある。
+これは、各ノードに追加のデータを入れる場合で、特に、回転操作ではそれを定数時間では更新できないが、#rebuild(u)#では定数時間で更新できる場合である。
+この場合#ScapegoatTree#（や部分的な再構築を行う他のデータ構造）を選ぶのがよい。
+このような応用の例を\excref{list-order-maintenance}では取り上げている。
 
 \begin{exc}
   \figref{scapegoat-example}の#ScapegoatTree#に1.5、1.6を順に追加する様子を描け。
@@ -302,7 +303,7 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
 \begin{exc}
   この章の最初に説明した#rebuild(u)#を、再構築する部分木に含まれるノードを蓄える配列を使わずに再実装せよ。
   代わりに、まずは再帰を使ってこれらのノードを連結リストにし、この連結リストを非常にバランスのよい二分木に変換せよ。
-  （いずれのステップにも華麗な再帰による実装がある。）
+  （いずれのステップにも華麗な再帰を使った実装がある。）
 \end{exc}
 
 \begin{exc}
@@ -333,7 +334,7 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
   いずれかの操作が#u#の部分木に影響を与えるとき、#u#は確率$1/#u.size#$で\emph{爆発}する。
   #u#が爆発すると、#u#を根とする部分木は非常にバランスのよい二分木に再構築される。
 
-  そして、#DynamiteTree#の償却実行時間は$O(\log#n#)$であることを示せ。
+  そして、#DynamiteTree#の実行時間の期待値は$O(\log#n#)$であることを示せ。
 \end{exc}
 
 \begin{exc}\exclabel{list-order-maintenance}
