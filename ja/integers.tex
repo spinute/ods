@@ -27,10 +27,10 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
 \seclabel{binarytrie}
 
 \ejindex{BinaryTrie@#BinaryTrie#}{にぶんとらい@二分トライ}%
-#BinaryTrie#は#w#ビットの整数の集合を二分木で符号化したものである。 % YJ encode=符号化、翻訳、エンコード
-この木の任意の葉の深さは#w#であって、各整数は根から葉への経路として符号化される。
-整数#x#への経路は深さ#i#において、もし上から#i#番目のビットが0なら左、1なら右に向かう。
-\figref{binarytrie-ex}は$#w#=4$の場合の例を示しており、ここでは整数3(0011), 9(1001), 12(1100), 13(1101)がトライに格納されている。 % YJ trie=トライ
+#BinaryTrie#は#w#ビット整数の集合を二分木で符号化したものである。 % YJ encode=符号化、翻訳、エンコード
+この木では、葉の深さはいずれも#w#で、根から葉への経路がある整数を表している。
+整数#x#への経路は、深さ#i#において、上から#i#番目のビットが0なら左、1なら右に向かう。
+\figref{binarytrie-ex}は$#w#=4$の場合の例を示しており、ここでは整数3(0011), 9(1001), 12(1100), 13(1101)が二分トライに格納されている。 % YJ trie=トライ
 \begin{figure}
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-1}
@@ -39,38 +39,40 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
   \figlabel{binarytrie-ex}
 \end{figure}
 
-#x#の探索経路は#x#の二進表現によって決まるので、ノード#u#の子を#u.child[0]# (#left#)・#u.child[1]# (#right#)と呼ぶことにすると便利である。
-この子を指すポインタは二重の用途で使われる。
-二分トライの葉は子を持たないので、ここではポインタを使って葉の双方向連結リストを作る。
-二分トライの葉では、#u.child[0]# (#prev#)はリストにおける#u#の直前のノードを、#u.child[1]# (#next#)はリストにおける#u#の直後のノードを指す。
-特別なノード#dummy#は先頭のノードの前のノード、および末尾のノードの後のノードを表現するために使われる。
+#x#の探索経路は#x#の二進数表記から決まるので、ノード#u#の子を指すポインタを#u.child[0]# (#left#)・#u.child[1]# (#right#)と書くと便利である。
+葉ではこのポインタを別の用途に使う。
+葉には子がいないので、このポインタを使って葉の双方向連結リストを作る。
+すなわち、二分トライの葉では、#u.child[0]# (#prev#)はリストにおける#u#の直前のノードを指し、#u.child[1]# (#next#)はリストにおける#u#の直後のノードを指す。
+特別なノード#dummy#は先頭のノードの前のノード、および末尾のノードの後のノードである。
 （\secref{dllist}を参照せよ。）
-\cpponly{サンプルコードでは、#u.child[0]#, #u.left#, #u.prev# はノード#u#の同じフィールドを参照している。#u.child[1]#, #u.right#, #u.next#についても同様である。}
+\cpponly{サンプルコードでは、#u.child[0]#、#u.left#、#u.prev# はいずれもノード#u#の同じフィールドを参照している。#u.child[1]#、#u.right#、#u.next#も同様である。}
 
-各ノード#u#は#u.jump#というポインタも持つ。
-#u#が左の子を持たないとき、#u.jump#は#u#の部分木における最小の葉を指す。
-#u#が右の子を持たないとき、#u.jump#は#u#の部分木における最大の葉を指す。
-#BinaryTrie#の#jump#ポインタと葉の双方向連結リストとを描いた例を、\figref{binarytrie-ex2}に示す。
+各ノード#u#はポインタ#u.jump#も保持している。
+#u#が左の子を持たないとき、#u.jump#は#u#を根とする部分木における最小の葉を指す。
+#u#が右の子を持たないとき、#u.jump#は#u#を根とする部分木における最大の葉を指す。
+#BinaryTrie#の#jump#ポインタと葉の双方向連結リストとを描いた例が\figref{binarytrie-ex2}である。
 
 \begin{figure}
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/binarytrie-ex-2}
   \end{center}
-  \caption{二分トライにおける#jump#ポインタを破線で表す。}
+  \caption{二分トライにおける#jump#ポインタを破線の矢印で、リストのリンクを実線の矢印で表す。}
   \figlabel{binarytrie-ex2}
 \end{figure}
 
-
+% XXX: コメントアウトしてあるのはなぜか？
 %\jxavaimport{ods/BinaryTrie.Node<Node}
 %\cxppimport{ods/BinaryTrie.BinaryTrieNode<Node}
 
-#BinaryTrie#における#find(x)#操作は簡単である。
+#BinaryTrie#における#find(x)#は簡単だ。
 #x#の探索経路を辿ればよい。
-葉にたどり着いたなら、#x#が存在することが分かる。
-（進みたい方向の子を持っていないため）それ以上進めないノード#u#に辿り着いたときは、#u.jump#を辿る。
+葉に辿り着いたら、#x#が存在することがわかる。
+（進みたい方向の子がいないため）それ以上進めないノード#u#に辿り着いたときは、#u.jump#を辿る。
 そうすると、#x#より大きい最小の葉、または#x#より小さい最大の葉が見つかる。
-どちらになるかは#u#が左右どちらの子を持たないのかに応じて決まる。
+このどちらになるかは、#u#が左右どちらの子がいないのかに応じて決まる。
 #u#が左の子を持たないなら、欲しいノードを見つけたことになる。 % YJ 訳注でfind(x)がx以下の最もxに近い要素を返す関数であることを再確認する？
+%% spinute: 訳注を入れました
+\footnote{訳注：1章で定義したように、#SSet#の#find(x)#は#x#以上の最小の要素を見つける操作である。}
 #u#が右の子を持たないなら、連結リストを辿れば欲しいノードが見つかる。
 \figref{binarytrie-find}にはこのふたつの場合を描いた。
 \codeimport{ods/BinaryTrie.find(x)}
@@ -83,13 +85,13 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
 \end{figure}
 #find(x)#の実行時間において支配的なのは、根から葉への経路を辿る処理であり、この時間は$O(#w#)$である。
 
-#BinaryTrie#における#add(x)#も単純だが、やらなければならない処理はたくさんある。
+#BinaryTrie#における#add(x)#も単純だが、その手順は長い。
 \begin{enumerate}
-  \item #x#の探索経路を辿り、それ以上進めないノード#u#を得る。
-  \item #u#から#x#を含む葉への、探索経路の足りない部分を作る。
+  \item #x#の探索経路を辿り、それ以上進めないノード#u#を見つける。
+  \item #u#から#x#を含む葉への、探索経路に足りない部分を作る。
   \item #x#を含むノード#u'#を葉の連結リストに追加する。
-  （最初のステップで得た#u#の#jump#ポインタを利用して、連結リストにおける#u'#の直前のノード#pred#を得られる。）
-  \item これまで来た経路を逆に辿り、#x#を指す必要のある#jump#ポインタを調整する。
+  （#u#の#jump#ポインタを使って、連結リストにおける#u'#の直前のノード#pred#を得られる。）
+  \item これまで来た経路を戻りながら、#x#を指すべき#jump#ポインタを更新する。
 \end{enumerate}
 \figref{binarytrie-add}に要素を追加する様子を示した。
 \begin{figure}
@@ -105,7 +107,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
 
 
 #remove(x)#は#add(x)#のすることを取り消す。
-#add(x)#と同様にやらなければならないことがたくさんある。
+#add(x)#と同様に手順は長い。
 \begin{enumerate}
   \item #x#の探索経路を辿り、#x#を含む葉#u#を見つける。
   \item #u#を双方向連結リストから削除する。
@@ -123,12 +125,12 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
 \codeimport{ods/BinaryTrie.remove(x)}
 
 \begin{thm}
-#BinaryTrie#は#w#ビット整数のための#SSet#インターフェースの実装である。
-#BinaryTrie#は#add(x)#・#remove(x)#・#find(x)#をいずれも$O(#w#)$の時間で実行できる。
+#BinaryTrie#は#w#ビット整数を格納するための#SSet#インターフェースの実装である。
+#BinaryTrie#における#add(x)#・#remove(x)#・#find(x)#の実行時間はいずれも$O(#w#)$である。
 #n#個の要素を格納する#BinaryTrie#の領域使用量は$O(#n#\cdot#w#)$である。
 \end{thm}
 
-XXX: doubly-logarithmicはlog(log(x))のことだろうか（なんと訳そう） % YJ: 訳はなさそうなのでexplicitにLog-Log時間とか？ % Polylogarithm (多重対数関数)と被る名称は良くない
+% XXX: doubly-logarithmicはlog(log(x))のことだろうか（なんと訳そう） % YJ: 訳はなさそうなのでexplicitにLog-Log時間とか？ % Polylogarithm (多重対数関数)と被る名称は良くない
 \section{#XFastTrie#：$log(log n)$時間で検索を行う}
 \seclabel{xfast}
 
