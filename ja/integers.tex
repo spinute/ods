@@ -378,11 +378,11 @@ Treap #t#に含まれる#x#以上の要素を$#x#_i,#x#_{i+1},\ldots,#x#_{i+j-1}
 #XFastTrie#におけるハッシュテーブルはvan~Emde~Boas木の配列を置き換えたものである。
 つまり、ハッシュテーブル#t[i]#に要素を格納する代わりに、van~Emde~Boasでは長さ$2^{#i#}$の配列に要素を格納する。
 
-他の整数を格納するためのデータ構造としては、FredmanとWillardのfusion treeがある。\cite{fw93}
+整数を格納するための他のデータ構造としては、FredmanとWillardのfusion treeがある。\cite{fw93}
 \ejindex{fusion tree}{fusionぎ@fusion木}%
 このデータ構造は#n#個の#w#ビット整数を$O(#n#)$の領域に格納でき、#find(x)#を$O((\log #n#)/(\log #w#))$の時間で実行できる。
 $\log #w# > \sqrt{\log #n#}$ならばfusion treeを、$\log #w# \le \sqrt{\log #n#}$なら#YFastTrie#を使えば、領域使用量$O(#n#)$であり、#find(x)#にかかる時間は$O(\sqrt{\log #n#})$であるデータ構造が得られる。
-近年のP\v{a}tra\c{s}cu and Thorup \cite{pt07}が示した下界によると、$O(#n#)$だけの領域を使うデータ構造としてはすくなくともほぼ最適である。
+近年のP\v{a}tra\c{s}cu and Thorup \cite{pt07}が示した下界によると、$O(#n#)$だけの領域を使うデータ構造としては最適である。
 
 \begin{exc}
 単純化された#BinaryTrie#を設計・実装せよ。
@@ -392,7 +392,7 @@ $\log #w# > \sqrt{\log #n#}$ならばfusion treeを、$\log #w# \le \sqrt{\log #
 \begin{exc}
 単純化された#XFastTrie#を設計・実装せよ。
 これは二分トライを使わない。
-代わりに、この実装ではすべてを双方向連結リストと、$#w#+1$個のハッシュテーブルとに格納する。
+代わりに、この実装ではすべてを双方向連結リストと、$#w#+1$個のハッシュテーブルを使って格納する。
 \end{exc}
 
 \begin{exc}
