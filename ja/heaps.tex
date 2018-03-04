@@ -1,7 +1,7 @@
 \chapter{ヒープ}
 \chaplabel{heaps}
 この章では優先度付きキューの実装を2つ説明する。
-いずれも特殊な二分木であり、\emph{ヒープ}（雑多に積まれた山）と呼ばれている。
+いずれも特殊な二分木であり、\emph{ヒープ (heap)}（雑多に積まれた山）と呼ばれている。
 \ejindex{heap}{ひーぷ@ヒープ}%
 \ejindex{binary heap}{にぶんひーぷ@二分ヒープ}%
 \ejindex{heap!binary}{ひーぷ@ヒープ!にぶん@二分}%
@@ -39,7 +39,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
 \codeimport{ods/BinaryHeap.left(i).right(i).parent(i)}
 
 #BinaryHeap#はこの手法を使って完全二分木を非明示的に表現する。
-特に、この木の中では要素は\emph{ヒープ順}に並んでいる。
+特に、この木の中では要素は\emph{ヒープ順 (heap order)}に並んでいる。
 \ejindex{heap-ordered binary tree}{ひーぷじゅんにぶんぎ@ヒープ順二分木}%
 \ejindex{binary tree!heap-ordered}{にぶんぎ@二分木!ひーぷじゅん@ヒープ順}%
 \ejindex{heap order}{ひーぷじゅん@ヒープ順}%
@@ -95,7 +95,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
 他の配列ベースのデータ構造と同様に、#resize()#のための時間を無視する。
 この実行時間は\lemref{arraystack-amortized}の償却解析によってわかる。
 すると、#add(x)#・#remove()#の実行時間は（非明示の）二分木の高さに依存する。
-嬉しいことに、これは\emph{完全}二分木である。
+嬉しいことに、これは\emph{完全}二分木 (complete binary tree)である。
 \ejindex{binary tree!complete}{にぶんぎ@二分木!かんぜん@完全}%
 \ejindex{complete binary tree}{かんぜんにぶんぎ@完全二分木}%
 最大の深さを除く各深さには、可能な最大数のノードがある。 % levelの良い訳語はあるか？

@@ -4,7 +4,7 @@
 \index{binary search tree!red-black}%
 % XXX: あかくろぎ？あかぐろき？あかぐろぎ？ Wikipediaではあかくろぎだし、自分もそうだと思っています spinute % 標準語の語感だとあかくろぎでは。 YJ
 \ejindex{red-black tree}{あかくろぎ@赤黒木}%
-この章では赤黒木という、要素数に対して木の高さを対数程度に抑える二分木を紹介する。
+この章では赤黒木 (red-black tree)という、要素数に対して木の高さを対数程度に抑える二分木を紹介する。
 赤黒木は最も広く使われるデータ構造のひとつである。
 例えば、多くのライブラリの実装における基本的なデータ構造であり、JavaのコレクションフレームワークやC++の標準テンプレートライブラリ（のいくつかの実装）に使われている。
 また、LinuxというOSのカーネルでも使われている。
@@ -250,7 +250,7 @@ XXX: left-learning に定訳はあるか? % YJ: 政治の文脈では左傾と�
 異なる構造では、異なるやり方でこれを実現する。
 この節では#RedBlackTree#と呼ぶデータ構造を実装する。
 \index{RedBlackTree@#RedBlackTree#}%
-これは赤黒木の一種であって、ある追加の性質を満たすものである。
+これは赤黒木の一種であって、次の左傾性 (left-leaning) を満たすものである。
 \begin{prp}[左傾性]\prplabel{left-leaning}\prplabel{redblack-last}
   \ejindex{left-leaning property}{left-learning せい@left-learning 性}%
   任意のノード#u#について、#u.left#が黒ならば#u.right#も黒である。
