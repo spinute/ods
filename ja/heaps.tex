@@ -123,7 +123,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
 
 \section{#MeldableHeap#：ランダムなMeldableヒープ}
 \seclabel{meldableheap}
-XXX: melbadleは定訳がある? % YJ: Introduction to Algorithmsにあるので日本語版を確認すればあるはず
+% XXX: meldableは定訳がある? % YJ: Introduction to Algorithmsにあるので日本語版を確認すればあるはず
 
 \index{MeldableHeap@#MeldableHeap#}%
 この節では、#MeldableHeap#を紹介する。
@@ -131,16 +131,16 @@ XXX: melbadleは定訳がある? % YJ: Introduction to Algorithmsにあるので
 しかし、#BinaryHeap#のようには要素数から二分木の形が一意には決まらず、#MeldableHeap#における背後にある二分木の形状には制約がない。
 
 #MeldableHeap#における#add(x)#・#remove()#は#merge(h1,h2)#を使って実装される。
-この操作はヒープのノード#h1#と#h2#を引数にとり、それぞれを根とするふたつの部分木内のすべてのノードを含むヒープの根を返す。
+この操作は、ヒープのノード#h1#と#h2#を引数とし、#h1#、#h2#を根とする部分木のすべてのノードを含むヒープの根を返す。
 
-嬉しいことに#merge(h1,h2)#は再帰的に定義できる。
+#merge(h1,h2)#は再帰的に定義できる。
 \figref{meldable-merge}を参照せよ。
 #h1#または#h2#が#nil#なら、単に#h2#, #h1#をそれぞれ返せばよい。
 そうでないとき、$#h1.x# \le #h2.x#$として一般性を失わない。
-このとき新たなヒープの根は#h1.x#を含む。
-#h2#は再帰的に#h1.left#か#h1.right#の望む方と併合してよい。
+このとき新たなヒープの根の値は#h1.x#である。
+続いて、#h2#を#h1.left#か#h1.right#のどちらかと再帰的に併合する。
 ここでランダム性の出番だ。
-コインを投げ、#h#を#h1.left#と#h1.right#のどちらと併合するかを決める。
+コインを投げ、#h2#を#h1.left#と#h1.right#のどちらと併合するかを決める。
 \codeimport{ods/MeldableHeap.merge(h1,h2)}
 
 \begin{figure}
@@ -162,11 +162,11 @@ XXX: melbadleは定訳がある? % YJ: Introduction to Algorithmsにあるので
 \codeimport{ods/MeldableHeap.remove()}
 このときも実行時間の期待値は$O(\log #n#)$である。
 
-さらに#MeldableHeap#は他の色々な操作も$O(\log #n#)$の期待実行時間で実装できる。
-例えば次のものがある。
+実行時間の期待値が$O(\log #n#)$である#MeldableHeap#の操作は他にもいくつかある。
+例えば次のものである。
 \begin{itemize}
 \item #remove(u)#：ヒープからノード#u#を削除する
-\item #absorb(h)#：このヒープに#h#の要素をすべて追加し、#h#を空にする % TODO: YJ これはmeld(h)?
+\item #absorb(h)#：このヒープに#h#の要素をすべて追加し、#h#を空にする % TODO: YJ これはmeld(h)? -- spinute: 章冒頭の記述にあった meld(h) のことなら、meld は absorb ではなく merge の書き間違いで、absorb とは関係ないのでははないでしょうか。僕はこのままであっているのではないかと思っています
 \end{itemize}
 いずれの操作も定数回だけの#merge(h1,h2)#を使って実装できる。
 
@@ -174,11 +174,11 @@ XXX: melbadleは定訳がある? % YJ: Introduction to Algorithmsにあるので
 
 #merge(h1,h2)#の解析は二分木のランダムウォークに基づく。
 二分木の\emph{ランダムウォーク}は根から始まる。
-各ステップではコインを投げ、その結果に応じて今のノードの右か左の子に進む。
-木からはみ出ると処理を終了する。（これは今のノードが#nil#になったときである。）
+各ステップではコインを投げ、その結果に応じて今のノードから右の子か左の子に進む。
+木からはみ出ると処理を終了する。（これは進んだ先が#nil#であったときである。）
 
 次の補題は注目に値する。
-これは二分木の形状に関わらず成り立つためである。
+この補題は二分木の形状に関わらず成り立つ。
 
 \begin{lem}\lemlabel{tree-random-walk}
 #n#個のノードからなる二分木におけるランダムウォークの長さの期待値は#\log (n+1)#以下である。
@@ -189,25 +189,21 @@ XXX: melbadleは定訳がある? % YJ: Introduction to Algorithmsにあるので
 $#n#=0$のとき、ステップ数は$0=\log (#n#+1)$である。
 以下では、任意の非負整数$#n#'< #n#$について、示したい補題が成り立つと仮定する。
 
-$#n#_1$を根の左の部分木の大きさとし、$#n#_2=#n#-#n#_1-1$を根の右の部分木の大きさとする。
+$#n#_1$を左の部分木の大きさとする。
+このとき、$#n#_2=#n#-#n#_1-1$が右の部分木の大きさである。
 根からはじめて、一歩進み、大きさ$#n#_1$または$#n#_2$の部分木について処理を続ける。
 仮定より、ステップ数の期待値は次のようになる。
+% XXX: 原著では等号になっているが、仮定は不等号ではないか
 \[
-    \E[W] = 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1)
+    \E[W] \le 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1)
 \]
 これは$#n#_1$と$#n#_2$はいずれも$#n#$より小さいためである。
 $\log$は凹関数（上に凸な関数）なので、$\E[W]$は$#n#_1=#n#_2=(#n#-1)/2$で最大値を取る。
-%To maximize this,
-%over all choices of $#n#_1\in[0,#n#-1]$, we take the derivative and obtain
-%\[
-%    (\E[W])' = \frac{1}{2}(c/#n#_1 - c/(#n#-#n#_1-1)) \enspace , 
-%\]
-%which is equal to 0 when $#n#_1 = (#n#-1)/2$.  We can establish that
-%this is a maximum fairly easily, so
 よって、ランダムウォークのステップ数の期待値は次のようになる。
 \begin{align*}
     \E[W]
-    & = 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1) \\
+% XXX: ここも上と同様（原著では等号になっている）
+   & \le 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1) \\
    & \le  1 + \log ((#n#-1)/2+1) \\
    & =  1 + \log ((#n#+1)/2) \\
    & =  \log (#n#+1)  \enspace \qedhere
