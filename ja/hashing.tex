@@ -686,7 +686,7 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 
 ハッシュテーブルには他にも様々な実装がある。
 
-\secref{hashtable}で説明したものはチェイン法\emph{hashing with chaining}である。\ejindex{hashing with chaining}{ちぇいんほうによるはっしゅほう@チェイン法によるハッシュ法}%
+\secref{hashtable}で説明したものは\emph{チェイン法によるハッシュ法}（hashing with chaining）である。\ejindex{hashing with chaining}{ちぇいんほうによるはっしゅほう@チェイン法によるハッシュ法}%
 （各配列のエントリは要素のチェイン（#List#）である。）
 チェイン法によるハッシュテーブルはIBMにてH. P. Luhnが1953年1月に出した内部報告書で提案された。この報告書は連結リストの最古の文献のうちの一つでもあると思われる。
 
@@ -703,7 +703,7 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 
 また別のハッシュテーブルの実装に関する話題としては、\emph{完全ハッシュ法 (perfect hashing)}と呼ばれるものがある。
 \ejindex{perfect hashing}{かんぜんはっしゅほう@完全ハッシュ法}%
-これは#find(x)#の実行時間が最悪の場合でも$O(1)$になるハッシュ法だ。
+これは#find(x)#の実行時間が最悪の場合でも$O(1)$であるハッシュ法だ。
 データセットが静的な場合にはこれはデータセットに対する\emph{完全ハッシュ関数 (perfect hash function)}を見つけることで実現できる。
 \ejindex{perfect hash function}{かんぜんはっしゅかんすう@完全ハッシュ関数}%
 \ejindex{hash function!perfect}{はっしゅかんすう@ハッシュ関数!かんぜん@完全}%
@@ -717,7 +717,7 @@ $#p#-1$を列の終わりを示すマーカーだと考える。
 \ejindex{hash table!cuckoo}{はっしゅてーぶる@ハッシュテーブル!かっこう@カッコウ}%
 
 この章で紹介したハッシュ関数は任意のデータセットに対してうまく動作することが証明できる既知の手法の中でおそらく最も実用的なものである。
-別のよい方法として、CarterとWegmanによる先駆け的な研究成果であった\emph{ユニバーサルハッシュ法 (universal hashing)}を使ったものがある。いくつかのことなるシナリオのためのハッシュ関数が提案されている。\cite{cw79}
+別のよい方法として、CarterとWegmanによる先駆け的な研究成果であった\emph{ユニバーサルハッシュ法 (universal hashing)}を使ったものがある。用途に応じた別々のハッシュ関数が提案されている。\cite{cw79}
 \ejindex{universal hashing}{ゆにばーさるはっしゅほう@ユニバーサルハッシュ法}%
 \ejindex{hashing!universal}{はっしゅほう@ハッシュ法!ユニバーサル}%
 \secref{tabulation}で説明したTabulation hashingは
@@ -729,7 +729,7 @@ CarterとWegmanの研究\cite{cw79}によるものだが、この手法を線形
 おそらくこれはハッシュ法の伝承といってもよいだろう。\cite[Section~6.4]{k97v3}
 しかし、\secref{multihash}で説明した乗数#z#をランダムな奇数から選ぶアイデアとその解析はDietzfelbingerらの研究成果である。\cite{dhkp97}
 この乗算ハッシュ法は最もシンプルなもののうちの一つだが、衝突確率が$2/2^{#d#}$、つまり$2^{#w#}$から$2^{#d#}$への全ての関数からランダムに選出した場合（理想的な場合）とくらべて衝突確率が二倍になってしまう。
-XXX: multiply-addの訳語 % YJ random generatorの文脈だとlinear congruential generatorが線形合同法と訳されるけどどうでしょ。あるいは乗算ハッシュと統一して、乗算合同ハッシュ法とか。　https://ja.wikipedia.org/wiki/%E7%B7%9A%E5%BD%A2%E5%90%88%E5%90%8C%E6%B3%95
+% XXX: multiply-addの訳語 % YJ random generatorの文脈だとlinear congruential generatorが線形合同法と訳されるけどどうでしょ。あるいは乗算ハッシュと統一して、乗算合同ハッシュ法とか。　https://ja.wikipedia.org/wiki/%E7%B7%9A%E5%BD%A2%E5%90%88%E5%90%8C%E6%B3%95
 \emph{multiply-add ハッシュ法}は次の関数を使う方法だ。
 \ejindex{hashing!multiply-add}{はっしゅほう@ハッシュ法!multiply-add}%
 \ejindex{multiply-add hashing}{multiply-addはっしゅほう@multiply-addハッシュ法}%
@@ -758,7 +758,7 @@ $1/2^{#w#}$である。
 
 
 \secref{polyhash}で説明した素数体を使った可変長配列のハッシュ法はDietzfelbinger \etal \cite{dgmp92}による。
-この方法は$\bmod$を使うが、これは時間のかかる機械語命令であり、結果この方法は速くない。
+この方法は$\bmod$を使うが、これは時間のかかる機械語命令であり、その結果この方法は速くはない。
 剰余の法として$2^{#w#}-1$を使う工夫がある。
 こうすると$\bmod$を加算とビット単位のand演算に置き換えられる。\cite[Section~3.6]{k97v2}
 他の方法としては固定長の高速なハッシュ法を使って長さ$c>1$のブロックに対してハッシュ値を計算し、その結果の$\lceil r/c\rceil$個のハッシュ値の配列に素数体を使った方法でハッシュ値を求めるものがある。
