@@ -249,7 +249,7 @@ $\ddiv$は割り算の商を求める演算子である。
   #grow()#のコストを無視すると、#ChainedHashTable#における#add(x)#・#remove(x)#・#find(x)#の期待実行時間は$O(1)$である
   \footnote{訳注：この実行時間は非常に優れている。これまで紹介したデータ構造には、追加、削除、検索のすべてを定数時間で行えるものはなかった。}。
 
-  さらに、空の#ChainedHashTable#に対して、$m$個の#add(x)#・#remove(x)#からなる任意の操作列を順に実行するとき、#grow()#の呼び出しに要する償却実行時間は$O(m)$である。 % TODO: YJ 原文ではtotal of O(m) timeと書いてあるがconsistencyのため償却実行時間のほうがよいのでは
+  さらに、空の#ChainedHashTable#に対して、$m$個の#add(x)#・#remove(x)#からなる任意の操作列を順に実行するとき、#grow()#の呼び出しに要する償却実行時間は$O(m)$である。 % TODO: YJ 原文ではtotal of O(m) timeと書いてあるがconsistencyのため償却実行時間のほうがよいのでは -- spinute: 賛成
 \end{thm}
 
 \section{#LinearHashTable#：線形探索法}
@@ -259,11 +259,12 @@ $\ddiv$は割り算の商を求める演算子である。
 #ChainedHashTable#はリストの配列を使うデータ構造であった。
 #i#番目のリストは$#hash(x)#=#i#$である#x#を全て格納していた。
 これに対して\emph{オープンアドレス法 (open addressing)}と呼ばれる方法は配列#t#に直接要素を収めるものである。
+\footnote{訳注：たとえば、Pythonの最も一般的な実装であるCPython 3.7では、オープンアドレス法でdictionaryが実装されている。}
 \ejindex{open addressing}{おーぷんあどれすほう@オープンアドレス法}%
 このやり方はこの節で説明する#LinearHashTable#が採用しているものだ
+% XXX: ここに書くと、Python が linear probing してるみたいに見えるけどそうではない気がする
+% \footnote{訳注：たとえば、Pythonの最も一般的な実装であるCPythonでは、オープンアドレス法でdictionaryが実装されている。}
 % XXX: 具体的な実装を言及するなら、バージョンを書いておかないと情報が腐る可能性がある。（例えば、RubyのMRIでは2.5からhashtableの実装ががっつり変わった）
-% XXX: ここに書くと、Python が linear hashing みたいに見えるけど、そうなのか？
-\footnote{訳注：たとえば、Pythonの最も一般的な実装であるCPythonでは、オープンアドレス法でdictionaryが実装されている。}
 。
 文献によっては\emph{線形探索法 (linear probing)によるオープンアドレス}と呼ばれることもある。
 \ejindex{linear probing}{せんけいたんさくほう@線形探索法}%
@@ -280,7 +281,7 @@ $\ddiv$は割り算の商を求める演算子である。
   \item #del#：データが入っていたがそれが削除されたことを示す。
 \end{enumerate}
 #LinearHashTable#の要素数を数えるカウンタ#n#%に加えて、上の一つ目と三つ目の個数の合計を数えるカウンタ#q#を用意する。
-に加えて、データ値の個数と#del#の個数の合計を数えるカウンタ#q#を用意する。
+に加えて、値の個数と#del#の個数の合計を数えるカウンタ#q#を用意する。
 #q#の値は#n#に#del#の個数を加えた値である。
 これが効率的であるためには#t#が#q#より十分大きい必要がある。このとき、#t#には#null#である場所がたくさんある。
 よって#LinearHashTable#の操作は不変条件$#t.length#\ge 2#q#$を常に満たすようにする。
@@ -312,11 +313,10 @@ $#i#=#hash(x)#$として、#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\
 そのため#t[i']=null#である添え字#i'#を見つけると、#x#は配列に入っていないことがわかる。
 #t[i']#はずっと#null#であったといえるので、先立って、すなわち#i'#よりも先の添字に#add(x)#が要素を追加していることはないのである。
 
-
-#null#でないエントリの数が$#t.length#/2$より大きいときに#add(x)#を呼ぶとき、またはデータの入っているエントリ数が#t.length/8#よりも小さいときに#remove(x)#を呼ぶと#resize()#が呼ばれる。
+#add(x)#により#null#でないエントリの数が$#t.length#/2$を上回るとき、または#remove(x)#によりデータの入っているエントリ数が#t.length/8#を下回るとき、resize()#が呼ばれる。
 #resize()#は他の配列を使ったデータ構造の場合と同様に働く。
 まず$2^{#d#} \ge 3#n#$を満たす最小の非負整数#d#を見つける。
-大きさ$2^{#d#}$の配列#t#を割当て、古い配列の要素を全て移し替える。
+続いて、大きさ$2^{#d#}$の配列#t#を割当て、古い配列の要素を全て移し替える。
 この処理の過程で、#q#を#n#に等しくリセットする。
 これは新しい配列#t#は#del#を含まないためである。
 \codeimport{ods/LinearHashTable.resize()}
@@ -334,7 +334,7 @@ $#i#=#hash(x)#$として、#t[i]#, $#t#[(#i#+1)\bmod #t.length#]$, $#t#[(#i#+2)\
 つまり単に#t[i]#と書いても$#t#[#i#\bmod#t.length#]$のことである。
 
 \ejindex{run}{れんぞく@連続}%
-%XXX: これ、 i == 0 と i == t.length - 1 のときはどうなの？
+%XXX: これ、 i == 0 と i == t.length - 1 のときはどうなの？ -- spinute: なにを心配している？
 %XXX: runの訳語 % YJ 連続かなあ。technical termとして本文中で他に連続は使われていない。
 \emph{#i#から始まる長さ$k$の連続 (run)}が発生するとはテーブルのエントリ$#t[i]#, #t[i+1]#,\ldots,#t#[#i#+k-1]$がいずれも#null#でなく、$#t#[#i#-1]=#t#[#i#+k]=#null#$であることをいう。
 #t#の#null#でない要素の数は#q#で、#add(x)#は常に$#q#\le#t.length#/2$であることを保証する。
@@ -365,7 +365,7 @@ $r!$を$(r/e)^r$に置き換える部分である。
 #t.length#が最小値を取るとき$p_k$は最大値を取る。
 またデータ構造は不変条件$#t.length# \ge 2#q#$を保つ。
 よって次の式が成り立つ。
-% XXX: TALK これ、一行目の不等号で ((t.length-k)/(t.length))^{q-k} <= ((2q-k)/(2q))^{q-k} を仮定してる気がするけど、必ずしも成り立たなくないか？
+% XXX: TALK これ、一行目の不等号で ((t.length-k)/(t.length))^{q-k} <= ((2q-k)/(2q))^{q-k} を仮定してる気がするけど、必ずしも成り立たなくないか？ -- spinute: うーんそんな気がする。なんか具体的な反例出しました？
 \begin{align*}
    p_k & \le \binom{#q#}{k}\left(\frac{k}{2#q#}\right)^k\left(\frac{2#q#-k}{2#q#}\right)^{#q#-k} \\
   & = \left(\frac{#q#!}{(#q#-k)!k!}\right)\left(\frac{k}{2#q#}\right)^k\left(\frac{2#q#-k}{2#q#}\right)^{#q#-k} \\
@@ -383,12 +383,12 @@ $r!$を$(r/e)^r$に置き換える部分である。
 ここで、$\sqrt{e}/{2}< 0.824360636 < 1$なので、補題が示された。
 \end{proof}
 
-\lemref{linear-probing}を使えば#find(x)#・#add(x)#・#remove(x)#の期待実行時間の上界は直接的に計算できる。
-まずは最もシンプルな#find(x)#を呼ぶが#x#が#LinearHashTable#に入っていないときを考える。
-この場合$#i#=#hash(x)#$は$\{0,\ldots,#t.length#-1\}$の値を取り、#t#の中身と独立な確率変数である。
+\lemref{linear-probing}を使って#find(x)#・#add(x)#・#remove(x)#の期待実行時間の上界を直接的に計算できる。
+まずは最もシンプルな、#find(x)#を呼ぶが#x#が#LinearHashTable#に入っていない場合を考える。
+この場合$#i#=#hash(x)#$は$\{0,\ldots,#t.length#-1\}$の値を取り、#t#の中身とは独立な確率変数である。
 #i#が長さ$k$の連続の一部なら、#find(x)#の実行時間は$O(1+k)$以下である。
 よって実行時間の期待値の上界を計算できる。
-% XXX: これ無限級数の各項が1以上（＝kをt.lengthまでの有限級数で止めなくても上界の計算だから問題ない）という保証はどうやって確保してるの？
+% XXX: これ無限級数の各項が1以上（＝kをt.lengthまでの有限級数で止めなくても上界の計算だから問題ない）という保証はどうやって確保してるの？ -- spinute: コメントの意味がよくわからない
 \[
   O\left(1 + \left(\frac{1}{#t.length#}\right)\sum_{i=1}^{#t.length#}\sum_{k=0}^{\infty} k\Pr\{\text{#i# is part of a run of length $k$}\}\right)
 \]
@@ -404,14 +404,14 @@ $r!$を$(r/e)^r$に置き換える部分である。
 \footnote{解析学の教科書ではこの和は比を計算して求める。すなわち、ある正の数$k_0$が存在し、任意の$k\ge k_0$について、$\frac{(k+1)^2c^{k+1}}{k^2c^k} < 1$を満たす。}。
 以上より、#LinearHashTable#に入っていない#x#について、#find(x)#の期待実行時間は$O(1)$である。
 
-#resize()#のコストを無視していいなら、この解析で#LinearHashTable#の解析を終わりだ。
+#resize()#のコストを無視していいなら、これで#LinearHashTable#の解析は終わりだ。
 
-まず上の#find(x)#の解析は、#add(x)#において#x#がテーブルに含まれないときにもそのまま適用できる。
+上の#find(x)#の解析は、#add(x)#において#x#がテーブルに含まれないときにもそのまま適用できる。
 #x#がテーブルに含まれるときの#find(x)#の解析は#add(x)#によって#x#を加えたときのコストと同じである。
 最後に、#remove(x)#のコストも#find(x)#のコストと同じだ。
 
 まとめると、#resize()#のコストを無視すれば、#LinearHashTable#の操作の期待実行時間はいずれも$O(1)$である。
-リサイズのコストを考える場合は、\secref{arraystack}で#ArrayStack#の償却解析を行ったのと同様である。
+リサイズのコストを考える場合は、\secref{arraystack}で行った#ArrayStack#の償却解析と同様である。
 
 \subsection{要約}
 
@@ -436,14 +436,15 @@ $r!$を$(r/e)^r$に置き換える部分である。
 \pcodeonly{ここで、#>>#は\emph{右シフト}演算子である。そのため、#x.hashCode() >> w-d#は#x#の#w#ビットのハッシュ値の、上位#d#ビットを抽出する。}
 
 あいにく大きさ$2^{#w#}$の配列はメモリ使用量の観点から現実的でない。
-\emph{Tabulation Hashing}では#w#ビットの整数の代わりに$#w#/#r#$個の$#r#$ビット整数で妥協する。 % Tabulation hashingの訳語？
+\emph{Tabulation Hashing}では、#w#ビットの整数に対する乱数表の代わりに、$#w#/#r#$個の$#r#$ビット整数に対する乱数表で妥協する。 % Tabulation hashingの訳語？
 こうすれば大きさ$2^{#r#}$の配列$#w#/#r#$個で済むのである。
 これらの配列に入っている整数はいずれも互いに独立な#w#ビットの乱数である。
 #hash(x)#を計算するために、#x.hashCode()#を$#w#/#r#$個の#r#ビット整数に分け、それぞれを配列の添え字として使う。
 その後各配列の値をビット単位の排他的論理和を計算し、この結果を#hash(x)#とする。
-次のコードは$#w#=32, #r#=4$の場合のものである。
+% XXX: 原著では r=4 になっているが、r=8 ではないか
+次のコードは$#w#=32, #r#=8$の場合のものである。
 \codeimport{ods/LinearHashTable.hash(x)}
-この場合、#tab#は4つの列と$2^{32/4}=256$の行からなる二次元配列である。
+この場合、#tab#は4つの列と$2^8=256$の行からなる二次元配列である。
 \pcodeonly{
 上の#0xff#は\emph{16進数 (hexadecimal numbers)}である。
 \ejindex{hexadecimal numbers}{16しんすう@16進数}%
