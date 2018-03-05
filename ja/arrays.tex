@@ -188,14 +188,15 @@ $r \leq m$なので、#resize()#の呼び出しにかかる実行時間の合計
 \section{#FastArrayStack#：最適化されたArrayStack}
 % TALK ここでは 「add(i, x)とremove(i)」のように「と（並立助詞）」を使っている一方で、
 % これ以前は「add(i, x)・remove(i)」のように黒丸で並立している。「と」のほうが紛らわしさがないのでは？
-% （・は乗算に見えなくもない）
-#ArrayStack#が主にやっていることは、データの（#add(i,x)#と#remove(i)#のための）シフトと（#resize()#のための）コピーである。
-素朴な実装では#for#ループを使うだろう。
-しかしデータのシフトやコピーに特化したより効率的な機能が使えるかもしれない。
-C言語には#memmove(d,s,n)#と#memcpy(d,s,n)#関数がある
-\footnote{訳注：#memmove(d,s,n)#はdestination（移動先）にsource（移動元）からnバイトをコピーする関数である。#memcpy(d,s,n)#との違いは移動元と移動先の領域が重なっていてもよいことである。}。
-C++言語には#std::copy(a0,a1,b)#アルゴリズムがある。
-Javaには#System.arraycopy(s,i,d,j,n)#メソッドがある。
+% （・は乗算に見えなくもない） -- 編集で「・」はなしにする予定 -kshikano
+#ArrayStack#で主にやっていることは、（#add(i,x)#と#remove(i)#のために）データをシフトすることと、（#resize()#のために）データをコピーすることである。
+\notpcode{上記の実装では、これに#for#ループを使った。}%
+\pcodeonly{素朴に実装すると、これには#for#ループを使うだろう。}
+しかし実際には、データのシフトやコピーに特化したもっと効率的な機能が使えることが多い。
+C言語には、#memmove(d,s,n)#と#memcpy(d,s,n)#関数がある
+\footnote{訳注：#memmove(d,s,n)#は、移動先（destination）に移動元（source）から#n#バイトをコピーする関数である。#memcpy(d,s,n)#との違いは、移動元と移動先の領域が重なっていてもよいことである。}。
+C++には、#std::copy(a0,a1,b)#アルゴリズムがある。
+Javaには、#System.arraycopy(s,i,d,j,n)#メソッドがある。
 \index{memcpy@#memcpy(d,s,n)#}%
 \index{std::copy@#std::copy(a0,a1,b)#}%
 \index{System.arraycopy@#System.arraycopy(s,i,d,j,n)#}%
@@ -206,75 +207,76 @@ Javaには#System.arraycopy(s,i,d,j,n)#メソッドがある。
 % (1) n==a.length でも resize の必要があるのではないか
 % (2) i==1 && n==0 のとき first > last だが大丈夫か?
 
-これらの関数は最適化されており、#for#ループを使う場合と比べてかなり高速な機械語の命令を使うかもしれない。
-これらの関数を使っても漸近的な実行時間は小さくならないのだが、試してみる価値のある最適化ではある。
+これらの関数は最適化されており、#for#ループを使う場合と比べてかなり高速にデータのコピーが可能な機械語の命令を使っている可能性がある。
+これらの関数を使っても漸近的な実行時間は小さくならないが、最適化として試してみる価値はある。
 
-C++やJavaの実装でこれらの関数を使って2〜3倍の高速化を実現したこともある。実際どのくらい速くなるのかは環境によるので是非試してみてほしい。
+\pcodeonly{C++やJavaの実装では、高速な配列のコピー関数を使うことで、}
+\notpcode{ここで示した\langの実装では、組み込みの\javaonly{#System.arraycopy(s,i,d,j,n)#}\cpponly{#std::copy(a0,a1,b)#}関数の利用により、}
+操作の種類によっては2〜3倍の高速化につながる。
+自分の手元の環境でどれくらい速くなるか、ぜひ試してみてほしい。
 
 \section{ArrayQueue：配列を使ったキュー}
 \seclabel{arrayqueue}
 
 \index{ArrayQueue@#ArrayQueue#}%
 この節ではFIFO（先入れ先出し）キューを実装するデータ構造#ArrayQueue#を紹介する。
-このデータ構造では（#add(x)#によって）要素は追加されたのと同じ順番で（#remove()#によって）削除される。
+このデータ構造では、（#add(x)#によって）追加された要素が、同じ順番で（#remove()#によって）削除される。
 
-FIFOキューの実装に#ArrayStack#を使うのはよくない。
-一方の端から要素を追加し他方から要素を削除するので、賢明な選択ではないのだ。
-ふたつの操作のいずれかはリストの先頭を変更することになる。すなわち$#i#=0$で#add(i,x)#か#remove(i)#を呼びだす。
-このとき#n#に比例する実行時間がかかってしまうのである。
+FIFOキューの実装に#ArrayStack#を使うのは好ましくない。
+これが賢明な選択でないのは、#ArrayStack#では先頭か末尾のいずれかを要素を追加する側に、他方を削除する側に選ばなければならず、
+2つの操作のいずれかがリストの先頭を変更することになるからだ。そうすると、$#i#=0$で#add(i,x)#か#remove(i)#を呼びだすことになり、
+#n#に比例する実行時間がかかってしまうのである。
 
-配列を使ったキューの効率的な実装は、もし無限長の配列#a#があれば簡単だろう。
+もし無限長の配列#a#があれば、配列を使った効率的なキューを簡単に実装できるだろう。
 次に削除する要素を追跡するインデックス#j#と、キューの要素数#n#を記録しておけばよい。
-そうすればキューの要素は以下の場所に入っている。
+そうすれば、キューの要素は以下の場所に入っていることになる。
 \[ #a[j]#,#a[j+1]#,\ldots,#a[j+n-1]# \]
 まず#j#, #n#を0に初期化する。
-要素を追加するときは、#a[j+n]#に要素を入れて、#n#をひとつ増やす。
-要素を削除するときは、#a[j]#から要素を取り出し、#j#をひとつ増やし、#n#をひとつ減らす。
+要素を追加するときは、#a[j+n]#に要素を入れて、#n#を1つ増やす。
+要素を削除するときは、#a[j]#から要素を取り出し、#j#を1つ増やし、#n#を1つ減らす。
 
-この方法の明らかな問題点は無限長の配列が必要なことだ。
-#ArrayQueue#は有限長の配列#a#と\emph{剰余算術}で無限長の配列を模倣する。
+この方法の明らかな問題点は、無限長の配列が必要なことだ。
+#ArrayQueue#を使うことで、無限長の配列を、有限長の配列#a#と\emph{剰余算術}で模倣できる。
 \index{modular arithmetic}%
-剰余算術とは例えば時間の計算をするときに使っているものだ。
-例えば10:00に5時間を足すと3:00になる。
-形式的に書けば次のようになる。
+剰余算術というのは、時間に対して使うような計算だ。
+例えば、10:00に5時間を足すと3:00になる。
+これを形式的に書けば次のようになる。
 \[
     10 + 5 = 15 \equiv 3 \pmod{12}
 \]
-数式の後半は「12を法として15と3は合同である」と読む。
-$\bmod$は次のように二項演算と考えてもよい。
+上の数式の後半は、「12を法として15と3は合同である」と読む。
+$\bmod$は次のような二項演算と考えてもよい。
 \[
    15 \bmod 12 = 3
 \]
-
-整数$a$と正整数$m$について、ある整数kが存在し$a = km + r$をみたす整数 #r# $\in \{0, \ldots, m-1 \} $を$a \bmod m $と書く。
-簡単に言うと、$ r $とは$ a $を$ m $で割った余りである。
-CやC++、Ruby、Javaなど多くのプログラミング言語ではmod演算子は\%で表される。 % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
+整数$a$と正整数$m$について、ある整数kが存在し$a = km + r$をみたす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
+簡単に言うと、$r$は$a$を$m$で割った余りである。
+\pcodeonly{CやC++、Ruby、Javaなどの多くのプログラミング言語では、mod演算子を\%で表す。} % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
+\notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}
 
 剰余算術は無限長の配列を模倣するのに便利である。
-$#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利用して、配列の中にキューの要素をうまく入れられるのだ。
-
+$#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利用して、配列の中にキューの要素をうまく入れられるのだ。
 \[
 #a[j%a.length]#,#a[(j+1)%a.length]#,\ldots,#a[(j+n-1)%a.length]# \enspace
 \]
-
-これは#a#を\emph{循環配列}として使っている。
+ここでは#a#を\emph{循環配列}として使っている。
 \index{circular array}%
 \index{array!circular}%
-配列の添字が$#a.length#-1$を超えると、配列の先頭に戻ってくるのである。
+配列の添字が$#a.length#-1$を超えると、配列の先頭に戻ってくるわけである。
 
 残りの問題は#ArrayQueue#の要素数が#a#の大きさを超えてはならないことだ。
 
 \codeimport{ods/ArrayQueue.a.j.n}
 
-#ArrayQueue#に対して#add(x)#・#remove()#からなる操作の列を実行する様子を\figref{arrayqueue}に示す。
-#add(x)#はまず#a#が一杯かどうかを確認し、必要に応じて#resize()#を呼んで#a#の容量を増やす。
-続いて#x#を#a[(j+n)%a.length]#に入れて、#n#をひとつ増やせばよい。
+#ArrayQueue#に対して#add(x)#および#remove()#からなる操作の列を実行する様子を\figref{arrayqueue}に示す。
+#add(x)#の実装では、まず#a#が一杯かどうかを確認し、必要に応じて#resize()#を呼んで#a#の容量を増やす。
+続いて、#x#を#a[(j+n)%a.length]#に入れて、#n#を1つ増やせばよい。
 
 \begin{figure}
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arrayqueue}
   \end{center}
-  \caption{#ArrayQueue#に対する#add(x)#・#remove()#の実行例。矢印は要素のコピーを表す。#resize()#の発生する呼び出しにはアスタリスクを付した。}
+  \caption{#ArrayQueue#に対する#add(x)#・#remove()#の実行例。矢印は要素のコピーを表す。#resize()#が発生する呼び出しにはアスタリスクを付した}
   \figlabel{arrayqueue}
 \end{figure}
 
@@ -283,14 +285,14 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 % (1) n==a.length でも resize の必要があるのではないか
 
 #remove()#の実装では、まず#a[j]#をあとで返せるように保存しておく。
-つづいてnを1減らし、jを1増やしi#a.length#で剰余を取る。
+続いて#n#を1減らし、$#j#=(#j#+1)\bmod #a.length#$とすることで#j#を1増やす（#a.length#を法として計算している）。
 最後に保存しておいた#a[j]#を返す。
 もし必要なら#resize()#を読んで#a#を小さくする。
 
 \codeimport{ods/ArrayQueue.remove()}
 
-最後になるが、#resize()#操作は#ArrayStack#のものとよく似ている。
-大きさ$2#n#$の新しい配列#b#を割当て、
+最後に、#resize()#操作は#ArrayStack#の#resize()#とよく似ている。
+大きさ$2#n#$の新しい配列#b#を割り当て、
 \[
    #a[j]#,#a[(j+1)%a.length]#,\ldots,#a[(j+n-1)%a.length]#
 \]
@@ -303,12 +305,12 @@ $#i#\bmod #a.length#$は常に$0,\ldots,#a.length-1#$の値を取ることを利
 \codeimport{ods/ArrayQueue.resize()}
 \subsection{要約}
 
-次の定理は#ArrayQueue#の性能を整理するものだ。
+次の定理は#ArrayQueue#の性能について整理したものだ
 
 \begin{thm}
-  #ArrayQueue#は(FIFO)#Queue#インターフェースの実装である。
+  #ArrayQueue#は、（FIFOの）#Queue#インターフェースの実装である。
   #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#の実行時間は$O(1)$である。
-  さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#・#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
+  さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
 \section{ArrayDeque：配列を使った高速な双方向キュー}
