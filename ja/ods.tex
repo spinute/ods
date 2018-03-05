@@ -159,7 +159,7 @@
    fonttitle=\bfseries\sffamily,
    fontupper=\sffamily\fontsize{10pt}{12pt}\selectfont,
    attach title to upper,after title={:\ },
-   borderline west = {2mm}{0pt}{red}}{thmthm}
+   borderline west = {2mm}{0pt}{red}}{thm}
 \newenvironment{thm}
   {\begin{thmthm}{}{}\let\footnote\mfootnote}
   {\end{thmthm}\mfootnoteout}
@@ -175,9 +175,11 @@
    fonttitle=\bfseries\sffamily,
    fontupper=\sffamily\fontsize{10pt}{11pt}\selectfont,
    attach title to upper,after title={:\ },
-   borderline west = {2mm}{0pt}{green}}{lemthm}
+   borderline west = {2mm}{0pt}{green}}{lem}
 \newenvironment{lem}
-  {\begin{lemthm}{}{}\let\footnote\mfootnote}
+  {\begin{lemthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@lemthm\endcsname\csname thetcb@cnt@lemthm\endcsname}}
   {\end{lemthm}\mfootnoteout}
 \newcommand{\lemlabel}[1]{\label{lem:#1}}
 \newcommand{\lemref}[1]{補題~\ref{lem:#1}}
@@ -191,9 +193,11 @@
    fonttitle=\bfseries\sffamily,
    fontupper=\sffamily\fontsize{10pt}{12pt}\selectfont,
    attach title to upper,after title={:\ },
-   borderline west = {2mm}{0pt}{blue}}{corthm}
+   borderline west = {2mm}{0pt}{blue}}{cor}
 \newenvironment{cor}
-  {\begin{corthm}{}{}\let\footnote\mfootnote}
+  {\begin{corthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@corthm\endcsname\csname thetcb@cnt@corthm\endcsname}}
   {\end{corthm}\mfootnoteout}
 \newcommand{\corlabel}[1]{\label{cor:#1}}
 \newcommand{\corref}[1]{系~\ref{cor:#1}}
@@ -209,9 +213,11 @@
    fonttitle=\bfseries\sffamily,
    fontupper=\rmfamily\fontsize{9pt}{11pt}\selectfont,
    attach title to upper,after title={:\ },
-   borderline west = {2mm}{0pt}{white}}{excthm}
+   borderline west = {2mm}{0pt}{white}}{exc}
 \newenvironment{exc}
-  {\begin{excthm}{}{}\let\footnote\mfootnote}
+  {\begin{excthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@excthm\endcsname\csname thetcb@cnt@excthm\endcsname}}
   {\end{excthm}\mfootnoteout}
 \newcommand{\exclabel}[1]{\label{exc:#1}}
 \newcommand{\excref}[1]{問~\ref{exc:#1}}
@@ -225,9 +231,11 @@
    fonttitle=\bfseries\sffamily,
    fontupper=\sffamily\fontsize{10pt}{12pt}\selectfont,
    attach title to upper,after title={:\ },
-   borderline west = {2mm}{0pt}{yellow}}{prpthm}
+   borderline west = {2mm}{0pt}{yellow}}{prp}
 \newenvironment{prp}
-  {\begin{prpthm}{}{}\let\footnote\mfootnote}
+  {\begin{prpthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@prpthm\endcsname\csname thetcb@cnt@prpthm\endcsname}}
   {\end{prpthm}\mfootnoteout}
 \newcommand{\prplabel}[1]{\label{prp:#1}}
 \newcommand{\prpref}[1]{性質~\ref{prp:#1}}
@@ -240,9 +248,11 @@
    fonttitle=\bfseries\sffamily,
    fontupper=\rmfamily\fontsize{10pt}{12pt}\selectfont,
    attach title to upper,after title={:\ },
-   borderline west = {2mm}{0pt}{gray}}{prpthm}
+   borderline west = {2mm}{0pt}{gray}}{prp}
 \renewenvironment{proof}
-  {\begin{prfthm*}{}{}\let\footnote\mfootnote}
+  {\begin{prfthm*}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@prfthm\endcsname\csname thetcb@cnt@prfthm\endcsname}}
   {\qedhere\end{prfthm*}\mfootnoteout}
 
 \newcommand{\qedhere}{\ifmmode\qed\else\hfill\proofSymbol\fi}
