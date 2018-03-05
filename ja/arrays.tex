@@ -211,7 +211,7 @@ Javaには、#System.arraycopy(s,i,d,j,n)#メソッドがある。
 これらの関数を使っても漸近的な実行時間は小さくならないが、最適化として試してみる価値はある。
 
 \pcodeonly{C++やJavaの実装では、高速な配列のコピー関数を使うことで、}
-\notpcode{ここで示した\langの実装では、組み込みの\javaonly{#System.arraycopy(s,i,d,j,n)#}\cpponly{#std::copy(a0,a1,b)#}関数の利用により、}
+\notpcode{ここで示した\lang{}の実装では、組み込みの\javaonly{#System.arraycopy(s,i,d,j,n)#}\cpponly{#std::copy(a0,a1,b)#}関数の利用により、}
 操作の種類によっては2〜3倍の高速化につながる。
 自分の手元の環境でどれくらい速くなるか、ぜひ試してみてほしい。
 
