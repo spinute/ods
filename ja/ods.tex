@@ -150,6 +150,8 @@
 % Theorem-like environments
 \theoremstyle{plain}
 
+\makeatletter
+
 %\newtheorem{thm}{定理}[chapter]
 \newtcbtheorem[auto counter, number within = chapter]{thmthm}{定理}
   {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
@@ -161,7 +163,9 @@
    attach title to upper,after title={:\ },
    borderline west = {2mm}{0pt}{red}}{thm}
 \newenvironment{thm}
-  {\begin{thmthm}{}{}\let\footnote\mfootnote}
+  {\begin{thmthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@thmthm\endcsname\csname thetcb@cnt@thmthm\endcsname}}
   {\end{thmthm}\mfootnoteout}
 \newcommand{\thmlabel}[1]{\label{thm:#1}}
 \newcommand{\thmref}[1]{定理~\ref{thm:#1}}
@@ -254,6 +258,7 @@
       \protected@edef\@currentlabel
           {\csname p@tcb@cnt@prfthm\endcsname\csname thetcb@cnt@prfthm\endcsname}}
   {\qedhere\end{prfthm*}\mfootnoteout}
+\makeatother
 
 \newcommand{\qedhere}{\ifmmode\qed\else\hfill\proofSymbol\fi}
 
