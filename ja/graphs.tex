@@ -378,7 +378,7 @@ $#n#\times #n#$の真偽値の行列を格納するには$#n#^2$ビット以上�
 \ref{thm:bfs-graph}と\ref{thm:dfs-graph}で示されている幅優先探索・深さ優先探索の実行時間はあまりタイトではない。
 $#n#_{#r#}$を$G$における頂点#i#であって、#i#から#r#への経路が存在するものの個数と定義する。
 $#m#_#r#$をこのような頂点から出る辺の個数とする。
-このとき、幅優先探索・深さ優先探索の実行時間に関してより正確に述べる次の定理が成り立つ。
+このとき、幅優先探索・深さ優先探索のより正確な実行時間を示す次の定理が成り立つ。
 （練習問題で扱うアルゴリズムのうちの一部で、この定理は役に立つ。）
 \begin{thm}\thmlabel{graph-traversal}
 #AdjacencyLists#で実装された#Graph# #g#を入力すると、#bfs(g,r)#・#dfs(g,r)#・#dfs2(g,r)#の実行時間はいずれも$O(#n#_{#r#}+#m#_{#r#})$である。
@@ -411,9 +411,9 @@ $#m#_#r#$をこのような頂点から出る辺の個数とする。
   グラフ$G$の\emph{接続行列 (incidence matrix)}とは、$#n#\times#m#$行列$A$であって、次のように定義されるものである。
   \[
      A_{i,j} = \begin{cases}
-        -1 & \text{if vertex $i$ the source of edge $j$} \\
-        +1 & \text{if vertex $i$ the target of edge $j$} \\
-        0 & \text{otherwise.}
+        -1 & \text{頂点$i$が辺$j$の始点であるとき} \\
+        +1 & \text{頂点$i$が辺$j$の終点であるとき} \\
+        0 & \text{それ以外のとき}
      \end{cases}
   \]
   \begin{enumerate}
@@ -468,8 +468,6 @@ $#m#_#r#$をこのような頂点から出る辺の個数とする。
 \begin{exc}
   \index{universal sink}%
   \ejindex{celebrity|see{universal sink}}{せれぶりてぃ@セレブリティ|see{universal sink}}%
-  XXX: universal sinkの訳語
-
   グラフ$G$の\emph{universal sink}とは、$#n#-1$個の辺の行き先になっており、かつそこから辺が出ていない頂点である。
   \footnote{universal sink #v#を\emph{celebrity}と言うこともある。部屋の中のみなが#v#のことを知っているが、#v#は部屋の中の他の人が誰だか全く知らないのである。}
   #AdjacencyMatrix#で表現されるグラフ$G$がuniversal sinkを持つかどうかを判定するアルゴリズムを設計・実装せよ。
