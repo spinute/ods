@@ -91,6 +91,7 @@
 \codeimport{ods/BinaryTree.r}
 
 ノード#u#の深さを、#u#から根への経路を辿るときのステップ数として計算できる。
+% XXX: If node == nil, should depth(u) return -1 as height(u) do?
 \codeimport{ods/BinaryTree.depth(u)}
 
 
@@ -178,7 +179,7 @@
 \ejindex{binary search tree}{にぶんたんさくぎ@二分探索木}%
 \ejindex{binary tree!search}{にぶんぎ@二分木!たんさく@探索}%
 #BinarySearchTree#（二分探索木）はノード#u#がある全順序な集合の要素であるデータ#u.x#を持つ二分木である。
-二分探索木の各ノードとそのデータは次の\emph{二分探索木の性質}を満たす。 % TODO: YJ これはpropertyなのかdefinitionなのか
+二分探索木の各ノードとそのデータは次の\emph{二分探索木の性質}を満たす。 % TODO: YJ これはpropertyなのかdefinitionなのか -- 二分探索木の性質を満たす二分木を二分探索木探索木という（定義）んじゃないかな思うけど、二分探索木のことはこれまであまり調べたことがないので自信はない
 \ejindex{binary search tree property}{にぶんたんさくぎのせいしつ@2分探索木の性質}%
 ノード#u#について、#u.left#を根とする部分木に含まれるデータはすべて#u.x#より小さく、#u.right#を根とする部分木に含まれるデータはすべて#u.x#より大きい。
 #BinarySearchTree#の例を\figref{bst}に示す。
