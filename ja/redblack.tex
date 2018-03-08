@@ -136,7 +136,7 @@ Scapegoat treeには高さの保証があるものの、#add(x)#・#remove(x)#�
 
 赤黒木は各ノード#u#が\emph{赤}か\emph{黒}の\emph{色}を持つ二分探索木である。
 \ejindex{colour}{いろ@色}%
-赤は$0$で、黒は$1$で表現される。 % TODO: YJ: 赤ノード、黒ノードのほうが良いのでは。
+赤ノードは$0$で、黒ノードは$1$で表現される。 % TODO: YJ: 赤ノード、黒ノードのほうが良いのでは。
 \ejindex{red node}{あかいのーど@赤いノード}%
 \ejindex{black node}{くろいのーど@黒いノード}%
 \javaimport{ods/RedBlackTree.red.black.Node<T>}
@@ -240,7 +240,7 @@ $T'$の内部ノードはみな2-4個の子を持つ。
 
 \subsection{左傾赤黒木}
 \seclabel{left-redblack}
-XXX: left-learning に定訳はあるか? % YJ: 政治の文脈では左傾と訳されるが、どうだろう。
+% XXX: left-learning に定訳はあるか? % YJ: 政治の文脈では左傾と訳されるが、どうだろう。
 
 % XXX: あかくろぎ？あかぐろき？あかぐろぎ？ Wikipediaではあかくろぎだし、自分もそうだと思っています spinute
 \ejindex{red-black tree}{あかくろぎ@赤黒木}%
@@ -286,7 +286,7 @@ XXX: left-learning に定訳はあるか? % YJ: 政治の文脈では左傾と�
 この場合は特に、この操作によって黒の高さ・赤の辺の性質がいずれも満たされることが保証される。
 #flipRight(u)#は#flipLeft(u)#を左右対称に入れ替えた操作である。
 
-XXX: 図のノードが一部白抜きなのはなぜ? % TODO: たぶん画像生成コードのバグかと。Patに確認しよう。
+% XXX: 図のノードが一部白抜きなのはなぜ? % TODO: たぶん画像生成コードのバグかと。Patに確認しよう。
 \codeimport{ods/RedBlackTree.flipRight(u)}
 
 \subsection{要素の追加}
@@ -301,7 +301,7 @@ XXX: 図のノードが一部白抜きなのはなぜ? % TODO: たぶん画像�
 この先の議論は、\figref{rb-addfix}を見たり、それを一度紙に描いてみたりしなければ、理解するのが難しいかもしれない。
 続きを読む前に、この図に目を通して意味を考えてみてほしい。
 
-XXX: 白いノードの意味がよくわからない
+% XXX: 白いノードの意味がよくわからない
 \begin{figure}
   \begin{center}
     \includegraphics[width=\ScaleIfNeeded]{figs/rb-addfix}

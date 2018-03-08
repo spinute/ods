@@ -185,7 +185,7 @@ $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素
    もしそのような#y#が存在すればそれを返し、存在しないなら#null#を返す
 \end{enumerate}
 
-#SSet#の#find(x)#は\emph{後継探索(XXX:訳語) (successor search)}\ejindex{successor search}{こうけいたんさく@後継探索}と呼ばれることがある。#x#に等しい要素がなくても意味のある結果を返すという点で、#USet#の#find(x)#とは異なる。
+#SSet#の#find(x)#は\emph{後継探索(successor search)}\ejindex{successor search}{こうけいたんさく@後継探索}と呼ばれることがある。#x#に等しい要素がなくても意味のある結果を返すという点で、#USet#の#find(x)#とは異なる。
 
 #USet#、#SSet#における#find(x)#の区別は、重要だが見落とされることが多い。#SSet#は、#USet#より機能が多いが、それだけ実装が複雑で実行時間が長くなりがちだ。例えば、この本で述べる#SSet#の#find(x)#の実装は、いずれも集合に含まれる要素数の対数オーダーの時間がかかる。一方、\chapref{hashing}の#ChainedHashTable#による#USet#の実装では、#find(x)#の実行時間の期待値は定数オーダーである。#USet#にはない#SSet#の機能が必要でない限り、#SSet#ではなく#USet#を使うほうがよいだろう。
 
