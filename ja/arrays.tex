@@ -54,6 +54,7 @@ C++のふつうの配列は要素数を保持していないので、要素数�
 \cppimport{ods/array.operator[]}
 \cpponly{また、ある配列を他の配列に割り当てる操作は、ポインタの操作により定数時間で実行できる。}
 % XXX: このarray.operator=の実装は怪しい
+%% https://github.com/patmorin/ods/pull/68 でツッコミが入っていた。修正を取り込んだ
 \cppimport{ods/array.operator=}
 
 \section{ArrayStack：配列を使った高速なスタック操作}
@@ -96,6 +97,7 @@ C++のふつうの配列は要素数を保持していないので、要素数�
 
 % XXX: add はバグっているのではないか。
 % n==a.length でも resize の必要があるのではないか
+%% コードを修正しました
 \codeimport{ods/ArrayStack.add(i,x)}
 #resize()#のコストを無視すれば、#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり、この操作の（#resize()#のコストを無視した）実行時間は、$O(#n#-#i#)$である。
 
@@ -144,7 +146,7 @@ $r \leq m$なので、#resize()#の呼び出しにかかる実行時間の合計
 \[
 \sum_{i=1}^{r} O(#n#_i) \le O(m+r) = O(m)  \enspace
 \]
-あとは$(i-1)$回めの#resize()#から$i$回めの#resize()#の間に、#add(i,x)#か#remove(i)#が呼ばれる回数の合計が$#n#_i/2 - 1$以上であることを示せばよい。 % XXX 原文は at least ni/2 だったのだが、 これ文脈からして at least ni/2 - 1 では？ <- っぽいですね
+あとは$(i-1)$回めの#resize()#から$i$回めの#resize()#の間に、#add(i,x)#か#remove(i)#が呼ばれる回数の合計が$#n#_i/2 - 1$以上であることを示せばよい。 % XXX 原文は at least ni/2 だったのだが、 これ文脈からして at least ni/2 - 1 では？ <- っぽいですね -- 一応Patに確認する
 
 これは2つの場合に分けて考えられる。
 1つめは、#resize()#が#add(i,x)#の中で呼ばれる場合で、これはbacking arrayが一杯になるとき、つまり$#a.length# = #n#=#n#_i$が成り立つ場合だ。
@@ -176,7 +178,7 @@ $r \leq m$なので、#resize()#の呼び出しにかかる実行時間の合計
     \item #get(i)#および#set(i,x)#の実行時間は$O(1)$である
     \item #add(i,x)#および#remove(i)#の実行時間は$O(1+#n#-#i#)$である
     \footnote{訳注：$#n#=#i#=0$のときであってもビッグオー記法で書けるように、1が足されていることに注意。}
-	% XXX: この1は必要なのか？
+	% XXX: この1は必要なのか？ -- Pat に確認する
   \end{itemize}
   空の#ArrayStack#に対して任意の$m$個の#add(i,x)#および#remove(i)#からなる操作の列を実行する。このとき#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
