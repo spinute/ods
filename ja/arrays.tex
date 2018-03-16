@@ -53,8 +53,7 @@ C++のふつうの配列は要素数を保持していないので、要素数�
 \cpponly{配列の要素は添字により指定できる。}
 \cppimport{ods/array.operator[]}
 \cpponly{また、ある配列を他の配列に割り当てる操作は、ポインタの操作により定数時間で実行できる。}
-% XXX: このarray.operator=の実装は怪しい
-%% https://github.com/patmorin/ods/pull/68 でツッコミが入っていた。修正を取り込んだ
+% XXX: このarray.operator=の実装は怪しい -- https://github.com/patmorin/ods/pull/68 でツッコミが入っていた。修正を取り込んだ
 \cppimport{ods/array.operator=}
 
 \section{ArrayStack：配列を使った高速なスタック操作}
@@ -95,9 +94,7 @@ C++のふつうの配列は要素数を保持していないので、要素数�
   \figlabel{arraystack}
 \end{figure}
 
-% XXX: add はバグっているのではないか。
-% n==a.length でも resize の必要があるのではないか
-%% コードを修正しました
+% XXX: add はバグっているのではないか。n==a.length でも resize の必要があるのではないか -- コードを修正しました
 \codeimport{ods/ArrayStack.add(i,x)}
 #resize()#のコストを無視すれば、#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり、この操作の（#resize()#のコストを無視した）実行時間は、$O(#n#-#i#)$である。
 
@@ -177,7 +174,7 @@ $r \leq m$なので、#resize()#の呼び出しにかかる実行時間の合計
   \begin{itemize}
     \item #get(i)#および#set(i,x)#の実行時間は$O(1)$である
     \item #add(i,x)#および#remove(i)#の実行時間は$O(1+#n#-#i#)$である
-    \footnote{訳注：$#n#=#i#=0$のときであってもビッグオー記法で書けるように、1が足されていることに注意。}
+    %\footnote{訳注：$#n#=#i#=0$のときであってもビッグオー記法で書けるように、1が足されていることに注意。}
 	% XXX: この1は必要なのか？ -- Pat に確認する
   \end{itemize}
   空の#ArrayStack#に対して任意の$m$個の#add(i,x)#および#remove(i)#からなる操作の列を実行する。このとき#resize()#にかかる時間の合計は$O(m)$である。
@@ -206,8 +203,7 @@ Javaには、#System.arraycopy(s,i,d,j,n)#メソッドがある。
 \cppimport{ods/FastArrayStack.add(i,x).remove(i).resize()}
 \javaimport{ods/FastArrayStack.add(i,x).remove(i).resize()}
 % XXX: この add もバグっているのではないか。
-% (1) n==a.length でも resize の必要があるのではないか
-% (2) i==1 && n==0 のとき first > last だが大丈夫か?
+% (1) n==a.length でも resize の必要があるのではないか -- 修正しました
 
 これらの関数は最適化されており、#for#ループを使う場合と比べてかなり高速にデータのコピーが可能な機械語の命令を使っている可能性がある。
 これらの関数を使っても漸近的な実行時間は小さくならないが、最適化として試してみる価値はある。
