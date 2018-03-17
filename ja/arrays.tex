@@ -754,8 +754,8 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 $\lfloor\sqrt{#x#}\rfloor-2$のいずれかになる。
 $(#s#+1)^2 > #x#$となるまで#s#をインクリメントすることで、xの平方根を下に丸めた自然数$\lfloor\sqrt{#x#}\rfloor$の値を特定できる
 \footnote{訳注：平方根はプログラム中で何千回も使いまわされる可能性がある処理だから、空間計算量を少し犠牲にして中間結果を配列#sqrttab#に入れることで、時間計算量を改善しようという算段である。#x'#の数が高々$2^{#r#+1-\lfloor #r#/2\rfloor}$通り（たとえば一般的なコンピュータにおける$#r#=32$の場合は10万通り程度）しかなく、$2^{#r#+1-\lfloor #r#/2\rfloor} \le 4\sqrt{#x#}$という結果からビッグオー記法でいえば$O(\sqrt{#n#})$通りしかないのだから、この工夫は実を結ぶ。}。
-% TALK sqrttab[i] is within 2 of root x ってあるけど、$\lfloor\sqrt{#x#}\rfloor-2$の値を取ったときは微妙に2を超えてないか？今は「およそ２」としたが、どうすべきか？
-% TALK これ、r=64の場合、sqrttabのサイズが約85億と、果てしなく大きくなってしまわないか？そのことに関して注を入れた方がよいのでは？
+% TALK sqrttab[i] is within 2 of root x ってあるけど、$\lfloor\sqrt{#x#}\rfloor-2$の値を取ったときは微妙に2を超えてないか？今は「およそ２」としたが、どうすべきか？ -- spinute: そうなの？
+% TALK これ、r=64の場合、sqrttabのサイズが約85億と、果てしなく大きくなってしまわないか？そのことに関して注を入れた方がよいのでは？ -- spinute: r=64 の場合には単純にはうまくいかなそう。ここで平方根を扱っているのは Rootish Array Stack のためで、引数は概ねデータ構造の要素数程度。そのため、ふつうは 32 bit あれば足りるはず
 
 \javaimport{ods/FastSqrt.sqrt(x,r)}
 \cppimport{ods/FastSqrt.sqrt(x,r)}
@@ -775,7 +775,7 @@ $\log#x#=#r'#<#r#$である#x#については、$2^{#r#-#r'#}$をかけて\emph{
     \sqrt{2^{#r#-#r'#}x} = 2^{(#r#-#r#')/2}\sqrt{#x#} \enspace
 \]
 $2^{#r#-#r#'}x$は$\{2^{#r#},\ldots,2^{#r#+1}-1\}$に含まれるので、上の値は#sqrttab#に入っている。
-% XXX: 2^{30}-1なのはどういう気遣い？
+% XXX: 2^{30}-1なのはどういう気遣い？ -- Pat に聞きます
 次のコードは、$\{0,\ldots,2^{30}-1\}$に含まれる任意の#x#について、大きさ$2^{16}$の配列#sqrttab#を使って$\lfloor\sqrt{#x#}\rfloor$を計算するものである。
 } % notpcode
 \javaimport{ods/FastSqrt.sqrt(x)}
@@ -815,7 +815,7 @@ $\lfloor\log #x#\rfloor$が#x#を2進表記したときに1となる最大の桁
 \index{tiered-vector}%
 このデータ構造では、#get(i,x)#および#set(i,x)#の実行時間は定数である。
 #add(i,x)#および#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
-% XXX: excrefで参照しているのは問2.9だが、問2.7（おそらく章.節）になっている
+% XXX: excrefで参照しているのは問2.9だが、問2.7（おそらく章.節）になっている -- 修正済み
 \excref{rootisharraystack-fast}では、#RootishArrayStack#をさらに改良し、これに近い実行時間を達成する。
 
 \begin{exc}
