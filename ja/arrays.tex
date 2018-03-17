@@ -44,6 +44,7 @@
 \cpponly{
 この章、そしてこの本では、要素数を保持する配列が使えると便利なことが多い。
 C++のふつうの配列は要素数を保持していないので、要素数を保持する配列のクラス#array#を定義する。
+\footnote{訳注：この#array#クラスにおける$=$の実装では、右辺の配列を#NULL#にしている。つまり、他の#array#に代入した#array#は、その後使えなくなってしまうことに注意する。}
 このクラスは標準的なC++の配列#a#と整数#length#により簡単に実装できる。}
 \cppimport{ods/array.a.length}
 \cpponly{
@@ -53,7 +54,7 @@ C++のふつうの配列は要素数を保持していないので、要素数�
 \cpponly{配列の要素は添字により指定できる。}
 \cppimport{ods/array.operator[]}
 \cpponly{また、ある配列を他の配列に割り当てる操作は、ポインタの操作により定数時間で実行できる。}
-% XXX: このarray.operator=の実装は怪しい -- https://github.com/patmorin/ods/pull/68 でツッコミが入っていた。修正を取り込んだ
+% XXX: このarray.operator=の実装は怪しい -- https://github.com/patmorin/ods/pull/68 でツッコミが入っているが、Pat は今の実装を選んでいるので、訳注を入れるに留めることにした
 \cppimport{ods/array.operator=}
 
 \section{ArrayStack：配列を使った高速なスタック操作}

@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include <string.h>
 
 namespace ods {
 
@@ -20,7 +19,6 @@ namespace ods {
  * A simple array class that simulates Java's arrays implementation - kind of
  * TODO: Make a reference-counted version so that the = operator doesn't have
  * to destroy its right-hand side.
- * <- spinute: I fixed = operator following https://github.com/patmorin/ods/pull/68
  */
 template<class T>
 class array {
@@ -35,9 +33,9 @@ public:
 
 	array<T>& operator=(array<T> &b) {
 		if (a != NULL) delete[] a;
+		a = b.a;
+		b.a = NULL;
 		length = b.length;
-		a = new T[length];
-		if (a != NULL) memcpy(a, b.a, length);
 		return *this;
 	}
 
