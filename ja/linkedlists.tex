@@ -31,7 +31,7 @@
 参照は列における次のノードを指している。
 列の末尾のノード#w#においては$#w.next# = #null#$である。
 
-% TODO: Remove constructors from SLList.Node
+% TODO: Remove constructors from class Node -- オリジナルのソースに入っていたコメントです
 \javaimport{ods/SLList.Node}
 \cppimport{ods/SLList.Node}
 
@@ -53,6 +53,7 @@
 #push(x)#は新しいノード#u#を作り、データ値に#x#を設定し、#u.next#を古い先頭とし、#u#を新しい先頭にする。
 最後に#SLList#の要素がひとつ増えたので、#n#を1だけ大きくする。
 
+% XXX: push が値を返しているのはなぜか
 \codeimport{ods/SLList.push(x)}
 
 #pop()#では、#SLList#が空でないことを確認し、$#head=head.next#$として先頭を削除し、#n#を1だけ小さくする。
@@ -126,13 +127,13 @@
   \figlabel{dllist}
 \end{figure}
 
-%TODO: Remove constructors from class Node
+%TODO: Remove constructors from class Node -- オリジナルのソースに入っていたコメントです
 
 \codeimport{ods/DLList.n.dummy.DLList()}
 
 #DLList#から添え字を指定してノードを見つけるのは簡単だ。
 先頭（#dummy.next#）から順方向に列を辿るか、末尾（#dummy.prev#）から逆方向に列を辿ればよい。
-% XXX: O記法の中の1は必要か？
+% XXX: O記法の中の1は必要か？ -- Pat に確認します
 こうして#i#番目のノードを見つけるのにかかる時間は$O(1+\min\{#i#,#n#-#i#\})$である。
 
 \codeimport{ods/DLList.getNode(i)}
@@ -346,7 +347,7 @@ $#u#_0$に#x#を入れるスペースを提供してくれるブロックを求�
 \codeimport{ods/SEList.add(i,x)}
 
 #add(i,x)#の実行時間は上の3つの場合のどれが起きるかによって決まる。
-% TALK これ while(u != l.u) の部分の擬似コード間違ってない？ちゃんとやったら最初のふたつもO(#b^2#)の気がする
+% TALK これ while(u != l.u) の部分の擬似コード間違ってない？ちゃんとやったら最初のふたつもO(#b^2#)の気がする -- ブロックは配列ではなく、ArrayDeque なので、間違ってないと思います
 最初のふたつの場合は最大#b#ブロックにわたって要素を探しシフトするので、実行時間は$O(#b#)$である。
 3つめの場合では、#spread(u)#を呼び出し$#b#(#b#+1)$個の要素を動かすので、実行時間は$O(#b#^2)$である。
 3つめの場合のコストを無視すれば、#i#番目の位置に要素#x#を挿入するときの実行時間は$O(#b#+\min\{#i#,#n#-#i#\}/#b#)$である。
@@ -488,7 +489,7 @@ XOR-listでは各ノード#u#はひとつだけのポインタ#u.nextprev#を持
    #u.next# = #u.prev# \verb+^+ #u.nextprev#
 \]
 （ここで\verb+^+はふたつの引数の排他的論理和を計算する。)
-このテクニックはコードを少し複雑すること、JavaやPythonなどガーベッジコレクションのある言語では使えないことは欠点である。 % TODO: Rubyは？
+このテクニックはコードを少し複雑すること、JavaやPythonなどガーベッジコレクションのある言語では使えないことは欠点である。 % TODO: Rubyは？ -- spinute: たぶんダメですね
 XOR-listのもっと踏み込んだ議論はSinhaの雑誌記事\cite{s04}を参照してほしい。
 
 \begin{exc}
