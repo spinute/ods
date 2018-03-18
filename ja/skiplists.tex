@@ -75,7 +75,7 @@ $L_0$のノード#u#について、#u#の探索経路の長さの期待値は$2\
 #u.next[i]#が$L_{#i#}$における#u#の次のノードを指すようにすればよい。
 #x#は複数のリストに現れることがあるが、こうすればノードとしての実体は1つだけあれば済む。
 
-% XXX: height は length of next - 1 ではないか
+% XXX: height は length of next - 1 ではないか -- 実装を見てもそうなっているっぽい。コード中のコメントは不正確なので一旦消した。Pat に確認する
 \javaimport{ods/SkiplistSSet.Node<T>}
 \cppimport{ods/SkiplistSSet.Node}
 
