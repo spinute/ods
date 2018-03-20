@@ -170,6 +170,7 @@ $L_{#r#}$（$#r#>0$）については、辺#e#の長さを、$L_{#r#-1}$にお�
 \end{figure}
 
 \javaimport{ods/SkiplistList.Node}
+% XXX: height は length of next - 1 ではないか -- 実装を見てもそうなっているっぽい。コード中のコメントは不正確なので一旦消した。Pat に確認する
 \cppimport{ods/SkiplistList.Node}
 
 この定義には、$L_0$においてj番めのノードから長さ$\ell$の辺を辿ると、$L_0$において$#j#+\ell$のノードに移るという良い性質がある。
