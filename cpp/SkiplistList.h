@@ -20,7 +20,7 @@ protected:
 	T null;
 	struct Node {
 		T x;
-		int height;     // length of next
+		int height;
 		int *length;
 		Node **next;
 	};
