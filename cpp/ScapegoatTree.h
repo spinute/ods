@@ -178,7 +178,8 @@ template<class Node, class T> inline
 bool ScapegoatTree<Node,T>::remove(T x) {
 	if (BinarySearchTree<Node,T>::remove(x)) {
 		if (2*n < q) {
-			rebuild(r);
+			if (r != NULL)
+				rebuild(r);
 			q = n;
 		}
 		return true;
