@@ -123,7 +123,7 @@ Eytzinger法を大きな木に適用してみると、規則性が見えてく�
 
 \section{#MeldableHeap#：ランダムなMeldableヒープ}
 \seclabel{meldableheap}
-% XXX: meldableは定訳がある? % YJ: Introduction to Algorithmsにあるので日本語版を確認すればあるはず
+% XXX: meldableは定訳がある? % YJ: Introduction to Algorithmsにあるので日本語版を確認すればあるはず -- spinute: （mergeable heap は載っているけど）meldable heap は載ってない気がする。ひとまず meldable のままにしておきます。
 
 \index{MeldableHeap@#MeldableHeap#}%
 この節では、#MeldableHeap#を紹介する。
@@ -193,7 +193,7 @@ $#n#_1$を左の部分木の大きさとする。
 このとき、$#n#_2=#n#-#n#_1-1$が右の部分木の大きさである。
 根からはじめて、一歩進み、大きさ$#n#_1$または$#n#_2$の部分木について処理を続ける。
 仮定より、ステップ数の期待値は次のようになる。
-% XXX: 原著では等号になっているが、仮定は不等号ではないか
+% XXX: 原著では等号になっているが、仮定は不等号ではないか -- Pat に確認します。
 \[
     \E[W] \le 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1)
 \]
@@ -202,7 +202,7 @@ $\log$は凹関数（上に凸な関数）なので、$\E[W]$は$#n#_1=#n#_2=(#n
 よって、ランダムウォークのステップ数の期待値は次のようになる。
 \begin{align*}
     \E[W]
-% XXX: ここも上と同様（原著では等号になっている）
+% XXX: ここも上と同様（原著では等号になっている）-- Pat に確認します。
    & \le 1 + \frac{1}{2}\log (#n#_1+1) + \frac{1}{2}\log (#n#_2+1) \\
    & \le  1 + \log ((#n#-1)/2+1) \\
    & =  1 + \log ((#n#+1)/2) \\
