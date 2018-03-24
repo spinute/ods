@@ -10,15 +10,12 @@
 \ejindex{partial rebuilding}{ぶぶんてきなさいこうちく@部分的な再構築}%
 \ejindex{binary search tree!partial rebuilding}{にぶんたんさくぎ@二分探索木!ぶぶんてきなさいこうちく@部分的な再構築}%
 部分的な再構築とは部分木を一度分解し、非常にバランスのよい二分木として再構築するプロセスである。
-ここで、非常にバランスのよい二分木とは、サイズでバランスされている（問6.6）完全二分木のことである。また、完全二分木（10章）とは任意の葉の高さの差が高々1である木のことである。 % TODO: perfectly balanced binary tree
-% YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木は全てのノードについてバランスされている木である、と定義して使うか？
-%% spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
+ここで、非常にバランスのよい二分木とは、サイズでバランスされている（問6.6）完全二分木のことである。また、完全二分木（10章）とは任意の葉の高さの差が高々1である木のことである。 % TODO: perfectly balanced binary tree -- YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木は全てのノードについてバランスされている木である、と定義して使うか？ -- spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
 ノード#u#を根とする部分木を非常にバランスのよい二分木に再構築するやり方はたくさんある。
 もっとも単純なやり方のひとつは#u#の部分木を辿りすべてのノードを配列#a#に集め、#a#から再帰的に非常にバランスのよい二分木を構築するやり方だ。
-% m = floor(a.length/2)?
-%% spinute: そうだと思います。整数の除算が整数になる言語のつもりなのでは
+% XXX: m = floor(a.length/2)? -- spinute: そうだと思います。整数の除算が整数になる言語のつもりなのでは
 $#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そして$#a#[0],\ldots,#a#[#m#-1]$は左の部分木に、$#a#[#m#+1],\ldots,#a#[#a.length#-1]$は右の部分木にそれぞれ再帰的に配置する。
-% XXX: buildBalanced が表示されていない
+% XXX: buildBalanced が表示されていない -- 原因不明。snarf-cpp.plあたりを読まないといけないかも。あるいは単に複数のcodeimportに分割すれば動くか？
 \codeimport{ods/ScapegoatTree.rebuild(u).packIntoArray(u,a,i).buildBalanced(a,i,ns)}
 #rebuild(u)#の実行時間は$O(#size(u)#)$である。
 結果として得られる部分木は高さが最小である。
@@ -149,7 +146,7 @@ scapegoatノード#w#を見つけた後、#w#を根とする部分木の再構�
 scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで$#u#_0,\ldots,#u#_k$に順に実行する。
 しかし、 $#u#_k$はこの列における最初のscapegoatノードなので、任意の$i\in\{0,\ldots,k-2\}$について次の式が成り立つ。
 \[
-  % XXX ここ、原著 < になっているけど、(8.2) の逆なので \le ではないでしょうか
+  % XXX ここ、原著 < になっているけど、(8.2) の逆なので \le ではないでしょうか -- そうっぽい。Pat に確認する
   #size(u#_{i}#)# \le \frac{2}{3}#size(u#_{i+1}#)#
 \]
 よって、すべての#size(u)#呼び出しのコストの合計は次のようになる。
@@ -179,10 +176,9 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
 \end{lem}
 
 \begin{proof}
-% XXX: credit schemeの訳語は? accounting method（AlgoIntroでは出納法）のことだろうか?
-% YJ accounting methodのことっぽい。検索してみるとおしゃれにcreditという言い方をするものがいくつか出てきた。 https://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf
+% XXX: credit schemeの訳語は? accounting method（AlgoIntroでは出納法）のことだろうか? -- YJ accounting methodのことっぽい。検索してみるとおしゃれにcreditという言い方をするものがいくつか出てきた。 https://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf
 % 出納法に訳します。
-% eindexもcredit schemeよりもaccounting methodの方がよいような気がする
+% XXX: eindexもcredit schemeよりもaccounting methodの方がよいような気がする -- 両方index 付けときました
 
 \emph{出納法（credit scheme）}を使って示す。
 \ejindex{credit scheme}{すいとうほう@出納法}%
