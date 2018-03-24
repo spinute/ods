@@ -241,11 +241,11 @@
 \codeimport{ods/BinarySearchTree.findLast(x)}
 \codeimport{ods/BinarySearchTree.addChild(p,u)}
 \figref{bst-insert}に例を示した。
-% XXX: 原著が間違ってる? According to the definition at the head of this chapter, it seems to be appropriate to use not "height" but "depth" here.
+% XXX: 原著が間違ってる? According to the definition at the head of this chapter, it seems to be appropriate to use not "height" but "depth" here. -- YJ 深さかと
 % > An example is shown in \figref{bst-insert}. The most time-consuming
 % part of this process is the initial search for #x#, which takes an
 % amount of time proportional to the height of the newly added node #u#.
-最も時間がかかるのは#x#を検索する処理で、この時間は新たに追加するノード#u#の深さに比例する。 % YJ 深さかと
+最も時間がかかるのは#x#を検索する処理で、この時間は新たに追加するノード#u#の深さに比例する。
 最悪の場合にはこれは#BinarySearchTree#の高さである。
 
 \begin{figure}

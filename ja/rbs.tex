@@ -184,9 +184,7 @@ $I_i$を指示確率変数とする。
 
 \thmref{rbs}における期待値は、ランダム二分探索木を作るための置換のランダム性に基づく。つまり、#x#をランダムに選ぶことには依存しておらず、任意の#x#についてこれは成り立つ。
 
-% XXX: Randomized Binary Search Tree と random binary search tree をどう訳し分けるか
-% YJ: ランダム化二分探索木？動的ランダム二分探索木？
-% 原著はこのsecではTreapをRandomized binary search treeの一つとして紹介しているのにかかわらずexerciseのところではMartinezによる変種こそをrandomized binary search treeと呼んで２つを対比している。
+% XXX: Randomized Binary Search Tree と random binary search tree をどう訳し分けるか -- YJ: ランダム化二分探索木？動的ランダム二分探索木？ 原著はこのsecではTreapをRandomized binary search treeの一つとして紹介しているのにかかわらずexerciseのところではMartinezによる変種こそをrandomized binary search treeと呼んで２つを対比している。
 %\section{#Treap#: A Randomized Binary Search Tree}
 \section{#Treap#: 動的ランダム二分探索木}
 \seclabel{treap}
@@ -307,7 +305,7 @@ $I_i$を指示確率変数とする。
 #u#が根になると処理が終了するので、回転回数の期待値は探索経路長の期待値以下である。
 よって、#Treap#における#add(x)#の実行時間の期待値は$O(\log #n#)$である。
 （\excref{treap-rotates}はこの操作における回転の回数の期待値は実は$O(1)$であることを示す問題である。）
-%% XXX: \excref{treap-rotates} が問7.3となっているが、問7.5である。（excercise は 7.3 節であるが）
+%% XXX: \excref{treap-rotates} が問7.3となっているが、問7.5である。（excercise は 7.3 節であるが）-- 対応済み
 
 #Treap#における#remove(x)#は#add(x)#の逆である。
 #x#を含むノード#u#を探し、#u#が葉に来るまで下方向に回転を繰り返し、最後に#u#を取り外す。
@@ -351,7 +349,7 @@ $I_i$を指示確率変数とする。
 いずれも#SSet#の実装で、各操作の実行時間の期待値は$O(\log #n#)$である。
 どちらのデータ構造でも#add(x)#・#remove(x)#は検索に続く定数回のポインタの更新からなる。
 （下の\excref{treap-rotates}を見よ）
-%% XXX: \excref{treap-rotates} が問7.3となっているが、問7.5である。（excercise は 7.3 節であるが）
+%% XXX: \excref{treap-rotates} が問7.3となっているが、問7.5である。（excercise は 7.3 節であるが）-- 対応済み
 よってどちらのデータ構造でも探索経路の長さの期待値が性能を決める重要な値である。
 #SkiplistSSet#では探索経路の長さの期待値は次のようである。
 \[
@@ -362,7 +360,7 @@ $I_i$を指示確率変数とする。
     2\ln #n# +O(1) \approx 1.386\log #n#  + O(1)
 \]
 よって#Treap#における探索経路の方が短く、各操作も#Skiplist#よりも#Treap#の方がかなり速いと解釈できるだろう。
-% XXX: ここも\excrefの参照先を修正する必要がある
+% XXX: ここも\excrefの参照先を修正する必要がある -- 対応済み
 \chapref{skiplists}の\excref{skiplist-opt}で示したように、偏ったコイントスを使って、#Skiplist#における探索経路の長さの期待値を次のように減らせる。
 %\bf{XXX: SkiplistSSetの誤植?} % 導入では実装+インターフェイスの名前であるSkiplistSSetを使い、実装の違いによる計算量の議論に移るところで実装の名前であるSkiplistにしていると思う。
 \[
@@ -393,7 +391,6 @@ Devroye\cite{d88}が\lemref{rbs}とそれに関連する結果とを証明した
 min-wise independent性とは次の性質である。
 相異なる任意の値$x_1,\ldots,x_k$について、それぞれのハッシュ値$h(x_1),\ldots,h(x_k)$は高い確率で相異なる値を取る。
 すなわち、ある定数$c$が存在して、任意の$i\in\{1,\ldots,k\}$について次の式が成り立つ。
-% XXX: 右辺の分母、正しいか？
 \[
    \Pr\{h(x_i) = \min\{h(x_1),\ldots,h(x_k)\}\} \le c/k
 \]
