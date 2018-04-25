@@ -1,45 +1,46 @@
-\chapter{Scapegoat Tree}
+\chapter{スケープゴート木}
 \chaplabel{scapegoat}
 
 この章では二分探索木の一種である#ScapegoatTree#を紹介する。
-これは、なにか誤りがあったときそれが誰の責任なのかを決めようとする、現実でよくある発想に基づくデータ構造である。（scapegoat とは罪を負わされたヤギ、転じて身代わりや生け贄のことである。）
-\ejindex{scapegoat}{すけーぷごーと@スケープゴート}%
-責任の所在が決まれば、その scapegoat に問題を解決させられる。
+スケープゴート（scapegoat）とは、罪を負わされたヤギ、転じて身代わりや生け贄のことである。
+現実では、なにかがうまくいかないとき、まず責任者を探そうとすることが多い。それと同じ発想に基づくデータ構造が#ScapegoatTree#である。
+\ejindex{スケープゴート}{すけーぷごーと@スケープゴート}%
+責任者がはっきり決まったら、それをスケープゴートにして問題を解決させればよい。
 
-#ScapegoatTree#は\emph{部分的な再構築 (partial rebuilding)}によってバランスを保つ。
+#ScapegoatTree#では、\emph{部分的な再構築（partial rebuilding）}によってバランスを保つ。
 \ejindex{partial rebuilding}{ぶぶんてきなさいこうちく@部分的な再構築}%
 \ejindex{binary search tree!partial rebuilding}{にぶんたんさくぎ@二分探索木!ぶぶんてきなさいこうちく@部分的な再構築}%
-部分的な再構築とは部分木を一度分解し、非常にバランスのよい二分木として再構築するプロセスである。
-ここで、非常にバランスのよい二分木とは、サイズでバランスされている（問6.6）完全二分木のことである。また、完全二分木（10章）とは任意の葉の高さの差が高々1である木のことである。 % TODO: perfectly balanced binary tree -- YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木は全てのノードについてバランスされている木である、と定義して使うか？ -- spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
-ノード#u#を根とする部分木を非常にバランスのよい二分木に再構築するやり方はたくさんある。
-もっとも単純なやり方のひとつは#u#の部分木を辿りすべてのノードを配列#a#に集め、#a#から再帰的に非常にバランスのよい二分木を構築するやり方だ。
+部分的な再構築とは、部分木を一度分解し、非常にバランスのよい二分木として再構築するプロセスである。
+ここで、非常にバランスのよい二分木とは、サイズでバランスされている完全二分木のことである（問6.6参照）。また、完全二分木とは、任意の葉の高さの差が高々1である木のことである（第10章参照）。% TODO: perfectly balanced binary tree -- YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木は全てのノードについてバランスされている木である、と定義して使うか？ -- spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
+ノード#u#を根とする部分木を再構築して非常にバランスのよい二分木にするやり方はたくさんある。
+なかでも単純なのは、#u#の部分木を辿ってすべてのノードを配列#a#に集め、#a#から再帰的に非常にバランスのよい二分木を構築するやり方だ。
 % XXX: m = floor(a.length/2)? -- spinute: そうだと思います。整数の除算が整数になる言語のつもりなのでは
-$#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そして$#a#[0],\ldots,#a#[#m#-1]$は左の部分木に、$#a#[#m#+1],\ldots,#a#[#a.length#-1]$は右の部分木にそれぞれ再帰的に配置する。
+$#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そして、$#a#[0],\ldots,#a#[#m#-1]$は左の部分木に、$#a#[#m#+1],\ldots,#a#[#a.length#-1]$は右の部分木にそれぞれ再帰的に配置する。
 % XXX: buildBalanced が表示されていない -- 原因不明。snarf-cpp.plあたりを読まないといけないかも。あるいは単に複数のcodeimportに分割すれば動くか？
 \codeimport{ods/ScapegoatTree.rebuild(u).packIntoArray(u,a,i).buildBalanced(a,i,ns)}
 #rebuild(u)#の実行時間は$O(#size(u)#)$である。
 結果として得られる部分木は高さが最小である。
 すなわち、#size(u)#個のノードを持つこの木より低い木は存在しない。
 
-\section{#ScapegoatTree#：部分再構築する二分探索木}
+\section{#ScapegoatTree#：部分的に再構築する二分探索木}
 \seclabel{scapegoattree}
 
 \index{ScapegoatTree@#ScapegoatTree#}%
 #ScapegoatTree#は二分探索木である。
-ノード数#n#に加えてノード数の上界#q#とを保持する。
+木に含まれるノードの数#n#に加えて、ノードの数に関する上界を表すカウンター#q#を保持する。
 \codeimport{ods/ScapegoatTree.q}
 #n#と#q#は常に次の関係を満たす。
 \[
       #q#/2 \le  #n# \le #q#
 \]
-加えて#ScapegoatTree#の高さはノードの数に対して対数程度であるという性質を持つ。
-すなわちscapegoat treeの高さは常に$\log_{3/2} #q#$以下であり、この値は以下の性質を満たす。 % YJ 不等式にあるどの値も高さを表すものではなく、高さの上界であることが分かりにくいので。
+#ScapegoatTree#には、木の高さがノード数の対数で抑えられるという性質がある。
+具体的には、#ScapegoatTree#の高さは常に$\log_{3/2} #q#$以下であり、この値は以下の性質を満たす。% YJ 不等式にあるどの値も高さを表すものではなく、高さの上界であることが分かりにくいので。
 \begin{equation}
      \log_{3/2} #q# \le \log_{3/2} 2#n# < \log_{3/2} #n# + 2
      \eqlabel{scapegoat-height}
 \end{equation}
-この制約を満たしていても、#ScapegoatTree#は意外と偏った見た目になりうる。
-例えば\figref{scapegoat-example}は$#q#=#n#=10$であり、高さ$5<\log_{3/2}10 \approx 5.679$の木である。
+このような制約があるものの、#ScapegoatTree#の見た目は意外なほど偏ることもある。
+例えば、$#q#=#n#=10$で高さが$5<\log_{3/2}10 \approx 5.679$の#ScapegoatTree#を\figref{scapegoat-example}に示す。
 
 \begin{figure}
   \begin{center}
@@ -49,29 +50,27 @@ $#m#=#a.length#/2$とし、#a[m]#を新たな部分木の根とする。そし�
   \figlabel{scapegoat-example}
 \end{figure}
 
-#ScapegoatTree#における#find(x)#の実装は#BinarySearchTree#のアルゴリズムをそのまま使う。（\secref{binarysearchtree}を参照せよ。）
-実行時間は木の高さに比例し、\myeqref{scapegoat-height}よりこれは$O(\log #n#)$である。
+#ScapegoatTree#における#find(x)#の実装では、#BinarySearchTree#のアルゴリズムをそのまま使う（\secref{binarysearchtree}参照）。
+実行時間は木の高さに比例し、これは\myeqref{scapegoat-height}により$O(\log #n#)$である。
 
-#add(x)#の実装でも、まず#n#と#q#をひとつずつ増やし、#x#を#BinarySearchTree#に追加するアルゴリズムをそのまま使う。
-すなわち、#x#を探し、新たな葉#u#を追加し、$#u.x#=#x#$とする。 % YJ u.x=x: フィールドの名前と引数の名前が同じなのは初学者を混乱させてしまわないだろうか。訳者注を加える？
-このとき、#u#の深さが運良く既に$\log_{3/2}#q#$以下なら、これ以上なにもしなくてよい。
+#add(x)#の実装では、まず#n#と#q#を1ずつ増やし、それから#x#を#BinarySearchTree#に追加するアルゴリズムをそのまま使う。
+すなわち、#x#を探し、新たな葉#u#を追加し、$#u.x#=#x#$とする。% YJ u.x=x: フィールドの名前と引数の名前が同じなのは初学者を混乱させてしまわないだろうか。訳者注を加える？
+このとき、たまたま#u#の深さが$\log_{3/2}#q#$以下になっているなら、それ以上なにもしなくてよい。
 
-$#depth(u)# > \log_{3/2} #q#$になっていることもあり、この場合には高さを減らなければならない。
-これはさほど難しくない。
-このとき、深さが$\log_{3/2} #q#$を超えているノードは今加えた#u#だけである。
-修正するために、木を上に向かって辿りながら\emph{scapegoat}であるノード#w#を探す。
-#w#は非常にバランスの悪いノードである。
-ここではバランスの悪さを次の式で判定する。
+しかし、$#depth(u)# > \log_{3/2} #q#$になっていることもある。
+この場合には高さを減らさなければならないが、深さが$\log_{3/2} #q#$を超えてしまうノードはいま加えた#u#だけなので、さほど難しくはない。
+木を上に向かって辿りながら、\emph{スケープゴート}となるノード#w#を探す。
+スケープゴート#w#は、特にバランスされていないノードである。
+根から#u#へと至る経路上の子（#w.child#）との間で、次のような性質を持つノードが、#w#である。
 \begin{equation}
    \frac{#size(w.child)#}{#size(w)#} > \frac{2}{3}
    \eqlabel{scapegoat}
 \end{equation}
-#w.child#は#w#の子であって、根から#u#に至る経路上にあるものである。
-scapegoatが存在することを示すのは難しくない。
-今はこれを事実として認めることにする。
-scapegoatである#w#が見つかれば、#w#を根とする部分木を非常にバランスのよい二分木に再構築すればよい。
-\myeqref{scapegoat}より、#u#を加える前には#w#の部分木は非常にバランスのよい二分木ではない。
-よって、再構築後の木の高さは1以上減り、#ScapegoatTree#の高さは再び$\log_{3/2}#q#$以上になる。
+このようなスケープゴート#w#が存在するかどうかについては、すぐあとで証明する。
+いまは#w#が存在するものとしよう。
+スケープゴート#w#が見つかったら、#w#を根とする部分木を再構築することで、全体を非常にバランスのよい二分木にする。
+#w#を根とする部分木は、\myeqref{scapegoat}のような性質なので、#u#を加える前から完全二分木ではなかった。
+そこで#w#を再構築するときは、#ScapegoatTree#の高さが再び$\log_{3/2}#q#$以上になるように、#w#の高さを1以上減らす。
 
 \codeimport{ods/ScapegoatTree.add(x)}
 
@@ -82,28 +81,28 @@ scapegoatである#w#が見つかれば、#w#を根とする部分木を非常�
       \includegraphics[scale=0.90909]{figs/scapegoat-insert-4}
     \end{tabular}
   \end{center}
-  \caption{#ScapegoatTree#に3.5を追加する。このとき木の高さは6に増え、$6 > \log_{3/2} 11 \approx 5.914$より\myeqref{scapegoat-height}が成り立たない。scapegoatは値5を含むノードで見つかる。}
+  \caption{#ScapegoatTree#に3.5を追加する。このとき木の高さは6に増え、$6 > \log_{3/2} 11 \approx 5.914$より\myeqref{scapegoat-height}が成り立たない。スケープゴートは値5を含むノードで見つかる}
 \end{figure}
-scapegoat #w#を見つけるコスト、#w#を根とする部分木を再構築するコストを無視すれば、#add(x)#の実行時間のうち支配的なのは最初の検索のものであり、これは$O(\log #q#) = O(\log #n#)$である。
-scapegoatを見つけ、部分木を再構築するコストは、次小節で償却解析を使って説明する。
+スケープゴート#w#を見つけるコストと、#w#を根とする部分木を再構築するコストを無視すれば、#add(x)#の実行時間のうち支配的なのは最初の検索にかかるコストであり、これは$O(\log #q#) = O(\log #n#)$である。
+スケープゴートを見つけて部分木を再構築するコストは、次項で償却解析を使って説明する。
 
-#ScapegoatTree#における#remove(x)#の実装は非常に単純である。
-#x#を探し、#BinarySearchTree#におけるアルゴリズムを使ってそれを削除する。
-（これは木の高さを増やすことはない。）
-そして#n#をひとつ小さくし、#q#はそのままにしておく。
-最後に$#q# > 2#n#$かどうかを確認し、もしそうなら\emph{木全体を再構築}し、非常にバランスのよい二分木にして、$#q#=#n#$とする。
+#ScapegoatTree#における#remove(x)#の実装はとても単純である。
+#x#を探し、#BinarySearchTree#におけるアルゴリズムを使って削除する
+（これによって木の高さが増えることはない）。
+そのうえで、#n#を1つ小さくし、#q#はそのままにしておく。
+最後に$#q# > 2#n#$かどうかを確認し、もしそうなら\emph{木全体を再構築}して非常にバランスのよい二分木とし、$#q#=#n#$とする。
 % XXX: 原著にはないが、rebuild の直前に r の非 NULL チェックが必要な気がする。空の ScapegoatTree に対して、ある要素を add し、それを remove すると、n = 1, q = 0 になるためこの分岐に入るが、そのとき r は NULL になっている。すると、rebuild の中で r のポインタを剥がしているので死ぬ
 \codeimport{ods/ScapegoatTree.remove(x)}
 ここでも、再構築のコストを無視すれば、#remove(x)#の実行時間は木の高さに比例し、$O(\log #n#)$である。
 
 \subsection{正しさの証明と実行時間の解析}
 
-ここでは#ScapegoatTree#の各操作の正しさと償却実行時間の解析とを行う。
-まずは正しさを示すために、#add(x)#操作において\myeqref{scapegoat-height}が成り立たないならscapegoatが見つかることを示す。
+ここでは#ScapegoatTree#の各操作の正しさと償却実行時間とを解析する。
+まず、#add(x)#操作によって\myeqref{scapegoat-height}を満たさない状態になった場合には必ずスケープゴートが見つかることを示すことにより、#ScapegoatTree#の各操作の正しさを証明する。
 
 \begin{lem}
-  #u#を#ScapegoatTree#における深さ$d>\log_{3/2} #q#$のあるノードとする。 % YJ: ここは高さではなく深さなので、hではなくdを使うべきでは？コードはdを使っている。
-  このとき#u#からrootへの経路上に次の条件を満たすノード#w#が存在する。
+  #ScapegoatTree#において深さ$d>\log_{3/2} #q#$となるノードを#u#とする。 % YJ: ここは高さではなく深さなので、hではなくdを使うべきでは？コードはdを使っている。
+  このとき、#u#から根への経路上に次の条件を満たすノード#w#が存在する。
   \[
      \frac{#size(w)#}{#size(parent(w))#} > 2/3
   \]
@@ -111,7 +110,7 @@ scapegoatを見つけ、部分木を再構築するコストは、次小節で�
 
 \begin{proof}
 背理法で示す。
-#u#からrootへの経路上の任意のノード#w#について次の式が成り立つと仮定する。
+#u#から根への経路上の任意のノード#w#について次の式が成り立つと仮定する。
 \[
    \frac{#size(w)#}{#size(parent(w))#} \le 2/3
 \]
@@ -119,11 +118,11 @@ scapegoatを見つけ、部分木を再構築するコストは、次小節で�
 このとき
 $#size(u#_0#)#=#n#$、
 $#size(u#_1#)#\le\frac{2}{3}#n#$、
-$#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般に次の式が成り立つ。
+$#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り立つ。
 \[
 #size(u#_i#)#\le\left(\frac{2}{3}\right)^i#n#
 \]
-ここで$#size(u)#\ge 1$より、
+ここで、$#size(u)#\ge 1$より、以下のようになる。
 \[
     1 \le #size(u)# \le \left(\frac{2}{3}\right)^d#n#
    < \left(\frac{2}{3}\right)^{\log_{3/2} #q#}#n#
@@ -134,22 +133,22 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般に次の式が成り立
 こうして矛盾が導かれた。
 \end{proof}
 
-続いてまだ説明していない部分の実行時間の解析を行う。
-scapegoatノードを探す際の#size(u)#・#rebuild(w)#のコストを改正する。
-これらふたつの操作の間には次のような関係がある。
+続いて、まだ説明していない実行時間について解析する。
+解析は、スケープゴートとなるノードを探すときに#size(u)#を呼び出すコストと、スケープゴート#w#を見つけたときに#rebuild(w)#を呼び出すコストに分けて考える。
+これら2つの操作の間には次のような関係がある。
 \begin{lem}
-#ScapegoatTree#の#add(x)#において、scapegoat #w#を見つけて#w#を根とする部分木を再構築するコストは$O(#size(w)#)$である。
+#ScapegoatTree#の#add(x)#において、スケープゴート#w#を見つけて#w#を根とする部分木を再構築するコストは$O(#size(w)#)$である。
 \end{lem}
 
 \begin{proof}
-scapegoatノード#w#を見つけた後、#w#を根とする部分木の再構築を行う際の実行時間は$O(#size(w)#)$である。
-scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで$#u#_0,\ldots,#u#_k$に順に実行する。
-しかし、 $#u#_k$はこの列における最初のscapegoatノードなので、任意の$i\in\{0,\ldots,k-2\}$について次の式が成り立つ。
+スケープゴートとなるノード#w#を見つけたあと、#w#を根とする部分木を再構築する際の実行時間は、$O(#size(w)#)$である。
+スケープゴートを見つけるには、$#u#_k=#w#$を見つけるまで、$#u#_0,\ldots,#u#_k$に対して順番に#size(u)#を実行する。
+しかし、$#u#_k$はこの列における最初のスケープゴートとなるノードなので、任意の$i\in\{0,\ldots,k-2\}$について次の式が成り立つ。
 \[
   % XXX ここ、原著 < になっているけど、(8.2) の逆なので \le ではないでしょうか -- そうっぽい。Pat に確認する
   #size(u#_{i}#)# \le \frac{2}{3}#size(u#_{i+1}#)#
 \]
-よって、すべての#size(u)#呼び出しのコストの合計は次のようになる。
+よって、#size(u)#を呼び出すコストをすべて合計すると次のようになる。
 \begin{eqnarray*}
  O\left( \sum_{i=0}^k #size(u#_{k-i}#)# \right)
  &=& O\left(
@@ -166,13 +165,13 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
   \right)\right) \\
 &=& O(#size(u#_k#)#) = O(#size(w)#)
 \end{eqnarray*}
-最後の行は等比数列の和を計算している。
+最後の行では等比数列の和を計算している。
 \end{proof}
 
-最後に、$m$個の操作を順に実行する時の#rebuild(u)#の合計コストの上界を示す。
+最後に、$m$個の操作を順に実行するときの#rebuild(u)#の合計コストの上界を示す。
 
 \begin{lem}\lemlabel{scapegoat-amortized}
-空の#ScapegoatTree#に対して、$m$個の#add(x)#・#remove(x)#からなる操作の列を順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
+空の#ScapegoatTree#に対して、$m$個の#add(x)#および#remove(x)#からなる操作の列を順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
 \end{lem}
 
 \begin{proof}
@@ -185,24 +184,24 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
 \ejindex{accounting scheme}{すいとうほう@出納法}%
 各ノードは預金を持っていると考える。
 預金が$c$だけあれば再構築のための支払いができる。
-預金の合計は$O(m\log m)$で、#rebuild(u)#は#u#に蓄えられている預金を使って支払われる。
+預金の合計は$O(m\log m)$で、#rebuild(u)#の呼び出しにかかるコストは、#u#が蓄えている預金を使って支払われる。
 
-ノード#u#を挿入・削除の際に、根から#u#への経路上にある各ノードの預金を1だけ増やす。
-こうして一回の操作で増える預金の合計は最大$\log_{3/2}#q#\le \log_{3/2}m$である。
+ノード#u#を挿入、削除する際に、根から#u#への経路上にある各ノードの預金を1だけ増やす。
+こうして1回の操作で増える預金の合計は最大$\log_{3/2}#q#\le \log_{3/2}m$である。
 削除の際には多めに預金を蓄えることになる。
-こうして最大$O(m\log m)$だけの預金を行う。
+こうして最大で$O(m\log m)$を預金する。
 あとは、これだけの預金ですべての#rebuild(u)#の支払いに十分であることを示せばよい。
 
-挿入の際に#rebuild(u)#を実行するなら、#u#はscapegoatである。
-次のことを仮定しても一般性を失わない。
+挿入の際に#rebuild(u)#を実行するなら、#u#がスケープゴートである。
+次のように仮定しても一般性を失わない。
 \[
 \frac{#size(u.left)#}{#size(u)#} > \frac{2}{3}
 \]
-次の事実を仮定使うと、
+ここで、次の事実が成り立っている。
 \[
   #size(u)# = 1 + #size(u.left)# + #size(u.right)#
 \]
-次の式が成り立つ。
+これを使うと、次の式が成り立つ。
 \[
   \frac{1}{2}#size(u.left)# > #size(u.right)#
 \]
@@ -211,58 +210,57 @@ scapegoatを見つけるためには#size(u)#を$#u#_k=#w#$を見つけるまで
   #size(u.left)# - #size(u.right)# > \frac{1}{2}#size(u.left)# >
   \frac{1}{3}#size(u)#
 \]
-#u#を含む部分木が直前に再構築されたとき（もし、#u#を含む部分木が一度も再構築されていなければ、#u#が挿入されたとき）、次の式が成り立つ。
+#u#を含む部分木が直前に再構築されたとき（もし#u#を含む部分木が一度も再構築されていなければ、#u#が挿入されたとき）、次の式が成り立つ。
 \[
   #size(u.left)# - #size(u.right)# \le 1
 \]
-よって、#u.left#・#u.right#に影響を与えた#add(x)#・#remove(x)#の数の合計は次の値以上である。
+よって、#u.left#と#u.right#に影響を与えた#add(x)#および#remove(x)#の数の合計は次の値以上である。
 \[
   \frac{1}{3}#size(u)# - 1
 \]
 #u#には少なくともこれだけの預金が蓄えられており、#rebuild(u)#に必要な$O(#size(u)#)$だけの支払いには十分である。
 
-削除において#rebuild(u)#が呼ばれるとき、$#q# > 2#n#$である。
+削除において#rebuild(u)#が呼ばれるときは、$#q# > 2#n#$である。
 この場合、$#q#-#n#> #n#$だけ余分に預金が蓄えられており、根の再構築に必要な$O(#n#)$だけの支払いには十分である。
 \end{proof}
 
 \subsection{要約}
-次の定理は#ScapegoatTree#の性能をまとめるものだ。
+次の定理に#ScapegoatTree#の性能をまとめる。
 
 \begin{thm}\thmlabel{scapegoat}
   #ScapegoatTree#は#SSet#インターフェースを実装する。
-  #rebuild(u)#のコストを無視すると、#ScapegoatTree#は#add(x)#・#remove(x)#・#find(x)#をいずれも$O(\log #n#)$の時間で実行できる。
-  さらに、空の#ScapegoatTree#に対して、$m$個の#add(x)#・#remove(x)#からなる操作の列を順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
+  #rebuild(u)#のコストを無視すると、#ScapegoatTree#は#add(x)#、#remove(x)#、#find(x)#をいずれも$O(\log #n#)$の時間で実行できる。
+  さらに、$m$個の#add(x)#および#remove(x)#からなる操作の列を空の#ScapegoatTree#に対して順に実行するとき、#rebuild(u)#に要する時間の合計は$O(m\log m)$である。
 \end{thm}
 
 \section{ディスカッションと練習問題}
 
-GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し、このデータ構造を定義し、解析した。
-しかし同じデータ構造がAndersson \cite{a89,a99}によって先に発見されており、そこでは
+\emph{scapegoat tree}という名称は、このデータ構造を定義して解析したGalperinとRivestにより提案された\cite{gr93}。
+ただし、同じデータ構造はAnderssonによって先に発見されており、そこでは
 \index{general balanced tree}%
 \emph{general balanced trees}
-と呼ばれていた。
-これはこのデータ構造は高さが小さいならどのような形状も取れることによる。
+と呼ばれていた\cite{a89,a99}。
+これは、このデータ構造が、高さが小さいならどのような形状も取れることによる。
 
 #ScapegoatTree#を実装し、実験してみると、この本で紹介した他の#SSet#の実装と比べてかなり遅いことがわかる。
-高さの上界は
+高さの上界は以下である。
 \[
    \log_{3/2}#q# \approx 1.709\log #n# + O(1)
 \]
-である。
 これは#Skiplist#の探索経路の長さの期待値よりも小さく、#Treap#ともほぼ同じなので、#ScapegoatTree#が遅いのは意外かもしれない。
-#ScapegoatTree#の最適化として、各ノードに部分木の大きさを保持したり、既に計算した部分木のサイズを再利用したりできる。
-（\ref{exc:scapegoat-quicksize}と\ref{exc:scapegoat-explicitsize}を参照せよ。）
+#ScapegoatTree#の最適化として、各ノードに部分木の大きさを保持したり、既に計算した部分木のサイズを再利用したりできる
+（\ref{exc:scapegoat-quicksize}と\ref{exc:scapegoat-explicitsize}を参照）。
 これらの最適化をしても、依然として#add(x)#や#delete(x)#を繰り返し実行すると、#ScapegoatTree#は他の#SSet#の実装より遅いことがあるだろう。
 
-この本で紹介した他の#SSet#の実装と比べて、#ScapegoatTree#は再構築にかかる時間が長いため、性能が芳しくないのである。
-この本で紹介した他の#SSet#の実装では、#n#個の操作の間にデータ構造の再構築に費やす時間は$O(#n#)$であった。
-一方、\excref{scapegoat-nlogn}より、#ScapegoatTree#では#n#個の操作を実行する間に$#n#\log #n#$のオーダーの時間を#rebuild(u)#に費やす。
-これはデータ構造の再構築をすべて#rebuild(u)#で行っていることに起因する。 \cite{d90}.
+#ScapegoatTree#が、本章で紹介した他の#SSet#の実装と比べて性能が芳しくないのは、再構築にかかる時間が長いからである。
+本章で紹介した他の#SSet#の実装では、#n#個の操作の間にデータ構造の再構築に費やす時間は$O(#n#)$であった。
+一方、\excref{scapegoat-nlogn}より、#ScapegoatTree#では#n#個の操作を実行する間に$#n#\log #n#$オーダーの時間を#rebuild(u)#に費やす。
+これは、データ構造の再構築をすべて#rebuild(u)#で行っていることに起因する\cite{d90}。
 
-性能は劣るものの、#ScapegoatTree#が正しい選択となることもある。
-これは、各ノードに追加のデータを入れる場合で、特に、回転操作ではそれを定数時間では更新できないが、#rebuild(u)#では定数時間で更新できる場合である。
-この場合#ScapegoatTree#（や部分的な再構築を行う他のデータ構造）を選ぶのがよい。
-このような応用の例を\excref{list-order-maintenance}では取り上げている。
+性能が劣るとはいえ、#ScapegoatTree#が正しい選択になる場合もある。
+それは、各ノードに追加のデータを入れる場合である。特に、回転操作では定数時間で更新できないが、#rebuild(u)#では定数時間で更新できる場合がある。
+そのような場合には#ScapegoatTree#（もしくは部分的な再構築を行う他のデータ構造）を選ぶのがよい。
+応用例を\excref{list-order-maintenance}で取り上げる。
 
 \begin{exc}
   \figref{scapegoat-example}の#ScapegoatTree#に1.5、1.6を順に追加する様子を描け。
@@ -274,21 +272,21 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
 \end{exc}
 
 \begin{exc}\exclabel{scapegoat-nlogn}
-  空の#ScapegoatTree#に対して、$#x#=1,2,3,\ldots,#n#$について順に#add(x)#を呼び出す。
-  このときある定数$c>0$が存在し、#rebuild(u)#に要する時間の合計は$c#n#\log #n#$以上であることを示せ。
+  空の#ScapegoatTree#に対し、$#x#=1,2,3,\ldots,#n#$について順に#add(x)#を呼び出す。
+  このとき、ある定数$c>0$が存在し、#rebuild(u)#に要する時間の合計が$c#n#\log #n#$以上であることを示せ。
 \end{exc}
 
 \begin{exc}
   #ScapegoatTree#における探索経路の長さは$\log_{3/2}#q#$を超えない。
   \begin{enumerate}
-    \item #ScapegoatTree#を修正し、$1<#b#<2$を満たすパラメータ#b#について探索経路の長さが$\log_{#b#} #q#$を超えないデータ構造を、設計・解析・実装せよ。
-    \item 解析・実験によると、#find(x)#・#add(x)#・#remove(x)#の償却コストは#n#と#b#の関数としてどう表せるか。
+    \item #ScapegoatTree#を修正し、$1<#b#<2$を満たすパラメータ#b#について探索経路の長さが$\log_{#b#} #q#$を超えないデータ構造を設計、解析、実装せよ
+    \item #find(x)#、#add(x)#、#remove(x)#の償却コストが#n#と#b#の関数としてどう表せるか、解析および実験によって考えよ
   \end{enumerate}
 \end{exc}
 
 \begin{exc}\exclabel{scapegoat-quicksize}
-  #ScapegoatTree#の#add(x)#メソッドを修正し、既に計算した部分木の大きさは再計算せず、無駄を省くように修正せよ。
-  #size(w)#を計算するとき、#size(w.left)#か#size(w.right)#は既に計算しているため、このような最適化が可能である。
+  #ScapegoatTree#の#add(x)#メソッドを修正し、既に計算した部分木の大きさは再計算しないように無駄を省け。
+  #size(w)#を計算するとき、#size(w.left)#か#size(w.right)#は既に計算しているので、このような最適化が可能である。
   修正前後での性能を比較せよ。
 \end{exc}
 
@@ -299,56 +297,57 @@ GalperinとRivest\cite{gr93}が\emph{scapegoat tree}という名前を提案し�
 
 \begin{exc}
   この章の最初に説明した#rebuild(u)#を、再構築する部分木に含まれるノードを蓄える配列を使わずに再実装せよ。
-  代わりに、まずは再帰を使ってこれらのノードを連結リストにし、この連結リストを非常にバランスのよい二分木に変換せよ。
-  （いずれのステップにも華麗な再帰を使った実装がある。）
+  代わりに、まずは再帰を使ってこれらのノードを連結リストにし、この連結リストを非常にバランスのよい二分木に変換せよ
+  （いずれのステップにも華麗な再帰を使った実装がある）。
 \end{exc}
 
 \begin{exc}
   \index{WeightBalancedTree@#WeightBalancedTree#}%
-  #WeightBalancedTree#を設計・実装せよ。
-  このデータ構造では、根以外の各ノード#u#は\emph{バランス条件}$#size(u)# \le (2/3)#size(u.parent)#$を満たす。
-  #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、ノード#u#でバランス条件が成り立たないときには#u.parent#を根とする部分木が再構築される点でのみ異なっている。
-  そして、#WeightBalancedTree#の償却実行時間は$O(\log#n#)$であることを示せ。
+  #WeightBalancedTree#を設計、実装せよ。
+  このデータ構造では、根以外の各ノード#u#が\emph{バランス条件}$#size(u)# \le (2/3)#size(u.parent)#$を満たす。
+  #WeightBalancedTree#における#add(x)#および#remove(x)#操作は、通常の#BinarySearchTree#における各操作とほぼ同じだが、ノード#u#でバランス条件が成り立たないときには#u.parent#を根とする部分木が再構築される。
+  
+  さらに、#WeightBalancedTree#の償却実行時間が$O(\log#n#)$であることを示せ。
 \end{exc}
 
 \begin{exc}
   \index{CountdownTree@#CountdownTree#}%
-  #CountdownTree#を設計・実装せよ。
-  このデータ構造では各ノード#u#は\emph{タイマー} #u.t#を持っている。
-  #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、いずれかの操作が#u#の部分木に影響を与えるとき、#u.t#をひとつ小さくする点で異なる。
-  $#u.t#=0$のとき、#u#を根とする部分木は非常にバランスのよい二分木に再構築される。
-  ノード#u#が再構築に関わるとき（#u#が再構築されるか、#u#の祖先のうちのひとつが再構築されるとき）#u.t#は$#size(u)#/3$にリセットされる。
+  #CountdownTree#を設計、実装せよ。
+  このデータ構造では、各ノード#u#は\emph{タイマー}#u.t#を持っている。
+  #CountdownTree#における#add(x)#および#remove(x)#操作は、通常の#BinarySearchTree#における各操作とほぼ同じだが、いずれかの操作が#u#の部分木に影響を与えるときには#u.t#を1つ小さくする。
+  $#u.t#=0$のときは、#u#を根とする部分木を非常にバランスのよい二分木へと再構築する。
+  ノード#u#が再構築に関与する（#u#が再構築されるか、#u#の祖先のうちの1つが再構築される）とき、#u.t#は$#size(u)#/3$にリセットする。
 
-  そして、#CountdownTree#の償却実行時間は$O(\log#n#)$であることを示せ。
-  （ヒント：まずは任意のノードがあるバランスに関する不変条件を満たすことを示せ。）
+  さらに、#CountdownTree#の償却実行時間が$O(\log#n#)$であることを示せ
+  （ヒント：バランスに関するある種の不変条件を任意のノード#u#が満たすことを最初に示すとよい）。
 \end{exc}
 
 \begin{exc}
   \index{DynamiteTree@#DynamiteTree#}%
-  #DynamiteTree#を設計・実装せよ。
-  このデータ構造ではすべてのノード#u#は#u#を根とする部分着の大きさを#u.size#として保持する。
-  #add(x)#・#remove(x)#操作はふつうの#BinarySearchTree#とほぼ同じだが、
-  いずれかの操作が#u#の部分木に影響を与えるとき、#u#は確率$1/#u.size#$で\emph{爆発}する。
-  #u#が爆発すると、#u#を根とする部分木は非常にバランスのよい二分木に再構築される。
+  #DynamiteTree#を設計、実装せよ。
+  このデータ構造では、すべてのノード#u#は、#u#を根とする部分木の大きさを#u.size#として保持する。
+  #add(x)#および#remove(x)#操作は、通常の#BinarySearchTree#とほぼ同じだが、
+  いずれかの操作が#u#の部分木に影響を与えるときには#u#が確率$1/#u.size#$で\emph{爆発}する。
+  #u#が爆発したときは、#u#を根とする部分木を非常にバランスのよい二分木に再構築する。
 
-  そして、#DynamiteTree#の実行時間の期待値は$O(\log#n#)$であることを示せ。
+  さらに、#DynamiteTree#の実行時間の期待値が$O(\log#n#)$であることを示せ。
 \end{exc}
 
 \begin{exc}\exclabel{list-order-maintenance}
   \index{Sequence@#Sequence#}%
-  要素の列を保持するデータ構造#Sequence#を設計・実装せよ。
+  要素の列を保持するデータ構造#Sequence#を設計、実装せよ。
   これは次のような操作を提供する。
   \begin{itemize}
-    \item #addAfter(e)#：要素#e#の次に新たな要素を追加する。
-	また、新たに追加した要素を返す。
-	（#e#が#null#なら新たな要素は列の先頭に追加される。）
-    \item #remove(e)#：#e#を列から削除する。
-    \item #testBefore(e1,e2)#：#e1#が#e2#の前にあるならば、またそのときに限って#true#を返す。
+    \item #addAfter(e)#：要素#e#の次に新たな要素を追加して、
+	新たに追加した要素を返す
+	（#e#が#null#なら新たな要素を列の先頭に追加する）
+    \item #remove(e)#：#e#を列から削除する
+    \item #testBefore(e1,e2)#：#e1#が#e2#の前にある場合、またその場合に限り、#true#を返す
   \end{itemize}
-  はじめのふたつの操作の償却実行時間は$O(\log #n#)$でなければならない。
-  みっつめの操作は定数時間でなければならない。
+  はじめの2つの操作の償却実行時間は$O(\log #n#)$でなければならない。
+  3つめの操作は定数時間でなければならない。
 
-  #Sequence#は、列の中の順序を使い、#ScapegoatTree#のようにデータを蓄えれば実装できる。
-  #testBefore(e1,e2)#を定数時間で実装するために、要素#e#は根から#e#への経路を符号化した整数でラベル付けされる。
-  こうすると#testBefore(e1,e2)#は#e1#と#e2#のラベルを比較すればよい。
+  #Sequence#は、列の中の順序を使って#ScapegoatTree#のようにデータを蓄えることで実装できる。
+  #testBefore(e1,e2)#を定数時間で実装するには、要素#e#を根から#e#への経路を符号化した整数でラベル付けする。
+  そうして#testBefore(e1,e2)#で#e1#と#e2#のラベルを比較すればよい。
 \end{exc}
