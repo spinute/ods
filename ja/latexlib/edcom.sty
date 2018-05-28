@@ -1,0 +1,22 @@
+%%%%% edcom
+\let\ed\edcom
+\newcounter{showmemo}
+\setcounter{showmemo}{1} % 0：メモ非表示、1：メモ表示
+\def\invisiblememo{\setcounter{showmemo}{0}}
+\def\visiblememo#1{\ifcase\theshowmemo{}\or{#1}\fi\ignorespaces}
+\newcommand{\edcomsize}{\@setfontsize\scriptsize\@vipt\@viipt}
+\newcommand{\edcom}[2][!]{%
+  \def\withsig[##1]##2{%
+    \visiblememo{%
+      \special{pdf:tounicode UTF8-UCS2}%
+      \special{pdf: ann width 0pt height 0pt
+      << /Type /Annot /Subtype /Caret /RD [0 5 10 5] /Close true /C [0.05 0.1 1]
+      /Contents (##2) >>}}}%
+  \ifx!#1%
+    \visiblememo{%
+      \special{pdf:tounicode UTF8-UCS2}%
+      \special{pdf: ann width 0pt height 0pt
+      << /Type /Annot /Subtype /Caret /RD [0 5 10 5] /Close true /C [0.9 0.1 0.1]
+      /Contents (#2 -編集者) >>}}
+    \else\withsig[#1]{#2}%
+  \fi}

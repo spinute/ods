@@ -1,0 +1,234 @@
+\newcommand{\chapternumbersize}{\fontsize{46pt}{46pt}\selectfont}
+\newcommand{\chaptertitlesize}{\fontsize{26pt}{26pt}\selectfont}
+\newlength{\chapterwidth}
+\setlength{\chapterwidth}{\textwidth}
+\newcounter{doubleclear}
+\setcounter{doubleclear}{0}
+\def\nodoubleclear{\global\setcounter{doubleclear}{1}}
+\def\doubleclear{\global\setcounter{doubleclear}{0}}
+
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else\thispagestyle{empty}%\begin{center}\vskip2\baselineskip {\Huge 白} \par\vskip2\baselineskip このページは意図的に白ページになっています\end{center}
+    \hbox{}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\renewcommand{\chapter}{%
+  \if@openright{\ifcase\thedoubleclear{\cleardoublepage}\or{\clearpage}\fi}\else\clearpage\fi%
+  \thispagestyle{titleheadings}%
+  \global\@topnum\z@%
+  \secdef\@chapter\@schapter
+  }%
+\def\@makechapterhead{%
+  \thispagestyle{titleheadings}%
+  \global\@topnum\z@%
+  \buildchapterhead{\chapternumhead}}
+\def\chapternumhead{%
+  \sffamily\ebseries\LARGE%
+  \hbox to\chapterwidth{\hfill\@chapapp\raisebox{-2pt}{\sffamily\bfseries\chapternumbersize\thechapter}\@chappos}}
+\def\buildchapterhead#1#2{%
+  \ifodd\c@page
+    \noindent{\parbox[t][3\baselineskip]{\chapterwidth}{
+      #1
+      \vfill
+      \parbox[b][3\baselineskip]{\chapterwidth}{%
+        \raggedleft
+        \sffamily\ebseries\usefont{T1}{ugq}{b}{n}\chaptertitlesize\propshape#2}
+      \vspace*{-2.5\baselineskip}
+    }}
+  \else
+    {\parbox[b][20\baselineskip]{\chapterwidth}{%
+      \noindent{#1}\hfill\\[\baselineskip]%
+      \noindent{\sffamily\bfseries\chaptertitlesize#2}\hfill\\[-\baselineskip]%
+      \leavevmode\kern-200mm\kern\textwidth\hbox to200mm{%
+        {\color{\titlebarcolor}\vrule \@height3pt \@width200mm \@depth0pt}}}}
+  \fi
+  \vskip5\baselineskip
+  \enchapter{}}%
+
+\newcommand{\enchapter}[1]{%
+  \begin{tcolorbox}[
+    enlarge right by=-5cm,
+    width=\linewidth+5cm,
+    height=\baselineskip,
+    size=minimal,
+    valign=center,
+    enhanced,
+    colframe=white,
+    before=,
+    after=\vskip-1pt,
+    sharpish corners,
+    skin=enhancedmiddle,
+    interior style={left color=white,right color=black!30},
+    ]%
+  \end{tcolorbox}
+  \vspace{2\baselineskip}
+  }
+
+\newif\ifwithintoc
+\def\@makeschapterhead#1{%
+  \ifcase\thedoubleclear{\cleardoublepage}\or{\clearpage}\fi%
+  \thispagestyle{titleheadings}%
+  \global\@topnum\z@%
+  \noindent\inhibitglue%
+  {\LARGE\bfseries\sffamily#1}
+  \ifwithintoc\else
+    \phantomsection\addcontentsline{toc}{chapter}{#1}
+  \fi
+  \vskip\baselineskip}%
+
+\newif\ifappendix\appendixfalse
+\renewcommand{\appendix}{\par
+  \appendixtrue
+  \setcounter{chapter}{0}%
+  \setcounter{section}{0}%
+  \gdef\@chapapp{\appendixname}%
+  \gdef\@chappos{}%
+  \gdef\thechapter{\@Alph\c@chapter}}
+\def\@pchapter[#1]#2{%
+  \chaptermark{#1}%
+  \if@twocolumn
+    \@topnewpage[\@makeschapterhead{#2}]%
+  \else
+    \@makeschapterhead{#1}\@afterheading
+  \fi
+}
+
+\def\section{\secdef\@section\@ssection}
+\def\@ssection{\@testopt{\@makesectionhead{!}}{}}
+\def\@section{%
+  \refstepcounter{section}%
+  \@makesectionhead{\thesection}}
+\def\@makesectionhead#1[#2]#3{%
+  \if@noskipsec \leavevmode \fi%
+  \ifhmode \unskip\par \fi%
+  \addpenalty\@secpenalty
+  \addvspace{\baselineskip}%
+  \noindent{\makesectiontitle{#1}{#3}\nopagebreak}%
+  \@afterindenttrue \@afterheading%
+  \markright{\ifx#1!{#3}\else{#1 \kern.5zh #2}\fi}%
+  \phantomsection\addcontentsline{toc}{section}{\ifx#1!{#3}\else{#1 \kern.5zh #2}\fi}\nopagebreak}
+\newlength{\sectiontitlewidth}
+\setlength{\sectiontitlewidth}{\textwidth}
+\newcommand{\sectiontitlesize}{\fontsize{14pt}{\baselineskip}\selectfont}
+\newcommand{\makesectiontitle}[2]{%
+  %\sffamily\bfseries\sectiontitlesize%
+  \sffamily\ebseries\usefont{T1}{ugq}{b}{n}\sectiontitlesize%
+  \sbox\@tempboxa{\ifx#1!{}\else{#1 \hskip.5zw}\fi}%
+  \advance\sectiontitlewidth by-\wd\@tempboxa%
+  \leavevmode%
+    \usebox{\@tempboxa}%
+    \parbox[t]{\sectiontitlewidth}{\mathversion{bold}#2
+               \vspace*{.5\baselineskip}\nopagebreak}\par}
+
+\def\subsection{\secdef\@subsection\@ssubsection}
+\def\@ssubsection{\@testopt{\@makessubsectionhead{}}{}}
+\def\@subsection{%
+  \refstepcounter{subsection}
+  \@makesubsectionhead{\thesubsection}}
+\def\@makesubsectionhead#1[#2]#3{%
+  \if@noskipsec \leavevmode \fi%
+  \ifhmode \unskip\par \fi%
+  \addpenalty\@secpenalty
+  \addvspace{.75\baselineskip}
+  \noindent{\makesubsectiontitle{#1}{#3}\nopagebreak}%
+  \@afterindenttrue \@afterheading%
+}
+\def\@makessubsectionhead#1[#2]#3{%
+  \addvspace{.75\baselineskip}
+  \noindent\inhibitglue{\makesubsectiontitle{!}{#3}\nopagebreak}%
+  \@afterindenttrue \@afterheading%
+}
+\newlength{\subsectiontitlewidth}
+\setlength{\subsectiontitlewidth}{\textwidth}
+\newcommand{\subsectiontitlesize}{\fontsize{12pt}{\baselineskip}\selectfont}
+\newcommand{\makesubsectiontitle}[2]{%
+  %\sffamily\bfseries\sectiontitlesize%
+  \sffamily\bfseries\subsectiontitlesize%
+  \sbox\@tempboxa{\ifx#1!{}\else{#1 \hskip.5zw}\fi}%
+  \advance\subsectiontitlewidth by-\wd\@tempboxa%
+  \leavevmode%
+    \usebox{\@tempboxa}%
+    \parbox[t]{\subsectiontitlewidth}{\mathversion{bold}#2
+               \vspace*{.5\baselineskip}\nopagebreak}\par}
+
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+  {.5\baselineskip}{\z@}%
+  {\normalfont\normalsize\bfseries\sffamily ■ }}
+
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}%
+  {.5\baselineskip}{\z@}%
+  {\normalfont\normalsize\bfseries\sffamily {\color{black!45}●} }}
+
+
+\newcommand{\parttitlesize}{\fontsize{27pt}{27pt}\selectfont}
+\newcommand{\partprepossize}{\fontsize{21pt}{21pt}\selectfont}
+\renewcommand\part{%
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+  \thispagestyle{titleheadings}
+  \secdef\@part\@spart}
+\def\@part[#1]#2{%
+  \ifnum \c@secnumdepth >-2\relax
+    \refstepcounter{part}%
+    \phantomsection\addcontentsline{toc}{part}{%
+      \prepartname\thepart\postpartname\hspace{1zw}#1}%
+  \else
+    \phantomsection\addcontentsline{toc}{part}{#1}%
+  \fi
+  \markboth{}{}
+  \vspace*{-\topmargin}%
+  \vspace*{-\headheight}%
+  \vspace*{-\headsep}%
+  \vspace*{-\topskip}%
+  \vspace*{-10truemm}%
+  \noindent\hspace*{-\oddsidemargin}%
+  \hspace*{-10truemm}%
+  \enlargethispage{100mm}%
+  %\includegraphics[height=276truemm, width=202truemm]{part-cover.pdf}
+  %\vspace*{-\paperheight}%
+  %\hspace*{-\paperwidth}%
+  \vspace*{55truemm}\par
+  {\centering
+    \parttitlesize\bfseries\sffamily
+    \ifnum \c@secnumdepth >-2\relax
+      {\partprepossize\prepartname\thepart\postpartname}
+      \par\vskip20\p@
+    \fi
+    #2\par}
+  \@endpart}
+\def\@spart#1{%
+  \phantomsection\addcontentsline{toc}{part}{#1}
+  \markboth{}{}
+  \vspace*{-\topmargin}%
+  \vspace*{-\headheight}%
+  \vspace*{-\headsep}%
+  \vspace*{-\topskip}%
+  \vspace*{-10truemm}%
+  \noindent\hspace*{-\oddsidemargin}%
+  \hspace*{-10truemm}%
+  \enlargethispage{100mm}%
+  %\includegraphics[height=276truemm, width=202truemm]{part-cover.pdf}
+  %\vspace*{-\paperheight}%
+  %\hspace*{-\paperwidth}%
+  \vspace*{55truemm}\par
+  {\centering
+    \parttitlesize\bfseries\sffamily
+    \ifnum \c@secnumdepth >-2\relax
+      \par\vskip20\p@
+    \fi
+    #1\par}
+  \@endpart}
+\def\@endpart{%\vfil\newpage
+  \if@twoside
+    \null
+    \thispagestyle{empty}%
+%    \newpage
+  \fi
+  \if@restonecol
+    \twocolumn
+  \fi}
+\newenvironment{partlead}
+  {\begingroup\sffamily}
+  {\endgroup}
+

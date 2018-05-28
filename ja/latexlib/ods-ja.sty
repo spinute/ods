@@ -1,0 +1,158 @@
+\usepackage{array, multicol}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage[vflt]{floatflt}
+\usepackage{fancybox, framed}
+\usepackage{ifthen, calc}
+\usepackage{makeidx, index}
+\usepackage{okumacro}
+%\usepackage[obeyspaces]{url}
+%\usepackage[hang]{footmisc}
+\usepackage{multirow}
+\usepackage{atbegshi}
+\usepackage{fancyvrb}
+
+\usepackage{type1cm}
+\usepackage[T1]{fontenc}
+\usepackage[deluxe, uplatex]{otf}
+\usepackage{hiraprop}
+%\usepackage[scaled]{helvet}
+\usepackage[expert,lucidasmallscale]{lucidabr}
+\renewcommand{\bfseries}{\mathversion{bold}\fontseries{b}\kanjiseries{bx}\selectfont}
+\renewcommand{\headfont}{\gtfamily\sffamily\bfseries}
+\newcommand{\headfontb}{\usefont{T1}{fvs}{b}{n}\ebseries\gtfamily}
+\newcommand{\myemph}[1]{{\sffamily#1}}
+
+%\usepackage{stix}
+
+\usepackage[dvipdfmx]{xcolor,colortbl}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+  \tcbuselibrary{breakable}
+  \tcbuselibrary{skins}
+
+\usepackage{imakeidx}
+\makeindex[options=-s book]
+\makeindex[name=ja, title={日本語牽引}, options=-s book]
+\newcommand{\ejindex}[2]{\index{#1}\index[ja]{#2}}
+
+\usepackage{mycolor}
+\usepackage{edcom}
+\usepackage{chapsec}
+\usepackage{caption}
+\usepackage{listenvs}
+\usepackage{entry}
+\usepackage{codelist}
+\usepackage{column}
+\usepackage{mytable}
+\usepackage{lnindex}
+
+
+\DeclareRobustCommand\jem{\hskip\kanjiskip\@nomath\em \bfseries\rmfamily}
+\DeclareTextFontCommand{\emph}{\jem}
+\let\em\jem
+\def\emph#1{\hskip\kanjiskip{\@nomath\em \bfseries\sffamily#1}\hskip\kanjiskip}
+\font\eclmr=ec-lmr10
+\def\aroundemph{{\eclmr\char23}} % thx. ZR san
+\xspcode23=3
+
+\def\firstterm#1{#1}
+
+\def\tablefontspeck{\footnotesize\sffamily}
+
+\dimen\footins=10in
+
+\setcounter{tocdepth}{2}
+
+\def\UU{\raisebox{.3mm}{\scalebox{0.85}[1]{\kern.05zw\_\kern.05zw}}}
+\def\UUU{\raisebox{.7mm}{\scalebox{0.85}[1]{\kern.05zw\_\kern.05zw}}}
+\def\lsquash{\raisebox{.3mm}{\scalebox{1}[0.8]{\symbol{123}}}}
+\def\rsquash{\raisebox{.3mm}{\scalebox{1}[0.8]{\symbol{125}}}}
+\def\lsquare{\symbol{64}}
+\def\bslash{\raisebox{.3mm}{\scalebox{1}[0.72]{\(\backslash\)}}}
+\def\ampersand{\symbol{91}}
+\def\numbermark{\symbol{35}}
+\def\atmark{\symbol{64}}
+\def\dollar{\symbol{36}}
+\def\parcent{\symbol{37}}
+\def\lsquareparen{\symbol{91}}
+\def\rsquareparen{\symbol{93}}
+\def\langleparen{\symbol{14}}
+\def\rangleparen{\symbol{15}}
+\def\hatmark{\symbol{94}}
+\def\tildemark{\raisebox{.3mm}{\scalebox{0.85}[1]{\kern.05zw\symbol{126}\kern.05zw}}}
+
+
+%%% excerpt from ods.sty
+
+\renewcommand{\eqref}[1]{(\ref{eq:#1})}
+
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup}
+
+% We can do this since latex2html doesn't read this file
+\newcommand{\htmlonly}[1]{}
+
+%% This code allows dynamic scaling of images to fit the page
+%% Usage: \includegraphics[width=\ScaleIfNeeded]{figs/figure}
+\def\ScaleIfNeeded{%
+\ifdim\Gin@nat@width>.97\linewidth
+.97\linewidth
+\else
+\Gin@nat@width
+\fi
+}
+
+\def\HalfScaleIfNeeded{%
+\ifdim\Gin@nat@width>.46\linewidth
+.46\linewidth
+\else
+\Gin@nat@width
+\fi
+}
+
+\def\HeightScaleIfNeeded{%
+\ifdim\Gin@nat@height>.8\textheight
+.8\textheight
+\else
+\Gin@nat@height
+\fi
+}
+
+\def\QuarterHeightScaleIfNeeded{%
+\ifdim\Gin@nat@height>.22\textheight
+.22\textheight
+\else
+\Gin@nat@height
+\fi
+}
+
+\def\FifthHeightScaleIfNeeded{%
+\ifdim\Gin@nat@height>.168\textheight
+.168\textheight
+\else
+\Gin@nat@height
+\fi
+}
+
+\newcommand{\thetitlepage}{
+  \begin{titlepage}
+    \newlength{\lone}
+    \newlength{\ltwo}
+    \newlength{\lthree}
+    \setlength{\lone}{0.3\textheight}
+    \setlength{\ltwo}{0.618033988\lone}
+    \setlength{\lthree}{0.618033988\ltwo}
+    \begin{flushleft}
+      \ \\[.1\paperheight]
+      \includegraphics[width=\linewidth]{images/tree3-thick}\\
+      {\fontsize{21}{1}\usefont{OT1}{jkpss}{b}{n}%
+       \resizebox{\linewidth}{!}{\thetitle}} \\[\lthree]
+      {\fontsize{14}{1}\usefont{OT1}{jkpss}{b}{n}\thedate} \\[\lthree]
+      {\fontsize{11}{1}\usefont{OT1}{jkpss}{b}{n}\theauthor} \\
+      {\fontsize{11}{1}\usefont{OT1}{jkpss}{b}{n}堀江 慧、陣内 デイビッド 佑、田中 康隆　共訳} \\[\lthree]
+      \includegraphics[scale=0.5]{images/cc-by}
+    \end{flushleft}
+  \end{titlepage}
+}
+

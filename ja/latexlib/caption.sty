@@ -1,0 +1,25 @@
+\newcommand{\captionsize}{\fontsize{9pt}{9pt}\selectfont}
+\newlength{\captionnumwidth}
+\setlength{\captionnumwidth}{13truemm}
+\newlength{\captionwidth}
+\setlength{\captionwidth}{\textwidth}
+\addtolength{\captionwidth}{-\captionnumwidth}
+\def\@makecaption#1#2{{\small%
+  \vspace{-.5\baselineskip}
+  \addvspace\abovecaptionskip%
+  \sbox\@tempboxa{\captionsize\sffamily #2}%
+  \ifdim \wd\@tempboxa <\captionwidth%
+    \hfil{\captionsize\sffamily{{\color{\bulletcolor}\rotatebox[origin=c]{270}{$\blacktriangle$}}} #1%
+      \hskip1zw\relax}\usebox{\@tempboxa}\hfil
+  \else%
+    \parbox[t]{\captionnumwidth}{\hrule height 0pt width 0pt
+      \captionsize\sffamily{{\color{\bulletcolor}\rotatebox[origin=c]{270}{$\blacktriangle$}}} #1\par}
+       \hskip1zw
+    \parbox[t]{\captionwidth}{\hrule height 0pt width 0pt
+      \captionsize\sffamily #2}
+  \fi%
+  }%
+}
+
+\def\figsubtitle#1{{\noindent\captionsize\sffamily\underline{#1}}}
+

@@ -1,3 +1,8 @@
+export
+TEXINPUTS := latexlib//:
+TEXFONTS  := fonts//:
+
+
 sources = intro.tex arrays.tex linkedlists.tex skiplists.tex \
 	hashing.tex binarytrees.tex rbs.tex scapegoat.tex \
         redblack.tex heaps.tex sorting.tex graphs.tex integers.tex btree.tex
@@ -13,7 +18,7 @@ pyth = $(sources:.tex=-python-html.tex)
 pdfs = ods-java.pdf ods-cpp.pdf ods-python.pdf
 styles=ods.sty ods-colors.sty
 
-LFLAGS=-interaction=nonstopmode -halt-on-error
+LFLAGS=-interaction=nonstopmode #-halt-on-error
 
 all: $(pdfs)
 
@@ -32,11 +37,12 @@ images:
 	cd images ; make
 
 ods-java.pdf : ods-java.tex $(javs) $(styles) images figs
-	platex $(LFLAGS) ods-java
+	cp ../latex/figs/*.pdf figs/
+	uplatex $(LFLAGS) ods-java
 	pbibtex ods-java
-	platex $(LFLAGS) ods-java
-	platex $(LFLAGS) ods-java
-	dvipdfmx ods-java.dvi
+	uplatex  $(LFLAGS) ods-java
+	uplatex  $(LFLAGS) ods-java
+	dvipdfmx -f latexlib/lnbook.map -x 0mm -y 0mm ods-java.dvi
 #	latexmk -pdf ods-java
 
 ods-java.tex : ods.tex Makefile
@@ -45,11 +51,12 @@ ods-java.tex : ods.tex Makefile
 	sed -i 's/%HEADCOMMAND/\\newcommand{\\cpponly}[1]{}\\newcommand{\\javaonly}[1]{#1}\\newcommand{\\pcodeonly}[1]{}\\newcommand{\\notpcode}[1]{#1}\\newcommand{\\lang}{Java}/' ods-java.tex
 
 ods-cpp.pdf : ods-cpp.tex $(cpps) $(styles) images figs
-	platex $(LFLAGS) ods-cpp
-	bibtex ods-cpp
-	platex $(LFLAGS) ods-cpp
-	platex $(LFLAGS) ods-cpp
-	dvipdfmx ods-cpp.dvi
+	cp ../latex/figs/*.pdf figs/
+	uplatex $(LFLAGS) ods-cpp
+	pbibtex ods-cpp
+	uplatex $(LFLAGS) ods-cpp
+	uplatex $(LFLAGS) ods-cpp
+	dvipdfmx -f latexlib/lnbook.map -x 0mm -y 0mm ods-cpp.dvi
 #	latexmk -pdf ods-cpp
 
 ods-cpp.tex : ods.tex Makefile
@@ -58,11 +65,11 @@ ods-cpp.tex : ods.tex Makefile
 	sed -i 's/%HEADCOMMAND/\\newcommand{\\javaonly}[1]{}\\newcommand{\\cpponly}[1]{#1}\\newcommand{\\pcodeonly}[1]{}\\newcommand{\\notpcode}[1]{#1}\\newcommand{\\lang}{C++}/' ods-cpp.tex
 
 ods-python.pdf : ods-python.tex $(pyts) $(styles) images figs
-	platex $(LFLAGS) ods-python
-	bibtex ods-python
-	platex $(LFLAGS) ods-python
-	platex $(LFLAGS) ods-python
-	dvipdfmx ods-python.dvi
+	uplatex $(LFLAGS) ods-python
+	pbibtex ods-python
+	uplatex $(LFLAGS) ods-python
+	uplatex $(LFLAGS) ods-python
+	dvipdfmx -f latexlib/lnbook.map -x 0mm -y 0mm ods-python.dvi
 #	latexmk -pdf ods-python
 
 ods-python.tex : ods.tex Makefile

@@ -1,0 +1,83 @@
+%\usepackage{fvextra}
+\newlength{\precodeskip}\setlength{\precodeskip}{.3\baselineskip} % based on the ratio bw normal font and code font
+\newlength{\leftcodemargine}\setlength{\leftcodemargine}{-.75em}
+
+\newif\ifcodesmall
+\newcommand{\Codefontsize}{\ifcodesmall\fontsize{8}{7pt}\else\fontsize{10}{9pt}\fi\selectfont}
+\newcommand{\codefontsize}{\fontsize{7.5pt}{7pt}\selectfont}
+\newcommand{\filename}[1]{{\xkanjiskip0pt\Codefontsize\tt #1\inhibitglue}}
+\newcommand{\codebf}[1]{{\bfseries\ttfamily #1}}
+\newcommand{\prompt}[1]{{\color{\promptcolor}#1}}
+\newcommand{\codesl}[1]{{\color{\codegrcolor}#1}}
+\newcommand{\codeit}[1]{{\usefont{T1}{pzc}{m}{it}{}#1}}
+
+%\newenvironment{codequote}{%%
+%  \interlinepenalty9999
+%  \begin{list}{}{%
+%     \setlength{\topsep}{0.5\baselineskip}%
+%     \setlength{\partopsep}{0pt}%
+%     \setlength{\parsep}{0pt}%
+%     \setlength{\itemsep}{0pt}%
+%     \setlength{\labelwidth}{0pt}%
+%     \setlength{\labelsep}{0pt}%
+%     \setlength{\leftmargin}{\leftcodemargine}%
+%     \setlength{\listparindent}{0pt}%
+%     \setlength{\itemindent}{0pt}%
+%    }%
+%  \normalsize \item[]}{\end{list}}
+
+\newenvironment{codequote}[1]{%%
+  \vspace{.25\baselineskip}
+  \begin{tcolorbox}[enhanced, sharp corners=downhill,
+                    breakable, enhanced jigsaw, boxrule=1pt,
+                    colback=black!5!white,
+                    colframe=black!50!white,
+                    adjusted title=#1, halign title=flush right, 
+                    fonttitle=\ttfamily\footnotesize, 
+                    ]
+  %\interlinepenalty9999
+  \begin{list}{}{%
+     \setlength{\topsep}{0.5\baselineskip}%
+     \setlength{\partopsep}{0pt}%
+     \setlength{\parsep}{0pt}%
+     \setlength{\itemsep}{0pt}%
+     \setlength{\labelwidth}{0pt}%
+     \setlength{\labelsep}{0pt}%
+     \setlength{\leftmargin}{\leftcodemargine}%
+     \setlength{\listparindent}{0pt}%
+     \setlength{\itemindent}{0pt}%
+    }%
+  \item[]}
+ {\end{list}\end{tcolorbox}}
+
+\newenvironment{execquote}{%%
+  \def\execcmtcolor{20gray}%
+  \renewenvironment{codequote}{}{}
+  \vspace{.5\baselineskip}
+  \begin{tcolorbox}[enhanced, sharp corners=downhill, coltext=white, 
+                    breakable, enhanced jigsaw, boxrule=1pt,
+                    colback=black!85!white,
+                    colframe=black!100!white,
+                    ]
+  \interlinepenalty9999
+  \begin{list}{}{%
+     \setlength{\topsep}{0.5\baselineskip}%
+     \setlength{\partopsep}{0pt}%
+     \setlength{\parsep}{0pt}%
+     \setlength{\itemsep}{0pt}%
+     \setlength{\labelwidth}{0pt}%
+     \setlength{\labelsep}{0pt}%
+     \setlength{\leftmargin}{\leftcodemargine}%
+     \setlength{\listparindent}{0pt}%
+     \setlength{\itemindent}{0pt}%
+    }%
+  \item[]}
+ {\end{list}\end{tcolorbox}}
+
+\def\crmark{$\varcarriagereturn$}
+\def\chmark{$\checkmark$}
+
+\def\setcodefont{}%
+\newcounter{codelineno}
+
+

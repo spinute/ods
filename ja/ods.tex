@@ -2,15 +2,15 @@
 %\documentclass[10pt]{book}
 %\usepackage[whole]{bxcjkjatype}
 %\documentclass[pdflatex,a5paper,10pt]{bxjsbook}
-\documentclass[platex,dvipdfmx,a5paper,10pt]{bxjsbook}
-\usepackage{framed}
-\setlength{\FrameSep}{0mm}
+\documentclass[uplatex,dvipdfmx,a5,9pt]{lnbook}
+%\usepackage{framed}
+%\setlength{\FrameSep}{0mm}
 
 % For Japanese index
-\usepackage{imakeidx}
-\makeindex
-\makeindex[name=ja, title={日本語牽引}]
-\newcommand{\ejindex}[2]{\index{#1}\index[ja]{#2}}
+%\usepackage{imakeidx}
+%\makeindex
+%\makeindex[name=ja, title={日本語牽引}]
+%\newcommand{\ejindex}[2]{\index{#1}\index[ja]{#2}}
 
 %\makeindex
 %\usepackage{showidx}
@@ -30,15 +30,16 @@
 
 \usepackage{amsopn}
 \usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{url}
-\usepackage[dvipdfmx]{graphicx}
+\usepackage[amsmath,amsthm,framed,thmmarks]{ntheorem}
+%\usepackage{amsthm}
+%\usepackage{url}
+%\usepackage[dvipdfmx]{graphicx}
 \usepackage{datetime}
 \usepackage{amsfonts}
-\usepackage{graphicx}
+%\usepackage{graphicx}
 \usepackage{threeparttable}
 \usepackage{wasysym}
-\usepackage{emptypage}
+%\usepackage{emptypage}
 \usepackage{titling}
 %\usepackage{calc}
 
@@ -86,20 +87,21 @@
 \let\emph\relax % there's no \RedeclareTextFontCommand
 \DeclareTextFontCommand{\emph}{\bf}
 
-\usepackage[sf,small,raggedright]{titlesec} % formatting titles
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
-\patchcmd{\ttlh@hang}{\noindent}{}{}{}
-\makeatother
+%\usepackage[sf,small,raggedright]{titlesec} % formatting titles
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+%\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+%\makeatother
 
-\titlespacing*{\section}{0pt}{24pt}{14pt}
-\titlespacing*{\subsection}{0pt}{14pt}{14pt}
-\usepackage{relsize,fancyvrb}  % formatting pseudocode
-\usepackage{ods} % Personalization and commands
+%\titlespacing*{\section}{0pt}{24pt}{14pt}
+%\titlespacing*{\subsection}{0pt}{14pt}{14pt}
+%\usepackage{relsize,fancyvrb}  % formatting pseudocode
+%\usepackage{ods} % Personalization and commands
+\usepackage{ods-ja}
 
 %\renewcommand*{\thechapter}{\arabic{chapter}~章}
-\titleformat*{\chapter}{\large\bfseries}
+%\titleformat*{\chapter}{\large\bfseries}
 
 % These command are expanded by scripts, otherwise they should be ignored
 \newcommand{\javaimport}[1]{}
@@ -112,8 +114,8 @@
   \newcommand{\HeightScaleIfNeeded}{\textheight}
   \newcommand{\QuarterHeightScaleIfNeeded}{.25\textheight}
   \newcommand{\FifthHeightScaleIfNeeded}{.2\textheight}
-  \newcommand{\fancyhead}[2][zzz]{}
-  \newcommand{\fancyfoot}[2][zzz]{}
+%  \newcommand{\fancyhead}[2][zzz]{}
+%  \newcommand{\fancyfoot}[2][zzz]{}
 }
 
 % Referencing commands 
@@ -147,29 +149,118 @@
 
 % Theorem-like environments
 \theoremstyle{plain}
-\newtheorem{thm}{定理}[chapter]
+
+\makeatletter
+
+%\newtheorem{thm}{定理}[chapter]
+\newtcbtheorem[auto counter, number within = chapter]{thmthm}{定理}
+  {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+   before skip=\baselineskip, after skip=\baselineskip,
+   %colback=green!5,colframe=green!35!black,
+   colback=white,colframe=white,colbacktitle=white,coltitle=black,
+   fonttitle=\bfseries\sffamily,
+   fontupper=\sffamily\fontsize{10pt}{12pt}\selectfont,
+   attach title to upper,after title={:\ },
+   borderline west = {2mm}{0pt}{red}}{thm}
+\newenvironment{thm}
+  {\begin{thmthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@thmthm\endcsname\csname thetcb@cnt@thmthm\endcsname}}
+  {\end{thmthm}\mfootnoteout}
 \newcommand{\thmlabel}[1]{\label{thm:#1}}
 \newcommand{\thmref}[1]{定理~\ref{thm:#1}}
 
-\newtheorem{lem}{補題}[chapter]
+%\newtheorem{lem}{補題}[chapter]
+\newtcbtheorem[auto counter, number within = chapter]{lemthm}{補題}
+  {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+   before skip=\baselineskip, after skip=\baselineskip,
+   %colback=green!5,colframe=green!35!black,
+   colback=white,colframe=white,colbacktitle=white,coltitle=black,
+   fonttitle=\bfseries\sffamily,
+   fontupper=\sffamily\fontsize{10pt}{11pt}\selectfont,
+   attach title to upper,after title={:\ },
+   borderline west = {2mm}{0pt}{green}}{lem}
+\newenvironment{lem}
+  {\begin{lemthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@lemthm\endcsname\csname thetcb@cnt@lemthm\endcsname}}
+  {\end{lemthm}\mfootnoteout}
 \newcommand{\lemlabel}[1]{\label{lem:#1}}
 \newcommand{\lemref}[1]{補題~\ref{lem:#1}}
 
-\newtheorem{cor}{系}[chapter]
+%\newtheorem{cor}{系}[chapter]
+\newtcbtheorem[auto counter, number within = chapter]{corthm}{系}
+  {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+   before skip=\baselineskip, after skip=\baselineskip,
+   %colback=green!5,colframe=green!35!black,
+   colback=white,colframe=white,colbacktitle=white,coltitle=black,
+   fonttitle=\bfseries\sffamily,
+   fontupper=\sffamily\fontsize{10pt}{12pt}\selectfont,
+   attach title to upper,after title={:\ },
+   borderline west = {2mm}{0pt}{blue}}{cor}
+\newenvironment{cor}
+  {\begin{corthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@corthm\endcsname\csname thetcb@cnt@corthm\endcsname}}
+  {\end{corthm}\mfootnoteout}
 \newcommand{\corlabel}[1]{\label{cor:#1}}
 \newcommand{\corref}[1]{系~\ref{cor:#1}}
 
 \theoremstyle{definition}
 
-\newtheorem{exc}{問}[chapter] % 問題はtechnical term?
+%\newtheorem{exc}{問}[chapter]
+\newtcbtheorem[auto counter, number within = chapter]{excthm}{問}
+  {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+   before skip=\baselineskip, after skip=0\baselineskip,breakable,
+   %colback=green!5,colframe=green!35!black,
+   colback=white,colframe=white,colbacktitle=white,coltitle=black,
+   fonttitle=\bfseries\sffamily,
+   fontupper=\rmfamily\fontsize{9pt}{11pt}\selectfont,
+   attach title to upper,after title={:\ },
+   borderline west = {2mm}{0pt}{white}}{exc}
+\newenvironment{exc}
+  {\begin{excthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@excthm\endcsname\csname thetcb@cnt@excthm\endcsname}}
+  {\end{excthm}\mfootnoteout}
 \newcommand{\exclabel}[1]{\label{exc:#1}}
 \newcommand{\excref}[1]{問~\ref{exc:#1}}
 
-
-\newtheorem{prp}{性質}[chapter]
+%\newtheorem{prp}{性質}[chapter]
+\newtcbtheorem[auto counter, number within = chapter]{prpthm}{性質}
+  {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+   before skip=\baselineskip, after skip=\baselineskip,breakable,
+   %colback=green!5,colframe=green!35!black,
+   colback=white,colframe=white,colbacktitle=white,coltitle=black,
+   fonttitle=\bfseries\sffamily,
+   fontupper=\sffamily\fontsize{10pt}{12pt}\selectfont,
+   attach title to upper,after title={:\ },
+   borderline west = {2mm}{0pt}{yellow}}{prp}
+\newenvironment{prp}
+  {\begin{prpthm}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@prpthm\endcsname\csname thetcb@cnt@prpthm\endcsname}}
+  {\end{prpthm}\mfootnoteout}
 \newcommand{\prplabel}[1]{\label{prp:#1}}
 \newcommand{\prpref}[1]{性質~\ref{prp:#1}}
 
+\newtcbtheorem[]{prfthm}{証明}
+  {enhanced,skin=enhancedmiddle,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+   before skip=\baselineskip, after skip=\baselineskip,breakable,
+   %colback=green!5,colframe=green!35!black,
+   colback=white,colframe=white,colbacktitle=white,coltitle=black,
+   fonttitle=\bfseries\sffamily,
+   fontupper=\rmfamily\fontsize{10pt}{12pt}\selectfont,
+   attach title to upper,after title={:\ },
+   borderline west = {2mm}{0pt}{gray}}{prp}
+\renewenvironment{proof}
+  {\begin{prfthm*}{}{}\let\footnote\mfootnote%
+      \protected@edef\@currentlabel
+          {\csname p@tcb@cnt@prfthm\endcsname\csname thetcb@cnt@prfthm\endcsname}}
+  {\qedhere\end{prfthm*}\mfootnoteout}
+\makeatother
+
+\newcommand{\qedhere}{\ifmmode\qed\else\hfill\proofSymbol\fi}
 
 % Miscellaneous commands
 \newcommand{\etal}{\emph{et al.}}
@@ -186,7 +277,6 @@
 \DeclareMathOperator{\ddiv}{div}
 
 \renewcommand\proofname{\bf 証明}
-
 
 \usepackage{ods-colors}
 
@@ -211,7 +301,7 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \htmlonly{\\ \includegraphics[scale=0.90909,scale=0.5]{images/cc-by}}}
 %Version 0.0 pre $\alpha$: \today}
 
-\pagenumbering{roman}
+%\pagenumbering{roman}
 
 % Draft mode only - mark overfull hboxes
 % \overfullrule=5pt
@@ -220,6 +310,9 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 %\titleformat{\chapter}[display]
 %  {\huge\headingfont}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
 
+\pagestyle{bookheadings}
+\AtBeginShipoutFirst{\special{pdf:tounicode UTF8-UTF16}}
+\AtBeginDocument{\special{papersize=148truemm,210truemm}}%
 
 \begin{document}
 
@@ -244,7 +337,7 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 %}
 
 % Use 14pt between lines
-\setlength{\baselineskip}{14pt}
+%\setlength{\baselineskip}{14pt}
 
 
 %\begin{titlepage}
@@ -265,14 +358,14 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \tableofcontents
 \cleardoublepage
 
-\fancyhead[RO,LE]{} % disable section numbers, for now
-\pagestyle{fancy}
+%\fancyhead[RO,LE]{} % disable section numbers, for now
+%\pagestyle{fancy}
 \include{ack-ja}
 \include{ack}
 \thispagestyle{empty}
 \cleardoublepage
 
-\fancyhead[CE]{\small Why This Book?} % chapter title, left center
+%\fancyhead[CE]{\small Why This Book?} % chapter title, left center
 \include{why}
 \cleardoublepage
 
@@ -281,9 +374,9 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
   \cleardoublepage
 }
 
-\fancyhead[CE]{\small\nouppercase{\leftmark}} % chapter title, left center
-\fancyhead[CO]{\small\rightmarktitle} % section title, right center
-\fancyhead[RO,LE]{\small\rightmarksection}
+%\fancyhead[CE]{\small\nouppercase{\leftmark}} % chapter title, left center
+%\fancyhead[CO]{\small\rightmarktitle} % section title, right center
+%\fancyhead[RO,LE]{\small\rightmarksection}
 
 %% Include all the chapters one at a time
 
@@ -303,11 +396,11 @@ Edition 0.1G\cpponly{$\beta$}\pcodeonly{$\beta$}
 \include{btree-lang}
 
 %% Turn off section numbers for remainder of document
-\fancyhead[RO]{} % section number on the outside
-\fancyhead[LE]{} % section number on the outside
+%\fancyhead[RO]{} % section number on the outside
+%\fancyhead[LE]{} % section number on the outside
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
 \renewcommand{\sectionmark}[1]{\markright{#1}} 
-\fancyhead[CO]{\small\nouppercase\rightmark}
+%\fancyhead[CO]{\small\nouppercase\rightmark}
 
 \cleardoublepage
 \addcontentsline{toc}{chapter}{Bibliography}

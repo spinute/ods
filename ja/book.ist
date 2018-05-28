@@ -1,0 +1,17 @@
+preamble "\n \\begin{theindex} \n \\thispagestyle{titleheadings} \n"
+postamble "\n\n \\end{theindex}\n"
+item_1 "\n \\subitem "
+item_2 "\n  \\subsubitem "
+item_01 "\\nopagebreak \n \\subitem "
+item_12 "\\nopagebreak \n  \\subsubitem "
+item_x1 "\\nopagebreak \n \\subitem "
+item_x2 "\\nopagebreak \n  \\subsubitem "
+delim_0 "\\expandafter\\indexpages "
+delim_1 "\\expandafter\\indexpages "
+delim_2 "\\expandafter\\indexpages "
+heading_prefix "{\\sffamily\\bfseries\\large "
+heading_suffix "}\\nopagebreak \\vskip.5zh "
+line_max 120
+indent_space ""
+indent_length 0
+symhead_positive "記号・数字"
