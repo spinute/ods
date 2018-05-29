@@ -1,0 +1,56 @@
+\renewcommand{\@idxitem}{\par\hangindent1.5zw} % 元 40pt
+\renewcommand{\subitem}{\@idxitem \hspace*{1.5zw}\hangindent3zw} % 元 20pt
+\renewcommand{\subsubitem}{\@idxitem \hspace*{3zw}\hangindent4.5zw} % 元 30pt
+\newcommand{\myindexdot}{%
+  \renewcommand{\@dotsep}{1}%
+  \cleaders\hbox{\tiny$\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill}
+\def\indexpages{\begingroup\catcode`\^^M=12 \pickPages}
+{\catcode`\^^M=12 %
+  \gdef\pickPages#1^^M{{\penalty-2\myindexdot\hbox{}\penalty-1 %
+    \hbox{\tiny.}\myindexdot\hbox{}\hbox{#1}%
+    \parfillskip=0pt}\endgroup}%
+}
+\renewenvironment{theindex}{%
+  \if@openright{\ifcase\thedoubleclear{\cleardoublepage}\or{\clearpage}\fi}\else\clearpage\fi%
+  \markboth{\indexname}{\indexname}%
+  \pagestyle{bookheadings}
+  \columnseprule.4pt \columnsep 2zw
+  \ifx\multicols\@undefined
+    \twocolumn[\@makeschapterhead{\indexname}%
+  ]%
+  \else
+    \begin{multicols}{2}[\@makeschapterhead{\indexname}]%
+  \fi
+  \parindent\z@
+  \parskip\z@ \@plus .3\p@\relax
+  \let\item\@idxitem
+  \raggedright
+  \small\narrowbaselines
+  }{
+  \ifx\multicols\@undefined
+    \if@restonecol\onecolumn\fi
+  \else
+    \end{multicols}
+  \fi
+  \clearpage
+  }
+\def\idxnml#1{%
+  \index{#1}}
+\def\idxftn#1{%
+  \index{#1|footpage}}
+\def\idxfig#1{%
+  \index{#1|figpage}}
+\def\idxtbl#1{%
+  \index{#1|tblpage}}
+\def\idxem#1{%
+  \index{#1|firstidxpage}}
+\def\footpage#1{%
+  {\hyperpage{#1}$_{\text{（注）}}$}}
+\def\figpage#1{%
+  {\hyperpage{#1}$_{\text{（図）}}$}}
+\def\tblpage#1{%
+  {\hyperpage{#1}$_{\text{（表）}}$}}
+\def\indexsee#1#2{%
+  \index{#2|seealso{#1}}}
+\def\firstidxpage#1{%
+  {\bfseries\sffamily\hyperpage{#1}}}

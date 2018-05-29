@@ -1,3 +1,6 @@
+export
+IPELATEXDIR=..
+
 sources=$(wildcard ../figs/*.ipe)
 kek=$(notdir $(sources))
 kak=$(kek:.ipe=.xml)

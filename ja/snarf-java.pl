@@ -141,13 +141,13 @@ MAIN: {
       #print('\renewcommand{\baselinestretch}{1}'."\n");
       #print("\\resizebox{.98\\textwidth}{!}{");
       print("\n\n ");
-      print('\ \vspace{.5ex}');
-      print("\\begin{Verbatim}[gobble=1,tabsize=2,frame=single,framerule=1.2pt");
+      print("\\begin{codequote}\\setcodefont\\Codefontsize\n");
+      print("\\begin{Verbatim}[gobble=1,tabsize=2");
       print(',commandchars=\\\\@\\$');
-      print(",label=\\texttt{$class},labelposition=topline");
+      print(",label=\\texttt{$class}");
       print("]\n"); 
       snarfit($args, 0); 
-      print("\\end{Verbatim}\n\n");
+      print("\\end{Verbatim}\n\\end{codequote}\n");
       #print("}");
       #print('\renewcommand{\baselinestretch}{1.4}'."\n");
       #print('\end{singlespace}');

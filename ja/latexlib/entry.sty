@@ -1,0 +1,36 @@
+\newlength{\labellenmin}
+\newlength{\labellenmax}
+\newlength{\thislabellen}
+\newcommand{\entrylabel}[1]{%
+   \setlength{\labellenmin}{\textwidth}%
+   \setlength{\labellenmax}{\textwidth}%
+   \settowidth{\thislabellen}{#1}%
+   \addtolength{\labellenmin}{0em}%
+   \addtolength{\labellenmax}{0em}%
+   \addtolength{\thislabellen}{0em}%
+   \ifthenelse{\lengthtest{\thislabellen > \labellenmin} \and %
+               \lengthtest{\thislabellen < \labellenmax}}%
+       {\@tempdima\labellenmax}{\@tempdima\labellenmin}%
+   \sbox\@tempboxa{%
+      {\parbox[b]{\textwidth}{\raggedright%
+          \advance\leftskip.5em\narrowbaselines%
+          \leavevmode\kern-.5em\makebox[0.5em][l]{\color{70gray}\put(0,3){\circle*{3}}}%
+          \sffamily\inhibitglue#1\mbox{}\relax}}}%
+   \@tempdima\dp\@tempboxa%
+   \usebox{\@tempboxa}}%
+\renewenvironment{description}{
+  \begin{list}{}%
+    {\renewcommand{\makelabel}{\entrylabel}%
+     \interlinepenalty9999
+     \@itempenalty -9999
+     \setlength{\parskip}{.25\baselineskip}%
+     \setlength{\topsep}{.25\baselineskip}%
+     \setlength{\parsep}{0\baselineskip}%
+     \setlength{\partopsep}{0pt}%
+     \setlength{\itemsep}{.25\baselineskip}%
+     \setlength{\labelwidth}{0em}%
+     \setlength{\labelsep}{0pt}%
+     \setlength{\leftmargin}{1em}%
+     \setlength{\itemindent}{-.5em}%
+     \setlength{\listparindent}{0em}}
+  }{\end{list}}
