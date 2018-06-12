@@ -121,7 +121,7 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左に1つシフトし、#n#の値を1つ小さく�
 大きさ$2#n#$の配列#b#を割り当て、#n#個の要素をコピーする。
 これには$O(#n#)$の時間がかかる。
 
-前節の実行時間分析では#resize()#のコストを無視していた。この節では\emph{償却解析 (amortized analysis)}と呼ばれる手法でこれを解決する。
+前節の実行時間分析では#resize()#のコストを無視していた。この節では\emph{償却解析（amortized analysis）}と呼ばれる手法でこれを解決する。
 この手法は、個々の#add(i, x)#および#remove(i)#における#resize()#のコストを求めるわけではない。
 代わりに、#add(i, x)#と#remove(i)#からなる#m#個の一連の操作の間に呼ばれる#resize()#の実行時間の合計を考える。特に、次の補題を示す。
 % 以上の部分はpdfにしたときに別段落に分けられていたので、原文に沿って一段落にまとめた
@@ -275,7 +275,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
   \begin{center}
     \includegraphics[scale=0.90909]{figs/arrayqueue}
   \end{center}
-  \caption{#ArrayQueue#に対する#add(x)#・#remove()#の実行例。矢印は要素のコピーを表す。#resize()#が発生する呼び出しにはアスタリスクを付した}
+  \caption{#ArrayQueue#に対する#add(x)#、#remove()#の実行例。矢印は要素のコピーを表す。#resize()#が発生する呼び出しにはアスタリスクを付した}
   \figlabel{arrayqueue}
 \end{figure}
 
@@ -307,7 +307,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 \begin{thm}
   #ArrayQueue#は、（FIFOの）#Queue#インターフェースの実装である。
-  #resize()#のコストを無視すると、#ArrayStack#は#add(x)#・#remove()#の実行時間は$O(1)$である。
+  #resize()#のコストを無視すると、#ArrayStack#は#add(x)#、#remove()#の実行時間は$O(1)$である。
   さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
@@ -340,7 +340,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
     % XXX: 最後の`add(4,z)`は、`add(3,z)`の間違いっぽい -- 修正した
     \includegraphics[scale=0.90909]{figs/arraydeque}
   \end{center}
-  \caption{#ArrayDeque#に対する#add(i, x)#・#remove(i)#の実行例。矢印は要素のコピーを表す。}
+  \caption{#ArrayDeque#に対する#add(i, x)#、#remove(i)#の実行例。矢印は要素のコピーを表す。}
   \figlabel{arraydeque}
 \end{figure}
 
@@ -484,7 +484,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
   \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(m)$であることを示したことになる。
 
   ここでは
-  \emph{ポテンシャル法 (potential method)}
+  \emph{ポテンシャル法（potential method）}
   \index{potential}%
   \index{potential method}%
   という技法を使う。
@@ -634,7 +634,7 @@ $#i#+1,\ldots,#n#$番めの要素をそれぞれ左に1つずつシフトし、2
 \footnote{訳注：#remove(i)#の場合は常に$#i#<#n#$、すなわち$#n#-#i#>0$が成り立つので、#add(i,x)#の計算量のように1を足す必要がない。}
 。
 
-\subsection{拡張・収縮の分析}
+\subsection{拡張、収縮の分析}
 
 #add(i,x)#と#remove(i)#の解析では#grow()#と#shrink()#を考慮していなかった。
 #ArrayStack.resize()#の場合とは違い、#grow()#と#shrink()#では要素がコピーされないことに注意しよう。
@@ -811,7 +811,7 @@ $\lfloor\log #x#\rfloor$が#x#を2進表記したときに1となる最大の桁
 これはコンピュータアーキテクチャによっては専用の命令があり、効率的に計算できる。
 \javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
-#RootishArrayStack#に関連するデータ構造として、GoodrichとKlossによる\cite{gk99}で示された2段階の\emph{階層ベクトル (tiered-vector)}というものがある。
+#RootishArrayStack#に関連するデータ構造として、GoodrichとKlossによる\cite{gk99}で示された2段階の\emph{階層ベクトル（tiered-vector）}というものがある。
 \index{tiered-vector}%
 このデータ構造では、#get(i,x)#および#set(i,x)#の実行時間は定数である。
 #add(i,x)#および#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
