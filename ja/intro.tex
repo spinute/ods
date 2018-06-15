@@ -595,11 +595,12 @@ B、C、C++、C\#、Objective-C、D、Java、JavaScriptといったALGOL系の�
 破線の矢印は、章のごく一部の内容や結果のみに依存することを示す。
 
 \begin{table}
-\vspace{56pt}
+\caption{#List#、#USet#の実装の要約}
+\tablabel{summary-i}
 \begin{center}
-\resizebox{.98\textwidth}{!}{
+\setlength{\extrarowheight}{3pt}
 \begin{threeparttable}
-\begin{tabular}{|l|l|l|l|} \hline
+\begin{tabular}{|l|l|l@{\hspace*{1em}}|l|} \hline
 \multicolumn{4}{|c|}{#List#の実装} \\ \hline
 % XXX: この本の定義に従うとき、二変数のO記法の中に+1を添える必要はあるか？
  & #get(i)#/#set(i,x)# & #add(i,x)#/#remove(i)# & \\ \hline
@@ -616,46 +617,49 @@ B、C、C++、C\#、Objective-C、D、Java、JavaScriptといったALGOL系の�
 #ChainedHashTable# & $O(1)$\tnote{E} & $O(1)$\tnote{A,E} & \sref{hashtable} \\ 
 #LinearHashTable# & $O(1)$\tnote{E} & $O(1)$\tnote{A,E} & \sref{linearhashtable} \\ \hline
 \end{tabular}
-\begin{tablenotes}
+\vspace{3pt}
+\begin{tablenotes}[online,flushleft]
 \item[A]{\emph{償却}実行時間を表す}
 \item[E]{\emph{期待}実行時間を表す}
 \end{tablenotes}
-\end{threeparttable}}
+\end{threeparttable}
 \end{center}
-\caption{#List#、#USet#の実装の要約}
-\tablabel{summary-i}
 \end{table}
 
 \begin{table}
+\caption{#SSet#、優先度付き#Queue#の実装の要約}
+\tablabel{summary-ii}
 \begin{center}
+\setlength{\extrarowheight}{3pt}
 \begin{threeparttable}
-\begin{tabular}{|l|l|l|l|} \hline
+\begin{tabular}{|l|l@{\hspace*{1em}}|l|l|} \hline
 \multicolumn{4}{|c|}{#SSet#の実装} \\ \hline
  & #find(x)# & #add(x)#/#remove(x)# & \\ \hline
 #SkiplistSSet# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E} & \sref{skiplistset} \\ 
 #Treap# & $O(\log #n#)$\tnote{E} & $O(\log #n#)$\tnote{E} & \sref{treap} \\ 
 #ScapegoatTree# & $O(\log #n#)$ & $O(\log #n#)$\tnote{A} & \sref{scapegoattree} \\
 #RedBlackTree# & $O(\log #n#)$ & $O(\log #n#)$ & \sref{redblacktree} \\ 
-#BinaryTrie#\tnote{I} & $O(#w#)$ & $O(#w#)$ & \sref{binarytrie} \\ 
-#XFastTrie#\tnote{I} & $O(\log #w#)$\tnote{A,E} & $O(#w#)$\tnote{A,E} & \sref{xfast} \\ 
-#YFastTrie#\tnote{I} & $O(\log #w#)$\tnote{A,E} & $O(\log #w#)$\tnote{A,E} & \sref{yfast} \\ 
+#BinaryTrie#\tnote{Int} & $O(#w#)$ & $O(#w#)$ & \sref{binarytrie} \\ 
+#XFastTrie#\tnote{Int} & $O(\log #w#)$\tnote{A,E} & $O(#w#)$\tnote{A,E} & \sref{xfast} \\ 
+#YFastTrie#\tnote{Int} & $O(\log #w#)$\tnote{A,E} & $O(\log #w#)$\tnote{A,E} & \sref{yfast} \\ 
 \javaonly{#BTree# & $O(\log #n#)$ & $O(B+\log #n#)$\tnote{A} & \sref{btree} \\ 
 #BTree#\tnote{X} & $O(\log_B #n#)$ & $O(\log_B #n#)$ & \sref{btree} \\ } \hline
 \multicolumn{4}{c}{} \\[2ex] \hline
-\multicolumn{4}{|c|}{(Priority) #Queue# の実装} \\ \hline
+\multicolumn{4}{|c|}{（優先度付き）#Queue#の実装} \\ \hline
  & #findMin()# & #add(x)#/#remove()# & \\ \hline
 #BinaryHeap# & $O(1)$ & $O(\log #n#)$\tnote{A} & \sref{binaryheap} \\ 
 #MeldableHeap# & $O(1)$ & $O(\log #n#)$\tnote{E} & \sref{meldableheap} \\ \hline
 \end{tabular}
-\begin{tablenotes}
-\item[I]{このデータ構造は#w#ビットで表現できる整数のみを格納できる}
+\vspace{3pt}
+\begin{tablenotes}[online,flushleft]
+\item[A]{\emph{償却}実行時間を表す}
+\item[E]{\emph{期待}実行時間を表す}
+\item[Int]{このデータ構造は#w#ビットで表現できる整数のみを格納できる}
 \javaonly{\item[X]{これは外部メモリモデル（\chapref{btree}を参照）での実行時間である}}
 \end{tablenotes}
 %\renewcommand{\thefootnote}{\arabic{footnote}}
 \end{threeparttable}
 \end{center}
-\caption{#SSet#、優先度付き#Queue#の実装の要約}
-\tablabel{summary-ii}
 \end{table}
 
 \begin{figure}
