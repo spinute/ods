@@ -29,7 +29,7 @@ protected:
 				logtab[(1<<d)+k] = d;
 		int s = 1<<7;                        // sqrt(2^14)
 		for (int i = 0; i < halfint; i++) {
-			if ((s+1)*(s+1) <= i << 14) s++; // sqrt increases
+			if ((s+1)*(s+1) <= i << 14) s++; // 平方根の値を増やす
 			sqrtab[i] = s;
 		}
 	}
@@ -58,9 +58,9 @@ public:
 	static int sqrt(int x) {
 		int rp = log(x);
 		int upgrade = ((r-rp)/2) * 2;
-		int xp = x << upgrade;  // xp has r or r-1 bits
+		int xp = x << upgrade;  // xp は r ビットまたは r-1 ビット
 		int s = sqrtab[xp>>(r/2)] >> (upgrade/2);
-		while ((s+1)*(s+1) <= x) s++;  // executes at most twice
+		while ((s+1)*(s+1) <= x) s++;  // 高々二回だけ実行する
 		return s;
 	}
 

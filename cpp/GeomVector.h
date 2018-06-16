@@ -10,13 +10,13 @@ protected:
 
 public:	
 	unsigned hashCode() {
-		long p = (1L<<32)-5;   // prime: 2^32 - 5
-		long z = 0x64b6055aL;  // 32 bits from random.org
-		int z2 = 0x5067d19d;   // random odd 32 bit number
+		long p = (1L<<32)-5;   // 2^32 - 5 は素数
+		long z = 0x64b6055aL;  // random.org から取得した 32 ビットの乱数
+		int z2 = 0x5067d19d;   // 32 ビットのランダムな奇数
 		long s = 0;
 		long zi = 1;
 		for (int i = 0; i < x.length; i++) {
-			// reduce to 31 bits
+			// 31 ビットに縮める
 			long long xi = (ods::hashCode(x[i]) * z2) >> 1; 
 			s = (s + zi * xi) % p;
 			zi = (zi * z) % p;	

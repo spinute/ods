@@ -45,7 +45,7 @@ protected:
 	Node* findPred(int i) {
 		Node *u = sentinel;
 		int r = h;
-		int j = -1;   // the index of the current node in list 0
+		int j = -1;   // リスト 0 における現在のノードのインデックス
 		while (r >= 0) {
 			while (u->next[r] != NULL && j + u->length[r] < i) {
 				j += u->length[r];
@@ -60,13 +60,13 @@ protected:
 		Node *u = sentinel;
 		int k = w->height;
 		int r = h;
-		int j = -1; // index of u
+		int j = -1; // u のインデックス
 		while (r >= 0) {
 			while (u->next[r] != NULL && j + u->length[r] < i) {
 				j += u->length[r];
 				u = u->next[r];
 			}
-			u->length[r]++; // to account for new node in list 0
+			u->length[r]++; // 新たなノードがリスト 0 において何番目なのかを数える
 			if (r <= k) {
 				w->next[r] = u->next[r];
 				u->next[r] = w;
@@ -106,13 +106,13 @@ public:
 		T x = null;
 		Node *u = sentinel, *del;
 		int r = h;
-		int j = -1; // index of node u
+		int j = -1; // u のインデックス
 		while (r >= 0) {
 			while (u->next[r] != NULL && j + u->length[r] < i) {
 				j += u->length[r];
 				u = u->next[r];
 			}
-			u->length[r]--; // for the node we are removing
+			u->length[r]--; // ノードを削除するので、辺の長さを減らす
 			if (j + u->length[r] + 1 == i && u->next[r] != NULL) {
 				x = u->next[r]->x;
 				u->length[r] += u->next[r]->length[r];

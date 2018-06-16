@@ -17,10 +17,10 @@ template<class T>
 class BTree {
 public:
 	T null;
-	int b; // the maximum number of children of a node (must be odd)
-	int B; // b div 2
-	int n; // number of elements stored in the tree
-	int ri; // index of the root
+	int b; // 子ノードの最大値（奇数である必要がある）
+	int B; // b を 2 で割った値
+	int n; // 木に含まれる要素の個数
+	int ri; // 根のインデックス
 
 	int findIt(array<T> &a, T x) {
 		int lo = 0, hi = a.length;
@@ -28,11 +28,11 @@ public:
 			int m = (hi+lo)/2;
 			int cmp = a[m] == null ? -1 : compare(x, a[m]);
 			if (cmp < 0)
-				hi = m;      // look in first half
+				hi = m;      // 前半を見る
 			else if (cmp > 0)
-				lo = m+1;    // look in second half
+				lo = m+1;    // 後半を見る
 			else
-				return -m-1; // found it
+				return -m-1; // 見つけた
 		}
 		return lo;
 	}
@@ -113,12 +113,12 @@ public:
 		Node *u = bs.readBlock(ui);
 		int i = findIt(u->keys, x);
 		if (i < 0) throw(-1);
-		if (u->children[i] < 0) { // leaf node, just add it
+		if (u->children[i] < 0) { // 葉ノードである。単に追加する
 			u->add(x, -1);
 			bs.writeBlock(u->id, u);
 		} else {
 			Node* w = addRecursive(x, u->children[i]);
-			if (w != NULL) {  // child was split, w is new child
+			if (w != NULL) {  // 子は分割された。w は新たな子である
 				x = w->remove(0);
 				bs.writeBlock(w->id, w);
 				u->add(x, w->id);
@@ -134,10 +134,10 @@ public:
 		assert(w->id == u->children[i+1]);
 		int sv = v->size();
 		int sw = w->size();
-		// copy keys from w to v
+		// キーを w から v にコピーする
 		std::copy(w->keys + 0, w->keys + sw, v->keys + sv+1);
 		std::copy(w->children + 0, w->children + sw+1, v->children + sv+1);
-		// add key to v and remove it from u
+		// v にキーを追加し、u からそのキーを削除する
 		v->keys[sv] = u->keys[i];
 		std::copy(u->keys + i+1, u->keys + b, u->keys + i);
 		u->keys[b-1] = null;
@@ -148,11 +148,11 @@ public:
 	void shiftLR(Node *u, int i, Node *v, Node *w) {
 		int sw = w->size();
 		int sv = v->size();
-		int shift = ((sw+sv)/2) - sw;  // num. keys to shift from v to w
-		// make space for new keys in w
+		int shift = ((sw+sv)/2) - sw;  // v から w にシフトするキーの個数
+		// w に新たなキーを入れるためのスペースを作る
 		std::copy(w->keys + 0, w->keys + sw, w->keys + shift);
 		std::copy(w->children + 0, w->children + sw+1, w->children + shift);
-		// move keys and children out of v and into w (and u)
+		// v からキーと子を追い出して w（と u）に入れる
 		w->keys[shift-1] = u->keys[i];
 		u->keys[i] = v->keys[sv-shift];
 		std::copy(v->keys + sv-shift+1, v->keys + sv, w->keys + 0);
@@ -165,13 +165,13 @@ public:
 		assert(w->id == u->children[i] && v->id == u->children[i+1]);
 		int sw = w->size();
 		int sv = v->size();
-		int shift = ((sw+sv)/2) - sw;  // num. keys to shift from v to w
-		// shift keys and children from v to w
+		int shift = ((sw+sv)/2) - sw;  // v から w にシフトするキーの個数
+		// v から w にキーと子を移す
 		w->keys[sw] = u->keys[i];
 		std::copy(v->keys + 0, v->keys + shift-1, w->keys + sw+1);
 		std::copy(v->children + 0, v->children + shift, w->children + sw+1);
 		u->keys[i] = v->keys[shift-1];
-		// delete keys and children from v
+		// v からキーと子を削除する
 		std::copy(v->keys + shift, v->keys + b, v->keys + 0);
 		std::fill(v->keys + sv-shift, v->keys + b, null);
 		std::copy(v->children + shift, v->children + b+1, v->children + 0);
@@ -180,11 +180,11 @@ public:
 
 	void checkUnderflowZero(Node *u, int i) {
 		Node *w = bs.readBlock(u->children[i]);
-		if (w->size() < B-1) {  // underflow at w
+		if (w->size() < B-1) {  // w でアンダーフローが発生
 			Node *v = bs.readBlock(u->children[i+1]);
-			if (v->size() > B) { // w can borrow from v
+			if (v->size() > B) { // w は v から借用できる
 				shiftRL(u, i, v, w);
-			} else { // w will absorb w
+			} else { // v は w を併合する
 				merge(u, i, w, v);
 				u->children[i] = w->id;
 			}
@@ -193,11 +193,11 @@ public:
 
 	void checkUnderflowNonZero(Node *u, int i) {
 		Node *w = bs.readBlock(u->children[i]);
-		if (w->size() < B-1) {  // underflow at w
+		if (w->size() < B-1) {  // w でアンダーフローが発生
 			Node *v = bs.readBlock(u->children[i-1]);
-			if (v->size() > B) {  // w can borrow from v
+			if (v->size() > B) {  // w は v から借用できる
 				shiftLR(u, i-1, v, w);
-			} else { // v will absorb w
+			} else { // v は w を併合する
 				merge(u, i-1, v, w);
 			}
 		}
@@ -206,7 +206,7 @@ public:
 	void checkUnderflow(Node* u, int i) {
 		if (u->children[i] < 0) return;
 		if (i == 0)
-			checkUnderflowZero(u, i); // use u's right sibling
+			checkUnderflowZero(u, i); // u の右の兄弟を使う
 		else
 			checkUnderflowNonZero(u, i);
 	}
@@ -221,10 +221,10 @@ public:
 	}
 
 	bool removeRecursive(T x, int ui) {
-		if (ui < 0) return false;  // didn't find it
+		if (ui < 0) return false;  // 見つからなかった
 		Node* u = bs.readBlock(ui);
 		int i = findIt(u->keys, x);
-		if (i < 0) { // found it
+		if (i < 0) { // 見つけた
 			i = -(i+1);
 			if (u->isLeaf()) {
 				u->remove(i);
@@ -255,9 +255,9 @@ public:
         try {
         	w = addRecursive(x, ri);
         } catch (int e) {
-        	return false; // adding duplicate value
+        	return false; // 重複した値を加えようとしている
         }
-        if (w != NULL) {   // root was split, make new root
+        if (w != NULL) {   // 根は分割された。新たな根を作る
 			Node *newroot = new Node(this);
 			x = w->remove(0);
 			bs.writeBlock(w->id, w);
@@ -275,7 +275,7 @@ public:
 		if (removeRecursive(x, ri)) {
 			n--;
 			Node *r = bs.readBlock(ri);
-			if (r->size() == 0 && n > 0) // root has only one child
+			if (r->size() == 0 && n > 0) // 根の子は1つだけ
 				ri = r->children[0];
 			return true;
 		}
@@ -293,7 +293,7 @@ public:
 		while (ui >= 0) {
 			Node *u = bs.readBlock(ui);
 			int i = findIt(u->keys, x);
-			if (i < 0) return u->keys[-(i+1)]; // found it
+			if (i < 0) return u->keys[-(i+1)]; // 見つけた
 			if (u->keys[i] != null)
 				z = u->keys[i];
 			ui = u->children[i];

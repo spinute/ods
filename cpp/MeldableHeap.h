@@ -52,7 +52,7 @@ Node* MeldableHeap<Node,T>::merge(Node *h1, Node *h2) {
 	if (h1 == nil) return h2;
 	if (h2 == nil) return h1;
 	if (compare(h1->x, h2->x) > 0) return merge(h2, h1);
-        // now we know h1->x <= h2->x
+    // この時点で h1->x <= h2->x だとわかる
 	if (rand() % 2) {
 		h1->left = merge(h1->left, h2);
 		if (h1->left != nil) h1->left->parent = h1;

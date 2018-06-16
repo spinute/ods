@@ -71,7 +71,7 @@ BinarySearchTree<Node,int>::BinarySearchTree()  {
 
 template<class Node, class T>
 BinarySearchTree<Node,T>::BinarySearchTree() {
-	this->null = (T)NULL;  // won't work for non-primitive types
+	this->null = (T)NULL;  // プリミティブ型でのみ正しく動く
 	n = 0;
 }
 
@@ -140,7 +140,7 @@ BinarySearchTree<Node,T>::~BinarySearchTree() {
 template<class Node, class T>
 bool BinarySearchTree<Node, T>::addChild(Node *p, Node *u) {
 		if (p == nil) {
-			r = u;              // inserting into empty tree
+			r = u;              // 空っぽの木に挿入する
 		} else {
 			int comp = compare(u->x, p->x);
 			if (comp < 0) {
@@ -148,7 +148,7 @@ bool BinarySearchTree<Node, T>::addChild(Node *p, Node *u) {
 			} else if (comp > 0) {
 				p->right = u;
 			} else {
-				return false;   // u.x is already in the tree
+				return false;   // u.x は既に木に含まれている
 			}
 			u->parent = p;
 		}

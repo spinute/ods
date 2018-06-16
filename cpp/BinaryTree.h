@@ -28,8 +28,8 @@ public:
 template<class Node>
 class BinaryTree {
 protected:
-	Node *r;    // root node
-	Node *nil;  // null-like node
+	Node *r;    // 根（root）ノード
+	Node *nil;  // null のようなノード
 	virtual int size(Node *u);
 	virtual int height(Node *u);
 	virtual void traverse(Node *u);

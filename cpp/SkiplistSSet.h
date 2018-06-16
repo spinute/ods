@@ -63,10 +63,10 @@ typename SkiplistSSet<T>::Node* SkiplistSSet<T>::findPredNode(T x) {
 	Node *u = sentinel;
 	int r = h;
 	while (r >= 0) {
-		while (u->next[r] != NULL 
+		while (u->next[r] != NULL
                && compare(u->next[r]->x, x) < 0)
-			u = u->next[r]; // go right in list r
-		r--; // go down into list r-1
+			u = u->next[r]; // リスト r の中で右に進む
+		r--; // リスト r-1 に下がる
 	}
 	return u;
 }
@@ -110,7 +110,7 @@ bool SkiplistSSet<T>::remove(T x) {
 			del = u->next[r];
 			u->next[r] = u->next[r]->next[r];
 			if (u == sentinel && u->next[r] == NULL)
-				h--; // skiplist height has gone down
+				h--; // スキップリストの高さを小さくする
 		}
 		r--;
 	}
@@ -132,11 +132,11 @@ bool SkiplistSSet<T>::add(T x) {
 			u = u->next[r];
 		if (u->next[r] != NULL && comp == 0)
 			return false;
-		stack[r--] = u;        // going down, store u
+		stack[r--] = u;        // u を入れて下に進む
 	}
 	Node *w = newNode(x, pickHeight());
 	while (h < w->height)
-		stack[++h] = sentinel; // height increased
+		stack[++h] = sentinel; // 高さが増える
 	for (int i = 0; i <= w->height; i++) {
 		w->next[i] = stack[i]->next[i];
 		stack[i]->next[i] = w;

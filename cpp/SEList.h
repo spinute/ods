@@ -195,14 +195,14 @@ public:
 			u = u->next;
 			r++;
 		}
-		if (r == b) {// b blocks each with b+1 elements
+		if (r == b) { // b+1 要素を含むブロックが b 個あった
 			spread(l.u);
 			u = l.u;
 		}
-		if (u == &dummy) { // ran off the end - add new node
+		if (u == &dummy) { // 末尾まで到達したので新たなノードを加える
 			u = addBefore(u);
 		}
-		while (u != l.u) { // work backwards, shifting elements
+		while (u != l.u) { // 逆方向に要素をシフトする
 			u->d.add(0, u->prev->d.remove(u->prev->d.size()-1));
 			u = u->prev;
 		}
@@ -219,7 +219,7 @@ public:
 			u = u->next;
 			r++;
 		}
-		if (r == b) { // found b blocks each with b-1 elements
+		if (r == b) { // b-1 要素を含むブロックが b 個あった
 			gather(l.u);
 		}
 		u = l.u;

@@ -130,16 +130,16 @@ bool XFastTrie<Node,T>::add(T x) {
 	int i, c = 0;
 	unsigned ix = intValue(x);
 	Node *u = &r;
-	// 1 - search for ix until falling out of the trie
+	// 1. トライの端に着くまで ix を探す
 	for (i = 0; i < w; i++) {
 		c = (ix >> (w-i-1)) & 1;
 		if (u->child[c] == NULL) break;
 		u = u->child[c];
 	}
-	if (i == w) return false; // trie already contains x - abort
-	Node *pred = (c == right) ? u->jump : u->jump->left; // save for step 3
-	u->jump = NULL;  // u will have two children shortly
-	// 2 - add path to ix
+	if (i == w) return false; // トライに x は既に入っているので中止する
+	Node *pred = (c == right) ? u->jump : u->jump->left; // ステップ 3 のために保存しておく
+	u->jump = NULL;  // u はふたつの子を持つようになる
+	// 2. ix への経路を追加する
 	for (; i < w; i++) {
 		c = (ix >> (w-i-1)) & 1;
 		u->child[c] = new Node();
@@ -148,12 +148,12 @@ bool XFastTrie<Node,T>::add(T x) {
 		u = u->child[c];
 	}
 	u->x = x;
-	// 3 - add u to linked list
+	// 3. u を連結リストに追加する
 	u->prev = pred;
 	u->next = pred->next;;
 	u->prev->next = u;
 	u->next->prev = u;
-	// 4 - walk back up, updating jump pointers
+	// 4. 上に戻りながら jump ポインタを更新する
 	Node *v = u->parent;
 	while (v != NULL) {
 		if ((v->left == NULL
@@ -169,7 +169,7 @@ bool XFastTrie<Node,T>::add(T x) {
 
 template<class Node, class T>
 bool XFastTrie<Node,T>::remove(T x) {
-	// 1 - find leaf, u, containing x
+	// 1. x を含む葉 u を見つける
 	int i = 0, c;
 	unsigned ix = intValue(x);
 	Node *u = &r;
@@ -178,11 +178,11 @@ bool XFastTrie<Node,T>::remove(T x) {
 		if (u->child[c] == NULL) return false;
 		u = u->child[c];
 	}
-	// 2 - remove u from linked list
+	// 2. u を連結リストから削除する
 	u->prev->next = u->next;
 	u->next->prev = u->prev;
 	Node *v = u;
-	// 3 - delete nodes on path to u
+	// 3. u を根から u への経路上のノードから削除する
 	for (i = w-1; i >= 0; i--) {
 		c = (ix >> (w-i-1)) & 1;
 		v = v->parent;
@@ -191,7 +191,7 @@ bool XFastTrie<Node,T>::remove(T x) {
 		v->child[c] = NULL;
 		if (v->child[1-c] != NULL) break;
 	}
-	// 4 - update jump pointers
+	// 4. jump ポインタを更新する
 	v->jump = u;
 	for (; i >= 0; i--) {
 		c = (ix >> (w-i-1)) & 1;
