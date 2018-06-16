@@ -1,3 +1,7 @@
+export
+IPELATEXDIR=..
+IPEPDFLATEX=
+
 sources=$(wildcard *.ipe)
 
 pdfs=$(sources:.ipe=.pdf)
