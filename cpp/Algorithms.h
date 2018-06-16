@@ -41,7 +41,7 @@ enum { white, grey, black };
 
 template<class Graph>
 void dfs(Graph &g, int i, char *c) {
-	c[i] = grey;  // currently visiting i
+	c[i] = grey;  // i を訪問しはじめる
 	ArrayStack<int> edges;
 	g.outEdges(i, edges);
 	for (int k = 0; k < edges.size(); k++) {
@@ -51,7 +51,7 @@ void dfs(Graph &g, int i, char *c) {
 			dfs(g, j, c);
 		}
 	}
-	c[i] = black; // done visiting i
+	c[i] = black; // i を訪問し終えた
 }
 
 template<class Graph>
@@ -120,12 +120,12 @@ void quickSort(array<T> &a, int i, int n) {
 	// a[i..p]<x,  a[p+1..q-1]??x, a[q..i+n-1]>x
 	while (j < q) {
 		int comp = compare(a[j], x);
-		if (comp < 0) {       // move to beginning of array
-			a.swap(j++, ++p);
+		if (comp < 0) {
+			a.swap(j++, ++p); // 配列の前方に移す
 		} else if (comp > 0) {
-			a.swap(j, --q);  // move to end of array
+			a.swap(j, --q);   // 配列の後方に移す
 		} else {
-			j++;              // keep in the middle
+			j++;              // 中ほどに残す
 		}
 	}
 	// a[i..p]<x,  a[p+1..q-1]=x, a[q..i+n-1]>x
@@ -154,8 +154,8 @@ void radixSort(array<int> &a) {
 	const int d = 8, w = 32;
 	for (int p = 0; p < w/d; p++) {
 		array<int> c(1<<d, 0);
-		// the next three for loops implement counting-sort
-		array<int> b(a.length);
+        // 次の3つの for ループで計数ソートを行う
+        array<int> b(a.length);
 		for (int i = 0; i < a.length; i++)
 			c[(a[i] >> d*p)&((1<<d)-1)]++;
 		for (int i = 1; i < 1<<d; i++)

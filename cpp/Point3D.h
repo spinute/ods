@@ -9,7 +9,7 @@ protected:
 
 public:	
 	unsigned hashCode() {
-		// random number from random.org
+		// random.org から取得したランダムな値
 		long long z[] = {0x2058cc50L, 0xcb19137eL, 0x2cb6b6fdL};
 		long zz = 0xbea0107e5067d19dL;
 

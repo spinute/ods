@@ -150,13 +150,13 @@ ScapegoatTree<Node,T>::~ScapegoatTree() {
 
 template<class Node, class T> inline
 bool ScapegoatTree<Node,T>::add(T x) {
-	// first do basic insertion keeping track of depth
+	// まずは深さを調べながら素朴に挿入する
 	Node *u = new Node;
 	u->x = x;
 	u->left = u->right = u->parent = nil;
 	int d = addWithDepth(u);
 	if (d > log32(q)) {
-		// depth exceeded, find scapegoat
+		// 深すぎるなら、スケープゴートを見つける
 		Node *w = u->parent;
 		int a = BinaryTree<Node>::size(w);
 		int b = BinaryTree<Node>::size(w->parent);

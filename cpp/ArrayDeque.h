@@ -77,11 +77,11 @@ int ArrayDeque<T>::size() {
 template<class T>
 void ArrayDeque<T>::add(int i, T x) {
 	if (n + 1 >= a.length)	resize();
-	if (i < n/2) { // shift a[0],..,a[i-1] left one position
+	if (i < n/2) { // a[0],..,a[i-1] を左に1つずらす
 		j = (j == 0) ? a.length - 1 : j - 1;
 		for (int k = 0; k <= i-1; k++)
 			a[(j+k)%a.length] = a[(j+k+1)%a.length];
-	} else { // shift a[i],..,a[n-1] right one position
+	} else { // a[i],..,a[n-1] を右に1つずらす
 		for (int k = n; k > i; k--)
 			a[(j+k)%a.length] = a[(j+k-1)%a.length];
 	}
@@ -92,11 +92,11 @@ void ArrayDeque<T>::add(int i, T x) {
 template<class T>
 T ArrayDeque<T>::remove(int i) {
 	T x = a[(j+i)%a.length];
-	if (i < n/2) { // shift a[0],..,[i-1] right one position
+	if (i < n/2) { // a[0],..,[i-1] を右に1つずらす
 		for (int k = i; k > 0; k--)
 			a[(j+k)%a.length] = a[(j+k-1)%a.length];
 		j = (j + 1) % a.length;
-	} else { // shift a[i+1],..,a[n-1] left one position
+	} else { // a[i+1],..,a[n-1] を左に1つずらす
 		for (int k = i; k < n-1; k++)
 			a[(j+k)%a.length] = a[(j+k+1)%a.length];
 	}

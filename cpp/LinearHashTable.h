@@ -21,8 +21,8 @@ class LinearHashTable {
 	static const int w = 32;
 	static const int r = 8;
 	array<T> t;
-	int n;   // number of values in T
-	int q;   // number of non-null entries in T
+	int n;   // 値の個数
+	int q;   // null でない値の個数
 	int d;   // t.length = 2^d
 	T null, del;
 	void resize();
@@ -103,7 +103,7 @@ void LinearHashTable<T>::resize() {
 	while ((1<<d) < 3*n) d++;
 	array<T> tnew(1<<d, null);
 	q = n;
-	// insert everything into tnew
+	// tnew にすべてを移す
 	for (int k = 0; k < t.length; k++) {
 		if (t[k] != null && t[k] != del) {
 			int i = hash(t[k]);
@@ -127,10 +127,10 @@ void LinearHashTable<T>::clear() {
 template<class T>
 bool LinearHashTable<T>::add(T x) {
 	if (find(x) != null) return false;
-	if (2*(q+1) > t.length) resize();   // max 50% occupancy
+	if (2*(q+1) > t.length) resize();   // 利用率は 50% 以下
 	int i = hash(x);
 	while (t[i] != null && t[i] != del)
-		i = (i == t.length-1) ? 0 : i + 1; // increment i
+		i = (i == t.length-1) ? 0 : i + 1; // i を増やす
 	if (t[i] == null) q++;
 	n++;
 	t[i] = x;
@@ -142,7 +142,7 @@ T LinearHashTable<T>::find(T x) {
 	int i = hash(x);
 	while (t[i] != null) {
 		if (t[i] != del && t[i] == x) return t[i];
-		i = (i == t.length-1) ? 0 : i + 1; // increment i
+		i = (i == t.length-1) ? 0 : i + 1; // i を増やす
 	}
 	return null;
 }
@@ -155,21 +155,21 @@ T LinearHashTable<T>::remove(T x) {
 		if (y != del && x == y) {
 			t[i] = del;
 			n--;
-			if (8*n < t.length) resize(); // min 12.5% occupancy
+			if (8*n < t.length) resize(); // 利用率は 12.5% 以上
 			return y;
 		}
-		i = (i == t.length-1) ? 0 : i + 1;  // increment i
+		i = (i == t.length-1) ? 0 : i + 1;  // i を増やす
 	}
 	return null;
 }
 
 template<class T>
 bool LinearHashTable<T>::addSlow(T x) {
-	if (2*(q+1) > t.length) resize();   // max 50% occupancy
+	if (2*(q+1) > t.length) resize();   // 利用率 50% 以下
 	int i = hash(x);
 	while (t[i] != null) {
 			if (t[i] != del && x.equals(t[i])) return false;
-			i = (i == t.length-1) ? 0 : i + 1; // increment i
+			i = (i == t.length-1) ? 0 : i + 1; // i を増やす
 	}
 	t[i] = x;
 	n++; q++;

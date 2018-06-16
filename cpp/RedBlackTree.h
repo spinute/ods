@@ -106,19 +106,19 @@ void RedBlackTree<Node,T>::swapcolours(Node *u, Node *w) {
 template<class Node, class T>
 void RedBlackTree<Node,T>::addFixup(Node *u) {
 	while (u->colour == red) {
-		if (u == r) { // u is the root - done
+		if (u == r) { // u は根なので完了
 			u->colour = black;
 			return;
 		}
 		Node *w = u->parent;
-		if (w->left->colour == black) { // ensure left-leaning
+		if (w->left->colour == black) { // 左傾性を保つ
 			flipLeft(w);
 			u = w;
 			w = u->parent;
 		}
 		if (w->colour == black)
-			return; // no red-red edge = done
-		Node *g = w->parent; // grandparent of u
+			return; // 赤い辺がないので完了
+		Node *g = w->parent; // u の祖父母
 		if (g->right->colour == black) {
 			flipRight(g);
 			return;
@@ -144,7 +144,7 @@ void RedBlackTree<Node,T>::removeFixup(Node *u) {
 			u = removeFixupCase3(u);
 		}
 	}
-	if (u != r) { // restore left-leaning property, if needed
+	if (u != r) { // 必要であれば左傾性を満たすようにする
 		Node *w = u->parent;
 		if (w->right->colour == red && w->left->colour == black) {
 			flipLeft(w);
@@ -167,9 +167,9 @@ Node* RedBlackTree<Node,T>::removeFixupCase2(Node *u) {
 	Node *w = u->parent;
 	Node *v = w->right;
 	pullBlack(w); // w->left
-	flipLeft(w); // w is now red
+	flipLeft(w); // 今は w は赤
 	Node *q = w->right;
-	if (q->colour == red) { // q-w is red-red
+	if (q->colour == red) { // q と w はいずれも赤
 		rotateLeft(w);
 		flipRight(v);
 		pushBlack(q);
@@ -188,18 +188,18 @@ Node* RedBlackTree<Node,T>::removeFixupCase3(Node *u) {
 	Node *w = u->parent;
 	Node *v = w->left;
 	pullBlack(w);
-	flipRight(w);            // w is now red
+	flipRight(w);            // w は赤
 	Node *q = w->left;
-	if (q->colour == red) { // q-w is red-red
+	if (q->colour == red) { // q と w はいずれも赤
 		rotateRight(w);
 		flipLeft(v);
 		pushBlack(q);
 		return q;
 	} else {
 		if (v->left->colour == red) {
-			pushBlack(v); // both v's children are red
+			pushBlack(v); // v の子はみな赤
 			return v;
-		} else { // ensure left-leaning
+		} else { // 左傾性を保つ
 			flipLeft(v);
 			return w;
 		}

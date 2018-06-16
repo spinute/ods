@@ -64,7 +64,7 @@ ChainedHashTable<T>::ChainedHashTable() : t(2) {
 	n = 0;
 	d = 1;
 	null = INT_MIN;
-	z = rand() | 1;     // is a random odd integer
+	z = rand() | 1;     // ランダムな奇数
 }
 
 
