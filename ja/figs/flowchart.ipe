@@ -2,7 +2,7 @@
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70005" creator="Ipe 7.1.1">
 <info created="D:20120607145412" modified="D:20120607150128"/>
-<preamble>\usepackage{xr}
+<preamble>\usepackage[whole]{bxcjkjatype}\usepackage{xr}
 \externaldocument[X-]{../ods-java}
 \usepackage{kpfonts}\fontsize{10pt}{10pt}\selectfont\usepackage{ods-colors}</preamble>
 <ipestyle name="basic">

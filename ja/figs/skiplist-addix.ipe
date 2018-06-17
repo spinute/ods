@@ -2,7 +2,7 @@
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70005" creator="Ipe 7.1.1">
 <info created="D:20110228150616" modified="D:20140204105716"/>
-<preamble>\usepackage{kpfonts}
+<preamble>\usepackage[whole]{bxcjkjatype}\usepackage{kpfonts}
 \usepackage{ulem}\fontsize{10pt}{10pt}\selectfont\usepackage{ods-colors}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
