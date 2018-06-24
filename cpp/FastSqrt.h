@@ -67,7 +67,7 @@ public:
 	/* Fake code used only in the book
 	int sqrt(int x, int r) {
 		int s = sqrtab[x>>r/2];
-		while ((s+1)*(s+1) <= x) s++; // executes at most twice
+		while ((s+1)*(s+1) <= x) s++; // 高々二回だけ実行する
 		return s;
 	}
 	*/
