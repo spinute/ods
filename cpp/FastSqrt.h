@@ -42,7 +42,7 @@ protected:
 				logtab[1<<d+k] = d;
 		int s = 1<<(r/4);                    // sqrt(2^(r/2))
 		for (int i = 0; i < 1<<(r/2); i++) {
-			if ((s+1)*(s+1) <= i << (r/2)) s++; // sqrt increases
+			if ((s+1)*(s+1) <= i << (r/2)) s++; // 平方根の値を増やす
 			sqrtab[i] = s;
 		}
 	}
