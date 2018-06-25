@@ -344,7 +344,7 @@ $#t[i]#, #t#[(#i#+1)\bmod #t.length#], #t#[(#i#+2)\bmod #t.length#], \ldots$を�
 以上の準備で、線形探索法の解析に必要な次の補題を示せる。
 
 \begin{lem}\lemlabel{linear-probing}
-$\{0,\ldots,#t.length#-1\}$から#i#を1つとって固定する。
+$\{0,\ldots,#t.length#-1\}$から#i#を1つ取って固定する。
 このとき、#i#から始まる長さ$k$の連続が発生する確率は、定数$c$（$0<c<1$）を使って$O(c^k)$と表せる。
 \end{lem}
 
@@ -702,7 +702,7 @@ $r > r'$として、長さがそれぞれ$r$および$r'$の2つの列がある�
 データセットが静的であれば、データセットに対する\emph{完全ハッシュ関数}（perfect hash function）を見つけることで、完全ハッシュ法を実現できる。
 \ejindex{perfect hash function}{かんぜんはっしゅかんすう@完全ハッシュ関数}%
 \ejindex{hash function!perfect}{はっしゅかんすう@ハッシュ関数!かんぜん@完全}%
-完全ハッシュ関数とは、各データを配列内で別々の位置に対応づけるような関数である。
+完全ハッシュ関数とは、各データを配列内で別々の位置に対応付けるような関数である。
 データが動的な場合には、\emph{FKS二段階ハッシュテーブル}（two-level hash table）
 \ejindex{two-level hash table}{にだんかいはっしゅてーぶる@二段階ハッシュテーブル}%
 \ejindex{hash table!two-level}{はっしゅてーぶる@ハッシュテーブル!にだんかい@二段階}%
