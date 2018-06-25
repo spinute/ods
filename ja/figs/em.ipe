@@ -312,7 +312,6 @@ h
 48 0 0 48 256 576 e
 </path>
 </group>
-<text matrix="1 0 0 1 -8.745 -3.459" transformations="translations" pos="272.359 574.173" stroke="black" type="label" valign="baseline">ディスク</text>
 <text matrix="1 0 0 1 -32.3081 -6.41423" transformations="translations" pos="136.667 665.724" stroke="black" type="label" valign="baseline">RAM</text>
 <text matrix="1 0 0 1 27.1371 0.173" transformations="translations" pos="169.725 572.471" stroke="black" type="label" halign="right" valign="baseline">外部メモリ</text>
 <path matrix="1 0 0 1 24.3589 -15.76" stroke="black" pen="fat">
