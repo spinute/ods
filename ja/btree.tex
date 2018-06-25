@@ -193,7 +193,7 @@ $B$木のノードに格納されるデータの大きさは$O(B)$である。
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/btree-2}}
-  \caption{$B$木における成功する探索（4を探す）と、失敗する探索（16.5を探す）の様子。色を付けたノードは探索の途中に値を更新されるものである。}
+  \caption{$B$木における成功する探索（4を探す）と、失敗する探索（16.5を探す）の様子。色を付けたノードは探索の途中に値を更新されるものである}
   \figlabel{btree-find}
 \end{figure}
 具体的には、ノード#u#において、探索している#x#が#u.keys#に格納されているかどうかを確認する。
@@ -257,7 +257,7 @@ $B$木で親へのポインタを持たないことが重要なのは、これ�
      \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
      \includegraphics[width=\ScaleIfNeeded]{figs/btree-split-2} \\
    \end{tabular}}
-   \caption{$B=3$である$B$木における、ノード#u#の分割。キー$#u.keys#[2]=\mathrm{m}$は#u#からその親に移る。}
+   \caption{$B=3$である$B$木における、ノード#u#の分割。キー$#u.keys#[2]=\mathrm{m}$は#u#からその親に移る}
    \figlabel{btree-split}
 \end{figure}
 
@@ -367,7 +367,7 @@ $#x#'$を削除することで、#u#の持つキーの数が$B-1$未満になる
      \multicolumn{1}{c}{$\Downarrow$} \\[2ex]
      \includegraphics[width=\ScaleIfNeeded]{figs/btree-remove-2}
    \end{tabular}}
-   \caption{#BTree#において#remove(x)#を実行する様子。値$#x#=10$を削除するとき、その値を$#x'#=11$で上書きし、値11を含む葉を削除する。}
+   \caption{#BTree#において#remove(x)#を実行する様子。値$#x#=10$を削除するとき、その値を$#x'#=11$で上書きし、値11を含む葉を削除する}
    \figlabel{btree-remove}
 \end{figure}
 

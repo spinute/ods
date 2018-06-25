@@ -255,7 +255,7 @@ h
 </path>
 </group>
 <text matrix="1 0 0 1 -18.9014 -13.7346" transformations="translations" pos="361.053 754.188" stroke="black" type="label" valign="baseline">3. 連結リスト</text>
-<text matrix="1 0 0 1 -38.6904 13.3489" transformations="translations" pos="380.842 712.327" stroke="black" type="label" valign="baseline">3.3 空間効率のよい連結リスト</text>
+<text matrix="1 0 0 1 -38.6904 13.3489" transformations="translations" pos="380.842 712.327" stroke="black" type="label" valign="baseline">3.3. 空間効率のよい連結リスト</text>
 <path matrix="1 0 0 1 -32 16" stroke="black" pen="fat">
 368 720 m
 368 704 l
