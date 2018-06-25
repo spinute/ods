@@ -207,7 +207,7 @@ Java Collections Frameworkにおける#LinkedHashSet#は、その好例である
 例えば、連結リストのノードへの参照を#USet#に格納しておくという手法がある。
 そうすれば、連結リストから#x#を削除したい場合には#x#を含むノードを#USet#から素早く探し出し、当該のノードを連結リストから定数時間で削除できる。}
 
-\section{#SEList#：空間効率のよい連結リスト}
+\section{#SEList#：空間効率の良い連結リスト}
 \seclabel{selist}
 
 \index{SEList@#SEList#}%
@@ -624,7 +624,7 @@ XOR-listについてのさらに踏み込んだ議論は、Sinhaの雑誌記事\
   すべての操作の償却実行時間は定数であること。
 \end{exc}
 
-以降の問題は、領域効率のよい#SLList#の解析と実装について理解度を測るためのものである。
+以降の問題は、領域効率の良い#SLList#の解析と実装について理解度を測るためのものである。
 
 \begin{exc}
   #SEList#が#Stack#のように使われるとき、つまり#SEList#が$#push(x)#\equiv #add(size(),x)#$と$#pop()#\equiv #remove(size()-1)#$によってのみ更新されるとき、これらの操作の償却実行時間がいずれも#b#の値に依存しない定数であることを証明せよ。
