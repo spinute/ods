@@ -147,7 +147,7 @@
 
 \subsection{追加と削除}
 
-#DLList#においてノード#w#の直前にノード#u#を追加したいとき、ノード#w#の参照がわかっているなら、$#u.next#=#w#$および$#u.prev#=#w.prev#$とし、#u.prev.next#とお#u.next.prev#を適切に調整すればよい（\figref{dllist-addbefore}参照）。
+#DLList#においてノード#w#の直前にノード#u#を追加したいとき、ノード#w#の参照がわかっているなら、$#u.next#=#w#$および$#u.prev#=#w.prev#$とし、#u.prev.next#と#u.next.prev#を適切に調整すればよい（\figref{dllist-addbefore}参照）。
 ダミーノードがあるので、#w.prev#や#w.next#がない場合を特別扱いせずにすむ。
 
 \codeimport{ods/DLList.addBefore(w,x)}
