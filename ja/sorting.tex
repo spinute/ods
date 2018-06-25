@@ -181,7 +181,7 @@ $#n#$が奇数の場合は、やや複雑になる。
 その代わり、\cpponly{#quickSort(a,i,n)#}\pcodeonly{#quickSort(a,i,n,c)#}\javaonly{#quickSort(a,i,n,c)#}では、配列の一部$#a[i]#,\ldots,#a[i+n-1]#$だけを整列する。
 このメソッドを、最初に\cpponly{#quickSort(a,0,n)#}\pcodeonly{#quickSort(a,0,n,c)#}\javaonly{#quickSort(a,0,n,c)#}として呼び出すわけである。
 
-クイックソートのアルゴリズムでもっとも肝心なポイントは、in-placeな分割を行うアルゴリズムである。
+クイックソートのアルゴリズムで最も肝心なポイントは、in-placeな分割を行うアルゴリズムである。
 このアルゴリズムでは、余計な領域を使わずに、#a#の中の要素を入れ替え、次の制約を満たすような添字#p#と#q#を計算する。
 \[
    #a[i]# \begin{cases}%
@@ -267,7 +267,7 @@ $#n#$が奇数の場合は、やや複雑になる。
 \pcodeimport{ods/Algorithms.heapSort(a)}
 
 % TALK the constructor の訳はWikipediaに倣いコンストラクタとした
-ヒープソートにおいてもっとも重要な処理は、未整列の配列#a#からヒープを構築する部分である。
+ヒープソートにおいて最も重要な処理は、未整列の配列#a#からヒープを構築する部分である。
 #BinaryHeap#の#add(x)#を繰り返し実行することで、これを$O(#n#\log#n#)$の時間で簡単に済ませてもいいだろう。
 しかし、ボトムアップなアルゴリズムを採用することで、さらに効率良くヒープを構築できる。
 #BinaryHeap#では、#a[i]#の子が#a[2i+1]#と#a[2i+2]#に入っていた。% TODO: YJ binary heapの和訳がない？
