@@ -30,7 +30,7 @@
   \begin{center}
     \includegraphics[scale=0.90909]{figs/eytzinger}
   \end{center}
-  \caption{Eytzinger法により、配列を使って完全二分木を表現する。}
+  \caption{Eytzinger法により、配列を使って完全二分木を表現する}
   \figlabel{eytzinger}
 \end{figure}
 
@@ -66,14 +66,14 @@
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-3} \\
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-insert-4} \\
   \end{center}
-  \caption{#BinaryHeap#に値6を追加する。}
+  \caption{#BinaryHeap#に値6を追加する}
   \figlabel{heap-insert}
 \end{figure}
 
-#remove()#は、ヒープから最小の値を削除する。この操作の実装にはすこし工夫が必要になる。
+#remove()#は、ヒープから最小の値を削除する。この操作の実装には少し工夫が必要になる。
 根が最小値であることはわかっているのだが、これを削除したあともヒープ性が成り立つことを保証しなければならない。
 
-もっとも簡単な方法は、根と#a[n-1]#を交換し、交換後に#a[n-1]#にある値を削除して、#n#を1小さくすることだ。
+最も簡単な方法は、根と#a[n-1]#を交換し、交換後に#a[n-1]#にある値を削除して、#n#を1小さくすることだ。
 しかし、結果として新しく根となった値は、おそらく最小値ではない。
 そこで、これを下方向に動かしていく必要がある。
 新しく根となった要素を2つの子と比較し、
@@ -88,7 +88,7 @@
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-3} \\
     \includegraphics[height=\QuarterHeightScaleIfNeeded]{figs/heap-remove-4} \\
   \end{center}
-  \caption{#BinaryHeap#から最小の値4を削除する。}
+  \caption{#BinaryHeap#から最小の値4を削除する}
   \figlabel{heap-remove}
 \end{figure}
 
@@ -144,7 +144,7 @@
 
 \begin{figure}
   \centering{\includegraphics[width=\ScaleIfNeeded]{figs/meldable-merge}}
-  \caption{#h1#と#h2#を併合するために、#h1.left#または#h1.right#のいずれかに#h2#を併合する。}
+  \caption{#h1#と#h2#を併合するために、#h1.left#または#h1.right#のいずれかに#h2#を併合する}
   \figlabel{meldable-merge}
 \end{figure}
 
@@ -211,7 +211,7 @@ $\log$は上に凸な関数なので、$\E[W]$は$#n#_1=#n#_2=(#n#-1)/2$で最�
 \begin{proof}[\lemref{tree-random-walk}の情報理論的な証明]
 $d_i$を、添字$i$に対応する外部ノード（#nil#）の深さとする。
 #n#個のノードを持つ二分木が#n+1#個の外部ノードを持つことを思い出そう。
-ランダムウォークが$i$番めの外部ノードにたどり着く確率は$p_i=1/2^{d_i}$である。
+ランダムウォークが$i$番めの外部ノードに辿り着く確率は$p_i=1/2^{d_i}$である。
 よって、ランダムウォークのステップ数の期待値は次のように計算できる。
 \[
    H=\sum_{i=0}^{#n#} p_id_i
@@ -281,7 +281,7 @@ skew heaps \cite{st83}などである。
 （$#y#\le#u.x#$であることを前提とする）。
 これらのデータ構造の大部分では、このような操作のためにノード#u#を削除して#y#を追加するので、$O(\log #n#)$の時間がかかる。
 しかし、もっと効率的にこの操作を実装できるデータ構造もある。
-なかでも、Fibonacci heapsは、$O(1)$の償却実行時間で#decreaseKey(u,y)#を実行できる。
+中でも、Fibonacci heapsは、$O(1)$の償却実行時間で#decreaseKey(u,y)#を実行できる。
 pairing heapsの特殊なものでは、$O(\log\log #n#)$の償却実行時間で#decreaseKey(u,y)#を実行できる\cite{e09}。
 効率的な#decreaseKey(u,y)#は、ダイクストラ法など、グラフアルゴリズムの高速化に役立つ。
 \cite{ft87}
@@ -336,7 +336,7 @@ pairing heapsの特殊なものでは、$O(\log\log #n#)$の償却実行時間�
 \end{exc}
 
 \begin{exc}
-#BinaryHeap#および#MeldableHeap#においてk番目に小さい値を$O(k\log k)$の時間で見つける方法を示せ。
+#BinaryHeap#および#MeldableHeap#においてk番めに小さい値を$O(k\log k)$の時間で見つける方法を示せ。
 （ヒント：別のヒープを使ってみよう。）
 \end{exc}
 

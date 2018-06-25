@@ -40,7 +40,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
 \end{figure}
 
 二分トライ木に格納されている#x#を探し出すときの探索経路は、#x#の二進表記で決まる。
-そこで、ノード#u#の子を指すポインタ#u.child[0]#および#u.child[1]#に、それぞれ#left#および#right#という名前をつけておくと便利である。
+そこで、ノード#u#の子を指すポインタ#u.child[0]#および#u.child[1]#に、それぞれ#left#および#right#という名前を付けておくと便利である。
 葉には子がないので、葉ではこのポインタを別の用途に使う。具体的には、このポインタを使って、葉の双方向連結リストを作る。
 すなわち、二分トライ木の葉では#u.child[0]#がリストにおける#u#の直前のノード（#prev#）を指し、#u.child[1]#はリストにおける#u#の直後のノード（#next#）を指す。
 さらに、特別なノード#dummy#により、先頭のノードの前のノード、および、末尾のノードの後のノードを指すことにする
@@ -225,7 +225,7 @@ $#h-l#\le 1$になった段階で、この処理を終える。
 これらの要素は、\emph{二次構造}へと移動する。ここでは、二次構造として、#Treap#（\secref{treap}参照）を拡張したデータ構造を使う。
 \ejindex{secondary structure}{にじこうぞう@二次構造}%
 二次構造は全部でおよそ#n#/#w#個あり、1つの二次構造には平均して$O(#w#)$個の要素を格納することにする。
-#Treap#は#SSet#の操作を対数時間でサポートするので、各操作の実行時間は、当初の目論見どおり$O(\log #w#)$である。
+#Treap#は#SSet#の操作を対数時間でサポートするので、各操作の実行時間は、当初の目論見通り$O(\log #w#)$である。
 
 より具体的に言うと、#YFastTrie#では、確率$1/#w#$で選り抜いたデータを格納するための#XFastTrie#を保持しておく。
 この#XFastTrie#（#xft#）には、都合により、常に$2^{#w#}-1$という値を含めておく。
@@ -293,7 +293,7 @@ $(#x#,#t1#)$を#xft#に追加する処理の実行時間は$O(#w#)$だが、こ�
   \begin{center}
     \includegraphics[scale=0.90909]{figs/yfast-remove}
   \end{center}
-  \caption{\figref{yfast-add}の#YFastTrie#から値1、値9を削除する。}
+  \caption{\figref{yfast-add}の#YFastTrie#から値1、値9を削除する}
   \figlabel{yfast-remove}
 \end{figure}
 #xft#からノード#u#を見つけるのに必要な時間の期待値は$O(\log#w#)$である。
@@ -359,7 +359,7 @@ $(#x#,#t1#)$を#xft#に追加する処理の実行時間は$O(#w#)$だが、こ�
 この場合、上の定理における領域使用量は$O(#n#)$になる。
 
 \section{ディスカッションと練習問題}
-#add(x)#、#remove(x)#、#find(x)#の実行時間がいずれも$O(\log#w#)$であるデータ構造としてはじめて提案されたのは、van~Emde~Boasによるもので、
+#add(x)#、#remove(x)#、#find(x)#の実行時間がいずれも$O(\log#w#)$であるデータ構造として初めて提案されたのは、van~Emde~Boasによるもので、
 \emph{van~Emde~Boas木}
 \ejindex{van Emde Boas tree}{van Emde Boasぎ@van Emde Boas木}%
 （または\emph{stratified木}）
