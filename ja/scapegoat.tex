@@ -11,7 +11,7 @@
 \ejindex{partial rebuilding}{ぶぶんてきなさいこうちく@部分的な再構築}%
 \ejindex{binary search tree!partial rebuilding}{にぶんたんさくぎ@二分探索木!ぶぶんてきなさいこうちく@部分的な再構築}%
 部分的な再構築とは、部分木を一度分解し、非常にバランスのよい二分木として再構築するプロセスである。
-ここで、非常にバランスのよい二分木とは、サイズでバランスされている完全二分木のことである（問6.6参照）。また、完全二分木とは、任意の葉の高さの差が高々1である木のことである（第10章参照）。% TODO: perfectly balanced binary tree -- YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木は全てのノードについてバランスされている木である、と定義して使うか？ -- spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
+ここで、非常にバランスのよい二分木とは、サイズでバランスされている完全二分木のことである（問6.6参照）。また、完全二分木とは、任意の葉の高さの差が高々1である木のことである（第10章参照）。% TODO: perfectly balanced binary tree -- YJ perfectly balanced binary tree := 完全二分木　だが、原著にはどこにも完全二分木は明示的に定義されていない。"バランスされている"ことの定義が問6.6にある。完全二分木はすべてのノードについてバランスされている木である、と定義して使うか？ -- spinute: perfectly balanced は、size balanced かつ complete な木のことっぽい。計算量の解析でcomplete性を、補題8.3でsize-balanced性を使っている
 ノード#u#を根とする部分木を再構築して非常にバランスのよい二分木にするやり方はたくさんある。
 なかでも単純なのは、#u#の部分木を辿ってすべてのノードを配列#a#に集め、#a#から再帰的に非常にバランスのよい二分木を構築するやり方だ。
 % XXX: m = floor(a.length/2)? -- spinute: そうだと思います。整数の除算が整数になる言語のつもりなのでは
@@ -248,7 +248,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
    \log_{3/2}#q# \approx 1.709\log #n# + O(1)
 \]
 これは#Skiplist#の探索経路の長さの期待値よりも小さく、#Treap#ともほぼ同じなので、#ScapegoatTree#が遅いのは意外かもしれない。
-#ScapegoatTree#の最適化として、各ノードに部分木の大きさを保持したり、既に計算した部分木のサイズを再利用したりできる
+#ScapegoatTree#の最適化として、各ノードに部分木の大きさを保持したり、すでに計算した部分木のサイズを再利用したりできる
 （\ref{exc:scapegoat-quicksize}と\ref{exc:scapegoat-explicitsize}を参照）。
 これらの最適化をしても、依然として#add(x)#や#delete(x)#を繰り返し実行すると、#ScapegoatTree#は他の#SSet#の実装より遅いことがあるだろう。
 
@@ -285,8 +285,8 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
 \end{exc}
 
 \begin{exc}\exclabel{scapegoat-quicksize}
-  #ScapegoatTree#の#add(x)#メソッドを修正し、既に計算した部分木の大きさは再計算しないように無駄を省け。
-  #size(w)#を計算するとき、#size(w.left)#か#size(w.right)#は既に計算しているので、このような最適化が可能である。
+  #ScapegoatTree#の#add(x)#メソッドを修正し、すでに計算した部分木の大きさは再計算しないように無駄を省け。
+  #size(w)#を計算するとき、#size(w.left)#か#size(w.right)#はすでに計算しているので、このような最適化が可能である。
   修正前後での性能を比較せよ。
 \end{exc}
 
