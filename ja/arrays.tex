@@ -57,7 +57,7 @@ C++のふつうの配列は要素数を保持していないので、要素数�
 % XXX: このarray.operator=の実装は怪しい -- https://github.com/patmorin/ods/pull/68 でツッコミが入っているが、Pat は今の実装を選んでいるので、訳注を入れるに留めることにした
 \cppimport{ods/array.operator=}
 
-\section{ArrayStack：配列を使った高速なスタック操作}
+\section{#ArrayStack#：配列を使った高速なスタック操作}
 \seclabel{arraystack}
 
 \index{ArrayStack@#ArrayStack#}%
@@ -185,7 +185,7 @@ $r \leq m$なので、#resize()#の呼び出しにかかる実行時間の合計
 特に、#push(x)#は#add(n,x)#に相当し、#pop()#は#remove(n-1)#に相当する。
 これらいずれの操作の償却実行時間も$O(1)$である。
 
-\section{#FastArrayStack#：最適化されたArrayStack}
+\section{#FastArrayStack#：最適化された#ArrayStack#}
 % TALK ここでは 「add(i, x)とremove(i)」のように「と（並立助詞）」を使っている一方で、
 % これ以前は「add(i, x)・remove(i)」のように黒丸で並立している。「と」のほうが紛らわしさがないのでは？
 % （・は乗算に見えなくもない） -- 編集で「・」はなしにする予定 -kshikano
@@ -214,7 +214,7 @@ Javaには、#System.arraycopy(s,i,d,j,n)#メソッドがある。
 操作の種類によっては2〜3倍の高速化につながる。
 自分の手元の環境でどれくらい速くなるか、ぜひ試してみてほしい。
 
-\section{ArrayQueue：配列を使ったキュー}
+\section{#ArrayQueue#：配列を使ったキュー}
 \seclabel{arrayqueue}
 
 \index{ArrayQueue@#ArrayQueue#}%
@@ -311,7 +311,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
   さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
-\section{ArrayDeque：配列を使った高速な双方向キュー}
+\section{#ArrayDeque#：配列を使った高速な双方向キュー}
 \seclabel{arraydeque}
 
 \index{ArrayDeque@#ArrayDeque#}%
@@ -526,7 +526,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
   また、空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
 \end{thm}
 
-\section{RootishArrayStack：メモリ効率に優れた配列スタック}
+\section{#RootishArrayStack#：メモリ効率に優れた配列スタック}
 \seclabel{rootisharraystack}
 
 \index{RootishArrayStack@#RootishArrayStack#}%
