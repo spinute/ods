@@ -87,7 +87,6 @@ bool YFastTrie<T>::add(T x) {
 		return true;
 	}
 	return false;
-	return true;
 }
 
 template<class T>

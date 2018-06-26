@@ -236,7 +236,7 @@ h
 <text layer="alpha" matrix="1 0 0 1 -1.97656 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">0</text>
 <text matrix="1 0 0 1 14.0234 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">1</text>
 <text matrix="1 0 0 1 30.0234 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">2</text>
-<text matrix="1 0 0 1 47.0234 -158.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">3</text>
+<text matrix="1 0 0 1 47.0234 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">3</text>
 <text matrix="1 0 0 1 62.0234 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">4</text>
 <text matrix="1 0 0 1 78.0234 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">5</text>
 <text matrix="1 0 0 1 94.0234 -157.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" halign="center" valign="baseline">6</text>

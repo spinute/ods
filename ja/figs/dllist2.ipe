@@ -714,7 +714,7 @@ h
 <use matrix="1 0 0 1 8 0" name="mark/disk(sx)" pos="96 392" size="normal" stroke="black"/>
 </group>
 </group>
-<text matrix="1 0 0 1 46.023 98.198" transformations="rigid" pos="105.977 306.738" stroke="black" type="label" width="26.401" height="6.25" depth="1.79" halign="right" valign="baseline">$\mathtt{\color{var}dummy}$</text>
+<text matrix="1 0 0 1 43.023 98.198" transformations="rigid" pos="105.977 306.738" stroke="black" type="label" width="26.401" height="6.25" depth="1.79" halign="right" valign="baseline">$\mathtt{\color{var}dummy}$</text>
 <path stroke="black" pen="fat" arrow="normal/small">
 136 392 m
 112 392

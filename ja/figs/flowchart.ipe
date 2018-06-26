@@ -237,7 +237,7 @@ h
 <view layers="alpha" active="alpha"/>
 <text layer="alpha" matrix="1 0 0 1 -23.0105 47.0356" transformations="translations" pos="461.521 550.208" stroke="black" type="label" width="76.672" height="7.172" depth="1.66" valign="baseline">11.1.2. クイックソート</text>
 <group matrix="1 0 0 1 3.34202 10.6708">
-<text matrix="1 0 0 1 -48 0" transformations="translations" pos="307.014 777.783" stroke="black" type="label" width="67.288" height="7.173" depth="0.08" valign="baseline">1. Introduction</text>
+<text matrix="1 0 0 1 -48 0" transformations="translations" pos="307.014 777.783" stroke="black" type="label" width="67.288" height="7.173" depth="0.08" valign="baseline">1. イントロダクション</text>
 <path matrix="1 0 0 1 -3.34202 5.32922" stroke="black" pen="fat">
 256 784 m
 256 768 l

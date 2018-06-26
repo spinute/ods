@@ -1225,7 +1225,7 @@ h
 <text matrix="1 0 0 1 -1.97656 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">0</text>
 <text matrix="1 0 0 1 14.0234 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">1</text>
 <text matrix="1 0 0 1 30.0234 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">2</text>
-<text matrix="1 0 0 1 47.0234 -78.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">3</text>
+<text matrix="1 0 0 1 47.0234 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">3</text>
 <text matrix="1 0 0 1 62.0234 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.804" depth="0.08" halign="center" valign="baseline">4</text>
 <text matrix="1 0 0 1 78.0234 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">5</text>
 <text matrix="1 0 0 1 94.0234 -77.802" transformations="translations" pos="105.977 306.738" stroke="darkgray" type="label" width="5.43" height="6.6" depth="0.08" halign="center" valign="baseline">6</text>
