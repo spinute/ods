@@ -129,7 +129,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
 \end{thm}
 
 % XXX: doubly-logarithmicはlog(log(x))のことだろうか（なんと訳そう） % YJ: 訳はなさそうなのでexplicitにLog-Log時間とか？ % Polylogarithm (多重対数関数)と被る名称は良くない
-\section{#XFastTrie#：$log(log n)$時間での検索}
+\section{#XFastTrie#：$O(log(log n))$時間での検索}
 \seclabel{xfast}
 
 \ejindex{XFastTrie@#XFastTrie#}{XFastトライ}%
@@ -205,7 +205,7 @@ $#h-l#\le 1$になった段階で、この処理を終える。
 #n#個の要素を格納する#XFastTrie#の領域使用量は$O(#n#\cdot#w#)$である。% YJ space 領域
 \end{thm}
 
-\section{#YFastTrie#：$log(log n)$時間の#SSet#}
+\section{#YFastTrie#：$O(log(log n))$時間の#SSet#}
 \seclabel{yfast}
 
 #XFastTrie#における検索の実行時間は、#BinaryTrie#に比べて指数的に速くなった。
