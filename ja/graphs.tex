@@ -131,8 +131,8 @@ $V$の各頂点とひも付けられたデータを保存するには、大き�
 #AdjacencyMatrix#は#Graph#インターフェースを実装する。
 #AdjacencyMatrix#は以下の各操作をサポートする。
 \begin{itemize}
-  \item #addEdge(i,j)#、#removeEdge(i,j)#、#hasEdge(i,j)#を定数時間で実行できる。
-  \item #inEdges(i)#、#outEdges(i)#を$O(#n#)$の時間で実行できる。
+  \item #addEdge(i,j)#、#removeEdge(i,j)#、#hasEdge(i,j)#を定数時間で実行できる
+  \item #inEdges(i)#、#outEdges(i)#を$O(#n#)$の時間で実行できる
 \end{itemize}
 #AdjacencyMatrix#の領域使用量は$O(#n#^2)$である。% 空間使用量、領域使用量
 \end{thm}
@@ -223,11 +223,11 @@ $V$の各頂点とひも付けられたデータを保存するには、大き�
 #AdjacencyLists#は#Graph#インターフェースを実装する。
 #AdjacencyLists#は以下のように各操作をサポートする。
 \begin{itemize}
-  \item #addEdge(i,j)#は定数時間で実行できる。
-  \item #removeEdge(i,j)#および#hasEdge(i,j)#にかかる時間は$O(\deg(#i#))$である。
-  \javaonly{\item #outEdges(i)#は定数時間で実行できる。}
-  \cpponly{\item #outEdges(i)#にかかる時間は$O(\deg(#i#))$である。}
-  \item #inEdges(i)#にかかる時間は$O(#n#+#m#)$である。
+  \item #addEdge(i,j)#は定数時間で実行できる
+  \item #removeEdge(i,j)#および#hasEdge(i,j)#にかかる時間は$O(\deg(#i#))$である
+  \javaonly{\item #outEdges(i)#は定数時間で実行できる}
+  \cpponly{\item #outEdges(i)#にかかる時間は$O(\deg(#i#))$である}
+  \item #inEdges(i)#にかかる時間は$O(#n#+#m#)$である
 \end{itemize}
 #AdjacencyLists#の領域使用量は$O(#n#+#m#)$である。
 \end{thm}
@@ -412,7 +412,7 @@ $G$における頂点#i#のうち、#i#から#r#への経路が存在するも�
      \end{cases}
   \]
   \begin{enumerate}
-    \item \figref{graph-example2}のグラフの接続行列を書け
+    \item \figref{graph-example2}のグラフの接続行列を書け。
     \item グラフの隣接行列による表現を設計、実装せよ。また、領域使用量を解析し、#addEdge(i,j)#、#removeEdge(i,j)#、#hasEdge(i,j)#、#inEdges(i)#、#outEdges(i)#の実行時間を求めよ。
   \end{enumerate}
 \end{exc}
@@ -464,7 +464,7 @@ $G$における頂点#i#のうち、#i#から#r#への経路が存在するも�
   \index{universal sink}%
   \ejindex{celebrity|see{universal sink}}{せれぶりてぃ@セレブリティ|see{universal sink}}%
   グラフ$G$の\emph{universal sink}とは、$#n#-1$個の辺の行き先になっており、かつそこから辺が出ていない頂点である
-  \footnote{universal sink #v#を\emph{セレブリティ（celebrity）}と呼ぶこともある。部屋の中の全員が#v#のことを知っているが、#v#は部屋の中の人が誰だかまったく知らないため、有名人（セレブリティ）のような状態になっているからである。}
+  \footnote{universal sink #v#を\emph{セレブリティ（celebrity）}と呼ぶこともある。部屋の中の全員が#v#のことを知っているが、#v#は部屋の中の人が誰だかまったく知らないため、有名人（セレブリティ）のような状態になっているからである。}。
   #AdjacencyMatrix#で表現されるグラフ$G$がuniversal sinkを持つかどうかを判定するアルゴリズムを設計、実装せよ。
   ただし、実行時間は$O(#n#)$でなければならない。
 \end{exc}

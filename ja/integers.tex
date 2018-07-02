@@ -90,7 +90,7 @@ $\{0,\ldots,2^{#w#}-1\}$の部分集合の大きさ#n#は$#n#\le 2^{#w#}$であ�
   \item #u#から#x#を含む葉への、探索経路に足りない部分を作る
   \item #x#を含むノード#u'#を葉の連結リストに追加する
   （#u#の#jump#ポインタを使うことで、連結リストにおける#u'#の直前のノード#pred#が得られる）
-  \item これまで辿ってきた経路を戻りながら、#x#を指すべき#jump#ポインタを更新する。
+  \item これまで辿ってきた経路を戻りながら、#x#を指すべき#jump#ポインタを更新する
 \end{enumerate}
 \figref{binarytrie-add}に要素を追加する様子を示す。
 \begin{figure}
@@ -200,8 +200,8 @@ $#h-l#\le 1$になった段階で、この処理を終える。
 #XFastTrie#は、#w#ビット整数を格納するための#SSet#インターフェースの実装である。
 #XFastTrie#がサポートするのは次の操作である。
 \begin{itemize}
-\item #add(x)#および#remove(x)#の実行時間の期待値は$O(#w#)$である。
-\item #find(x)#の実行時間の期待値は$O(\log #w#)$である。
+\item #add(x)#および#remove(x)#の実行時間の期待値は$O(#w#)$である
+\item #find(x)#の実行時間の期待値は$O(\log #w#)$である
 \end{itemize}
 #n#個の要素を格納する#XFastTrie#の領域使用量は$O(#n#\cdot#w#)$である。% YJ space 領域
 \end{thm}
