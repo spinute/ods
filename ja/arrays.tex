@@ -171,7 +171,7 @@ $r \leq m$なので、#resize()#の呼び出しにかかる実行時間の合計
 
 \begin{thm}\thmlabel{arraystack}
   #ArrayStack#は#List#インターフェースを実装する。
-  #resize()#にかかる時間を無視した場合の#ArrayStack#における各操作の実行時間をまとめる。
+  #resize()#にかかる時間を無視した場合の#ArrayStack#における各操作の実行時間を以下にまとめる。
   \begin{itemize}
     \item #get(i)#および#set(i,x)#の実行時間は$O(1)$である
     \item #add(i,x)#および#remove(i)#の実行時間は$O(1+#n#-#i#)$である
@@ -232,12 +232,12 @@ FIFOキューの実装に#ArrayStack#を使うのは好ましくない。
 \[ #a[j]#,#a[j+1]#,\ldots,#a[j+n-1]# \]
 まず#j#, #n#を0に初期化する。
 要素を追加するときは、#a[j+n]#に要素を入れて、#n#を1つ増やす。
-要素を削除するときは、#a[j]#から要素を取り出し、#j#を1つ増やし、#n#を1つ減らす。
+要素を削除するときは、#a[j]#から要素を取り出し、#j#を1つ増やして、#n#を1つ減らす。
 
 この方法の明らかな問題点は、無限長の配列が必要なことだ。
 #ArrayQueue#を使うことで、無限長の配列を、有限長の配列#a#と\emph{剰余算術}で模倣できる。
 \index{modular arithmetic}%
-剰余算術というのは、時間に対して使うような計算だ。
+剰余算術というのは、時刻に対して使うような計算だ。
 例えば、10:00に5時間を足すと3:00になる。
 これを形式的に書けば次のようになる。
 \[
@@ -289,7 +289,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 \codeimport{ods/ArrayQueue.remove()}
 
-最後に、#resize()#操作は#ArrayStack#の#resize()#とよく似ている。
+#resize()#操作は#ArrayStack#の#resize()#とよく似ている。
 大きさ$2#n#$の新しい配列#b#を割り当て、
 \[
    #a[j]#,#a[(j+1)%a.length]#,\ldots,#a[(j+n-1)%a.length]#
@@ -366,7 +366,7 @@ $#i#<#n#/2$かどうかに応じて、左から$i$個の要素をいずれも1�
 次の定理は#ArrayDeque#の性能について整理したものだ
 \begin{thm}\thmlabel{arraydeque}
   #ArrayDeque#は#List#インターフェースを実装する。
-  #resize()#のコストを無視すると、#ArrayDeque#における各操作の実行時間は、
+  #resize()#のコストを無視すると、#ArrayDeque#における各操作の実行時間は下記のようになる。
   \begin{itemize}
     \item #get(i)#および#set(i,x)#の実行時間は$O(1)$である
     \item #add(i,x)#および#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である
@@ -464,8 +464,8 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
 
 最後に、#add(i,x)#と#remove(i)#の操作において実行される#balance()#について説明する。
 この#balance()#操作により、#front#と#back#の要素数が極端に偏らないことが保証される。
-具体的には、要素数が2つ以上のとき、#front#も#back#も$#n#/4$以上の要素を含むようにする。
-#front#か#back#に$#n#/4$つ以上の要素が含まれそうな場合は、要素を動かして、#front#と#back#にそれぞれちょうど$\lfloor#n#/2\rfloor$個および$\lceil#n#/2\rceil$個の要素が含まれるようにする。
+具体的には、要素数が2以上のとき、#front#も#back#も$#n#/4$以上の要素を含むようにする。
+#front#か#back#に$#n#/4$以上の要素が含まれそうな場合は、要素を動かして、#front#と#back#にそれぞれちょうど$\lfloor#n#/2\rfloor$個および$\lceil#n#/2\rceil$個の要素が含まれるようにする。
 
 \codeimport{ods/DualArrayDeque.balance()}
 

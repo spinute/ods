@@ -66,7 +66,7 @@ protected:
 				j += u->length[r];
 				u = u->next[r];
 			}
-			u->length[r]++; // 新たなノードがリスト 0 において何番目なのかを数える
+			u->length[r]++; // 新たなノードがリスト 0 において何番めなのかを数える
 			if (r <= k) {
 				w->next[r] = u->next[r];
 				u->next[r] = w;
