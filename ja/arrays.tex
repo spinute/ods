@@ -646,7 +646,7 @@ $#i#+1,\ldots,#n#$番めの要素をそれぞれ左に1つずつシフトし、2
 そのため、次の#grow()#と#shrink()#が呼ばれるのは、少なくとも$#r#-1$回だけ要素が追加および削除された後である。
 よって、#grow()#および#shrink()#に$O(#r#)$だけ時間がかかっても、そのコストは$#r#-1$回の#add(i,x)#および#remove(i)#で償却され、#grow()#と#shrink()#の償却コストは$O(1)$である。
 
-\subsection{領域使用量}
+\subsection{空間使用量}
 \seclabel{rootishspaceusage}
 
 #RootishArrayStack#が使う無駄な領域の量を解析する。
@@ -696,7 +696,7 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
   \end{itemize}
   空の#RootishArrayStack#に対して、#add(i,x)#および#remove(i)#からなる長さ#m#の任意の操作の列を実行するとき、#grow()#および#shrink()#にかかる時間の合計は$O(m)$である。
 
-  要素数#n#の#RootishArrayStack#が使う（ワード単位で測った）使用領域量\footnote{\secref{model}で説明した、どのようにメモリ量を測るかという話を思い出してほしい。}は$#n# +O(\sqrt{#n#})$である。
+  要素数#n#の#RootishArrayStack#が使う（ワード単位で測った）空間使用量\footnote{\secref{model}で説明した、どのようにメモリ量を測るかという話を思い出してほしい。}は$#n# +O(\sqrt{#n#})$である。
 \end{thm}
 
 %\notpcode{

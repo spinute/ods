@@ -457,7 +457,7 @@ $#u#_0$のブロックが#b#要素を含むようになるので、ここから�
   \end{itemize}
   さらに、空の#SEList#から始めて、#add(i,x)#および#remove(i)#からなる$m$個の操作の列における#spread(u)#と#gather(u)#の実行時間は、合計で$O(#b#m)$である。
 
-  要素数#n#の#SEList#の領域使用量は、ワード単位で測ると$#n# +O(#b# + #n#/#b#)$である\footnote{メモリの計測方法については\secref{model}の説明を参照。}。
+  要素数#n#の#SEList#の空間使用量は、ワード単位で測ると$#n# +O(#b# + #n#/#b#)$である\footnote{メモリの計測方法については\secref{model}の説明を参照。}。
 \end{thm}
 
 #SEList#により、#ArrayList#か#DLList#かのトレードオフを調整できる。
@@ -475,7 +475,7 @@ $#u#_0$のブロックが#b#要素を含むようになるので、ここから�
 \ejindex{unrolled linked list|seealso{#SEList#}}{あんろーるされたれんけつりすと@アンロールされた連結リスト|seealso{#SEList#}}%
 \ejindex{linked list!unrolled|seealso{#SEList#}}{れんけつりすと@連結リスト!あんろーるされた@アンロールされた|seealso{#SEList#}}%
 
-双方向連結リストの領域使用量を減らすための別な手法として、XOR-listsと呼ばれるものもある。
+双方向連結リストの空間使用量を減らすための別な手法として、XOR-listsと呼ばれるものもある。
 \ejindex{XOR-list}{XORリスト}%
 XOR-listでは、各ノード#u#はポインタの代わりに#u.nextprev#だけを持つ。 % TODO: pointerの値のXORをとったものはポインタと呼んでいいのか？ -- 日本語での読みやすさも考慮して、「ポインタの代わりとなる値」としてみます -kshikano
 このポインタの代わりとなる値は、#u.prev#と#u.next#のXOR（排他的論理和）を取ったものである。
@@ -624,7 +624,7 @@ XOR-listについてのさらに踏み込んだ議論は、Sinhaの雑誌記事\
   すべての操作の償却実行時間は定数であること。
 \end{exc}
 
-以降の問題は、領域効率の良い#SLList#の解析と実装について理解度を測るためのものである。
+以降の問題は、空間効率の良い#SLList#の解析と実装について理解度を測るためのものである。
 
 \begin{exc}
   #SEList#が#Stack#のように使われるとき、つまり#SEList#が$#push(x)#\equiv #add(size(),x)#$と$#pop()#\equiv #remove(size()-1)#$によってのみ更新されるとき、これらの操作の償却実行時間がいずれも#b#の値に依存しない定数であることを証明せよ。
