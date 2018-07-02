@@ -238,7 +238,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
 \emph{scapegoat tree}という名称は、このデータ構造を定義して解析したGalperinとRivestにより提案された\cite{gr93}。
 ただし、同じデータ構造はAnderssonによって先に発見されており、そこでは
 \index{general balanced tree}%
-\emph{general balanced trees}
+\emph{general balanced trees}%
 と呼ばれていた\cite{a89,a99}。
 これは、このデータ構造が、高さが小さいならどのような形状も取れることによる。
 
@@ -249,7 +249,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
 \]
 これは#Skiplist#の探索経路の長さの期待値よりも小さく、#Treap#ともほぼ同じなので、#ScapegoatTree#が遅いのは意外かもしれない。
 #ScapegoatTree#の最適化として、各ノードに部分木の大きさを保持したり、すでに計算した部分木のサイズを再利用したりできる
-（\ref{exc:scapegoat-quicksize}と\ref{exc:scapegoat-explicitsize}を参照）。
+（\excref{scapegoat-quicksize}と\excref{scapegoat-explicitsize}を参照）。
 これらの最適化をしても、依然として#add(x)#や#delete(x)#を繰り返し実行すると、#ScapegoatTree#は他の#SSet#の実装より遅いことがあるだろう。
 
 #ScapegoatTree#が、本章で紹介した他の#SSet#の実装と比べて性能が芳しくないのは、再構築にかかる時間が長いからである。
@@ -279,8 +279,8 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
 \begin{exc}
   #ScapegoatTree#における探索経路の長さは$\log_{3/2}#q#$を超えない。
   \begin{enumerate}
-    \item #ScapegoatTree#を修正し、$1<#b#<2$を満たすパラメータ#b#について探索経路の長さが$\log_{#b#} #q#$を超えないデータ構造を設計、解析、実装せよ
-    \item #find(x)#、#add(x)#、#remove(x)#の償却コストが#n#と#b#の関数としてどう表せるか、解析および実験によって考えよ
+    \item #ScapegoatTree#を修正し、$1<#b#<2$を満たすパラメータ#b#について探索経路の長さが$\log_{#b#} #q#$を超えないデータ構造を設計、解析、実装せよ。
+    \item #find(x)#、#add(x)#、#remove(x)#の償却コストが#n#と#b#の関数としてどう表せるか、解析および実験によって考えよ。
   \end{enumerate}
 \end{exc}
 
@@ -304,7 +304,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
 \begin{exc}
   \index{WeightBalancedTree@#WeightBalancedTree#}%
   #WeightBalancedTree#を設計、実装せよ。
-  このデータ構造では、根以外の各ノード#u#が\emph{バランス条件}$#size(u)# \le (2/3)#size(u.parent)#$を満たす。
+  このデータ構造では、根以外の各ノード#u#が\emph{バランス条件}$ #size(u)# \le (2/3)#size(u.parent)#$を満たす。
   #WeightBalancedTree#における#add(x)#および#remove(x)#操作は、通常の#BinarySearchTree#における各操作とほぼ同じだが、ノード#u#でバランス条件が成り立たないときには#u.parent#を根とする部分木が再構築される。
   
   さらに、#WeightBalancedTree#の償却実行時間が$O(\log#n#)$であることを示せ。
@@ -313,7 +313,7 @@ $#size(u#_2#)#\le\frac{4}{9}#n#$であり、より一般には次の式が成り
 \begin{exc}
   \index{CountdownTree@#CountdownTree#}%
   #CountdownTree#を設計、実装せよ。
-  このデータ構造では、各ノード#u#は\emph{タイマー}#u.t#を持っている。
+  このデータ構造では、各ノード#u#は\emph{タイマー} #u.t#を持っている。
   #CountdownTree#における#add(x)#および#remove(x)#操作は、通常の#BinarySearchTree#における各操作とほぼ同じだが、いずれかの操作が#u#の部分木に影響を与えるときには#u.t#を1つ小さくする。
   $#u.t#=0$のときは、#u#を根とする部分木を非常にバランスのよい二分木へと再構築する。
   ノード#u#が再構築に関与する（#u#が再構築されるか、#u#の祖先のうちの1つが再構築される）とき、#u.t#は$#size(u)#/3$にリセットされる。

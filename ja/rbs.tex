@@ -132,7 +132,7 @@ $\{0,\ldots,#n#\}$のランダムな置換では、そのうちの一部だけ�
   = \left\{ \begin{array}{ll}
      1/(\lfloor#x#\rfloor-i+1) & \mbox{if $i < #x#$} \\
      1/(i-\lceil#x#\rceil+1) & \mbox{if $i > #x#$}
-     \end{array}\right . \enspace .
+     \end{array}\right . \enspace
 \]
 
 以上の考察により、調和数を使った簡単な計算で\lemref{rbs}を証明できる。
@@ -194,7 +194,7 @@ $I_i$の値は、$i$が探索経路に現れるときは1、そうでないと�
 これは、\lemref{rbs}を使って#SSet#インターフェースを実装するデータ構造である
 \footnote{#Treap#の名称は、このデータ構造が二分木\textbf{tr}ee（\secref{binarysearchtree}）であり、ヒープh\textbf{eap}（\chapref{heaps}）でもあることによる。}。
 
-#Treap#のノードは値#x#を持つ。その点で#Treap#は#BinarySearchTree#に似ているが、それに加えて#Treap#のノードは一意な\emph{優先度}#p#を持つ。
+#Treap#のノードは値#x#を持つ。その点で#Treap#は#BinarySearchTree#に似ているが、それに加えて#Treap#のノードは一意な\emph{優先度} #p#を持つ。
 この#p#はランダムに割り当てられる。
 \javaimport{ods/Treap.Node<T>}
 \cppimport{ods/Treap.TreapNode}
@@ -458,8 +458,8 @@ Devroye\cite{d88}では、\lemref{rbs}とそれに関連する結果とが証明
 \begin{exc}
 二分探索木の各ノード#u#が、高さ#u.height#と、#u#を根とする部分木の大きさ#u.size#とを保持していると仮定する。
   \begin{enumerate}
-    \item 左または右の回転を#u#で実行すると、回転によって影響を受けるすべてのノードにおいて、2つの値をそれぞれ定数時間で更新できることを示せ
-    \item 各ノードの深さも保持することにすると、上と同様の結果が成り立たなくなることを説明せよ
+    \item 左または右の回転を#u#で実行すると、回転によって影響を受けるすべてのノードにおいて、2つの値をそれぞれ定数時間で更新できることを示せ。
+    \item 各ノードの深さも保持することにすると、上と同様の結果が成り立たなくなることを説明せよ。
   \end{enumerate}
 \end{exc}
 
@@ -474,13 +474,13 @@ Devroye\cite{d88}では、\lemref{rbs}とそれに関連する結果とが証明
   \ejindex{finger search!in a treap}{ゆびたんさく@指探索!treap}%
   この問題では、#Treap#において与えられたポインタの近くにあるノードを効率的に見つける方法を明らかにする。
   \begin{enumerate}
-    \item 各ノードで、自身を根とする部分木における最大値と最小値が保持されているような#Treap#を設計、実装せよ
+    \item 各ノードで、自身を根とする部分木における最大値と最小値が保持されているような#Treap#を設計、実装せよ。
     \item 上記で追加した情報を使うことにより、#x#を含むノードからそれほど離れていない#u#を活用して#find(x)#を実行する、#fingerFind(x,u)#という操作を実装せよ。
 	この操作は、#u#から上に向かって進み、$#w.min#\le #x#\le #w.max#$を満たすノード#w#を見つけて、
 	#w#から通常の方法で#x#を検索するというものである
 	（#fingerFind(x,u)#の実行時間は$O(1+\log r)$であることが示せる。
-	ここで$r$は、#x#と#u.x#の間にある#Treap#の要素の数である）
-	\item #Treap#の実装を拡張し、直近に実行した#find(x)#で見つかったノードから#find(x)#の探索を開始するようにせよ
+	ここで$r$は、#x#と#u.x#の間にある#Treap#の要素の数である）。
+	\item #Treap#の実装を拡張し、直近に実行した#find(x)#で見つかったノードから#find(x)#の探索を開始するようにせよ。
   \end{enumerate}
 \end{exc}
 

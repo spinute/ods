@@ -283,8 +283,8 @@ skew heaps \cite{st83}などである。
 しかし、もっと効率的にこの操作を実装できるデータ構造もある。
 中でも、Fibonacci heapsは、$O(1)$の償却実行時間で#decreaseKey(u,y)#を実行できる。
 pairing heapsの特殊なものでは、$O(\log\log #n#)$の償却実行時間で#decreaseKey(u,y)#を実行できる\cite{e09}。
-効率的な#decreaseKey(u,y)#は、ダイクストラ法など、グラフアルゴリズムの高速化に役立つ。
-\cite{ft87}
+効率的な#decreaseKey(u,y)#は、ダイクストラ法など、グラフアルゴリズムの高速化に役立つ
+\cite{ft87}。
 
 \begin{exc}
   \figref{heap-insert}に示した#BinaryHeap#に7と3を順に追加する様子を図示せよ。
@@ -336,12 +336,12 @@ pairing heapsの特殊なものでは、$O(\log\log #n#)$の償却実行時間�
 \end{exc}
 
 \begin{exc}
-#BinaryHeap#および#MeldableHeap#においてk番めに小さい値を$O(k\log k)$の時間で見つける方法を示せ。
+#BinaryHeap#および#MeldableHeap#において#k#番めに小さい値を$O(#k#\log #k#)$の時間で見つける方法を示せ。
 （ヒント：別のヒープを使ってみよう。）
 \end{exc}
 
 \begin{exc}
 #k#個の整列済みリストであって、合計の長さが#n#であるものがあるとき、ヒープを使ってこれらのリストを1つの整列済みリストにする方法を示せ。
-このとき、実行時間は$O(n\log k)$でなければならない。
-（ヒント：$k=2$の場合から考えてみよう。）
+このとき、実行時間は$O(#n#\log #k#)$でなければならない。
+（ヒント：$#k#=2$の場合から考えてみよう。）
 \end{exc}

@@ -43,8 +43,8 @@
 
 \cpponly{
 この章、そしてこの本では、要素数を保持する配列が使えると便利なことが多い。
-C++のふつうの配列は要素数を保持していないので、要素数を保持する配列のクラス#array#を定義する。
-\footnote{訳注：この#array#クラスにおける$=$の実装では、右辺の配列を#NULL#にしている。つまり、他の#array#に代入した#array#は、その後使えなくなってしまうことに注意する。}
+C++のふつうの配列は要素数を保持していないので、要素数を保持する配列のクラス#array#を定義する
+\footnote{訳注：この#array#クラスにおける$=$の実装では、右辺の配列を#NULL#にしている。つまり、他の#array#に代入した#array#は、その後使えなくなってしまうことに注意する。}。
 このクラスは標準的なC++の配列#a#と整数#length#により簡単に実装できる。}
 \cppimport{ods/array.a.length}
 \cpponly{
@@ -248,10 +248,10 @@ $\bmod$は次のような二項演算と考えてもよい。
 \[
    15 \bmod 12 = 3
 \]
-整数$a$と正整数$m$について、ある整数kが存在し$a = km + r$を満たす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
+整数$a$と正整数$m$について、ある整数$k$が存在し$a = km + r$を満たす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
 簡単に言うと、$r$は$a$を$m$で割った余りである。
 \pcodeonly{CやC++、Ruby、Javaなどの多くのプログラミング言語では、mod演算子を\%で表す。} % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
-\notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}
+\notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}。
 
 剰余算術は無限長の配列を模倣するのに便利である。
 $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利用して、配列の中にキューの要素をうまく入れられるのだ。
@@ -303,7 +303,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 \codeimport{ods/ArrayQueue.resize()}
 \subsection{要約}
 
-次の定理は#ArrayQueue#の性能について整理したものだ
+次の定理は#ArrayQueue#の性能について整理したものだ。
 
 \begin{thm}
   #ArrayQueue#は、（FIFOの）#Queue#インターフェースの実装である。
@@ -319,10 +319,10 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 この節で紹介する#ArrayDeque#は、両端に対して追加と削除が効率的に実行できるデータ構造である。
 このデータ構造により、#ArrayQueue#を実装するのに使ったのと同じく、循環配列を使って#List#インターフェースを実装する
 \footnote{訳注：\secref{listintro}で言及したように、#ArrayDeque#は#List#インターフェースを実装するデータ構造である。#ArrayDeque#という名称は、#Deque#インターフェースのすべての操作の実行時間が$O(1)$であることを強調するために付けられている。}
-\codeimport{ods/ArrayDeque.a.j.n}
+\codeimport{ods/ArrayDeque.a.j.n}。
 
 #ArrayDeque#に対する#get(i)#と#set(i,x)#は簡単だ。
-配列の要素$#a[#{#(j+i)#\bmod #a.length#}#]#$を読み書きすればよい。
+配列の要素$#a[#{}#(j+i)#\bmod #a.length#{}#]#$を読み書きすればよい。
 
 \codeimport{ods/ArrayDeque.get(i).set(i,x)}
 
@@ -331,8 +331,8 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 いま、#add(i,x)#操作については、#i#が小さいとき（0に近いとき）と#i#が大きいとき（#n#に近いとき）に特に効率が良くなるようにしたい。
 そこで、$#i#<#n#/2$かどうかを確認する。
 % XXX: 原文の配列の添字がでたらめなので書き換えた
-もしそうなら、左から$i$個の要素をいずれも1つずつ左にずらす。
-そうでないなら、右から$n-i$個の要素をいずれも1つずつ右にずらす。
+もしそうなら、左から$#i#$個の要素をいずれも1つずつ左にずらす。
+そうでないなら、右から$#n#-#i#$個の要素をいずれも1つずつ右にずらす。
 #ArrayDeque#に対する#add(i,x)#と#remove(x)#を\figref{arraydeque}に示す。
 % TODO YJ 以下の図、コメント部分の端が切れてる
 \begin{figure}
@@ -354,7 +354,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 #remove(i)#も同様に実装できる。
 % XXX: 原文の配列の添字がでたらめなので書き換えた -- 前後のコメント参照
-$#i#<#n#/2$かどうかに応じて、左から$i$個の要素をいずれも1つずつ右にシフトするか、右から$n-i-1$個の要素をいずれも1つずつ左にシフトする。
+$#i#<#n#/2$かどうかに応じて、左から$#i#$個の要素をいずれも1つずつ右にシフトするか、右から$#n#-#i#-1$個の要素をいずれも1つずつ左にシフトする。
 #remove(i)#の実行時間も、やはり$O(1+\min\{#i#,#n#-#i#\})$である。
 % XXX: O記法は何変数のつもりか。1+は必要なのか -- Pat に相談する
 
@@ -363,7 +363,7 @@ $#i#<#n#/2$かどうかに応じて、左から$i$個の要素をいずれも1�
 
 \subsection{要約}
 
-次の定理は#ArrayDeque#の性能について整理したものだ
+次の定理は#ArrayDeque#の性能について整理したものだ。
 \begin{thm}\thmlabel{arraydeque}
   #ArrayDeque#は#List#インターフェースを実装する。
   #resize()#のコストを無視すると、#ArrayDeque#における各操作の実行時間は下記のようになる。
@@ -476,19 +476,19 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
 
 \begin{lem}\lemlabel{dualarraydeque-amortized}
   空の#DualArrayDeque#に対して、#add(i,x)#および#remove(i)#からなる長さ#m#の任意の操作の列を実行する。
-  このとき#resize()#にかかる時間の合計は$O(m)$である。
+  このとき#resize()#にかかる時間の合計は$O(#m#)$である。
 \end{lem}
 
 \begin{proof}
   #balance()#によって要素が動かされてから、次に#balance()#によって要素が動かされるまでに、#add(i,x)#および#remove(i)#が実行される回数が$#n#/2-1$以上であることを示す。
-  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(m)$であることを示したことになる。
+  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(#m#)$であることを示したことになる。
 
   ここでは
   \emph{ポテンシャル法（potential method）}
   \index{potential}%
   \index{potential method}%
   という技法を使う。
-  #DualArrayDeque#の\emph{ポテンシャル}$\Phi$を、#front#と#back#の要素数の差と定義する。
+  #DualArrayDeque#の\emph{ポテンシャル} $\Phi$を、#front#と#back#の要素数の差と定義する。
   \[  \Phi = |#front.size()# - #back.size()#| \enspace \]
   #add(i,x)#および#remove(i)#の処理でバランスを調整しない場合、ポテンシャル$\Phi$の増加が高々1であることに注目しよう。 % TODO caprice もっと自然に訳出したい
 
@@ -523,7 +523,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
     \item #get(i)#および#set(i,x)#の実行時間は$O(1)$である
     \item #add(i,x)#および#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である
   \end{itemize}
-  また、空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
+  また、空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(#m#)$である。
 \end{thm}
 
 \section{#RootishArrayStack#：メモリ効率に優れた配列スタック}
@@ -545,7 +545,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
 
 #RootishArrayStack#では\emph{ブロック}と呼ぶ#r#個の配列に要素を入れる。これらの配列には$0,1,\ldots,#r#-1$と番号を付ける。
 \figref{rootisharraystack}を見てほしい。
-$b$番めのブロックには$b+1$個の要素を入れる。
+$#b#$番めのブロックには$#b#+1$個の要素を入れる。
 すなわち、#r#個のブロックに含まれる要素数の合計は次のように計算できる。
 \[
   1+ 2+ 3+\cdots +#r# = #r#(#r#+1)/2
@@ -582,7 +582,7 @@ $b$番めのブロックには$b+1$個の要素を入れる。
 \]
 #i#から#b#を求める、つまり#i#番めの要素がどのブロックに入っているのかを計算する方法はもう少しややこしい。
 #i#以下のインデックスを持つ要素は$#i#+1$個ある。
-一方、$0,\ldots,b$番めのブロックに入っている要素数の合計は$(#b#+1)(#b#+2)/2$である。
+一方、$0,\ldots,#b#$番めのブロックに入っている要素数の合計は$(#b#+1)(#b#+2)/2$である。
 よって、#b#は次の式を満たす最小の整数である。
 \[
     (#b#+1)(#b#+2)/2 \ge #i#+1 \enspace
@@ -646,7 +646,7 @@ $#i#+1,\ldots,#n#$番めの要素をそれぞれ左に1つずつシフトし、2
 そのため、次の#grow()#と#shrink()#が呼ばれるのは、少なくとも$#r#-1$回だけ要素が追加および削除された後である。
 よって、#grow()#および#shrink()#に$O(#r#)$だけ時間がかかっても、そのコストは$#r#-1$回の#add(i,x)#および#remove(i)#で償却され、#grow()#と#shrink()#の償却コストは$O(1)$である。
 
-\subsection{領域使用量}
+\subsection{空間使用量}
 \seclabel{rootishspaceusage}
 
 #RootishArrayStack#が使う無駄な領域の量を解析する。
@@ -696,7 +696,7 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
   \end{itemize}
   空の#RootishArrayStack#に対して、#add(i,x)#および#remove(i)#からなる長さ#m#の任意の操作の列を実行するとき、#grow()#および#shrink()#にかかる時間の合計は$O(m)$である。
 
-  要素数#n#の#RootishArrayStack#が使う（ワード単位で測った）使用領域量\footnote{\secref{model}で説明した、どのようにメモリ量を測るかという話を思い出してほしい。}は$#n# +O(\sqrt{#n#})$である。
+  要素数#n#の#RootishArrayStack#が使う（ワード単位で測った）空間使用量\footnote{\secref{model}で説明した、どのようにメモリ量を測るかという話を思い出してほしい。}は$#n# +O(\sqrt{#n#})$である。
 \end{thm}
 
 %\notpcode{
@@ -731,7 +731,7 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 % caprice これめっちゃ頭いいな　こんなん思いつくんかい
 
 あらゆる自然数$#x#\in\{0,\ldots,#n#\}$の平方根について考える前に、少し問題を制約しよう。
-自然数#x#が$2^{#r#} \le #x# < 2^{#r#+1}$を満たす場合、すなわち$\lfloor\log #x#\rfloor=#r#$である場合を考える。このとき自然数#x#は、$#r#+1$ビットの2進表記で表せる
+自然数#x#が$2^{#r#} \le #x# < 2^{#r#+1}$を満たす場合、すなわち$\lfloor\log #x#\rfloor=#r#$である場合を考える。このとき自然数#x#は、$#r#+1$ビットの二進表記で表せる
 \footnote{訳注：例えば#r#が2なら、$#x#=5, 6, 7$をそれぞれ3ビットで$#101#, #110#, #111#$と表せる。}。
 #x#と#x'#の関係は\lemref{root}の仮定を満たすので、$\sqrt{#x#}-\sqrt{#x'#} \le 1$が成り立つ。
 ここで、$#x'#=#x# - (#x#\bmod 2^{\lfloor r/2\rfloor})$とおくと、#x'#の下位$\lfloor #r#/2\rfloor$ビットはすべて0である。
@@ -752,7 +752,7 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 言い換えれば、配列の各要素$#s#=#sqrttab#[#x##>>#\lfloor #r#/2\rfloor]$
 \footnote{$#x# #>># #n#$は右シフト演算と呼ばれ、#x#を表すビットのそれぞれを#n#ビットずつ右にずらす。算術上は、#x#から$#x#\bmod 2^#n#$を引いた（すなわち、下位#n#ビットをすべて0にした）あとに$2^#n#$で割った場合と同じ効果を持つ。}は、$\lfloor\sqrt{#x#}\rfloor$か、$\lfloor\sqrt{#x#}\rfloor-1$か、
 $\lfloor\sqrt{#x#}\rfloor-2$のいずれかになる。
-$(#s#+1)^2 > #x#$となるまで#s#をインクリメントすることで、xの平方根を下に丸めた自然数$\lfloor\sqrt{#x#}\rfloor$の値を特定できる
+$(#s#+1)^2 > #x#$となるまで#s#をインクリメントすることで、#x#の平方根を下に丸めた自然数$\lfloor\sqrt{#x#}\rfloor$の値を特定できる
 \footnote{訳注：平方根はプログラム中で何千回も使いまわされる可能性がある処理だから、空間計算量を少し犠牲にして中間結果を配列#sqrttab#に入れることで、時間計算量を改善しようという算段である。#x'#の数が高々$2^{#r#+1-\lfloor #r#/2\rfloor}$通り（例えば一般的なコンピュータにおける$#r#=32$の場合は10万通り程度）しかなく、$2^{#r#+1-\lfloor #r#/2\rfloor} \le 4\sqrt{#x#}$という結果からビッグオー記法でいえば$O(\sqrt{#n#})$通りしかないのだから、この工夫は実を結ぶ。}。
 % TALK sqrttab[i] is within 2 of root x ってあるけど、$\lfloor\sqrt{#x#}\rfloor-2$の値を取ったときは微妙に2を超えてないか？今は「およそ２」としたが、どうすべきか？ -- spinute: そうなの？
 % TALK これ、r=64の場合、sqrttabのサイズが約85億と、果てしなく大きくなってしまわないか？そのことに関して注を入れた方がよいのでは？ -- spinute: r=64 の場合には単純にはうまくいかなそう。ここで平方根を扱っているのは Rootish Array Stack のためで、引数は概ねデータ構造の要素数程度。そのため、ふつうは 32 bit あれば足りるはず
@@ -783,7 +783,7 @@ $2^{#r#-#r#'}x$は$\{2^{#r#},\ldots,2^{#r#+1}-1\}$に含まれるので、上の
 \notpcode{
 $#r#'=\lfloor\log#x#\rfloor$の計算方法も説明しておく。
 平方根の場合と同様に、大きさ$2^{#r#/2}$の配列#logtab#を使う。
-$\lfloor\log #x#\rfloor$が#x#を2進表記したときに1となる最大の桁の添字であることに気づけば、実装は難しくない。
+$\lfloor\log #x#\rfloor$が#x#を二進表記したときに1となる最大の桁の添字であることに気づけば、実装は難しくない。
 すなわち、$#x#>2^{#r#/2}$のとき#x#を$#r#/2$ビットだけ右にシフトし、#logtab#の添字とする。
 次のコードは、$\{0,\ldots,2^{32}-1\}$に含まれる任意の#x#について、大きさ$2^{16}$の配列#logtab#を使って$\lfloor\log #x#\rfloor$を計算するものである。
 } % notpcode
@@ -807,7 +807,7 @@ $\lfloor\log #x#\rfloor$が#x#を2進表記したときに1となる最大の桁
 
 #RootishArrayStack#について記述し、\secref{rootishspaceusage}で述べた下界$\sqrt{n}$を示した最初の文献は、おそらくBrodnikらによる\cite{bcdms99}である。
 彼らは、この章で説明した方法とは異なる巧妙なブロックサイズの選び方も示しており、このやり方では#i2b(i)#の中で平方根の計算をせずに済む。
-彼らのやり方では、#i#を含むブロックのインデックスが$\lfloor\log (#i#+1)\rfloor$番めとなり、このインデックスは$#i#+1$を2進表記したときの最高位の桁である。
+彼らのやり方では、#i#を含むブロックのインデックスが$\lfloor\log (#i#+1)\rfloor$番めとなり、このインデックスは$#i#+1$を二進表記したときの最高位の桁である。
 これはコンピュータアーキテクチャによっては専用の命令があり、効率的に計算できる。
 \javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
