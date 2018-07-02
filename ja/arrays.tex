@@ -248,7 +248,7 @@ $\bmod$は次のような二項演算と考えてもよい。
 \[
    15 \bmod 12 = 3
 \]
-整数$a$と正整数$m$について、ある整数kが存在し$a = km + r$を満たす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
+整数$a$と正整数$m$について、ある整数$k$が存在し$a = km + r$を満たす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
 簡単に言うと、$r$は$a$を$m$で割った余りである。
 \pcodeonly{CやC++、Ruby、Javaなどの多くのプログラミング言語では、mod演算子を\%で表す。} % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
 \notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}。
@@ -322,7 +322,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 \codeimport{ods/ArrayDeque.a.j.n}。
 
 #ArrayDeque#に対する#get(i)#と#set(i,x)#は簡単だ。
-配列の要素$#a[#{#(j+i)#\bmod #a.length#}#]#$を読み書きすればよい。
+配列の要素$#a[#{}#(j+i)#\bmod #a.length#{}#]#$を読み書きすればよい。
 
 \codeimport{ods/ArrayDeque.get(i).set(i,x)}
 
@@ -331,8 +331,8 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 いま、#add(i,x)#操作については、#i#が小さいとき（0に近いとき）と#i#が大きいとき（#n#に近いとき）に特に効率が良くなるようにしたい。
 そこで、$#i#<#n#/2$かどうかを確認する。
 % XXX: 原文の配列の添字がでたらめなので書き換えた
-もしそうなら、左から$i$個の要素をいずれも1つずつ左にずらす。
-そうでないなら、右から$n-i$個の要素をいずれも1つずつ右にずらす。
+もしそうなら、左から$#i#$個の要素をいずれも1つずつ左にずらす。
+そうでないなら、右から$#n#-#i#$個の要素をいずれも1つずつ右にずらす。
 #ArrayDeque#に対する#add(i,x)#と#remove(x)#を\figref{arraydeque}に示す。
 % TODO YJ 以下の図、コメント部分の端が切れてる
 \begin{figure}
@@ -354,7 +354,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 #remove(i)#も同様に実装できる。
 % XXX: 原文の配列の添字がでたらめなので書き換えた -- 前後のコメント参照
-$#i#<#n#/2$かどうかに応じて、左から$i$個の要素をいずれも1つずつ右にシフトするか、右から$n-i-1$個の要素をいずれも1つずつ左にシフトする。
+$#i#<#n#/2$かどうかに応じて、左から$#i#$個の要素をいずれも1つずつ右にシフトするか、右から$#n#-#i#-1$個の要素をいずれも1つずつ左にシフトする。
 #remove(i)#の実行時間も、やはり$O(1+\min\{#i#,#n#-#i#\})$である。
 % XXX: O記法は何変数のつもりか。1+は必要なのか -- Pat に相談する
 
@@ -476,19 +476,19 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
 
 \begin{lem}\lemlabel{dualarraydeque-amortized}
   空の#DualArrayDeque#に対して、#add(i,x)#および#remove(i)#からなる長さ#m#の任意の操作の列を実行する。
-  このとき#resize()#にかかる時間の合計は$O(m)$である。
+  このとき#resize()#にかかる時間の合計は$O(#m#)$である。
 \end{lem}
 
 \begin{proof}
   #balance()#によって要素が動かされてから、次に#balance()#によって要素が動かされるまでに、#add(i,x)#および#remove(i)#が実行される回数が$#n#/2-1$以上であることを示す。
-  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(m)$であることを示したことになる。
+  \lemref{arraystack-amortized}の証明と同様に、これを示せば#balance()#の合計実行時間が$O(#m#)$であることを示したことになる。
 
   ここでは
   \emph{ポテンシャル法（potential method）}
   \index{potential}%
   \index{potential method}%
   という技法を使う。
-  #DualArrayDeque#の\emph{ポテンシャル}$\Phi$を、#front#と#back#の要素数の差と定義する。
+  #DualArrayDeque#の\emph{ポテンシャル} $\Phi$を、#front#と#back#の要素数の差と定義する。
   \[  \Phi = |#front.size()# - #back.size()#| \enspace \]
   #add(i,x)#および#remove(i)#の処理でバランスを調整しない場合、ポテンシャル$\Phi$の増加が高々1であることに注目しよう。 % TODO caprice もっと自然に訳出したい
 
@@ -523,7 +523,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
     \item #get(i)#および#set(i,x)#の実行時間は$O(1)$である
     \item #add(i,x)#および#remove(i)#の実行時間は$O(1+\min\{#i#,#n#-#i#\})$である
   \end{itemize}
-  また、空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
+  また、空の#DualArrayDeque#に対して長さ#m#の任意の#add(i,x)#および#remove(i)#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(#m#)$である。
 \end{thm}
 
 \section{#RootishArrayStack#：メモリ効率に優れた配列スタック}
@@ -545,7 +545,7 @@ $#n#/4\le#i#<3#n#/4$のときは、#front#と#back#のどちらが操作され�
 
 #RootishArrayStack#では\emph{ブロック}と呼ぶ#r#個の配列に要素を入れる。これらの配列には$0,1,\ldots,#r#-1$と番号を付ける。
 \figref{rootisharraystack}を見てほしい。
-$b$番めのブロックには$b+1$個の要素を入れる。
+$#b#$番めのブロックには$#b#+1$個の要素を入れる。
 すなわち、#r#個のブロックに含まれる要素数の合計は次のように計算できる。
 \[
   1+ 2+ 3+\cdots +#r# = #r#(#r#+1)/2
@@ -582,7 +582,7 @@ $b$番めのブロックには$b+1$個の要素を入れる。
 \]
 #i#から#b#を求める、つまり#i#番めの要素がどのブロックに入っているのかを計算する方法はもう少しややこしい。
 #i#以下のインデックスを持つ要素は$#i#+1$個ある。
-一方、$0,\ldots,b$番めのブロックに入っている要素数の合計は$(#b#+1)(#b#+2)/2$である。
+一方、$0,\ldots,#b#$番めのブロックに入っている要素数の合計は$(#b#+1)(#b#+2)/2$である。
 よって、#b#は次の式を満たす最小の整数である。
 \[
     (#b#+1)(#b#+2)/2 \ge #i#+1 \enspace
@@ -752,7 +752,7 @@ $#r#\ge \sqrt{#n#}$なら、#r#個のブロックを追跡するために#r#個�
 言い換えれば、配列の各要素$#s#=#sqrttab#[#x##>>#\lfloor #r#/2\rfloor]$
 \footnote{$#x# #>># #n#$は右シフト演算と呼ばれ、#x#を表すビットのそれぞれを#n#ビットずつ右にずらす。算術上は、#x#から$#x#\bmod 2^#n#$を引いた（すなわち、下位#n#ビットをすべて0にした）あとに$2^#n#$で割った場合と同じ効果を持つ。}は、$\lfloor\sqrt{#x#}\rfloor$か、$\lfloor\sqrt{#x#}\rfloor-1$か、
 $\lfloor\sqrt{#x#}\rfloor-2$のいずれかになる。
-$(#s#+1)^2 > #x#$となるまで#s#をインクリメントすることで、xの平方根を下に丸めた自然数$\lfloor\sqrt{#x#}\rfloor$の値を特定できる
+$(#s#+1)^2 > #x#$となるまで#s#をインクリメントすることで、#x#の平方根を下に丸めた自然数$\lfloor\sqrt{#x#}\rfloor$の値を特定できる
 \footnote{訳注：平方根はプログラム中で何千回も使いまわされる可能性がある処理だから、空間計算量を少し犠牲にして中間結果を配列#sqrttab#に入れることで、時間計算量を改善しようという算段である。#x'#の数が高々$2^{#r#+1-\lfloor #r#/2\rfloor}$通り（例えば一般的なコンピュータにおける$#r#=32$の場合は10万通り程度）しかなく、$2^{#r#+1-\lfloor #r#/2\rfloor} \le 4\sqrt{#x#}$という結果からビッグオー記法でいえば$O(\sqrt{#n#})$通りしかないのだから、この工夫は実を結ぶ。}。
 % TALK sqrttab[i] is within 2 of root x ってあるけど、$\lfloor\sqrt{#x#}\rfloor-2$の値を取ったときは微妙に2を超えてないか？今は「およそ２」としたが、どうすべきか？ -- spinute: そうなの？
 % TALK これ、r=64の場合、sqrttabのサイズが約85億と、果てしなく大きくなってしまわないか？そのことに関して注を入れた方がよいのでは？ -- spinute: r=64 の場合には単純にはうまくいかなそう。ここで平方根を扱っているのは Rootish Array Stack のためで、引数は概ねデータ構造の要素数程度。そのため、ふつうは 32 bit あれば足りるはず
