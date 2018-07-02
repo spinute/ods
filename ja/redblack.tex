@@ -11,7 +11,7 @@ JavaのコレクションフレームワークやC++の標準テンプレート�
 赤黒木が広く利用されている理由はいくつかある。
 \begin{enumerate}
 \item #n#個の要素を含む赤黒木の高さが$2\log #n#$以下になる
-\item #add(x)#および#remove(x)#を\emph{最悪の場合でも}$O(\log #n#)$の時間で実行できる
+\item #add(x)#および#remove(x)#を\emph{最悪の場合でも} $O(\log #n#)$の時間で実行できる
 \item #add(x)#および#remove(x)#における回転の回数は、償却すると定数である
 \end{enumerate}
 上記のうち、はじめの2つの性質が、#Skiplist#、#Treap#、#Scapegoat#に対する赤黒木の優位性を示している。
@@ -20,7 +20,7 @@ JavaのコレクションフレームワークやC++の標準テンプレート�
 上記のうち3つめの性質は、おまけである。
 この性質から、要素#x#を追加および削除するときにかかる主な時間は、#x#を見つける処理によることがわかる
 \footnote{スキップリストや#Treap#も平均的にはこの性質を持つ。
-\ref{exc:skiplist-changes}および\ref{exc:treap-rotates}参照。}。
+\excref{skiplist-changes}および\excref{treap-rotates}参照。}。
 
 しかし、赤黒木の優れた性質には代償がある。
 実装が複雑なのである。
@@ -494,7 +494,7 @@ Sedgewick \cite{s08}では、二種類の左傾な赤黒木が提案されてい
 
 赤黒木に関連したより古いデータ構造として、\emph{AVL木} \cite{avl62}がある。
 \ejindex{AVL tree}{AVLぎ@AVL木}%
-AVL木は、\emph{height-balanced}性と呼ばれる性質を満たす木である。
+AVL木は、\emph{height-balanced性}と呼ばれる性質を満たす木である。
 \ejindex{height-balanced}{たかさでばらんすされた@高さでバランスされた}%
 \ejindex{binary search tree!height balanced}{にぶんたんさくぎ@二分探索木!たかさでばらんすされた@高さでバランスされた}%
 height-balanced性とは、「任意のノード$u$について、#u.left#を根とする部分木の高さと、#u.right#を根とする部分木の高さとの差は、高々1である」という性質だ。

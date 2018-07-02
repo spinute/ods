@@ -132,7 +132,7 @@ $\{0,\ldots,#n#\}$のランダムな置換では、そのうちの一部だけ�
   = \left\{ \begin{array}{ll}
      1/(\lfloor#x#\rfloor-i+1) & \mbox{if $i < #x#$} \\
      1/(i-\lceil#x#\rceil+1) & \mbox{if $i > #x#$}
-     \end{array}\right . \enspace .
+     \end{array}\right . \enspace
 \]
 
 以上の考察により、調和数を使った簡単な計算で\lemref{rbs}を証明できる。
@@ -194,7 +194,7 @@ $I_i$の値は、$i$が探索経路に現れるときは1、そうでないと�
 これは、\lemref{rbs}を使って#SSet#インターフェースを実装するデータ構造である
 \footnote{#Treap#の名称は、このデータ構造が二分木\textbf{tr}ee（\secref{binarysearchtree}）であり、ヒープh\textbf{eap}（\chapref{heaps}）でもあることによる。}。
 
-#Treap#のノードは値#x#を持つ。その点で#Treap#は#BinarySearchTree#に似ているが、それに加えて#Treap#のノードは一意な\emph{優先度}#p#を持つ。
+#Treap#のノードは値#x#を持つ。その点で#Treap#は#BinarySearchTree#に似ているが、それに加えて#Treap#のノードは一意な\emph{優先度} #p#を持つ。
 この#p#はランダムに割り当てられる。
 \javaimport{ods/Treap.Node<T>}
 \cppimport{ods/Treap.TreapNode}
