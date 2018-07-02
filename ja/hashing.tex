@@ -33,7 +33,7 @@
    \begin{center}
      \includegraphics[width=\ScaleIfNeeded]{figs/chainedhashtable}
    \end{center}
-   \caption{$#n#=14, #t.length#=16$である#ChainedHashTable#の例。この例では$#hash(x)#=6$である}
+   \caption{$#n#=14、#t.length#=16$である#ChainedHashTable#の例。この例では$#hash(x)#=6$である}
    \figlabel{chainedhashtable}
 \end{figure}
 \ejindex{hash value}{はっしゅち@ハッシュ値}%
@@ -299,7 +299,7 @@ $#i#=#hash(x)#$として、$#t[i]#, #t#[(#i#+1)\bmod #t.length#], #t#[(#i#+2)\bm
 
 #LinearHashTable#の#add(x)#操作も簡単に実装できる。
 #find(x)#を使って#x#がハッシュテーブルに含まれているかどうかを確認できる。
-#x#が含まれていないければ、$#t[i]#, #t#[(#i#+1)\bmod #t.length#], #t#[(#i#+2)\bmod #t.length#], \ldots$を順番に探し、#null#か#del#を見つけたら#x#に書き換え、#n#と#q#を1ずつ増やす。
+#x#が含まれていなければ、$#t[i]#, #t#[(#i#+1)\bmod #t.length#], #t#[(#i#+2)\bmod #t.length#], \ldots$を順番に探し、#null#か#del#を見つけたら#x#に書き換え、#n#と#q#を1ずつ増やす。
 \codeimport{ods/LinearHashTable.add(x)}
 
 ここまでくれば、#remove(x)#の実装も明らかだろう。
@@ -337,7 +337,7 @@ $#t[i]#, #t#[(#i#+1)\bmod #t.length#], #t#[(#i#+2)\bmod #t.length#], \ldots$を�
 \ejindex{run}{れんぞく@連続}%
 %XXX: これ、 i == 0 と i == t.length - 1 のときはどうなの？ -- spinute: 何を心配している？
 %XXX: runの訳語 % YJ 連続かなあ。technical termとして本文中で他に連続は使われていない。
-ハッシュテーブルのエントリ$#t[i]#, #t[i+1]#,\ldots,#t#[#i#+k-1]$がいずれも#null#でなく、$#t#[#i#-1]=#t#[#i#+k]=#null#$であることを、\emph{#i#から始まる長さ$k$の連続（run）}という。
+ハッシュテーブルのエントリ$#t[i]#, #t[i+1]#,\ldots,#t#[#i#+k-1]$がいずれも#null#でなく、$#t#[#i#-1]=#t#[#i#+k]=#null#$であるとき、\emph{#i#から始まる長さ$k$の連続（run）}という。
 #t#の#null#でない要素の数はちょうど#q#であり、#add(x)#では常に$#q#\le#t.length#/2$となることが保証されている。
 最後に#resize()#されてから#t#に挿入された#q#個の要素を$#x#_1,\ldots,#x#_{#q#}$とする。
 仮定より、ハッシュ値$#hash#(#x#_j)$はいずれも一様分布に従う互いに独立な確率変数である。

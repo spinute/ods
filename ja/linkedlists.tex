@@ -371,7 +371,7 @@ $#u#_0$のブロックの要素数を$#b#-1$以上にするため、$#u#_0,#u#_1
       \includegraphics[scale=0.90909]{figs/selist-remove-c}\\
     \end{tabular}
   \end{center}
-  \caption{#SEList#に対する要素#x#の削除で起こりえる3つの儒教（この#SEList#ではブロックの大きさ#b#は3である）}
+  \caption{#SEList#に対する要素#x#の削除で起こりえる3つの状況（この#SEList#ではブロックの大きさ#b#は3である）}
   \figlabel{selist-remove}
 \end{figure}
 
@@ -410,7 +410,7 @@ $#u#_0$のブロックが#b#要素を含むようになるので、ここから�
 しかし次の補題により、これらのメソッドは#add(i,x)#および#remove(i)#の呼び出し#b#回につき多くとも1回しか呼ばれないことがわかる。
 
 \begin{lem}\lemlabel{selist-amortized}
-  空の#SEList#が作られ、$m\ge 1$回の#add(i,x)#および#remove(i)#が実行される
+  空の#SEList#が作られ、$m\ge 1$回の#add(i,x)#および#remove(i)#が実行されるとする。
   このとき、#spread()#および#gather()#に要する時間の合計は$O(#b#m)$である。
 \end{lem}
 
@@ -475,7 +475,7 @@ $#u#_0$のブロックが#b#要素を含むようになるので、ここから�
 \ejindex{unrolled linked list|seealso{#SEList#}}{あんろーるされたれんけつりすと@アンロールされた連結リスト|seealso{#SEList#}}%
 \ejindex{linked list!unrolled|seealso{#SEList#}}{れんけつりすと@連結リスト!あんろーるされた@アンロールされた|seealso{#SEList#}}%
 
-双方向連結リストの空間使用量を減らすための別な手法として、XOR-listsと呼ばれるものもある。
+双方向連結リストの空間使用量を減らすための別な手法として、XOR-listと呼ばれるものもある。
 \ejindex{XOR-list}{XORリスト}%
 XOR-listでは、各ノード#u#はポインタの代わりに#u.nextprev#だけを持つ。 % TODO: pointerの値のXORをとったものはポインタと呼んでいいのか？ -- 日本語での読みやすさも考慮して、「ポインタの代わりとなる値」としてみます -kshikano
 このポインタの代わりとなる値は、#u.prev#と#u.next#のXOR（排他的論理和）を取ったものである。
