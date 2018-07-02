@@ -43,8 +43,8 @@
 
 \cpponly{
 この章、そしてこの本では、要素数を保持する配列が使えると便利なことが多い。
-C++のふつうの配列は要素数を保持していないので、要素数を保持する配列のクラス#array#を定義する。
-\footnote{訳注：この#array#クラスにおける$=$の実装では、右辺の配列を#NULL#にしている。つまり、他の#array#に代入した#array#は、その後使えなくなってしまうことに注意する。}
+C++のふつうの配列は要素数を保持していないので、要素数を保持する配列のクラス#array#を定義する
+\footnote{訳注：この#array#クラスにおける$=$の実装では、右辺の配列を#NULL#にしている。つまり、他の#array#に代入した#array#は、その後使えなくなってしまうことに注意する。}。
 このクラスは標準的なC++の配列#a#と整数#length#により簡単に実装できる。}
 \cppimport{ods/array.a.length}
 \cpponly{
@@ -251,7 +251,7 @@ $\bmod$は次のような二項演算と考えてもよい。
 整数$a$と正整数$m$について、ある整数kが存在し$a = km + r$を満たす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
 簡単に言うと、$r$は$a$を$m$で割った余りである。
 \pcodeonly{CやC++、Ruby、Javaなどの多くのプログラミング言語では、mod演算子を\%で表す。} % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
-\notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}
+\notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}。
 
 剰余算術は無限長の配列を模倣するのに便利である。
 $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利用して、配列の中にキューの要素をうまく入れられるのだ。
@@ -303,7 +303,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 \codeimport{ods/ArrayQueue.resize()}
 \subsection{要約}
 
-次の定理は#ArrayQueue#の性能について整理したものだ
+次の定理は#ArrayQueue#の性能について整理したものだ。
 
 \begin{thm}
   #ArrayQueue#は、（FIFOの）#Queue#インターフェースの実装である。
@@ -319,7 +319,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 この節で紹介する#ArrayDeque#は、両端に対して追加と削除が効率的に実行できるデータ構造である。
 このデータ構造により、#ArrayQueue#を実装するのに使ったのと同じく、循環配列を使って#List#インターフェースを実装する
 \footnote{訳注：\secref{listintro}で言及したように、#ArrayDeque#は#List#インターフェースを実装するデータ構造である。#ArrayDeque#という名称は、#Deque#インターフェースのすべての操作の実行時間が$O(1)$であることを強調するために付けられている。}
-\codeimport{ods/ArrayDeque.a.j.n}
+\codeimport{ods/ArrayDeque.a.j.n}。
 
 #ArrayDeque#に対する#get(i)#と#set(i,x)#は簡単だ。
 配列の要素$#a[#{#(j+i)#\bmod #a.length#}#]#$を読み書きすればよい。
@@ -363,7 +363,7 @@ $#i#<#n#/2$かどうかに応じて、左から$i$個の要素をいずれも1�
 
 \subsection{要約}
 
-次の定理は#ArrayDeque#の性能について整理したものだ
+次の定理は#ArrayDeque#の性能について整理したものだ。
 \begin{thm}\thmlabel{arraydeque}
   #ArrayDeque#は#List#インターフェースを実装する。
   #resize()#のコストを無視すると、#ArrayDeque#における各操作の実行時間は、
