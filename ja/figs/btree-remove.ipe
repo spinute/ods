@@ -283,13 +283,13 @@ h
 256 832 l
 h
 </path>
-<path layer="beta" matrix="1 0 0 1 0 112" fill="lightgreen">
+<!--<path layer="beta" matrix="1 0 0 1 0 112" fill="lightgreen">
 384 784 m
 384 800 l
 368 800 l
 368 784 l
 h
-</path>
+</path>-->
 <path layer="alpha" stroke="black" pen="fat">
 160 784 m
 160 800 l
