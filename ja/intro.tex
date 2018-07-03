@@ -103,7 +103,7 @@ Google\index{Google}について考えてみよう。Googleでは85億ものWeb�
   \figlabel{stack}
 \end{figure}
 
-FIFOキューとLIFOキュー（スタック）を一般化した#Deque#というインターフェースもある。#Deque#は双方向キューと呼ばれ、先頭と末尾を持った要素の列を表しており、先頭または末尾に要素を追加できる。#Deque#における操作には、#addFirst(x)#、#removeFirst()#、#addLast(x)#、 #removeLast()#というわかりやすい名前がついている。#addFirst()#および#removeFirst()#だけを使ってスタックを実装できることは覚えておくとよいだろう。一方、#addLast(x)#および#removeFirst()#だけを使えばFIFOキューを実装できる。 % back = 末尾?
+FIFOキューとLIFOキュー（スタック）を一般化した#Deque#というインターフェースもある。#Deque#は双方向キューと呼ばれ、先頭と末尾を持った要素の列を表しており、先頭または末尾に要素を追加できる。#Deque#における操作には、#addFirst(x)#、#removeFirst()#、#addLast(x)#、 #removeLast()#というわかりやすい名前が付いている。#addFirst()#および#removeFirst()#だけを使ってスタックを実装できることは覚えておくとよいだろう。一方、#addLast(x)#および#removeFirst()#だけを使えばFIFOキューを実装できる。 % back = 末尾?
 
 \subsection{#List#インターフェース：線形シーケンス}
 \seclabel{listintro}
@@ -153,12 +153,12 @@ $#x# = #y#$を満たす集合の要素#y#を見つける。そのような要素
 \end{enumerate}
 
 上の定義で、探したい#x#と、見つかる（かもしれない）要素#y#とを、わざわざ区別する必要はないように感じるかもしれない。
-これらを区別する理由は、別のもの（オブジェクト）である#x#と#y#とを、何らかの基準で等しいと判定したい場合があるからだ\javaonly{\footnote{Javaでは、クラスの#equals(y)#、#hashCode()#メソッドをオーバーライドするとこれを行える。}}。そのような判定ができると、キーを値に対応づけるインターフェースを実装するのに都合がいい。そうしたインターフェースは\emph{辞書（dictionary）}や\emph{マップ（map）}と呼ばれる。% TODO: YJ need better translation
+これらを区別する理由は、別のもの（オブジェクト）である#x#と#y#とを、何らかの基準で等しいと判定したい場合があるからだ\javaonly{\footnote{Javaでは、クラスの#equals(y)#、#hashCode()#メソッドをオーバーライドするとこれを行える。}}。そのような判定ができると、キーを値に対応付けるインターフェースを実装するのに都合がいい。そうしたインターフェースは\emph{辞書（dictionary）}や\emph{マップ（map）}と呼ばれる。% TODO: YJ need better translation
 \ejindex{dictionary}{じしょ@辞書}%
 \ejindex{map}{まっぷ@マップ}%
 % TODO 辞書、マップとハッシュテーブルの関わりを脚注で補足する
 
-辞書（マップ）を作るために、まずは#Pair#\ejindex{pair}{ぺあ@ペア}という、\emph{キー}と\emph{値}が対になったオブジェクトを作る。2つの#Pair#は、キーが等しければ（その値が等しいかどうかに関わらず）等しいとみなす。#Pair#である$(#k#,#v#)$を#USet#に入れてから、$#x#=(#k#,#null#)$として#find(x)#を実行すると、$#y#=(#k#,#v#)$が返ってくる。すなわち、キー#k#だけから値#v#が手に入る。
+辞書（マップ）を作るために、まずは#Pair#\ejindex{pair}{ぺあ@ペア}という、\emph{キー}と\emph{値}が対になったオブジェクトを作る。2つの#Pair#は、キーが等しければ（その値が等しいかどうかにかかわらず）等しいとみなす。#Pair#である$(#k#,#v#)$を#USet#に入れてから、$#x#=(#k#,#null#)$として#find(x)#を実行すると、$#y#=(#k#,#v#)$が返ってくる。すなわち、キー#k#だけから値#v#が手に入る。
 
 \subsection{#SSet#インターフェース：ソートされた要素の集まり}
 \seclabel{sset}
@@ -208,7 +208,7 @@ $b$が整数でないときも、指数関数$e^x$を使って冪乗を定義で
 \[
     b^{x} = k
 \]
-底が2の対数を\emph{二進対数（binary logarithm）}という。この本に出てくる対数のほとんどは二進対数なので、底になにも書かずに$\log k$とある場合は、$\log_2 k$の省略記法とする。
+底が2の対数を\emph{二進対数（binary logarithm）}という。この本に出てくる対数のほとんどは二進対数なので、底に何も書かずに$\log k$とある場合は、$\log_2 k$の省略記法とする。
 \ejindex{binary logarithm}{にしんたいすう@二進対数}%
 \ejindex{logarithm!binary}{たいすう@対数!にしん@二進}%
 
@@ -381,7 +381,7 @@ $a$、$b$、$c$、$d$、$e$はプログラムを実行するマシンに依存�
 \ejindex{probability}{かくりつ@確率}%
 \ejindex{randomized data structure}{らんたくでーたこうぞう@乱択データ構造}%
 \ejindex{randomized algorithm}{らんたくあるごりずむ@乱択アルゴリズム}%
-この本で扱うデータ構造には\emph{乱択化（randomization）}を利用するものがある。乱択化では、格納されているデータや実行する操作に加えて、サイコロの出目もふまえて実際の処理を決める。そのため、同じことをしても実行時間が毎回同じとは限らない。このようなデータ構造を分析するときは\emph{期待実行時間（expected running time）}を考えるのがよい。
+この本で扱うデータ構造には\emph{乱択化（randomization）}を利用するものがある。乱択化では、格納されているデータや実行する操作に加えて、サイコロの出目も踏まえて実際の処理を決める。そのため、同じことをしても実行時間が毎回同じとは限らない。このようなデータ構造を分析するときは\emph{期待実行時間（expected running time）}を考えるのがよい。
 \ejindex{expected running time}{きたいじっこうじかん@期待実行時間}%
 \ejindex{running time!expected}{じっこうじかん@実行時間!きたい@期待}%
 
