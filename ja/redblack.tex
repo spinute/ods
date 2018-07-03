@@ -278,7 +278,7 @@ $T'$の内部ノードは、すべて2～4個の子を持つ。
   \figlabel{redblack-flippullpush}
 \end{figure}
 
-#flipLeft(u)#は、#u#と#u.right#の色を入れ替え、その後で#u#を左回転する。
+#flipLeft(u)#は、#u#と#u.right#の色を入れ替え、そのあとで#u#を左回転する。
 この操作は、これら2つのノードの色と親子関係をいずれも入れ替えるのである。
 \codeimport{ods/RedBlackTree.flipLeft(u)}
 #flipLeft(u)#は、#u#が左傾性を満たしていないとき、すなわち#u.left#が黒ノード、#u.right#が赤ノードである場合に、左傾性を取り戻すのに役立つ。
@@ -329,7 +329,7 @@ $T'$の内部ノードは、すべて2～4個の子を持つ。
 \codeimport{ods/RedBlackTree.addFixup(u)}
 
 #insertFixup(u)#は、繰り返しごとにかかる実行時間は定数で、繰り返しのたびに#u#を根のほうへ移動するか、もしくは処理が終了する。
-よって、#insertFixup(u)#は$O(\log #n#)$回の繰り返しの後に終了し、このときの実行時間は$O(\log #n#)$である。
+よって、#insertFixup(u)#は$O(\log #n#)$回の繰り返しのあとに終了し、このときの実行時間は$O(\log #n#)$である。
 
 \subsection{要素の削除}
 \seclabel{redblack-elem-remove}
@@ -374,7 +374,7 @@ Case 1：#u#の兄弟#v#が赤ノードの場合。
 #w#で右回転を実行し、次の繰り返しに進む。
 この操作では、#w#の親が左傾性を満たさなくなり、#u#の深さが1大きくなることに注意する。
 しかし、次の繰り返しは#w#が赤ノードの場合（Case~3）である。
-後で説明するCase~3を実行すればうまく処理できる。
+あとで説明するCase~3を実行すればうまく処理できる。
 \codeimport{ods/RedBlackTree.removeFixupCase1(u)}
 
 \noindent
