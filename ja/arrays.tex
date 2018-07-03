@@ -811,7 +811,7 @@ $\lfloor\log #x#\rfloor$が#x#を二進表記したときに1となる最大の�
 これはコンピュータアーキテクチャによっては専用の命令があり、効率的に計算できる。
 \javaonly{Javaでは、#Integer#クラスの#numberOfLeadingZeros(i)#メソッドにより、簡単に$\lfloor\log (#i#+1)\rfloor$を計算できる。}
 
-#RootishArrayStack#に関連するデータ構造として、GoodrichとKlossによる\cite{gk99}で示された2段階の\emph{階層ベクトル（tiered-vector）}というものがある。
+#RootishArrayStack#に関連するデータ構造として、GoodrichとKlossによる\cite{gk99}で示された二段階の\emph{階層ベクトル（tiered-vector）}というものがある。
 \index{tiered-vector}%
 このデータ構造では、#get(i,x)#および#set(i,x)#の実行時間は定数である。
 #add(i,x)#および#remove(i)#の実行時間は$O(\sqrt{#n#})$である。
