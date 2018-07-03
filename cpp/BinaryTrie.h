@@ -106,9 +106,9 @@ bool BinaryTrie<Node,T>::add(T x) {
 		if (u->child[c] == NULL) break;
 		u = u->child[c];
 	}
-	if (i == w) return false; // x は既に入っているので中止する
+	if (i == w) return false; // x はすでに入っているので中止する
 	Node *pred = (c == right) ? u->jump : u->jump->left;
-	u->jump = NULL;  // u はふたつの子を持つようになる
+	u->jump = NULL;  // u は2つの子を持つようになる
 	// 2. ix への経路を追加する
 	for (; i < w; i++) {
 		c = (ix >> (w-i-1)) & 1;

@@ -148,7 +148,7 @@ bool BinarySearchTree<Node, T>::addChild(Node *p, Node *u) {
 			} else if (comp > 0) {
 				p->right = u;
 			} else {
-				return false;   // u.x は既に木に含まれている
+				return false;   // u.x はすでに木に含まれている
 			}
 			u->parent = p;
 		}

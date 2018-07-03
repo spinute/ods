@@ -136,9 +136,9 @@ bool XFastTrie<Node,T>::add(T x) {
 		if (u->child[c] == NULL) break;
 		u = u->child[c];
 	}
-	if (i == w) return false; // トライに x は既に入っているので中止する
+	if (i == w) return false; // トライに x はすでに入っているので中止する
 	Node *pred = (c == right) ? u->jump : u->jump->left; // ステップ 3 のために保存しておく
-	u->jump = NULL;  // u はふたつの子を持つようになる
+	u->jump = NULL;  // u は2つの子を持つようになる
 	// 2. ix への経路を追加する
 	for (; i < w; i++) {
 		c = (ix >> (w-i-1)) & 1;

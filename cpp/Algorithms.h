@@ -41,7 +41,7 @@ enum { white, grey, black };
 
 template<class Graph>
 void dfs(Graph &g, int i, char *c) {
-	c[i] = grey;  // i を訪問しはじめる
+	c[i] = grey;  // i を訪問し始める
 	ArrayStack<int> edges;
 	g.outEdges(i, edges);
 	for (int k = 0; k < edges.size(); k++) {
