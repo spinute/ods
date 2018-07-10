@@ -123,10 +123,10 @@ $#a[i+1]#,\ldots,#a[n-1]#$を左に1つシフトし、#n#の値を1つ小さく�
 
 前節の実行時間分析では#resize()#のコストを無視していた。この節では\emph{償却解析（amortized analysis）}と呼ばれる手法でこれを解決する。
 この手法は、個々の#add(i, x)#および#remove(i)#における#resize()#のコストを求めるわけではない。
-代わりに、#add(i, x)#と#remove(i)#からなる#m#個の一連の操作の間に呼ばれる#resize()#の実行時間の合計を考える。特に、次の補題を示す。
+代わりに、#add(i, x)#と#remove(i)#からなる$m$個の一連の操作の間に呼ばれる#resize()#の実行時間の合計を考える。特に、次の補題を示す。
 % 以上の部分はpdfにしたときに別段落に分けられていたので、原文に沿って一段落にまとめた
 \begin{lem}\lemlabel{arraystack-amortized}
-  空の#ArrayStack#が作られたあと、$m\ge 1$回の#add(i, x)#および#remove(i)#からなる操作の列が順に実行されるとき、#resize()#の実行時間は合計#O(m)#である。
+  空の#ArrayStack#が作られたあと、$m\ge 1$回の#add(i, x)#および#remove(i)#からなる操作の列が順に実行されるとき、#resize()#の実行時間は合計$O(m)$である。
 \end{lem}
 
 \begin{proof}
