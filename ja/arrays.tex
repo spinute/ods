@@ -307,8 +307,8 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 \begin{thm}
   #ArrayQueue#は、（FIFOの）#Queue#インターフェースの実装である。
-  #resize()#のコストを無視すると、#ArrayStack#は#add(x)#、#remove()#の実行時間は$O(1)$である。
-  さらに、空の#ArrayStack#に対して長さ#m#の任意の#add(x)#および#remove()#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
+  #resize()#のコストを無視すると、#ArrayQueue#は#add(x)#、#remove()#の実行時間は$O(1)$である。
+  さらに、空の#ArrayQueue#に対して長さ#m#の任意の#add(x)#および#remove()#からなる操作の列を実行するとき、#resize()#にかかる時間の合計は$O(m)$である。
   % caprice removed i from add(i, x) and remove(i) so that the function signatures match the add(x) and remove() function signatures in the above c++ code
 \end{thm}
 
