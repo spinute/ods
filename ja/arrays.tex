@@ -248,7 +248,7 @@ $\bmod$は次のような二項演算と考えてもよい。
 \[
    15 \bmod 12 = 3
 \]
-整数$a$と正整数$m$について、ある整数$k$が存在し$a = km + r$を満たす整数#r# $\in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
+整数$a$と正整数$m$について、ある整数$k$が存在し$a = km + r$を満たす整数$r \in \{0, \ldots, m-1 \}$を$a \bmod m $と書く。
 簡単に言うと、$r$は$a$を$m$で割った余りである。
 \pcodeonly{CやC++、Ruby、Javaなどの多くのプログラミング言語では、mod演算子を\%で表す。} % TODO: YJ In C/C++ modulo is only defined where both a and m are positive integers. Modulo is implementation dependent if a is negative (it killed me a MONTH).
 \notpcode{\javaonly{Java}\cpponly{C++}を含む多くのプログラミング言語では、mod演算子を#%#で表す\footnote{これは第一引数が負の場合について数学におけるmod演算子を正確に実装したものではないので、時として\emph{脳死}したmod演算子と呼ばれることがある。}}。
