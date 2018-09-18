@@ -30,7 +30,7 @@ PDFファイルはプロジェクトのウェブサイト<https://sites.google.c
 
 第2章： ArrayStack、ArrayQueue、ArrayDeque  
 第3章： SLList、DLList  
-第4章： ChainedHashTable  
+第5章： ChainedHashTable  
 第6章： BinaryTree、BinarySearchTree  
 第9章： RedBlackTree（9.2.2節から9.2.4節は複雑なので読み飛ばしてよい）  
 第10章： BinaryHeap  
