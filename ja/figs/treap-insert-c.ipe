@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
-<ipe version="70005" creator="Ipe 7.1.1">
-<info created="D:20110603150315" modified="D:20130529134530"/>
+<ipe version="70107" creator="Ipe 7.1.10">
+<info created="D:20110603150315" modified="D:20190112134232"/>
 <preamble>\usepackage[whole]{bxcjkjatype}\usepackage{kpfonts}\fontsize{10pt}{10pt}\selectfont\usepackage{ods-colors}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -235,7 +235,7 @@ h
 <layer name="beta"/>
 <view layers="alpha" active="alpha"/>
 <view layers="alpha beta" active="beta"/>
-<path layer="alpha" matrix="0.5 0 0 0.5 144 184" stroke="black" pen="fat" fill="pink">
+<path layer="alpha" matrix="0.5 0 0 0.5 144 184" stroke="black" fill="pink" pen="fat">
 160 336 m
 160 304 l
 224 304 l
@@ -296,16 +296,16 @@ h
 h
 </path>
 <text matrix="0.5 0 0 0.5 128 152" transformations="translations" pos="192 320" stroke="black" type="label" halign="center" valign="center">$1,6$</text>
-<use matrix="0.5 0 0 0.5 160 152" name="mark/fdisk(sfx)" pos="224 320" size="normal" stroke="white" fill="white"/>
+<use matrix="0.5 0 0 0.5 176 152" name="mark/fdisk(sfx)" pos="224 320" size="normal" stroke="white" fill="white"/>
 <use matrix="0.5 0 0 0.5 154.684 151.542" name="mark/fdisk(sfx)" pos="160 320" size="normal" stroke="white" fill="white"/>
-<path matrix="0.5 0 0 0.5 160 152" stroke="black" pen="fat">
+<path matrix="0.5 0 0 0.5 176 152" stroke="black" pen="fat">
 160 336 m
 160 304 l
 224 304 l
 224 336 l
 h
 </path>
-<text matrix="0.5 0 0 0.5 160 152" transformations="translations" pos="192 320" stroke="black" type="label" halign="center" valign="center">$2,99$</text>
+<text matrix="0.5 0 0 0.5 176 152" transformations="translations" pos="192 320" stroke="black" type="label" halign="center" valign="center">$2,99$</text>
 <use matrix="0.5 0 0 0.5 192 216" name="mark/fdisk(sfx)" pos="192 336" size="normal" stroke="white" fill="white"/>
 <use matrix="0.5 0 0 0.5 192 216" name="mark/fdisk(sfx)" pos="192 304" size="normal" stroke="white" fill="white"/>
 <use matrix="0.5 0 0 0.5 192 216" name="mark/fdisk(sfx)" pos="224 320" size="normal" stroke="white" fill="white"/>
@@ -384,10 +384,6 @@ h
 224 320 l
 </path>
 <path stroke="black" pen="fat">
-240 336 m
-256 320 l
-</path>
-<path stroke="black" pen="fat">
 224 304 m
 192 288 l
 </path>
@@ -398,6 +394,11 @@ h
 <path stroke="black" pen="fat">
 352 336 m
 320 320 l
+</path>
+<path stroke="black" pen="fat">
+240 336 m
+272 320 l
+240 336 l
 </path>
 </page>
 </ipe>
