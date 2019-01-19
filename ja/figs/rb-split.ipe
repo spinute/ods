@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
-<ipe version="70010" creator="Ipe 7.0.10">
-<info created="D:20110714105047" modified="D:20110714111738"/>
+<ipe version="70107" creator="Ipe 7.1.10">
+<info created="D:20110714105047" modified="D:20190119174459"/>
 <preamble>\usepackage[whole]{bxcjkjatype}\usepackage{kpfonts}\fontsize{10pt}{10pt}\selectfont\usepackage{ods-colors}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -203,13 +203,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
-<textsize name="small" value="\small"/>
-<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -237,7 +237,7 @@ h
 <layer name="delta"/>
 <layer name="epsilon"/>
 <layer name="zeta"/>
-<view layers="alpha gamma epsilon" active="alpha"/>
+<view layers="alpha gamma epsilon" active="epsilon"/>
 <view layers="alpha beta epsilon zeta" active="epsilon"/>
 <view layers="alpha beta delta" active="delta"/>
 <use layer="beta" matrix="0.5 0 0 1 42.5 21" name="mark/square(sx)" pos="256 240" size="large" stroke="black"/>
@@ -421,10 +421,10 @@ h
 180.559 330.322
 200.678 331.734 u
 </path>
-<text transformations="translations" pos="123.28 309.022" stroke="black" type="label" valign="baseline">$\mathtt{\color{var}w}$</text>
-<text layer="delta" transformations="translations" pos="123.88 299.225" stroke="black" type="label" valign="baseline">$\mathtt{\color{var}w}$</text>
-<text transformations="translations" pos="177.059 298.626" stroke="black" type="label" valign="baseline">$\mathtt{\color{var}w}&apos;$</text>
-<text layer="beta" transformations="translations" pos="184.257 261.64" stroke="black" type="label" valign="baseline">$\mathtt{\color{var}u}$</text>
+<text layer="delta" matrix="1 0 0 1 16 16" transformations="translations" pos="123.88 299.225" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
+<text transformations="translations" pos="177.059 298.626" stroke="black" type="label" width="8.186" height="7.402" depth="0" valign="baseline">$\mathtt{\color{var}w}&apos;$</text>
+<text layer="beta" transformations="translations" pos="184.257 261.64" stroke="black" type="label" width="5.28" height="4.438" depth="0.06" valign="baseline">$\mathtt{\color{var}u}$</text>
 <use layer="alpha" matrix="1 0 0 1 102.5 37" name="mark/fdisk(sfx)" pos="208 272" size="large" stroke="black" fill="black"/>
+<text layer="epsilon" transformations="translations" pos="144 320" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
 </page>
 </ipe>
