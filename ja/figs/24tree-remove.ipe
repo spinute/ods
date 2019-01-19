@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
-<ipe version="70005" creator="Ipe 7.1.1">
-<info created="D:20101201111324" modified="D:20130710150733"/>
+<ipe version="70107" creator="Ipe 7.1.10">
+<info created="D:20101201111324" modified="D:20190119172243"/>
 <preamble>\usepackage[whole]{bxcjkjatype}\usepackage{kpfonts}\fontsize{10pt}{10pt}\selectfont\usepackage{ods-colors}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -203,13 +203,13 @@ h
 <dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
 <dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
 <textsize name="large" value="\large"/>
-<textsize name="small" value="\small"/>
-<textsize name="tiny" value="\tiny"/>
 <textsize name="Large" value="\Large"/>
 <textsize name="LARGE" value="\LARGE"/>
 <textsize name="huge" value="\huge"/>
 <textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
 <textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
 <textstyle name="center" begin="\begin{center}" end="\end{center}"/>
 <textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
 <textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
@@ -240,7 +240,7 @@ h
 <layer name="eta"/>
 <layer name="theta"/>
 <layer name="iota"/>
-<view layers="alpha beta delta epsilon eta" active="alpha"/>
+<view layers="alpha beta delta epsilon eta" active="delta"/>
 <view layers="alpha delta epsilon eta" active="gamma"/>
 <view layers="alpha gamma epsilon eta iota" active="gamma"/>
 <view layers="alpha gamma zeta eta theta" active="zeta"/>
@@ -440,5 +440,8 @@ h
 352 272 m
 352 304 l
 </path>
+<text layer="delta" transformations="translations" pos="320 272" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
+<text transformations="translations" pos="384 272" stroke="black" type="label" width="8.186" height="7.402" depth="0" valign="baseline">$\mathtt{\color{var}w&apos;}$</text>
+<text layer="gamma" transformations="translations" pos="368 272" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
 </page>
 </ipe>
