@@ -440,8 +440,8 @@ h
 352 272 m
 352 304 l
 </path>
-<text layer="delta" transformations="translations" pos="320 272" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
+<text layer="delta" transformations="translations" pos="315 272" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
 <text transformations="translations" pos="384 272" stroke="black" type="label" width="8.186" height="7.402" depth="0" valign="baseline">$\mathtt{\color{var}w&apos;}$</text>
-<text layer="gamma" transformations="translations" pos="368 272" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
+<text layer="gamma" transformations="translations" pos="358 272" stroke="black" type="label" width="5.28" height="4.428" depth="0" valign="baseline">$\mathtt{\color{var}w}$</text>
 </page>
 </ipe>
