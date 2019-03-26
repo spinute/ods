@@ -596,10 +596,10 @@ $#b#$番めのブロックには$#b#+1$個の要素を入れる。
 2つめの解は常に負の値なので捨ててよい。
 よって、解は$#b# = (-3 + \sqrt{9+8#i#}) / 2$である。
 この解は一般に整数とは限らない。
-とはいえ、元の不等式に立ち戻って考えれば、欲しかったのは$#b# \ge (-3 + \sqrt{9+8i}) / 2$を満たす最小の#b#である。
+とはいえ、元の不等式に立ち戻って考えれば、欲しかったのは$#b# \ge (-3 + \sqrt{9+8#i#}) / 2$を満たす最小の#b#である。
 これは次のように書ける。
 \[
-   #b# = \left\lceil(-3 + \sqrt{9+8i}) / 2\right\rceil \enspace
+   #b# = \left\lceil(-3 + \sqrt{9+8#i#}) / 2\right\rceil \enspace
 \]
 
 \codeimport{ods/RootishArrayStack.i2b(i)}
@@ -794,7 +794,7 @@ $\lfloor\log #x#\rfloor$が#x#を二進表記したときに1となる最大の�
 \javaimport{ods/FastSqrt.inittabs()}
 \cppimport{ods/FastSqrt.inittabs()}
 \notpcode{
-まとめると、ワードRAMでは、$O(\sqrt{n})$の余分なメモリを使って#sqrttab#および#logtab#という配列を作ることで、#i2b(i)#を用いる各操作を定数時間で実行できる。
+まとめると、ワードRAMでは、$O(\sqrt{#n#})$の余分なメモリを使って#sqrttab#および#logtab#という配列を作ることで、#i2b(i)#を用いる各操作を定数時間で実行できる。
 この配列は、#n#が2倍または2分の1の大きさになるたびに拡大または縮小してもよい。その場合の実行時間は、#ArrayStack#のときと同様に、#add(i,x)#および#remove(i)#を実行する回数にわたって償却できる。
 } % notpcode
 

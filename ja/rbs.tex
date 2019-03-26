@@ -103,7 +103,7 @@ $k$を非負整数とすると、$k$番めの調和数$H_k$は次のように定
 \subsection{\lemref{rbs}の証明}
 
 \lemref{rbs}の証明では次の考察が鍵となる。
-ランダム二分探索木$T$における値$#x# \in (-1,#n#)$の探索経路に、$i < #x#$を満たす#i#をキーとするノードが含まれる必要十分条件は、$T$を作るランダムな置換において$i$が$\{i+1,i+2,\ldots,\lfloor#x#\rfloor\}$のいずれよりも前に現れることである。
+ランダム二分探索木$T$における値$#x# \in (-1,#n#)$の探索経路に、$i < #x#$を満たす$i$をキーとするノードが含まれる必要十分条件は、$T$を作るランダムな置換において$i$が$\{i+1,i+2,\ldots,\lfloor#x#\rfloor\}$のいずれよりも前に現れることである。
 
 そのことを確認するには、\figref{rbst-records}を見てほしい。
 $\{i,i+1,\ldots,\lfloor#x#\rfloor\}$のいずれかが追加されるまで、探索経路$(i-1,\lfloor#x#\rfloor+1)$に含まれる要素の探索経路は等しい
@@ -167,7 +167,7 @@ $I_i$の値は、$i$が探索経路に現れるときは1、そうでないと�
       \includegraphics[width=\ScaleIfNeeded]{figs/rbst-probs-b} \\ (b) \\[2ex]
     \end{tabular}
   \end{center}
-  \caption{#x#の探索経路に各要素が現れる確率~(a)、#x#が整数のとき~(b)~#x#が整数でないとき}
+  \caption{#x#の探索経路に各要素が現れる確率。(a)~#x#が整数のとき、(b)~#x#が整数でないとき}
   \figlabel{rbst-probs}
 \end{figure}
 
