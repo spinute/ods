@@ -429,7 +429,7 @@ $p_k$は、#t.length#が最小値を取るときに最大値を取る。
 
 \index{tabulation hashing}%
 #LinearHashTable#の解析では強い仮定を置いていた。
-すなわち、任意の相異なる要素$\{#x#_1,\ldots,#x#_#n#\}$について、そのハッシュ値$#hash#($x$_1),\ldots,#hash#(#x#_#n#)$が一様な確率で$\{0,\ldots,#t.length#-1\}$内に独立に分布するという仮定である。
+すなわち、任意の相異なる要素$\{#x#_1,\ldots,#x#_#n#\}$について、そのハッシュ値$#hash#(#x#_1),\ldots,#hash#(#x#_#n#)$が一様な確率で$\{0,\ldots,#t.length#-1\}$内に独立に分布するという仮定である。
 この仮定を実現する方法として、大きさ$2^{#w#}$の巨大な配列#tab#を準備し、すべてのエントリを互いに独立な#w#ビットのランダムな整数で初期化するというものがある。
 こうしておけば、#tab[x.hashCode()]#から#d#ビットの整数を取り出すことで#hash(x)#を実装できる。
 \codeimport{ods/LinearHashTable.idealHash(x)}
