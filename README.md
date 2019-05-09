@@ -1,10 +1,12 @@
 ## Open Data Structures 日本語訳プロジェクト
 
-[Open Data Structures](http://opendatastructures.org/)というプロジェクトをご存知だろうか。
+[Open Data Structures](http://opendatastructures.org/)というプロジェクトをご存知でしょうか。
 これは[Pat Morin](http://cglab.ca/~morin/)氏が立ち上げたプロジェクトで、
-大学のコンピュータサイエンス系の学部ならほぼ皆が最初に学ぶデータ構造に関する教科書をフリーで公開するものである。
+大学のコンピュータサイエンス系の学部ならほぼ皆が最初に学ぶデータ構造に関する教科書をフリーで公開するものです。
 
-PDFファイルはプロジェクトのウェブサイト<https://sites.google.com/view/open-data-structures-ja/home>にて随時更新しながら配布している。
+PDFファイルはプロジェクトのウェブサイト<https://sites.google.com/view/open-data-structures-ja/home>にて随時更新しながら配布しています。
+
+PDFファイルを自分でビルドしたい人は[ビルド手順書](https://github.com/spinute/ods/wiki/%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88pdf%E3%81%AE%E4%BD%9C%E6%88%90%E6%89%8B%E9%A0%86#%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%AB%E3%81%AB%E6%AC%A0%E5%A6%82%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E8%AA%BF%E6%95%B4)が参考になると思います。（ただ、単に最新版が読みたいという人は @spinute にウェブサイト「更新しやがれ！」とご連絡いただいた方が手っ取り早い&他の人にも有益かもしれません。）
 
 ## この本の読み方 (翻訳者まえがき)
 
