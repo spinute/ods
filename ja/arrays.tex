@@ -281,7 +281,7 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 #remove()#の実装では、まず#a[j]#をあとで返せるように保存しておく。
 続いて#n#を1減らし、$#j#=(#j#+1)\bmod #a.length#$とすることで#j#を1増やす（#a.length#を法として計算している）。
 最後に保存しておいた#a[j]#を返す。
-もし必要なら#resize()#を読んで#a#を小さくする。
+もし必要なら#resize()#を呼んで#a#を小さくする。
 
 \codeimport{ods/ArrayQueue.remove()}
 
