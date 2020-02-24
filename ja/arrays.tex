@@ -95,7 +95,6 @@ C++のふつうの配列は要素数を保持していないので、要素数�
   \figlabel{arraystack}
 \end{figure}
 
-% XXX: add はバグっているのではないか。n==a.length でも resize の必要があるのではないか -- コードを修正しました
 \codeimport{ods/ArrayStack.add(i,x)}
 #resize()#のコストを無視すれば、#add(i, x)#のコストは#x#を入れる場所を作るためにシフトする要素数に比例する。つまり、この操作の（#resize()#のコストを無視した）実行時間は、$O(#n#-#i#)$である。
 
@@ -203,8 +202,6 @@ Javaには、#System.arraycopy(s,i,d,j,n)#メソッドがある。
 
 \cppimport{ods/FastArrayStack.add(i,x).remove(i).resize()}
 \javaimport{ods/FastArrayStack.add(i,x).remove(i).resize()}
-% XXX: この add もバグっているのではないか。
-% (1) n==a.length でも resize の必要があるのではないか -- 修正しました
 
 これらの関数は最適化されており、#for#ループを使う場合と比べてかなり高速にデータのコピーが可能な機械語の命令を使っている可能性がある。
 これらの関数を使っても漸近的な実行時間は小さくならないが、最適化として試してみる価値はある。
@@ -280,7 +277,6 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 \end{figure}
 
 \codeimport{ods/ArrayQueue.add(x)}
-% XXX: この add もバグっているのではないか。 (1) n==a.length でも resize の必要があるのではないか -- 修正しました
 
 #remove()#の実装では、まず#a[j]#をあとで返せるように保存しておく。
 続いて#n#を1減らし、$#j#=(#j#+1)\bmod #a.length#$とすることで#j#を1増やす（#a.length#を法として計算している）。
@@ -346,7 +342,6 @@ $#i#\bmod #a.length#$が常に$0,\ldots,#a.length-1#$の値を取ることを利
 
 \codeimport{ods/ArrayDeque.add(i,x)}
 % XXX: ソースコードのコメントが正しくない気がする -- 抽象的なバッファの話をしているようだが、a を配列を表す変数としても使っているので紛らわしい
-% XXX: この add もバグっているのではないか。 % (1) n==a.length でも resize の必要があるのではないか -- 修正しました
 
 このように要素をずらせば、#add(i,x)#によって移動する要素の数が高々$\min\{#i#, #n#-#i#\}$個に保証される。
 そのため、#add(i,x)#の実行時間は、#resize()#を無視すれば$O(1+\min\{#i#,#n#-#i#\})$である。

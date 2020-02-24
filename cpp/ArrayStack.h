@@ -77,7 +77,7 @@ void ArrayStack<T>::resize() {
 
 template<class T>
 void ArrayStack<T>::add(int i, T x) {
-	if (n + 1 >= a.length) resize();
+	if (n + 1 > a.length) resize();
 	for (int j = n; j > i; j--)
 		a[j] = a[j - 1];
 	a[i] = x;

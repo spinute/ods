@@ -42,7 +42,7 @@ void FastArrayStack<T>::resize() {
 
 template<class T>
 void FastArrayStack<T>::add(int i, T x) {
-	if (n + 1 >= a.length) resize();
+	if (n + 1 > a.length) resize();
 	std::copy_backward(a+i, a+n, a+n+1);
 	a[i] = x;
 	n++;

@@ -76,7 +76,7 @@ int ArrayDeque<T>::size() {
 
 template<class T>
 void ArrayDeque<T>::add(int i, T x) {
-	if (n + 1 >= a.length)	resize();
+	if (n + 1 > a.length)	resize();
 	if (i < n/2) { // a[0],..,a[i-1] を左に1つずらす
 		j = (j == 0) ? a.length - 1 : j - 1;
 		for (int k = 0; k <= i-1; k++)

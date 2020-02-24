@@ -48,7 +48,7 @@ void ArrayQueue<T>::resize() {
 
 template<class T>
 bool ArrayQueue<T>::add(T x) {
-	if (n + 1 >= a.length) resize();
+	if (n + 1 > a.length) resize();
 	a[(j+n) % a.length] = x;
 	n++;
 	return true;
