@@ -378,8 +378,7 @@ Case 1：#u#の兄弟#v#が赤ノードの場合。
 \codeimport{ods/RedBlackTree.removeFixupCase1(u)}
 
 \noindent
-Case 2：#u#の兄弟#v#が黒ノードの場合。
-このとき、#u#は親#w#の左の子である。
+Case 2：#u#の兄弟が黒ノードで、#u#が親#w#の左の子である場合。
 #pullBlack(w)#を呼ぶと、#u#は黒ノードに、#v#は赤ノードになり、#w#は黒もしくはダブルブラックになる。
 このとき#w#は左傾性を満たしておらず、#flipLeft(w)#を呼んでこれを解決する。
 
