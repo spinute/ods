@@ -1276,7 +1276,7 @@ h
 152 224 m
 136 208 l
 </path>
-<text matrix="1 0 0 1 96 -110.944" transformations="translations" pos="200.196 292.173" stroke="black" type="label" valign="baseline">\texttt{add(3,z)}</text>
+<text matrix="1 0 0 1 96 -110.944" transformations="translations" pos="200.196 292.173" stroke="black" type="label" valign="baseline">\texttt{add(4,z)}</text>
 <group matrix="1 0 0 1 16 -144">
 <path stroke="white" pen="fat">
 96 320 m
